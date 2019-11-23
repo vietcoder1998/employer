@@ -1,0 +1,13 @@
+export const PENDING_JOBS_API = "/api/employers/pendingJobs";
+export const JOB_ANNOUNCEMENTS = '/api/employers/jobs/query';
+export const ANNOUNCEMENT_DETAIL = '/api/employers/announcements';
+export const SKILLS = "/api/employers/data/skills";
+export const TYPE_SCHOOLS = "/api/employers/data/schoolTypes";
+export const REGIONS = "/api/employers/data/regions";
+export const JOB_GROUPS = "/api/employers/data/jobGroups";
+export const MAJORS = "/api/employers/data/majors";
+export const LANGUAGES = "/api/employers/data/languages";
+export const JOB_NAMES = "/api/employers/data/jobNames";
+export const TYPE_MANAGEMENT = "/api/employers/data/announcementTypes";
+export const BRANCHES = "/api/employers/data/branches";
+export const EM_BRANCHES = "/api/employers/data/branches";
