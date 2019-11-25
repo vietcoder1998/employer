@@ -1,4 +1,3 @@
-import { IJobAnnouncementsFilter } from './../models/job-announcements';
 import { IJobAnnouncements } from '../models/job-announcements';
 import { POST } from '../../common/const/method';
 import { JOB_ANNOUNCEMENTS } from '../../services/api/private.api';
@@ -17,7 +16,6 @@ function* getListJobAnnouncementsData(action: any) {
     };
 
     if (res.code === 200) {
-        console.log(res.data)
         data = res.data;
         yield put({
             type: REDUX.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS,

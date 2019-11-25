@@ -21,3 +21,8 @@ export interface IEmBranches {
     totalItems?: number,
     items?: Array<IEmBranch>
 }
+
+export interface IEmBranchesFilter {
+    headquarters: boolean | undefined | null,
+    regionID: number | undefined | null,
+}

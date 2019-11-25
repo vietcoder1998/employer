@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, DatePicker, Rate, Cascader } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, Cascader } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -11,10 +11,6 @@ import { IptLetterP } from '../../../../layout/common/Common';
 import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../redux/models/job-announcements';
 import { IAppState } from '../../../../../../redux/store/reducer';
 let { Option } = Select;
-
-let ImageRender = (props) => {
-    return <img src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} />
-}
 
 interface JobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
@@ -176,6 +172,20 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             width: 100,
         },
         {
+            title: 'Chấp nhận',
+            dataIndex: 'suitableCount',
+            className: 'action',
+            key: 'suitableCount',
+            width: 100,
+        },
+        {
+            title: 'Từ chối',
+            dataIndex: 'rejectedApplied',
+            className: 'action',
+            key: 'rejectedApplied',
+            width: 100,
+        },
+        {
             title: 'Độ ưu tiên',
             dataIndex: 'priority',
             className: 'action',
@@ -221,11 +231,6 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     onToggleModal = () => {
         let { show_modal } = this.state;
-
-        if (!show_modal) {
-            let id = localStorage.getItem("id_job_announcement");
-        };
-
         this.setState({ show_modal: !show_modal });
     };
 
@@ -241,6 +246,14 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         if (nextProps.list_job_announcements !== prevState.list_job_announcements) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
+            let viewCount = (count: string | number | null, type:  "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
+                <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`} >
+                    <Button type={type} disabled={count===0}>
+                        <Icon type="team" />{count}
+                    </Button>
+                </Link>
+            </div>)
+
             nextProps.list_job_announcements.forEach((item: IJobAnnouncement, index: number) => {
                 data_table.push({
                     key: item.id,
@@ -251,7 +264,9 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    appliedCount: item.appliedCount ? item.appliedCount : "",
+                    appliedCount:  viewCount(item.appliedCount, "default") ,
+                    rejectedApplied: viewCount(item.rejectedApplied, "danger") ,
+                    suitableCount: viewCount(item.rejectedApplied, "primary") ,
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     announcementType: null,
                     priority: `${item.priority.homePriority},${item.priority.searchPriority}`
@@ -304,9 +319,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             case TYPE.HIDDEN:
                 value = true;
                 break;
-            case TYPE.UN_ACTIVE:
-                value = false;
-                break;
+         
             default:
                 break;
         }
@@ -386,7 +399,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                 margin: "0px 5px"
                             }}
                         >
-                            <Link to='/admin/job-management/create' >
+                            <Link to='/admin/jobs/job-announcements/create' >
                                 <Icon type="plus" />
                                 Tạo bài đăng mới
                             </Link>
@@ -448,7 +461,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     <Option value={null}>Tất cả</Option>
                                     <Option value={TYPE.FULLTIME}>Toàn thời gian</Option>
                                     <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
-                                    <Option value={TYPE.INTERSHIP}>Thực tập sinh</Option>
+                                    <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
@@ -514,7 +527,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1300 }}
+                            scroll={{ x: 1500 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

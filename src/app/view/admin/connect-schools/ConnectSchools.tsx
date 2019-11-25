@@ -1,6 +1,5 @@
 import React, { PureComponent, Fragment } from 'react'
 import './ConnectSchools.scss';
-import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 const Switch = require("react-router-dom").Switch;
 
@@ -25,7 +24,7 @@ class ConnectSchools extends PureComponent<ConnectSchoolsProps, ConnectSchoolsSt
     }
 
     render() {
-       let {path} = this.props.match
+    //    let {path} = this.props.match
         return (
             <Fragment >
                 <Switch>

@@ -9,7 +9,7 @@ export const TYPE = {
 
     PARTTIME: "PARTTIME",
     FULLTIME: "FULLTIME",
-    INTERSHIP: "INTERNSHIP",
+    INTERNSHIP: "INTERNSHIP",
 
     CANDIDATE: "CANDIDATE",
     EMPLOYER: "EMPLOYER",
@@ -32,6 +32,9 @@ export const TYPE = {
     EXPIRED: "EXPIRED",
     UN_EXPRIED: "UN_EXPRIED",
 
+    EXIST: "EXIST",
+    NON_EXIST: "NON_EXIST",
+
     JOB_FILTER: {
         expired: 'expired',
         hidden: 'hidden',
@@ -48,5 +51,10 @@ export const TYPE = {
         hasRejectedApplied: 'hasRejectedApplied',
         jobShiftFilter: 'jobShiftFilter',
         jobLocationFilter: 'jobLocationFilter'
-    }
+    },
+
+    EM_BRANCHES: {
+        headquarters: 'headquarters',
+        regionID: 'regionID'
+      }
 }

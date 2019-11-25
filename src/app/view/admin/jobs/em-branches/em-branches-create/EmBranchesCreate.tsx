@@ -7,7 +7,7 @@ import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { Link } from 'react-router-dom';
 import { TYPE } from '../../../../../../common/const/type';
 
-interface JobAnnouncementsCreateState {
+interface EmBranchesCreateState {
     title?: string;
     announcementTypeID: string;
     type_management?: Array<any>;
@@ -23,7 +23,8 @@ interface JobAnnouncementsCreateState {
     type_cpn?: string;
 }
 
-interface JobAnnouncementsCreateProps extends StateProps, DispatchProps {
+interface EmBranchesCreateProps extends StateProps, DispatchProps {
+    getTypeManagements: Function;
     getAnnouncementDetail: Function;
     match?: any;
 }
@@ -37,7 +38,7 @@ function getBase64(file) {
     });
 }
 
-class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, JobAnnouncementsCreateState> {
+class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCreateState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -67,7 +68,7 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management && nextProps.type_managemen !== prevState.type_management) {
+        if (nextProps.type_management !== prevState.type_management) {
             let list_item = [];
             for (let i = 0; i < nextProps.type_management.length; i++) {
                 const element = nextProps.type_management[i];
@@ -139,6 +140,7 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
     }
 
     async componentDidMount() {
+        await this.props.getTypeManagements()
         if (this.props.match.params.id) {
             let id = this.props.match.params.id;
             await this.props.getAnnouncementDetail(id);
@@ -306,13 +308,16 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+    getTypeManagements: () => dispatch({ type: REDUX_SAGA.TYPE_MANAGEMENT.GET_TYPE_MANAGEMENT }),
     getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
 })
 
 const mapStateToProps = (state, ownProps) => ({
+    type_management: state.TypeManagement.items,
+    announcement_detail: state.AnnouncementDetail.data
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobAnnouncementsCreate)
+export default connect(mapStateToProps, mapDispatchToProps)(EmBranchesCreate)

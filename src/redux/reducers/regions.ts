@@ -8,7 +8,7 @@ let initState: IRegions = {
     totalItems: 0,
 }
 
-export const Regions = (state = initState, action) => {
+export const Regions = (state: IRegions = initState, action): IRegions => {
     switch (action.type) {
         case REDUX.REGIONS.GET_REGIONS:
             return {

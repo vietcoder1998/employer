@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react'
-import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
+// import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 const Switch = require("react-router-dom").Switch;
 
@@ -24,7 +24,7 @@ class ConvernientService extends PureComponent<ConvernientServiceProps, Converni
     }
 
     render() {
-       let {path} = this.props.match
+    //    let {path} = this.props.match
         return (
             <Fragment >
                 <Switch>

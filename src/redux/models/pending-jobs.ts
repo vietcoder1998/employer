@@ -21,7 +21,7 @@ export interface IPendingJob {
 }
 
 export interface IPendingJobs {
-    list_jobs?: Array<IPendingJob>;
+    items?: Array<IPendingJob>;
     pageIndex?: number;
     pageSize?: number;
     totalItems?: number;

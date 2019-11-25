@@ -1,25 +1,24 @@
-import { REDUX } from './../../common/const/actions';
-import { IPendingJobs } from './../models/annoucements';
+import {REDUX} from '../../common/const/actions';
 
-let initState: IPendingJobs = {
+let initState = {
     items: [],
     pageIndex: 0,
     pageSize: 0,
     totalItems: 0,
-}
+};
 
-export const PendingJobs = (state: IPendingJobs = initState, action): IPendingJobs => {
+export const AnnouComments = (state = initState, action: any) => {
     switch (action.type) {
-        case REDUX.PENDING_JOBS.GET_PENDING_JOBS:
+        case REDUX.ANNOU_COMMENTS.GET_ANNOU_COMMENTS:
             return {
-                ...state, 
+                ...state,
                 items: action.data.items,
                 pageIndex: action.data.pageIndex,
                 pageSize: action.data.pageSize,
                 totalItems: action.data.totalItems
-            }
+            };
 
         default:
             return state;
     }
-}
+};

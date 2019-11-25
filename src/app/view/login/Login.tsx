@@ -58,7 +58,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             if (last_url) {
                 window.location.href = last_url
             } else {
-                window.location.href = '/admin/pending-jobs'
+                window.location.href = '/admin/annoucements'
             }
         }
     }

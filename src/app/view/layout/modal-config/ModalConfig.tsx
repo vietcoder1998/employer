@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Icon } from 'antd';
 
-export interface IConfigModalProps {
+export interface IModalConfigProps {
     toggleModal: Function;
     handleClose?: Function;
     handleOk?: Function;
@@ -13,11 +13,11 @@ export interface IConfigModalProps {
     title?: string;
     isOpen?: boolean;
 }
-export interface IConfigModalState {
+export interface IModalConfigState {
     toggleTo?: boolean;
 }
-export class ConfigModal extends React.Component<IConfigModalProps, IConfigModalState> {
-    state: IConfigModalState = { toggleTo: true }
+export class ModalConfig extends React.Component<IModalConfigProps, IModalConfigState> {
+    state: IModalConfigState = { toggleTo: true }
     closeModal = () => { let{isOpen} = this.props; if(isOpen){this.props.toggleModal()}  };
     componentDidMount() {
         document.addEventListener("keydown", (event) => {

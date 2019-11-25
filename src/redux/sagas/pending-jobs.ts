@@ -1,9 +1,8 @@
-import { IPendingJobs } from './../models/pending-job';
+import { IPendingJobs } from './../models/annoucements';
 import { POST } from './../../common/const/method';
 import { PENDING_JOBS_API } from './../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { authHeaders } from '../../services/auth';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
 import { EMPLOYER_HOST } from '../../environment/dev';
 
@@ -12,18 +11,14 @@ function* getListPendingJobsData(action) {
     let res = yield call(callPendingJobs, action);
 
     let data: IPendingJobs = {
-        list_jobs: [],
+        items: [],
         pageIndex: 0,
         pageSize: 0,
         totalItems: 0,
     }
 
     if (res.code === 200) {
-        data.list_jobs = res.data.items;
-        data.pageIndex = res.data.pageIndex;
-        data.pageSize = res.data.pageSize;
-        data.totalItems = res.data.totalItems;
-
+        data = res.data
         yield put({
             type: REDUX.PENDING_JOBS.GET_PENDING_JOBS,
             data
@@ -32,16 +27,17 @@ function* getListPendingJobsData(action) {
 }
 
 function callPendingJobs(action) {
+
     return _requestToServer(
         POST,
         PENDING_JOBS_API,
+        action.body ? action.body : null,
         {
-            employerID: action.body.employerID,
-            state: action.body.state,
-            jobType: action.body.jobType,
-            jobNameID: action.body.jobNameID,
+
+            pageIndex: action.pageIndex ? action.pageIndex : 0,
+            pageSize: action.pageSize ? action.pageSize : 10
         },
-        { pageIndex: action.body.pageIndex, pageSize: 10 },
+        undefined,
         EMPLOYER_HOST,
     )
 }

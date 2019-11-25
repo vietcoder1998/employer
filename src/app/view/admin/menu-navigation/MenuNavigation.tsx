@@ -49,13 +49,13 @@ export default class MenuNavigation extends PureComponent<MenuNavigationProps, M
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="2">
-                            <Link to={'/admin/jobs/employer-branchs'}>
+                            <Link to={'/admin/jobs/employer-branches/list'}>
                                 <Icon type="environment" />
                                 <span>Quản lí chi nhánh</span>
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="pendings-jobs">
-                            <Link to={'/admin/jobs/pending-jobs/list'}>
+                            <Link to={'/admin/jobs/annoucements/list'}>
                                 <Icon type="loading-3-quarters"  />
                                 <span>Bài đăng đang chờ</span>
                             </Link>

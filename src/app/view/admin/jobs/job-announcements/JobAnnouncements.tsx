@@ -23,11 +23,10 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
             show_menu: true,
             to_logout: false,
         }
-    }
+    }r
 
     render() {
         let {path} = this.props.match
-        console.log(path)
         return (
             <Fragment >
                 <Switch>

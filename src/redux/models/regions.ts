@@ -6,7 +6,6 @@ export interface IRegion {
 export interface IRegions {
     items: Array<IRegion>;
     pageIndex: number;
-pageSize: number;
     pageSize: number;
     totalItems: number;
 }
