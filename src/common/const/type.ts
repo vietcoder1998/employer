@@ -56,5 +56,26 @@ export const TYPE = {
     EM_BRANCHES: {
         headquarters: 'headquarters',
         regionID: 'regionID'
-      }
+    },
+
+    FIND_CANDIDATES_FILTER: {
+        gender: 'gender',
+        birthYearStart: 'birthYearStart',
+        birthYearEnd: 'birthYearEnd',
+        regionID: 'regionID',
+        lookingForJob: 'lookingForJob',
+        profileVerified: 'profileVerified',
+        completeProfile: 'completeProfile',
+        jobNameIDs: 'jobNameIDs',
+        skillIDs: 'skillIDs',
+        languageIDs: "languageIDs",
+        unlocked: "",
+        ids: "ids",
+    },
+
+    TRUE: "TRUE",
+    FALSE: "FALSE",
+
+    MALE: "MALE",
+    FEMALE: "FEMALE"
 }

@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, Avatar } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, Avatar, Drawer } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { TYPE } from '../../../../../../common/const/type';
@@ -54,6 +54,7 @@ interface FindCandidatesListState {
     id?: string;
     loading_table?: boolean;
     body: IFindCandidateFilter;
+    open_drawer: boolean;
 };
 
 class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCandidatesListState> {
@@ -81,18 +82,27 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             id: null,
             loading_table: false,
             body: {
-
-            }
+                gender: null,
+                birthYearStart: null,
+                birthYearEnd: null,
+                regionID: null,
+                lookingForJob: null,
+                profileVerified: null,
+                completeProfile: null,
+                jobNameIDs: [],
+                skillIDs: [],
+                languageIDs: [],
+                unlocked: null,
+            },
+            open_drawer: false
         };
     }
 
     EditJob = (
         <div>
-            <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" onClick={() => this.deleteAnnoun()} />
             <Link to={`/admin/em-branches/fix/${localStorage.getItem("id_em_branches")}`}>
                 <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
             </Link>
-            <Icon key="delete" style={{ padding: "5px 10px" }} type="eye" onClick={() => this.onToggleModal()} />
         </div>
     );
 
@@ -116,16 +126,16 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
         },
         {
             title: 'Ảnh',
-            width: 50,
+            width: 30,
             dataIndex: 'avatarUrl',
             key: 'avatarUrl',
         },
 
         {
-            title: 'Đang tìm việc',
+            title: 'Trạng thái',
             dataIndex: 'lookingForJob',
             key: 'lookingForJob',
-            width: 80,
+            width: 90,
         },
         {
             title: 'Họ và tên',
@@ -138,7 +148,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             title: 'Đại chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 250,
+            width: 320,
         },
         {
             title: 'Tỉnh thành',
@@ -159,7 +169,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 160,
+            width: 100,
             render: () => this.EditJob
         },
     ];
@@ -191,8 +201,6 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
         },
     ];
 
-
-
     onToggleModal = () => {
         let { show_modal } = this.state;
         this.setState({ show_modal: !show_modal });
@@ -215,8 +223,8 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.avatarUrl} alt="Ảnh đại diện" />,
-                    name: (item.firstName ? item.firstName : "") + " " + (item.lastName ? item.lastName : ""),
-                    lookingForJob: item.lookingForJob ? "Có" : "Không",
+                    name: (item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : ""),
+                    lookingForJob: item.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.address ? item.address : "",
                     region: item.region ? item.region.name : "",
                     birthday: timeConverter(item.birthday, 1000),
@@ -252,21 +260,25 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
         this.props.getListFindCandidates(body, pageIndex, pageSize);
     };
 
+    onCloseDrawer = () => {
+        this.setState({ open_drawer: false })
+    };
+
     onChangeType = (event: any, param?: string) => {
         let { body } = this.state;
         let { list_regions } = this.props;
         let value: any = event;
         list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } })
         switch (event) {
-            case TYPE.EXIST:
+            case TYPE.TRUE:
                 value = true;
                 break;
-            case TYPE.NON_EXIST:
+            case TYPE.FALSE:
                 value = false;
                 break;
             default:
                 break;
-        }
+        };
 
         body[param] = value;
         this.setState({ body });
@@ -297,11 +309,13 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             data_table,
             show_modal,
             loading_table,
+            open_drawer
         } = this.state;
 
         let {
             totalItems,
-            list_regions
+            list_regions,
+
         } = this.props
         return (
             <Fragment>
@@ -324,7 +338,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                     </Modal>
 
                     <h5>
-                        Quản lí chi nhánh
+                        Tìm kiếm ứng viên
                         <Button
                             onClick={() => this.searchEmBranch()}
                             type="primary"
@@ -349,24 +363,61 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                                 Tạo bài đăng mới
                             </Link>
                         </Button>
+                        <Button
+                            onClick={() => { this.setState({ open_drawer: true }) }}
+                            type="primary"
+                            style={{
+                                float: "right",
+                                margin: "0px 5px"
+                            }}
+                        >
+                            <Icon type="search" />
+                            Bộ lọc nâng cao
+                        </Button>
                     </h5>
                     <div className="table-operations">
                         <Row >
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Cơ sở chính"} />
+                                <IptLetterP value={"Trạng thái tìm việc"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.headquarters)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.lookingForJob)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.EXIST}>Cơ sở chính</Option>
-                                    <Option value={TYPE.NON_EXIST}>Cơ sở phụ</Option>
+                                    <Option value={TYPE.TRUE}>Đang tìm việc</Option>
+                                    <Option value={TYPE.FALSE}>Đã có việc</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Tên việc đăng tuyển"} />
+                                <IptLetterP value={"Đã xác minh hồ sơ"} />
+                                <Select
+                                    showSearch
+                                    defaultValue="Tất cả"
+                                    style={{ width: "100%" }}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileVerified)}
+                                >
+                                    <Option value={null}>Tất cả</Option>
+                                    <Option value={TYPE.TRUE}>Đã xác minh</Option>
+                                    <Option value={TYPE.FALSE}>Chưa xác minh</Option>
+                                </Select>
+                            </Col>
+                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <IptLetterP value={"Giới tính"} />
+                                <Select
+                                    showSearch
+                                    defaultValue="Tất cả"
+                                    style={{ width: "100%" }}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.gender)}
+                                >
+                                    <Option value={null}>Tất cả</Option>
+                                    <Option value={TYPE.MALE}>Nam </Option>
+                                    <Option value={TYPE.FEMALE}>Nữ</Option>
+                                </Select>
+                            </Col>
+                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <IptLetterP value={"Tỉnh thành"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
@@ -383,12 +434,161 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                                 </Select>
                             </Col>
                         </Row>
+                        <Drawer
+                            title="Tìm kiếm nâng cao"
+                            placement={"right"}
+                            width={"60vw"}
+                            closable={false}
+                            onClose={this.onCloseDrawer}
+                            visible={open_drawer}
+                        >
+                            <Row>
+                                <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+
+                                <Col xs={24} sm={12} md={8} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={8} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_regions && list_regions.length >= 1 ?
+                                                list_regions.map((item: IRegion, index: number) =>
+                                                    <Option key={index} value={item.name}>{item.name}</Option>
+                                                ) : null
+                                        }
+                                    </Select>
+                                </Col>
+                            </Row>
+
+                        </Drawer>
                         <Table
                             // @ts-ignore
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 900 }}
+                            scroll={{ x: 800 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
