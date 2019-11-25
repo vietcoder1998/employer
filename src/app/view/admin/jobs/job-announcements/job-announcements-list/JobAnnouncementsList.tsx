@@ -268,7 +268,6 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     rejectedApplied: viewCount(item.rejectedApplied, "danger") ,
                     suitableCount: viewCount(item.rejectedApplied, "primary") ,
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    announcementType: null,
                     priority: `${item.priority.homePriority},${item.priority.searchPriority}`
                 });
             })

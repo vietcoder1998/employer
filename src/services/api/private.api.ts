@@ -4,7 +4,7 @@ export const ANNOUNCEMENT_DETAIL = '/api/employers/announcements';
 export const ANNOUNCEMENTS = '/api/employers/announcements';
 export const ANNOU_COMMENTS = '/api/employers/announcements';
 export const ANNOU_TYPES = '/api/employers/announcementTypes';
-
+export const FIND_CANDIDATE = 'GET /api/employers/candidates';
 
 export const SKILLS = "/api/employers/data/skills";
 export const TYPE_SCHOOLS = "/api/employers/data/schoolTypes";

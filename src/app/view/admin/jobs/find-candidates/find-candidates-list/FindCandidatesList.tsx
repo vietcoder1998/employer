@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { Button, Table, Icon, Select, Row, Col, Modal } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
-import './EmBranchesList.scss';
+import './FindCandidatesList.scss';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { TYPE } from '../../../../../../common/const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IEmBranch, IEmBranchesFilter } from '../../../../../../redux/models/em-branches';
 import { IRegion } from '../../../../../../redux/models/regions';
+import { IFindCandidate } from '../../../../../../redux/models/find-candidates';
 let { Option } = Select;
 
-interface EmBranchesListProps extends StateProps, DispatchProps {
+interface FindCandidatesListProps extends StateProps, DispatchProps {
     match?: any;
     getListEmBranchs: Function;
     getTypeManagement: Function;
@@ -22,7 +22,7 @@ interface EmBranchesListProps extends StateProps, DispatchProps {
     getListRegions: Function;
 };
 
-interface EmBranchesListState {
+interface FindCandidatesListState {
     data_table?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
@@ -44,10 +44,10 @@ interface EmBranchesListState {
     list_em_branches?: Array<any>;
     id?: string;
     loading_table?: boolean;
-    body: IEmBranchesFilter;
+    body: IFindCandidateFilter;
 };
 
-class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListState> {
+class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCandidatesListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -72,8 +72,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             id: null,
             loading_table: false,
             body: {
-                regionID: null,
-                headquarters: null,
+                
             }
         };
     }
@@ -215,7 +214,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         if (nextProps.list_em_branches !== prevState.list_em_branches) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            nextProps.list_em_branches.forEach((item: IEmBranch, index: number) => {
+            nextProps.list_em_branches.forEach((item: IFindCandidate, index: number) => {
                 data_table.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
@@ -425,12 +424,12 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_em_branches: state.EmBranches.items,
-    totalItems: state.EmBranches.totalItems,
+    list_em_branches: state.FindCandidates.items,
+    totalItems: state.FindCandidates.totalItems,
     list_regions: state.Regions.items,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmBranchesList);
+export default connect(mapStateToProps, mapDispatchToProps)(FindCandidatesList);

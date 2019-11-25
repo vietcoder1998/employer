@@ -54,6 +54,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             let cookie = new Cookies()
             cookie.set("actk", res.data.accessToken, { expires: exp, path: "/" });
             localStorage.setItem("token", res.data.accessToken);
+            localStorage.setItem("userID", res.data.userID);
             let last_url = localStorage.getItem("last_url");
             if (last_url) {
                 window.location.href = last_url

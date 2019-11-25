@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, DatePicker, Rate, Tabs, List, Avatar, Skeleton, Checkbox } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, DatePicker, Rate, Tabs, List, Avatar, Skeleton, Checkbox, Input } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
 import { Link } from 'react-router-dom';
@@ -9,11 +9,12 @@ import { IptLetter } from '../../../../layout/common/Common';
 import { ModalConfig } from '../../../../layout/modal-config/ModalConfig';
 import { _requestToServer } from '../../../../../../services/exec';
 import { DELETE } from '../../../../../../common/const/method';
-import { ANNOUNCEMENT_DETAIL, ANNOU_COMMENTS } from '../../../../../../services/api/private.api';
+import { ANNOU_COMMENTS } from '../../../../../../services/api/private.api';
 import { IAnnouCommentsBody, IAnnouComment } from '../../../../../../redux/models/annou-comments';
 
 let { Option } = Select;
 const { TabPane } = Tabs;
+const { TextArea } = Input;
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -84,6 +85,7 @@ interface AnnouncementsListState {
     tabKey: number;
     list_remove: Array<string | number>;
     tab_key: string;
+    comment: string | null;
 };
 
 class AnnouncementsList extends PureComponent<AnnouncementsListProps, AnnouncementsListState> {
@@ -118,14 +120,12 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             tabKey: 1,
             list_remove: [],
             tab_key: "1",
+            comment: null,
         }
     };
 
     EditJob = (
         <React.Fragment>
-            <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red"
-                onClick={() => this.toggleModalConfig()} />
-            <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" onClick={() => this.toFixJob()} />
             <Icon key="delete" style={{ padding: "5px 10px" }} type="eye" onClick={() => this.onToggleModal()} />
         </React.Fragment>
     );
@@ -133,17 +133,6 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
     toFixJob = () => {
         let id = localStorage.getItem('id_mgm');
         this.props.history.push(`/admin/job-management/fix/${id}`);
-    };
-
-    deleteAnnouncements = async () => {
-        _requestToServer(
-            DELETE, ANNOUNCEMENT_DETAIL,
-            [localStorage.getItem("id_mgm")],
-        ).then((res: any) => {
-            this.searchAnnouncement();
-        });
-
-        this.toggleModalConfig();
     };
 
     columns = [
@@ -156,7 +145,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             fixed: 'left',
         },
         {
-            title: 'Ảnh đại diện',
+            title: 'Ảnh',
             width: 80,
             dataIndex: 'imageUrl',
             key: 'imageUrl',
@@ -441,7 +430,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                     title="XEM TRƯỚC BÀI VIẾT"
                     onCancel={this.onToggleModal}
                     destroyOnClose={true}
-                    style={{ top: "5vh", height: "90vh!important" }}
+                    style={{ top: "5vh" }}
                     width={700}
                     footer={[
                         <Button
@@ -500,6 +489,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                             }
                             key={"2"}
                         >
+                            <TextArea placeholder="Viết bình luận" onChange={(event: any) => { this.setState({ comment: event.target.value }) }} />
                             <List
                                 itemLayout="vertical"
                                 className="demo-loadmore-list"
@@ -531,7 +521,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                                     return (
                                         <List.Item
                                             extra={
-                                                <Checkbox onChange={(event: any) => this.onClickCheckBox(event.target.checked, item.id)} />
+                                                item.userID === localStorage.getItem("userID") ? <Checkbox onChange={(event: any) => this.onClickCheckBox(event.target.checked, item.id)} /> : null
                                             }
                                         >
                                             <Skeleton avatar title={false} loading={loadingMore} active>

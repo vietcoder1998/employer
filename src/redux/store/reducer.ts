@@ -1,3 +1,5 @@
+import { FindCandidateDetail } from './../reducers/find-candidates-detail';
+import { FindCandidates } from './../reducers/find-candidates';
 import { Announcements } from './../reducers/announcements';
 import { AnnouComments } from './../reducers/annou-comments';
 import { AnnouTypes } from './../reducers/annou-types';
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
     AnnouTypes,
     Announcements,
     AnnouComments,
-    JobNames
+    JobNames,
+    FindCandidates,
+    FindCandidateDetail
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;
