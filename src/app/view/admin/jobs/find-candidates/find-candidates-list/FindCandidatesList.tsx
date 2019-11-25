@@ -1,21 +1,30 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, Avatar } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
-import './FindCandidatesList.scss';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { TYPE } from '../../../../../../common/const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../../redux/models/regions';
-import { IFindCandidate } from '../../../../../../redux/models/find-candidates';
+import { IFindCandidate, IFindCandidateFilter } from '../../../../../../redux/models/find-candidates';
 let { Option } = Select;
+
+let ImageRender = (props: any) => {
+    if (props.src && props.src !== "") {
+        return <Avatar src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
+    } else {
+        return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
+            <Icon type="area-chart" />
+        </div>
+    }
+};
 
 interface FindCandidatesListProps extends StateProps, DispatchProps {
     match?: any;
-    getListEmBranchs: Function;
+    getListFindCandidates: Function;
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
@@ -29,7 +38,7 @@ interface FindCandidatesListState {
     state?: string;
     employerID?: string;
     target?: string;
-    branchNameID?: string;
+    avatarUrlID?: string;
     jobId?: string;
     show_modal?: boolean;
     loading?: boolean;
@@ -38,10 +47,10 @@ interface FindCandidatesListState {
     type_management?: Array<any>;
     value_type?: string;
     announcementTypeID?: number;
-    createdDate?: number;
+    birthday?: number;
     adminID?: string;
     hidden?: boolean;
-    list_em_branches?: Array<any>;
+    list_find_candidates?: Array<any>;
     id?: string;
     loading_table?: boolean;
     body: IFindCandidateFilter;
@@ -56,7 +65,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             pageSize: 10,
             state: null,
             employerID: null,
-            branchNameID: null,
+            avatarUrlID: null,
             jobId: null,
             show_modal: false,
             loading: false,
@@ -65,14 +74,14 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             type_management: [],
             value_type: null,
             announcementTypeID: null,
-            createdDate: null,
+            birthday: null,
             adminID: null,
             hidden: false,
-            list_em_branches: [],
+            list_find_candidates: [],
             id: null,
             loading_table: false,
             body: {
-                
+
             }
         };
     }
@@ -106,38 +115,30 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             fixed: 'left',
         },
         {
-            title: 'Tên chi nhánh',
-            width: 180,
-            dataIndex: 'branchName',
-            key: 'branchName',
+            title: 'Ảnh',
+            width: 50,
+            dataIndex: 'avatarUrl',
+            key: 'avatarUrl',
         },
 
         {
-            title: 'Địa chỉ',
-            dataIndex: 'address',
-            key: 'address',
-            width: 250,
+            title: 'Đang tìm việc',
+            dataIndex: 'lookingForJob',
+            key: 'lookingForJob',
+            width: 80,
         },
         {
-            title: 'Chi nhánh chính',
-            dataIndex: 'headquarters',
+            title: 'Họ và tên',
+            dataIndex: 'name',
             className: 'action',
-            key: 'headquarters',
+            key: 'name',
             width: 100,
         },
         {
-            title: 'Số điện thoại',
-            dataIndex: 'contactPhone',
-            className: 'action',
-            key: 'contactPhone',
-            width: 120,
-        },
-        {
-            title: 'Thư điện tử',
-            dataIndex: 'contactEmail',
-            className: 'action',
-            key: 'contactEmail',
-            width: 120,
+            title: 'Đại chỉ',
+            dataIndex: 'address',
+            key: 'address',
+            width: 250,
         },
         {
             title: 'Tỉnh thành',
@@ -147,18 +148,11 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             width: 100,
         },
         {
-            title: 'Ngày tạo',
-            dataIndex: 'createdDate',
+            title: 'Ngày sinh',
+            dataIndex: 'birthday',
             className: 'action',
-            key: 'createdDate',
+            key: 'birthday',
             width: 100,
-        },
-        {
-            title: 'Số lượng bài đăng',
-            dataIndex: 'totalJob',
-            className: 'action',
-            key: 'totalJob',
-            width: 80,
         },
         {
             title: 'Thao tác',
@@ -197,6 +191,8 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
         },
     ];
 
+
+
     onToggleModal = () => {
         let { show_modal } = this.state;
         this.setState({ show_modal: !show_modal });
@@ -211,25 +207,23 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             }
         }
 
-        if (nextProps.list_em_branches !== prevState.list_em_branches) {
+        if (nextProps.list_find_candidates !== prevState.list_find_candidates) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            nextProps.list_em_branches.forEach((item: IFindCandidate, index: number) => {
+            nextProps.list_find_candidates.forEach((item: IFindCandidate, index: number) => {
                 data_table.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    branchName: item.branchName ? item.branchName : "",
-                    headquarters: item.headquarters ? "Có" : "Không",
+                    avatarUrl: <ImageRender src={item.avatarUrl} alt="Ảnh đại diện" />,
+                    name: (item.firstName ? item.firstName : "") + " " + (item.lastName ? item.lastName : ""),
+                    lookingForJob: item.lookingForJob ? "Có" : "Không",
                     address: item.address ? item.address : "",
-                    contactPhone: item.contactPhone ? item.contactPhone : "",
-                    contactEmail: item.contactEmail ? item.contactEmail : "",
                     region: item.region ? item.region.name : "",
-                    createdDate: timeConverter(item.createdDate, 1000),
-                    totalJob: item.totalJob ? item.totalJob : "",
+                    birthday: timeConverter(item.birthday, 1000),
                 });
             })
             return {
-                list_em_branches: nextProps.type_management,
+                list_find_candidates: nextProps.type_management,
                 data_table,
                 loading_table: false,
             }
@@ -255,7 +249,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
 
     searchEmBranch = async () => {
         let { body, pageIndex, pageSize } = this.state;
-        this.props.getListEmBranchs(body, pageIndex, pageSize);
+        this.props.getListFindCandidates(body, pageIndex, pageSize);
     };
 
     onChangeType = (event: any, param?: string) => {
@@ -279,7 +273,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
     };
 
     onChangeCreatedDate = (event) => {
-        this.setState({ createdDate: momentToUnix(event) });
+        this.setState({ birthday: momentToUnix(event) });
     };
 
     onChangeHidden = (event) => {
@@ -394,7 +388,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1300 }}
+                            scroll={{ x: 900 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
@@ -417,14 +411,14 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListEmBranchs: (body: any, pageIndex: number, pageSize: number) =>
-        dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES, body, pageIndex, pageSize }),
+    getListFindCandidates: (body: IFindCandidateFilter, pageIndex: number, pageSize: number) =>
+        dispatch({ type: REDUX_SAGA.FIND_CANDIDATES.GET_FIND_CANDIDATES, body, pageIndex, pageSize }),
     getListRegions: () =>
         dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_em_branches: state.FindCandidates.items,
+    list_find_candidates: state.FindCandidates.items,
     totalItems: state.FindCandidates.totalItems,
     list_regions: state.Regions.items,
 });

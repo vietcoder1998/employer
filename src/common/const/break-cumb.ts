@@ -8,5 +8,5 @@ export const breakCumb =  [
     {label: "list", name: "Danh sách", icon: null, url: "/list"},
     {label: "fix", name: "Chỉnh sửa", icon: null, url: "/fix"},
     {label: "job-announcements", name: "Quản lí bài đăng", icon: null, url: "/job-announcements"},
-    {label: "candidate-profile", name: "Hồ sơ ứng viên", icon: null, url: "/candidate-profile"},
+    {label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: "/find-candidates"}
 ]

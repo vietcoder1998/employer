@@ -10,7 +10,7 @@ let initState: IFindCandidates = {
 
 export const FindCandidates = (state: IFindCandidates = initState, action: any): IFindCandidates => {
     switch (action.type) {
-        case REDUX.ANNOUNCEMENTS.GET_ANNOUNCEMENTS:
+        case REDUX.FIND_CANDIDATES.GET_FIND_CANDIDATES:
             return {
                 ...state,
                 items: action.data.items,

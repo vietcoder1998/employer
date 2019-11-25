@@ -309,7 +309,7 @@ class FindCandidatesDetail extends PureComponent<FindCandidatesDetailProps, Find
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     getTypeManagements: () => dispatch({ type: REDUX_SAGA.TYPE_MANAGEMENT.GET_TYPE_MANAGEMENT }),
-    getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
+    getAnnouncementDetail: (id: number) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
 })
 
 const mapStateToProps = (state, ownProps) => ({

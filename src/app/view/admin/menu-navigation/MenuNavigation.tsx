@@ -61,7 +61,7 @@ export default class MenuNavigation extends PureComponent<MenuNavigationProps, M
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="3">
-                            <Link to={'/admin/jobs/candidate-profile/list'}>
+                            <Link to={'/admin/jobs/find-candidates/list'}>
                                 <Icon type="user-add" />
                                 <span>Tìm kiếm ứng viên</span>
                             </Link>

@@ -1,6 +1,6 @@
 import { IFindCandidateDetail } from './../models/find-candidates-detail';
 import { GET } from '../../common/const/method';
-import { FIND_CANDIDATE } from '../../services/api/private.api';
+import { FIND_CANDIDATE_DETAIL } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
@@ -83,7 +83,7 @@ function callFindCandidateDetail(action: any) {
     }
     return _requestToServer(
         GET,
-        FIND_CANDIDATE + `/${id}/profile`,
+        FIND_CANDIDATE_DETAIL + `/${id}/profile`,
         undefined,
         undefined,
         undefined,

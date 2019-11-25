@@ -551,7 +551,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                     toggleModal={() => {
                         this.setState({ open_config_modal: !open_config_modal })
                     }}
-                    handleOk={async () => this.deleteAnnouncements()}
+                    handleOk={async () => {}}
                     handleClose={async () => this.toggleModalConfig()}
                 >
                     <div>

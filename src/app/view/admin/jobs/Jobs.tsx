@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import JobAnnouncements from './job-announcements/JobAnnouncements';
 import EmBranches from './em-branches/EmBranches';
 import Announcements from './announcements/Announcements';
+import FindCandidates from './find-candidates/FindCandidates';
 const Switch = require("react-router-dom").Switch;
 
 interface JobsState {
@@ -35,6 +36,7 @@ class Jobs extends PureComponent<JobsProps, JobsState> {
                     <ErrorBoundaryRoute path={`${path}/job-announcements`} component={JobAnnouncements} />
                     <ErrorBoundaryRoute path={`${path}/employer-branches`} component={EmBranches} />
                     <ErrorBoundaryRoute path={`${path}/annoucements`} component={Announcements} />
+                    <ErrorBoundaryRoute path={`${path}/find-candidates`} component={FindCandidates} />
                 </Switch>
             </Fragment>
         )
