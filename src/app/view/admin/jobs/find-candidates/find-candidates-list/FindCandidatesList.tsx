@@ -28,7 +28,6 @@ interface FindCandidatesListProps extends StateProps, DispatchProps {
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
-    getListRegions: Function;
 };
 
 interface FindCandidatesListState {
@@ -239,9 +238,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
     };
 
     async componentDidMount() {
-        await this.props.getListRegions();
-
-        await this.searchEmBranch();
+        await this.searchFindCandidate();
     };
 
     handleId = (event) => {
@@ -252,10 +249,10 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
 
     setPageIndex = async (event: any) => {
         await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
-        await this.searchEmBranch();
+        await this.searchFindCandidate();
     };
 
-    searchEmBranch = async () => {
+    searchFindCandidate = async () => {
         let { body, pageIndex, pageSize } = this.state;
         this.props.getListFindCandidates(body, pageIndex, pageSize);
     };
@@ -340,7 +337,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                     <h5>
                         Tìm kiếm ứng viên
                         <Button
-                            onClick={() => this.searchEmBranch()}
+                            onClick={() => this.searchFindCandidate()}
                             type="primary"
                             style={{
                                 float: "right",
@@ -351,7 +348,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
                             Tìm kiếm
                         </Button>
                         <Button
-                            onClick={() => this.searchEmBranch()}
+                            onClick={() => this.searchFindCandidate()}
                             type="primary"
                             style={{
                                 float: "right",
@@ -613,8 +610,6 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListFindCandidates: (body: IFindCandidateFilter, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.FIND_CANDIDATES.GET_FIND_CANDIDATES, body, pageIndex, pageSize }),
-    getListRegions: () =>
-        dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

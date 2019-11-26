@@ -10,6 +10,8 @@ import Jobs from './jobs/Jobs';
 import ConnectSchools from './connect-schools/ConnectSchools';
 import ConvernientService from './convernient-service/ConvernientService';
 import MoreInfo from './more-info/MoreInfo';
+import { IAppState } from '../../../redux/store/reducer';
+import { REDUX_SAGA } from '../../../common/const/actions';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -23,10 +25,8 @@ interface AdminState {
 
 interface AdminProps extends StateProps, DispatchProps {
     match: Readonly<any>;
-    getJobNames: Function;
-    getTypeManagement: Function;
-    getJobGroups: Function;
-    getBranches: Function;
+    getListRegions: Function;
+    getListJobNames: Function;
 }
 
 
@@ -42,6 +42,8 @@ class Admin extends PureComponent<AdminProps, AdminState> {
     }
 
     async componentDidMount() {
+        this.props.getListRegions();
+        this.props.getListJobNames();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -152,10 +154,12 @@ class Admin extends PureComponent<AdminProps, AdminState> {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
+    getListRegions: () => dispatch({type: REDUX_SAGA.REGIONS.GET_REGIONS}),
+    getListJobNames: () => dispatch({type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES})
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: IAppState, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

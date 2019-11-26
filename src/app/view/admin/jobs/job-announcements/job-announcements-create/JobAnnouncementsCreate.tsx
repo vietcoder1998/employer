@@ -305,11 +305,11 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

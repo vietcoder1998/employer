@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { Divider, Button, Icon } from 'antd';
-import { InputTitle } from './../../../../layout/input-tittle/InputTitle';
+import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { _requestToServer } from '../../../../../../services/exec';
 import { REGIONS } from '../../../../../../services/api/private.api';
 import { POST } from '../../../../../../common/const/method';
@@ -31,20 +31,20 @@ class CreateRegions extends PureComponent<CreateRegionsProps, CreateRegionsState
 
     createNewData = async () => {
         let { name } = this.state;
-        await _requestToServer(
-            POST,
-            { name: name.trim() },
-            REGIONS,
-            EMPLOYER_HOST,
-            authHeaders,
-            null,
-            true,
-        ).then(res => {
-            if (res.code === 200) {
-                this.props.getListRegions();
-                this.props.history.push('/admin/data/regions/list');
-            }
-        })
+        // await _requestToServer(
+        //     POST,
+        //     { name: name.trim() },
+        //     REGIONS,
+        //     EMPLOYER_HOST,
+        //     authHeaders,
+        //     null,
+        //     true,
+        // ).then(res => {
+        //     if (res.code === 200) {
+        //         this.props.getListRegions();
+        //         this.props.history.push('/admin/data/regions/list');
+        //     }
+        // })
     }
 
     onChange = (event) => {
@@ -93,11 +93,11 @@ class CreateRegions extends PureComponent<CreateRegionsProps, CreateRegionsState
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS })
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

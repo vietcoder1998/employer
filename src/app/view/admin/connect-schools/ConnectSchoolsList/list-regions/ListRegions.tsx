@@ -4,7 +4,7 @@ import { Icon, Table, Button } from 'antd';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { ILanguage } from '../../../../../../redux/models/languages';
 import { Link } from 'react-router-dom';
-import { ConfigModal } from '../../../../layout/modal-config/ModalConfig';
+import { ModalConfig } from '../../../../layout/modal-config/ModalConfig';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { _requestToServer } from '../../../../../../services/exec';
 import { PUT, DELETE } from '../../../../../../common/const/method';
@@ -215,11 +215,11 @@ class ListRegions extends PureComponent<ListRegionsProps, ListRegionsState> {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListRegions: (pageIndex, pageSize) => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS, pageIndex, pageSize })
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
     list_regions: state.Regions.items,
     totalItems: state.Regions.totalItems
 })

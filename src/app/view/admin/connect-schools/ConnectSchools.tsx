@@ -10,7 +10,6 @@ interface ConnectSchoolsState {
 
 interface ConnectSchoolsProps extends StateProps, DispatchProps {
     match: Readonly<any>;
-    getJobNames: Function;
     getTypeManagement: Function;
 }
 
@@ -34,11 +33,11 @@ class ConnectSchools extends PureComponent<ConnectSchoolsProps, ConnectSchoolsSt
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

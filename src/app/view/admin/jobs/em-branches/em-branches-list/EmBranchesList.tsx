@@ -19,7 +19,6 @@ interface EmBranchesListProps extends StateProps, DispatchProps {
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
-    getListRegions: Function;
 };
 
 interface EmBranchesListState {
@@ -238,8 +237,6 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     };
 
     async componentDidMount() {
-        await this.props.getListRegions();
-
         await this.searchEmBranch();
     };
 
@@ -420,8 +417,6 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListEmBranchs: (body: any, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES, body, pageIndex, pageSize }),
-    getListRegions: () =>
-        dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

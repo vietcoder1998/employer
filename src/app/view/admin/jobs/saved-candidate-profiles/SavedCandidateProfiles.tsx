@@ -1,21 +1,21 @@
 import React, { PureComponent, Fragment } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
-import EmBranchesList from './em-branches-list/EmBranchesList';
-import EmBranchesCreate from './em-branches-create/EmBranchesCreate';
+import SavedCandidateProfilesList from './saved-candidate-profiles-list/SavedCandidateProfilesList';
+import SavedCandidateProfileDetail from './saved-candidate-profiles-detail/SavedCandidateProfileDetail';
 const Switch = require("react-router-dom").Switch;
 
-interface IEmBranchesState {
+interface SavedCandidateProfileState {
     show_menu: boolean;
     to_logout: boolean;
 }
 
-interface IEmBranchesProps extends StateProps, DispatchProps {
+interface SavedCandidateProfileProps extends StateProps, DispatchProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-class EmBranches extends PureComponent<IEmBranchesProps, IEmBranchesState> {
+class SavedCandidateProfile extends PureComponent<SavedCandidateProfileProps, SavedCandidateProfileState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,8 +29,8 @@ class EmBranches extends PureComponent<IEmBranchesProps, IEmBranchesState> {
         return (
             <Fragment >
                 <Switch>
-                    <ErrorBoundaryRoute path={`${path}/list`} component={EmBranchesList} />
-                    <ErrorBoundaryRoute path={`${path}/create`} component={EmBranchesCreate} />
+                    <ErrorBoundaryRoute path={`${path}/list`} component={SavedCandidateProfilesList} />
+                    <ErrorBoundaryRoute path={`${path}/create`} component={SavedCandidateProfileDetail} />
                 </Switch>
             </Fragment>
         )
@@ -46,4 +46,4 @@ const mapStateToProps = (state: any, ownProps: any) => ({
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmBranches)
+export default connect(mapStateToProps, mapDispatchToProps)(SavedCandidateProfile)

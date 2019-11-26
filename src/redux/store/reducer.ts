@@ -1,3 +1,4 @@
+import { SavedCandidateProfiles } from './../reducers/saved-candidate-profiles';
 import { FindCandidateDetail } from './../reducers/find-candidates-detail';
 import { FindCandidates } from './../reducers/find-candidates';
 import { Announcements } from './../reducers/announcements';
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     AnnouComments,
     JobNames,
     FindCandidates,
-    FindCandidateDetail
+    FindCandidateDetail,
+    SavedCandidateProfiles,
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

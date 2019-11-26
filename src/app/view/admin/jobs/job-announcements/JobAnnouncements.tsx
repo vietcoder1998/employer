@@ -12,7 +12,6 @@ interface JobAnnouncementsState {
 
 interface JobAnnouncementsProps extends StateProps, DispatchProps {
     match: Readonly<any>;
-    getJobNames: Function;
     getTypeManagement: Function;
 }
 
@@ -38,10 +37,10 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

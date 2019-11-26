@@ -7,7 +7,7 @@ import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { Link } from 'react-router-dom';
 import { TYPE } from '../../../../../../common/const/type';
 
-interface FindCandidatesDetailState {
+interface SavedCandidateProfileDetailState {
     title?: string;
     announcementTypeID: string;
     type_management?: Array<any>;
@@ -23,9 +23,9 @@ interface FindCandidatesDetailState {
     type_cpn?: string;
 }
 
-interface FindCandidatesDetailProps extends StateProps, DispatchProps {
+interface SavedCandidateProfileDetailProps extends StateProps, DispatchProps {
     getTypeManagements: Function;
-    getAnnouncementDetail: Function;
+    getSavedCandidateProfile: Function;
     match?: any;
 }
 
@@ -38,7 +38,7 @@ function getBase64(file) {
     });
 }
 
-class FindCandidatesDetail extends PureComponent<FindCandidatesDetailProps, FindCandidatesDetailState> {
+class SavedCandidateProfileDetail extends PureComponent<SavedCandidateProfileDetailProps, SavedCandidateProfileDetailState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -143,7 +143,7 @@ class FindCandidatesDetail extends PureComponent<FindCandidatesDetailProps, Find
         await this.props.getTypeManagements()
         if (this.props.match.params.id) {
             let id = this.props.match.params.id;
-            await this.props.getAnnouncementDetail(id);
+            await this.props.getSavedCandidateProfile(id);
         }
     };
 
@@ -309,15 +309,15 @@ class FindCandidatesDetail extends PureComponent<FindCandidatesDetailProps, Find
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getTypeManagements: () => dispatch({ type: REDUX_SAGA.TYPE_MANAGEMENT.GET_TYPE_MANAGEMENT }),
-    getAnnouncementDetail: (id: number) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
+    getSavedCandidateProfile: (id: number) => dispatch({ type: REDUX_SAGA.SAVED_CANDIDATE_PROFILE_DETAIL.GET_SAVED_CANDIDATE_PROFILE_DETAIL, id }),
 })
 
 const mapStateToProps = (state: any, ownProps: any) => ({
     type_management: state.TypeManagement.items,
-    announcement_detail: state.AnnouncementDetail.data
+    announcement_detail: state.SavedCandidateProfile.data
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(FindCandidatesDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(SavedCandidateProfileDetail)

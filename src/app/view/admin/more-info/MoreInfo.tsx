@@ -34,7 +34,7 @@ const Label = (props) => {
         case TYPE.FULLTIME:
             value = "Toàn thời gian"
             break;
-        case TYPE.INTERSHIP:
+        case TYPE.INTERNSHIP:
             value = "Thực tập sinh"
             break;
     }
@@ -360,7 +360,7 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
                                         <Option value={null}>Tất cả</Option>
                                         <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
                                         <Option value={TYPE.FULLTIME}>Toàn thời gian</Option>
-                                        <Option value={TYPE.INTERSHIP}>Thực tập</Option>
+                                        <Option value={TYPE.INTERNSHIP}>Thực tập</Option>
                                     </Select>
                                 </Col>
                                 <Col xs={24} sm={12} md={8} lg={5.5} xl={6} xxl={6} >
@@ -416,14 +416,14 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getMoreInfo: (body) => dispatch({
         type: REDUX_SAGA.PENDING_JOBS.GET_PENDING_JOBS,
         body
     })
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
     list_jobs: state.MoreInfo.list_jobs,
     totalItems: state.MoreInfo.totalItems,
     list_jobs_group: state.JobNames.items,

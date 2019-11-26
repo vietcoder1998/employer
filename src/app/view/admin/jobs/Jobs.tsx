@@ -6,6 +6,7 @@ import JobAnnouncements from './job-announcements/JobAnnouncements';
 import EmBranches from './em-branches/EmBranches';
 import Announcements from './announcements/Announcements';
 import FindCandidates from './find-candidates/FindCandidates';
+import SavedCandidateProfiles from './saved-candidate-profiles/SavedCandidateProfiles';
 const Switch = require("react-router-dom").Switch;
 
 interface JobsState {
@@ -15,7 +16,6 @@ interface JobsState {
 
 interface JobsProps extends StateProps, DispatchProps {
     match: Readonly<any>;
-    getJobNames: Function;
     getTypeManagement: Function;
 }
 
@@ -37,16 +37,17 @@ class Jobs extends PureComponent<JobsProps, JobsState> {
                     <ErrorBoundaryRoute path={`${path}/employer-branches`} component={EmBranches} />
                     <ErrorBoundaryRoute path={`${path}/annoucements`} component={Announcements} />
                     <ErrorBoundaryRoute path={`${path}/find-candidates`} component={FindCandidates} />
+                    <ErrorBoundaryRoute path={`${path}/saved-candidate-profiles`} component={SavedCandidateProfiles} />
                 </Switch>
             </Fragment>
         )
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 })
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;
