@@ -36,7 +36,7 @@ function callSavedCandidateProfiles(action: any) {
         },
         undefined,
         EMPLOYER_HOST,
-        true,
+        false,
         false
     )
 }

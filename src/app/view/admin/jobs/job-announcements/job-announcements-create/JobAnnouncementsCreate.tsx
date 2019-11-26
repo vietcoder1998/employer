@@ -1,40 +1,36 @@
 import React, { PureComponent } from 'react'
-import { Upload, Modal, Icon, Divider, Switch, Row, Col, Button } from 'antd';
+import { Icon, Divider, Switch, Row, Col, Button, Input, DatePicker, Select, Tabs, InputNumber } from 'antd';
 import { connect } from 'react-redux';
-import CKEditor from 'ckeditor4-react';
+import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { Link } from 'react-router-dom';
 import { TYPE } from '../../../../../../common/const/type';
+import { IAppState } from '../../../../../../redux/store/reducer';
+import { IJobName } from '../../../../../../redux/models/job-names';
+import { IAnnoucementBody } from '../../../../../../redux/models/announcements';
+import { ShifContent } from '../../../../layout/annou-shift/AnnouShift';
+const { TextArea } = Input;
+const { Option } = Select;
+const { TabPane } = Tabs;
 
 interface JobAnnouncementsCreateState {
-    title?: string;
+    title: string;
     announcementTypeID: string;
-    type_management?: Array<any>;
-    list_item?: Array<{ label?: string, value?: string }>,
-    loading?: boolean;
-    previewImage?: any;
-    previewVisible?: boolean;
-    fileList?: Array<any>;
-    hidden?: boolean;
-    content?: string;
-    value_annou?: string;
-    announcement_detail?: any;
-    type_cpn?: string;
+    type_management: Array<any>;
+    list_item: Array<{ label: string, value: string }>,
+    loading: boolean;
+    previewImage: any;
+    previewVisible: boolean;
+    value_annou: string;
+    announcement_detail: any;
+    type_cpn: string;
+    body: IAnnoucementBody;
 }
 
 interface JobAnnouncementsCreateProps extends StateProps, DispatchProps {
     getAnnouncementDetail: Function;
-    match?: any;
-}
-
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
+    match: any;
 }
 
 class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, JobAnnouncementsCreateState> {
@@ -48,8 +44,6 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
             loading: false,
             previewImage: null,
             previewVisible: false,
-            fileList: [],
-            hidden: false,
             value_annou: "",
             announcement_detail: {
                 id: "",
@@ -63,6 +57,16 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                 loading: false,
             },
             type_cpn: TYPE.CREATE,
+            body: {
+                jobTitle: null,
+                jobNameID: null,
+                employerBranchID: null,
+                description: null,
+                requiredSkillIDs: [],
+                jobType: null,
+                expirationDate: null,
+                shifts: []
+            }
         }
     }
 
@@ -145,46 +149,23 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
         }
     };
 
+    onChangeValue = (event: any, param: string) => {
+        let { body } = this.state;
+        let value: any = event;
+        switch (param) {
+            case value:
 
-    getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    };
+                break;
 
-    handleCancel = () => this.setState({ previewVisible: false });
-
-    handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
+            default:
+                break;
         }
-
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-        });
-    };
-
-    // handleRemove = async() => {
-    //     let {fileList} = this.state;
-    //     let data = fileList[1]
-    //     fileList= [data];
-    //     await this.setState({fileList})
-    // }
-
-    handleChange = async ({ fileList }) => {
-        await this.setState({ fileList, previewImage: true });
-    };
-
-    createRequest = async () => {
-        // let { fileList, hidden, title, announcementTypeID } = this.state;
+        body[param] = value;
+        this.setState({ body });
     }
 
     render() {
-        let { title, list_item, previewImage, previewVisible, hidden, content, fileList, value_annou, type_cpn } = this.state;
+        let { title, list_item, previewImage, previewVisible, type_cpn } = this.state;
         const uploadButton = (
             <div>
                 <Icon type="plus" />
@@ -192,114 +173,126 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
             </div>
         );
 
+        let {
+            list_job_names
+        } = this.props;
+        let list_value = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
+        let children = list_job_names.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />))
+
         return (
             <div className='common-content'>
                 <h5>
                     Tạo bài viết mới
                 </h5>
-                <Divider orientation="left" >Nội dung bài viết</Divider>
-                <div className="Announcements-create-content">
-                    <InputTitle
-                        type={TYPE.INPUT}
-                        value={title}
-                        title="Nhập tiêu đề bài viết"
-                        placeholder="Tiêu đề"
-                        widthLabel="200px"
-                        widthInput="350px"
-                        onChange={event => this.setState({ title: event })}
-                    />
-                    <InputTitle
-                        type={TYPE.SELECT}
-                        title="Chọn loại bài viết"
-                        widthLabel="200px"
-                        placeholder="Loại bài viết"
-                        defaultValue="Loại bài viết"
-                        widthComponent="400px"
-                        value={value_annou}
-                        list_value={list_item}
-                        onChange={event => this.setState({ announcementTypeID: event })}
-                    />
-
-                    <InputTitle
-                        type="SWITCH"
-                        title="Trạng thái"
-                        widthLabel="200px"
-                    >
-                        <Switch checked={!hidden} onClick={() => { this.setState({ hidden: !hidden }) }} />
-                        <label style={{ width: "40px", textAlign: "center", fontWeight: 500 }}>
-                            {hidden ? "Ẩn" : "Hiện"}
-                        </label>
-                    </InputTitle>
-
-                    <InputTitle
-                        title="Nội dung"
-                        widthLabel="200px"
-                        placeholder="Loại bài viết"
-                    >
-                    </InputTitle>
-                    <CKEditor
-                        id={"yeah"}
-                        editorName="editor2"
-                        config={{
-                            extraPlugins: 'stylesheetparser'
-                        }}
-                        onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                        onInit={event => {
-                        }} fa-address-book
-                        data={content}
-                    />
-                </div>
                 <Row>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Divider orientation="left" >Thay đổi ảnh đại diện</Divider>
-                        <div className="Announcements-create-content">
-                            <Upload
-                                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
-                                listType="picture-card"
-                                onChange={this.handleChange}
-                                onPreview={this.handlePreview}
-                                fileList={fileList}
+                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
+                    <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
+                        <Divider orientation="left" >Nội dung bài viết</Divider>
+                        <div className="announcements-create-content">
+                            <InputTitle
+                                type={TYPE.INPUT}
+                                value={title}
+                                title="Tiêu đề"
+                                placeholder="ex: Tuyển nhân viên bán hàng"
+                                widthLabel="200px"
+                                widthInput="500px"
+                                onChange={event => this.setState({ title: event })}
+                            />
+                            <InputTitle
+                                title="Nội dung bài đăng"
+                                widthLabel="200px"
+                                widthComponent="400px"
                             >
-                                {fileList.length >= 2 ? null : uploadButton}
-                            </Upload>
+                                <TextArea rows={5} style={{ width: 500 }} placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt" />
+                            </InputTitle>
+                            <InputTitle
+                                title="Chọn thời gian hết hạn"
+                                type="SWITCH"
+                                widthLabel="200px"
+                            >
+                                <DatePicker format={"DD/MM/YYYY"} style={{ width: 500 }} placeholder="ex: 07/12/2019" />
+                            </InputTitle>
+                            <InputTitle
+                                title="Chọn công việc"
+                                type={TYPE.SELECT}
+                                list_value={list_value}
+                                widthLabel="200px"
+                                widthSelect="500px"
+                                placeholder="ex: Nhân viên văn phòng"
+                            />
+                            <InputTitle
+                                title="Chọn địa chỉ đăng tuyển"
+                                type={TYPE.SELECT}
+                                list_value={list_value}
+                                widthLabel="200px"
+                                widthSelect="500px"
+                                placeholder="ex: Công ti abc"
+                            />
+
+                            <InputTitle
+                                title="Chọn loại kĩ năng"
+                                widthLabel="200px"
+                            >
+                                <Select
+                                    mode="multiple"
+                                    size="default"
+                                    placeholder="ex: Giao tiếp, Tiếng Anh"
+                                    defaultValue={['a10', 'c12']}
+                                    onChange={() => { }}
+                                    style={{ width: 500 }}
+                                >
+                                    {children}
+                                </Select>
+                            </InputTitle>
+                        </div>
+                        <Divider orientation="left" >Thời gian làm việc</Divider>
+                        <div className="announcements-create-content">
+                            <Tabs defaultActiveKey="1" style={{ width: "100%" }} onChange={() => { }}>
+                                <TabPane tab="Toàn thời gian" key="1">
+                                    <div>
+                                      <ShifContent
+                                        id={1}
+                                      />
+                                    </div>
+                                </TabPane>
+                                <TabPane tab="Bán thời gian" key="2">
+                                    Content of Tab Pane 2
+                                 </TabPane>
+                                <TabPane tab="Thực tập sinh" key="3" >
+                                    Content of Tab Pane 3
+                                </TabPane>
+                            </Tabs>
+                        </div>
+
+                        <div className="Announcements-create-content">
+                            <Button
+                                type="primary"
+                                prefix={"check"}
+                                style={{
+                                    margin: "10px 10px",
+                                    float: "right"
+                                }}
+                            >
+                                {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
+                                <Icon type="right" />
+                            </Button>
+                            <Button
+                                type="danger"
+                                prefix={"check"}
+                                style={{
+                                    margin: "10px 10px",
+                                    float: "right"
+                                }}
+                            >
+                                <Link to='/admin/job-management/list'>
+                                    <Icon type="close" />
+                                    {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
+                                </Link>
+                            </Button>
                         </div>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Divider orientation="left" >Người sửa cuối cùng</Divider>
-
-                    </Col>
-
+                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
                 </Row>
-                <Divider orientation="left" >Hoàn tất</Divider>
-                <div className="Announcements-create-content">
-                    <Button
-                        type="primary"
-                        prefix={"check"}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                    >
-                        {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
-                        <Icon type="right" />
-                    </Button>
-                    <Button
-                        type="danger"
-                        prefix={"check"}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                    >
-                        <Link to='/admin/job-management/list'>
-                            <Icon type="close" />
-                            {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
-                        </Link>
-                    </Button>
-                </div>
-                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                    <img alt="example" style={{ width: '100%', height: "80vh" }} src={previewImage} />
-                </Modal>
             </div >
         )
     }
@@ -309,7 +302,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
 })
 
-const mapStateToProps = (state: any, ownProps: any) => ({
+const mapStateToProps = (state: IAppState, ownProps: any) => ({
+    list_job_names: state.JobNames.items
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -1,4 +1,4 @@
-import { IPendingJobs } from './../models/annoucements';
+import { IPendingJobs } from './../models/pending-jobs';
 import { POST } from './../../common/const/method';
 import { PENDING_JOBS_API } from './../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
@@ -39,6 +39,8 @@ function callPendingJobs(action) {
         },
         undefined,
         EMPLOYER_HOST,
+        false,
+        false
     )
 }
 

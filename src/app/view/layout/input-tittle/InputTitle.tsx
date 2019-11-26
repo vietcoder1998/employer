@@ -15,7 +15,7 @@ interface IInputitleProps {
     defaultValue?: string;
     placeholder?: string;
     children?: any;
-    style?: any;
+    style?: React.CSSProperties;
     widthSelect?: string;
     onChange?: Function;
 
@@ -110,7 +110,7 @@ export const InputTitle = (props: IInputitleProps) => {
                     defaultValue={defaultValue}
                     list_value={list_value}
                     placeholder={placeholder}
-                    onChange={event => props.onChange(event)}
+                    onChange={event => onChange ? onChange(event) : () => { }}
                     widthSelect={widthSelect}
                 />
             );
@@ -124,7 +124,7 @@ export const InputTitle = (props: IInputitleProps) => {
         return (
             <div
                 className="input-title"
-                style={{ ...defaultStyle, ...style }}
+                style={style ? style : defaultStyle}
             >
                 <div
                     className="title-inside"

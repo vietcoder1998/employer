@@ -73,6 +73,17 @@ export const TYPE = {
         ids: "ids",
     },
 
+    ANNONCEMENT_BODY: {
+        jobTitle: 'jobTitle',
+        jobNameID: 'jobNameID',
+        employerBranchID: 'employerBranchID',
+        description: 'description',
+        requiredSkillIDs: 'requiredSkillIDs',
+        jobType: 'jobType',
+        expirationDate: 'expirationDate',
+        shifts: 'shifts'
+    },
+
     TRUE: "TRUE",
     FALSE: "FALSE",
 

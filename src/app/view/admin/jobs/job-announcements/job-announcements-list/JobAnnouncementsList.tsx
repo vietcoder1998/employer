@@ -190,14 +190,14 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
-            width: 100,
+            width: 150,
         },
         {
             title: 'Thao tác',
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 160,
+            width: 120,
             render: () => this.EditJob
         },
     ];
