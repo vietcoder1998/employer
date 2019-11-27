@@ -1,39 +1,45 @@
-import React, { PureComponent } from 'react'
-import { Icon, Divider, Switch, Row, Col, Button, Input, DatePicker, Select, Tabs, InputNumber } from 'antd';
+import React, { Component } from 'react'
+import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message } from 'antd';
 import { connect } from 'react-redux';
 import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Link } from 'react-router-dom';
 import { TYPE } from '../../../../../../common/const/type';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../redux/models/job-names';
-import { IAnnoucementBody } from '../../../../../../redux/models/announcements';
-import { ShifContent } from '../../../../layout/annou-shift/AnnouShift';
+import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
+import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
+import { IEmBranch } from '../../../../../../redux/models/em-branches';
+import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
+import { _requestToServer } from '../../../../../../services/exec';
+import { POST } from '../../../../../../common/const/method';
+import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-interface JobAnnouncementsCreateState {
+interface IJobAnnouncementsCreateState {
     title: string;
     announcementTypeID: string;
     type_management: Array<any>;
     list_item: Array<{ label: string, value: string }>,
     loading: boolean;
-    previewImage: any;
-    previewVisible: boolean;
     value_annou: string;
     announcement_detail: any;
     type_cpn: string;
+    list_em_branches: Array<IEmBranch>;
     body: IAnnoucementBody;
-}
+};
 
-interface JobAnnouncementsCreateProps extends StateProps, DispatchProps {
-    getAnnouncementDetail: Function;
+interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
     match: any;
-}
+    history: any;
+    getAnnouncementDetail: Function;
+    getListEmBranches: Function;
+};
 
-class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, JobAnnouncementsCreateState> {
+class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJobAnnouncementsCreateState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,8 +48,6 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
             type_management: [],
             list_item: [],
             loading: false,
-            previewImage: null,
-            previewVisible: false,
             value_annou: "",
             announcement_detail: {
                 id: "",
@@ -57,96 +61,43 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                 loading: false,
             },
             type_cpn: TYPE.CREATE,
+            list_em_branches: [],
             body: {
                 jobTitle: null,
                 jobNameID: null,
                 employerBranchID: null,
                 description: null,
                 requiredSkillIDs: [],
-                jobType: null,
+                jobType: TYPE.FULLTIME,
                 expirationDate: null,
-                shifts: []
-            }
-        }
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management && nextProps.type_managemen !== prevState.type_management) {
-            let list_item = [];
-            for (let i = 0; i < nextProps.type_management.length; i++) {
-                const element = nextProps.type_management[i];
-                const list_target = element.targets;
-                let target = "";
-
-                if (list_target.length === 0) {
-                    target = "Mọi đối tượng";
-                } else {
-                    list_target.forEach((element, index) => {
-                        target += element + (index !== list_target.length - 1 ? ', ' : "")
-                    });
-                }
-                list_item.push({ label: element.name + ` ( ${target} ) `, value: element.id });
-            }
-
-            return {
-                list_item,
-                type_management: nextProps.type_management
-            }
-        }
-
-        if (
-            nextProps.match.params.id !== "" &&
-            nextProps.announcement_detail &&
-            nextProps.announcement_detail.id !==
-            prevState.announcement_detail.id
-        ) {
-            let { announcement_detail } = nextProps;
-            let fileList = [];
-            fileList.push({
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: announcement_detail.imageUrl,
-            });
-
-            return {
-                title: announcement_detail.title,
-                content: announcement_detail.content,
-                fileList,
-                hidden: announcement_detail.hidden,
-                announcement_detail,
-                announcementTypeID: announcement_detail.announcementType.id,
-                value_annou: announcement_detail.announcementType.name,
-                type_cpn: TYPE.EDIT
-            }
-        }
-
-        if (prevState.announcementTypeID) {
-            let { list_item, announcementTypeID } = prevState;
-            let value_annou = "";
-            list_item.forEach(item => {
-                if (item.value === announcementTypeID) {
-                    value_annou = item.label
-                }
-            })
-
-            return {
-                value_annou,
-            }
-        }
-
-        return {
-            type_cpn: TYPE.CREATE,
-            value_annou: "Chọn loại bài viết",
-
-        }
-    }
+                shifts: [
+                    {
+                        startTime: "00:00",
+                        endTime: "00:00",
+                        minSalary: null,
+                        maxSalary: null,
+                        unit: 'ca',
+                        mon: false,
+                        tue: false,
+                        wed: false,
+                        thu: false,
+                        fri: false,
+                        sat: false,
+                        sun: false,
+                        genderRequireds: []
+                    },
+                ]
+            },
+        };
+    };
 
     async componentDidMount() {
         if (this.props.match.params.id) {
             let id = this.props.match.params.id;
             await this.props.getAnnouncementDetail(id);
-        }
+        };
+
+        this.props.getListEmBranches();
     };
 
     onChangeValue = (event: any, param: string) => {
@@ -159,26 +110,71 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
 
             default:
                 break;
-        }
+        };
         body[param] = value;
         this.setState({ body });
+    };
+
+    handleBodyShift = (event: any, index: number | string) => {
+        let { body } = this.state;
+        body.shifts[index] = event;
+        this.setState({ body })
+    };
+
+    replaceShift = () => {
+        let { body } = this.state;
+        body.shifts = [];
+        body.shifts.push(newShift());
+        this.setState({ body })
+    };
+
+    addShift = () => {
+        let { body } = this.state;
+        body.shifts.push(newShift());
+        this.setState({ body });
+    };
+
+    removeShift = (id: number | string) => {
+        let { body } = this.state;
+        if (body.shifts.length > 1) {
+            body.shifts.forEach((item: IShifts, index: number) => {
+                if (item.id === id) {
+                    body.shifts.splice(index, 1);
+                    message.info({ type: "info", message: `Đã xóa ca số :${index}` })
+                }
+            });
+        };
+
+        this.setState({ body });
+    };
+
+    createRequest = async () => {
+        let { body } = this.state;
+
+        console.log(body)
+        await _requestToServer(
+            POST,
+            JOB_ANNOUNCEMENTS,
+            body,
+            null,
+            undefined,
+            EMPLOYER_HOST,
+            true,
+            false,
+        )
     }
 
     render() {
-        let { title, list_item, previewImage, previewVisible, type_cpn } = this.state;
-        const uploadButton = (
-            <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
-
+        let { type_cpn, body } = this.state;
         let {
-            list_job_names
+            list_job_names,
+            list_em_branches,
+            list_skills
         } = this.props;
-        let list_value = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
-        let children = list_job_names.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />))
 
+        let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
+        let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
+        let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
         return (
             <div className='common-content'>
                 <h5>
@@ -191,31 +187,59 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                         <div className="announcements-create-content">
                             <InputTitle
                                 type={TYPE.INPUT}
-                                value={title}
+                                value={body.jobTitle}
                                 title="Tiêu đề"
                                 placeholder="ex: Tuyển nhân viên bán hàng"
                                 widthLabel="200px"
                                 widthInput="500px"
-                                onChange={event => this.setState({ title: event })}
+                                onChange={
+                                    (event: string) => { body.jobTitle = event; this.setState({ body }) }
+                                }
                             />
                             <InputTitle
                                 title="Nội dung bài đăng"
                                 widthLabel="200px"
                                 widthComponent="400px"
                             >
-                                <TextArea rows={5} style={{ width: 500 }} placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt" />
+                                <TextArea
+                                    rows={5}
+                                    style={{ width: 500 }}
+                                    placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt"
+                                    onChange={
+                                        (event: any) => {
+                                            body.description = event.target.value;
+                                            this.setState({ body });
+                                        }
+                                    }
+                                />
                             </InputTitle>
                             <InputTitle
                                 title="Chọn thời gian hết hạn"
                                 type="SWITCH"
                                 widthLabel="200px"
                             >
-                                <DatePicker format={"DD/MM/YYYY"} style={{ width: 500 }} placeholder="ex: 07/12/2019" />
+                                <DatePicker
+                                    format={"DD/MM/YYYY"}
+                                    style={{ width: 500 }}
+                                    placeholder="ex: 07/12/2019"
+                                    onChange={
+                                        (event) => {
+                                            body.expirationDate = event.unix()*1000;
+                                            this.setState({ body });
+                                        }
+                                    }
+                                />
                             </InputTitle>
                             <InputTitle
                                 title="Chọn công việc"
                                 type={TYPE.SELECT}
-                                list_value={list_value}
+                                list_value={list_job_name_options}
+                                onChange={
+                                    (event: any) => {
+                                        body.jobNameID = event;
+                                        this.setState({ body });
+                                    }
+                                }
                                 widthLabel="200px"
                                 widthSelect="500px"
                                 placeholder="ex: Nhân viên văn phòng"
@@ -223,7 +247,13 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                             <InputTitle
                                 title="Chọn địa chỉ đăng tuyển"
                                 type={TYPE.SELECT}
-                                list_value={list_value}
+                                list_value={list_em_branches_options}
+                                onChange={
+                                    (event: any) => {
+                                        body.employerBranchID = event;
+                                        this.setState({ body });
+                                    }
+                                }
                                 widthLabel="200px"
                                 widthSelect="500px"
                                 placeholder="ex: Công ti abc"
@@ -237,33 +267,73 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                                     mode="multiple"
                                     size="default"
                                     placeholder="ex: Giao tiếp, Tiếng Anh"
-                                    defaultValue={['a10', 'c12']}
-                                    onChange={() => { }}
+                                    onChange={
+                                        (event: any) => {
+                                            console.log(event)
+                                            let list_data = findIdWithValue(list_skills, event, "name")
+                                            body.requiredSkillIDs = list_data;
+                                            this.setState({ body })
+                                        }
+                                    }
                                     style={{ width: 500 }}
                                 >
-                                    {children}
+                                    {list_skill_options}
                                 </Select>
                             </InputTitle>
                         </div>
                         <Divider orientation="left" >Thời gian làm việc</Divider>
                         <div className="announcements-create-content">
-                            <Tabs defaultActiveKey="1" style={{ width: "100%" }} onChange={() => { }}>
-                                <TabPane tab="Toàn thời gian" key="1">
-                                    <div>
-                                      <ShifContent
-                                        id={1}
-                                      />
-                                    </div>
+                            <Tabs
+                                defaultActiveKey={TYPE.FULLTIME} style={{ width: "100%" }}
+                                onChange={(event: string) => {
+                                    body.jobType = event;
+                                    this.setState({ body });
+                                    this.replaceShift();
+                                }}
+                            >
+                                <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME}>
+                                    {body.shifts &&
+                                        body.shifts.length > 0 &&
+                                        body.shifts.map((item: IShifts, index: number) => (
+                                            <ShiftContent
+                                                key={index}
+                                                type={TYPE.FULLTIME}
+                                                removeButton={false}
+                                                id={item.id}
+                                                onChange={(event) => this.handleBodyShift(event, index)} />
+                                        ))
+                                    }
                                 </TabPane>
-                                <TabPane tab="Bán thời gian" key="2">
-                                    Content of Tab Pane 2
-                                 </TabPane>
-                                <TabPane tab="Thực tập sinh" key="3" >
-                                    Content of Tab Pane 3
+                                <TabPane tab="Bán thời gian" key={TYPE.PARTTIME}>
+                                    {body.shifts &&
+                                        body.shifts.length > 0 &&
+                                        body.shifts.map((item: IShifts, index: number) => (
+                                            <ShiftContent
+                                                key={index}
+                                                index={index}
+                                                type={TYPE.PARTTIME}
+                                                id={item.id}
+                                                removeButton={true}
+                                                removeShift={(id: number | string) => this.removeShift(id)}
+                                                onChange={(event: IShifts) => this.handleBodyShift(event, index)} />))
+                                    }
+                                    <Button type="primary" icon="plus" onClick={() => this.addShift()} >Thêm ca</Button>
+                                </TabPane>
+                                <TabPane tab="Thực tập sinh" key={TYPE.INTERNSHIP} >
+                                    {body.shifts &&
+                                        body.shifts.length > 0 &&
+                                        body.shifts.map((item: IShifts, index: number) => (
+                                            <ShiftContent
+                                                key={index}
+                                                type={TYPE.INTERNSHIP}
+                                                removeButton={false}
+                                                id={item.id}
+                                                onChange={(event) => this.handleBodyShift(event, index)} />
+                                        ))
+                                    }
                                 </TabPane>
                             </Tabs>
                         </div>
-
                         <div className="Announcements-create-content">
                             <Button
                                 type="primary"
@@ -272,6 +342,7 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                                     margin: "10px 10px",
                                     float: "right"
                                 }}
+                                onClick={() => this.createRequest()}
                             >
                                 {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
                                 <Icon type="right" />
@@ -283,11 +354,10 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                                     margin: "10px 10px",
                                     float: "right"
                                 }}
+                                onClick={() => { this.props.history.push('/admin/jobs/job-announcements/list') }}
                             >
-                                <Link to='/admin/job-management/list'>
-                                    <Icon type="close" />
-                                    {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
-                                </Link>
+                                <Icon type="close" />
+                                {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
                             </Button>
                         </div>
                     </Col>
@@ -295,16 +365,19 @@ class JobAnnouncementsCreate extends PureComponent<JobAnnouncementsCreateProps, 
                 </Row>
             </div >
         )
-    }
-}
+    };
+};
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
-})
+    getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
+});
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_job_names: state.JobNames.items
-})
+    list_job_names: state.JobNames.items,
+    list_skills: state.Skills.items,
+    list_em_branches: state.EmBranches.items,
+});
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

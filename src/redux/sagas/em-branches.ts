@@ -40,7 +40,7 @@ function callEmBranches(action: any) {
         body,
         {
             pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 10
+            pageSize: action.pageSize ? action.pageSize : 0
         },
         undefined,
         EMPLOYER_HOST,

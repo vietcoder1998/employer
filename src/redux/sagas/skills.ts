@@ -1,28 +1,28 @@
+import { SKILLS } from './../../services/api/private.api';
 import { noInfoHeader } from './../../services/auth';
-import { IRegions } from '../models/regions';
+import { ISkills } from '../models/skills';
 import { GET } from '../../common/const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
 import { PUBLIC_HOST } from '../../environment/dev';
-import { REGIONS } from '../../services/api/public.api';
 
-function* getListRegionsData(action) {
-    let res = yield call(callRegions, action);
+function* getListSkillsData(action) {
+    let res = yield call(callSkills, action);
 
     if (res.code === 200) {
-        let data: IRegions = res.data;
+        let data: ISkills = res.data;
         yield put({
-            type: REDUX.REGIONS.GET_REGIONS,
+            type: REDUX.SKILLS.GET_SKILLS,
             data
         });
     }
 }
 
-function callRegions(action) {
+function callSkills(action) {
     return _requestToServer(
         GET,
-        REGIONS,
+        SKILLS,
         undefined,
         {
             pageIndex: action.pageIndex ? action.pageIndex : 0,
@@ -35,9 +35,9 @@ function callRegions(action) {
     )
 }
 
-export function* RegionsWatcher() {
+export function* SkillsWatcher() {
     yield takeEvery(
-        REDUX_SAGA.REGIONS.GET_REGIONS,
-        getListRegionsData
+        REDUX_SAGA.SKILLS.GET_SKILLS,
+        getListSkillsData
     )
 }

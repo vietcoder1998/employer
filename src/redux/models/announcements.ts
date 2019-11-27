@@ -1,5 +1,4 @@
 export interface IAnnouncement {
-    id?: string;
     imageUrl?: string;
     announcementType?: {
         id?: number;
@@ -25,24 +24,23 @@ export interface IAnnouncement {
     }
 }
 
-export interface shifts {
-    id?: string,
+export interface IShifts {
+    id?: string|number,
     startTime?: string,
     endTime?: string,
     minSalary?: number,
     maxSalary?: number,
-    unit?: 'ca' | 'giờ' | 'ngày' | 'tháng' | 'sản phẩm',
-    mon?: false,
-    tue?: false,
-    wed?: false,
-    thu?: false,
-    fri?: false,
-    sat?: false,
-    sun?: false,
+    unit?: string | 'ca' | 'giờ' | 'ngày' | 'tháng' | 'sản phẩm',
+    mon?: boolean,
+    tue?: boolean,
+    wed?: boolean,
+    thu?: boolean,
+    fri?: boolean,
+    sat?: boolean,
+    sun?: boolean,
     genderRequireds?: Array<{
-        id?: string,
         gender?: 'MALE' | 'FEMALE' | 'BOTH',
-        quantity?: number
+        quantity?: number,
     }>
 }
 
@@ -51,10 +49,10 @@ export interface IAnnoucementBody {
     jobNameID?: number,
     employerBranchID?: string,
     description?: string,
-    requiredSkillIDs?: Array<number>,
-    jobType?: 'FULLTIME' | 'PARTTIME' | 'INTERNSHIP',
+    requiredSkillIDs?: Array<any>,
+    jobType?: string,
     expirationDate?: number,
-    shifts?: Array<shifts>
+    shifts?: Array<IShifts>
 }
 
 export interface IAnnouncements {

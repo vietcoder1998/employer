@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, Cascader } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, Cascader, Checkbox } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -10,11 +10,17 @@ import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../redux/models/job-announcements';
 import { IAppState } from '../../../../../../redux/store/reducer';
+import { IJobName } from '../../../../../../redux/models/job-names';
+import { IEmBranch } from '../../../../../../redux/models/em-branches';
 let { Option } = Select;
+let CheckboxGroup = Checkbox.Group;
+
+const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
 interface JobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
     getListAnnouncements: Function;
+    getListEmBranches: Function;
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
@@ -33,7 +39,7 @@ interface JobAnnouncementsListState {
     loading?: boolean;
     pendingJob?: any;
     message?: string;
-    type_management?: Array<any>;
+    list_em_branches?: Array<any>;
     value_type?: string;
     announcementTypeID?: number;
     createdDate?: number;
@@ -43,6 +49,9 @@ interface JobAnnouncementsListState {
     id?: string;
     loading_table?: boolean;
     body?: IJobAnnouncementsFilter;
+    un_checkbox?: boolean;
+    list_check?: Array<any>;
+    state_check_box?: Array<string>;
 };
 
 class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobAnnouncementsListState> {
@@ -60,7 +69,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             loading: false,
             pendingJob: null,
             message: null,
-            type_management: [],
+            list_em_branches: [],
             value_type: null,
             announcementTypeID: null,
             createdDate: null,
@@ -85,7 +94,9 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                 hasRejectedApplied: null,
                 jobShiftFilter: null,
                 jobLocationFilter: null
-            }
+            },
+            un_checkbox: false,
+            list_check: []
         };
     }
 
@@ -235,20 +246,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management !== prevState.type_management) {
-            return {
-                type_management: nextProps.type_management,
-                value_type: "Tất cả",
-                announcementTypeID: null
-            }
-        }
-
         if (nextProps.list_job_announcements !== prevState.list_job_announcements) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (count: string | number | null, type:  "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
+            let viewCount = (count: string | number | null, type: "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
                 <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`} >
-                    <Button type={type} disabled={count===0}>
+                    <Button type={type} disabled={count === 0}>
                         <Icon type="team" />{count}
                     </Button>
                 </Link>
@@ -264,15 +267,15 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    appliedCount:  viewCount(item.appliedCount, "default") ,
-                    rejectedApplied: viewCount(item.rejectedApplied, "danger") ,
-                    suitableCount: viewCount(item.rejectedApplied, "primary") ,
+                    appliedCount: viewCount(item.appliedCount, "default"),
+                    rejectedApplied: viewCount(item.rejectedApplied, "danger"),
+                    suitableCount: viewCount(item.rejectedApplied, "primary"),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: `${item.priority.homePriority},${item.priority.searchPriority}`
                 });
             })
             return {
-                list_job_announcements: nextProps.type_management,
+                list_job_announcements: nextProps.list_em_branches,
                 data_table,
                 loading_table: false,
             }
@@ -280,6 +283,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
     };
 
     async componentDidMount() {
+        await this.props.getListEmBranches();
         await this.searchAnnouncement();
     };
 
@@ -288,6 +292,43 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             this.setState({ id: event.key })
         }
     };
+
+    handleCheckBox = (event: any) => {
+        let { body } = this.state;
+        let list_param = [
+            { label: "Đang chờ", param: TYPE.JOB_FILTER.hasPendingApplied },
+            { label: "Từ chối", param: TYPE.JOB_FILTER.hasRejectedApplied },
+            { label: "Chấp nhận", param: TYPE.JOB_FILTER.hasAcceptedApplied },
+        ]
+        if (typeof event === "boolean") {
+            if (event) {
+                body.hasAcceptedApplied = null;
+                body.hasPendingApplied = null;
+                body.hasRejectedApplied = null;
+            }
+        } else {
+            event.forEach((element: string) => {
+                let arr = list_param.filter((item: any, index: number) => {
+                    return (item.label === element)
+                });
+
+                let ivl_arr = list_param.filter((item: any, index: number) => {
+                    return (item.label !== element)
+                });
+
+                arr.forEach((item: any, index) => {
+                    body[item.param] = true;
+                });
+
+                ivl_arr.forEach((item: any, index) => {
+                    body[item.param] = false;
+                });
+
+            });
+        }
+
+        this.setState({ body });
+    }
 
     setPageIndex = async (event: any) => {
         await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
@@ -301,24 +342,29 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     onChangeType = (event: any, param?: string) => {
         let { body } = this.state;
+        let { list_em_branches } = this.props;
         let value: any = event;
+        switch (param) {
+            case TYPE.JOB_FILTER.jobNameIDs:
+                value = [value];
+                break;
+            case TYPE.JOB_FILTER.jobLocationFilter:
+                if (value) {
+                    let data = list_em_branches.filter((item: IEmBranch, index: number) => { return item.id === event });
+                    value = { distance: 1, lat: data[0].lat, lon: data[0].lon }
+                }
+                break;
+            default:
+                break;
+        }
+
         switch (event) {
-            case TYPE.EXPIRED:
+            case TYPE.TRUE:
+                value = true;
+                break;
+            case TYPE.FALSE:
                 value = false;
                 break;
-            case TYPE.UN_EXPRIED:
-                value = true;
-                break;
-            case TYPE.ACTIVE:
-                value = false;
-                break;
-            case TYPE.UN_ACTIVE:
-                value = true;
-                break;
-            case TYPE.HIDDEN:
-                value = true;
-                break;
-         
             default:
                 break;
         }
@@ -351,12 +397,17 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         let {
             data_table,
             show_modal,
-            type_management,
             value_type,
             loading_table,
+            un_checkbox,
+            list_check,
         } = this.state;
 
-        let { totalItems } = this.props
+        let {
+            totalItems,
+            list_job_names,
+            list_em_branches
+        } = this.props
         return (
             <Fragment>
                 <div className="common-content">
@@ -415,8 +466,8 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.EXPIRED}>Còn hạn</Option>
-                                    <Option value={TYPE.UN_EXPRIED}>Hêt hạn</Option>
+                                    <Option value={TYPE.TRUE}>Còn hạn</Option>
+                                    <Option value={TYPE.FALSE}>Hêt hạn</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
@@ -427,7 +478,10 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     style={{ width: "100%" }}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
                                 >
-                                    <Option value={null}>Tất cả</Option>
+                                    {
+                                        list_job_names &&
+                                        list_job_names.map((item: IJobName, index: number) => <Option key={index} value={item.id}>{item.name}</Option>)
+                                    }
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
@@ -437,13 +491,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     placeholder="Tất cả"
                                     optionFilterProp="children"
                                     style={{ width: "100%" }}
-                                    value={value_type}
-                                    onChange={(event: any) => this.onChangeType(event, null)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobLocationFilter)}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        type_management &&
-                                        type_management.map((item, index) => <Option key={index} value={item.id}>{item.name}</Option>)
+                                        list_em_branches &&
+                                        list_em_branches.map((item: IEmBranch, index: number) => <Option key={index} value={item.id}>{item.branchName}</Option>)
                                     }
                                 </Select>
                             </Col>
@@ -479,11 +532,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     placeholder="Tất cả"
                                     optionFilterProp="children"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, null)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.EXPIRED}>Còn hạn</Option>
-                                    <Option value={TYPE.UN_EXPRIED}>Hết hạn</Option>
+                                    <Option value={TYPE.TRUE}>Còn hạn</Option>
+                                    <Option value={TYPE.FALSE}>Hết hạn</Option>
 
                                 </Select>
                             </Col>
@@ -496,29 +549,37 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     optionFilterProp="children"
                                     style={{ width: "100%" }}
                                     value={value_type}
-                                    onChange={(event: any) => this.onChangeType(event, null)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.hidden)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.HIDDEN}>Đang ẩn</Option>
-                                    <Option value={TYPE.SHOW}>Đang hiện</Option>
+                                    <Option value={TYPE.TRUE}>Đang ẩn</Option>
+                                    <Option value={TYPE.FALSE}>Đang hiện</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái ứng tuyển"} />
-                                <Select
-                                    showSearch
-                                    placeholder="Tất cả"
-                                    optionFilterProp="children"
-                                    style={{ width: "100%" }}
-                                    value={value_type}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobType)}
+                                <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
+                                <Checkbox
+                                    indeterminate={un_checkbox}
+                                    onChange={
+                                        (event: any) => {
+                                            this.handleCheckBox(event.target.checked);
+                                            this.setState({ un_checkbox: event.target.checked })
+                                        }
+                                    }
                                 >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.PENDING}>Đang chờ</Option>
-                                    <Option value={TYPE.ACCEPTED}>Đã chấp nhận</Option>
-                                    <Option value={TYPE.REJECTED}>Đã từ chối</Option>
-
-                                </Select>
+                                    Bất kì
+                                </Checkbox>
+                                <CheckboxGroup
+                                    options={plainOptions}
+                                    value={list_check}
+                                    onChange={
+                                        (event: any) => {
+                                            this.handleCheckBox(event);
+                                            this.setState({ list_check: event })
+                                        }
+                                    }
+                                    disabled={un_checkbox}
+                                />
                             </Col>
                         </Row>
                         <Table
@@ -543,7 +604,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         />
                     </div>
                 </div>
-            </Fragment>
+            </Fragment >
         )
     }
 };
@@ -551,10 +612,14 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListAnnouncements: (body: IJobAnnouncementsFilter, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS, body, pageIndex, pageSize }),
+    getListEmBranches: () =>
+        dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_announcements: state.JobAnnouncements.items,
+    list_job_names: state.JobNames.items,
+    list_em_branches: state.EmBranches.items,
     totalItems: state.JobAnnouncements.totalItems
 });
 

@@ -10,9 +10,14 @@ export const IptLetter = (props: any) => {
 };
 
 export const IptLetterP = (props: any) => {
-    return (<p>
-        <span className="important-letter">{" " + props.value + " "}</span>
-    </p>)
+    return (
+        <div style={props.style ? {...props.style} : null}>
+            <p>
+                <span className="important-letter">{" " + props.value + " "}</span>
+            </p>
+            {props.children ? props.children : null}
+        </div>
+    )
 };
 
 export const FirstLetter = (props: any) => {

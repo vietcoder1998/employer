@@ -1,3 +1,4 @@
+import { Skills } from './../reducers/skills';
 import { SavedCandidateProfiles } from './../reducers/saved-candidate-profiles';
 import { FindCandidateDetail } from './../reducers/find-candidates-detail';
 import { FindCandidates } from './../reducers/find-candidates';
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
     FindCandidates,
     FindCandidateDetail,
     SavedCandidateProfiles,
+    Skills
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

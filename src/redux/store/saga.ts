@@ -10,6 +10,7 @@ import { AnnouTypesWatcher } from '../sagas/annou-types';
 import { FindCandidateDetailWatcher } from '../sagas/find-candidates-detail';
 import { FindCandidatesWatcher } from '../sagas/find-candidates';
 import { SavedCandidateProfilesWatcher } from '../sagas/saved-candidate-profiles';
+import { SkillsWatcher } from '../sagas/skills';
 
 
 export default function* rootSaga() {
@@ -25,5 +26,6 @@ export default function* rootSaga() {
         FindCandidateDetailWatcher(),
         FindCandidatesWatcher(),
         SavedCandidateProfilesWatcher(),
+        SkillsWatcher(),
     ])
 } 

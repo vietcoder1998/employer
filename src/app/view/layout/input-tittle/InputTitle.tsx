@@ -17,8 +17,8 @@ interface IInputitleProps {
     children?: any;
     style?: React.CSSProperties;
     widthSelect?: string;
+    disabled?: boolean;
     onChange?: Function;
-
 }
 
 interface INewSelect {
@@ -27,10 +27,12 @@ interface INewSelect {
     placeholder?: string;
     defaultValue?: string;
     widthSelect?: string;
+    disabled?: boolean;
     onChange?: Function;
 }
 
 interface INewInput {
+    disabled?: boolean;
     value?: string;
     placeholder?: string;
     defaultValue?: string;
@@ -39,7 +41,7 @@ interface INewInput {
 }
 
 export const NewInput = (props: INewInput) => {
-    let { defaultValue, value, placeholder, onChange, widthInput } = props;
+    let { defaultValue, value, placeholder, onChange, widthInput, disabled } = props;
 
     return (
         <Input
@@ -49,20 +51,21 @@ export const NewInput = (props: INewInput) => {
             value={value}
             onChange={event => onChange(event.target.value)}
             maxLength={220}
+            disabled={disabled ? disabled : false}
         />)
 }
 
 export const NewSelect = (props: INewSelect) => {
-    let { placeholder, list_value, value, onChange, widthSelect, defaultValue } = props;
+    let { placeholder, list_value, onChange, widthSelect, defaultValue, disabled } = props;
     return (
         <Select
             showSearch
             placeholder={placeholder}
             optionFilterProp="children"
             style={{ width: widthSelect ? widthSelect : "200px" }}
-            value={value}
             defaultValue={defaultValue}
             onChange={event => onChange(event)}
+            disabled={disabled ? disabled : false}
         >
             {
                 list_value &&
@@ -106,7 +109,6 @@ export const InputTitle = (props: IInputitleProps) => {
         case TYPE.SELECT:
             ComponentReturn = (
                 <NewSelect
-                    value={value}
                     defaultValue={defaultValue}
                     list_value={list_value}
                     placeholder={placeholder}

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Dropdown, Menu, Breadcrumb } from 'antd';
+import { Layout, Icon, Avatar, Menu, Breadcrumb, BackTop } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
@@ -12,6 +12,7 @@ import ConvernientService from './convernient-service/ConvernientService';
 import MoreInfo from './more-info/MoreInfo';
 import { IAppState } from '../../../redux/store/reducer';
 import { REDUX_SAGA } from '../../../common/const/actions';
+import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -27,6 +28,7 @@ interface AdminProps extends StateProps, DispatchProps {
     match: Readonly<any>;
     getListRegions: Function;
     getListJobNames: Function;
+    getListSkills: Function;
 }
 
 
@@ -44,6 +46,7 @@ class Admin extends PureComponent<AdminProps, AdminState> {
     async componentDidMount() {
         this.props.getListRegions();
         this.props.getListJobNames();
+        this.props.getListSkills();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -73,7 +76,7 @@ class Admin extends PureComponent<AdminProps, AdminState> {
     );
 
     render() {
-        let { show_menu, to_logout, data_breakcumb } = this.state;
+        let { show_menu, data_breakcumb } = this.state;
         let { match } = this.props;
 
         return (
@@ -85,7 +88,8 @@ class Admin extends PureComponent<AdminProps, AdminState> {
                             className="trigger"
                             type={show_menu ? 'menu-unfold' : 'menu-fold'}
                             style={{
-                                marginTop: "20px"
+                                marginTop: "20px",
+                                color: "white"
                             }}
                             onClick={() => this.setState({ show_menu: !show_menu })}
                         />
@@ -95,20 +99,13 @@ class Admin extends PureComponent<AdminProps, AdminState> {
                                 style={{
                                     width: "30px",
                                     height: "30px",
+                                    border: "solid #fff 2px",
                                 }}
                             />
-                            <Dropdown
-                                overlay={this.menu}
-                                placement="topRight"
-                            >
-                                <Icon
-                                    type={"down"}
-                                    style={{
-                                        padding: "20px 10px"
-                                    }}
-                                    onClick={() => this.setState({ to_logout: !to_logout })}
-                                />
-                            </Dropdown>
+                            <DropdownConfig>
+                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
+                                <OptionConfig icon="user" key="2" value="" label="Tài khoản" onClick={() => { }} />
+                            </DropdownConfig>
                         </div>
                     </Header>
                     <Content
@@ -147,16 +144,21 @@ class Admin extends PureComponent<AdminProps, AdminState> {
                             <ErrorBoundaryRoute path={`${match.url}/convenient-service`} component={ConvernientService} />
                             <ErrorBoundaryRoute path={`${match.url}/more-info`} component={MoreInfo} />
                         </Switch>
+
                     </Content>
                 </Layout>
+                <>
+                    <BackTop />
+                </>
             </Layout >
         )
     }
 }
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListRegions: () => dispatch({type: REDUX_SAGA.REGIONS.GET_REGIONS}),
-    getListJobNames: () => dispatch({type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES})
+    getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS }),
+    getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
+    getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS })
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

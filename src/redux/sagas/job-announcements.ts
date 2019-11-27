@@ -32,7 +32,7 @@ function callJobAnnouncements(action: any) {
 
     return _requestToServer(
         POST,
-        JOB_ANNOUNCEMENTS,
+        JOB_ANNOUNCEMENTS+'/query',
         body,
         {
             pageIndex: action.pageIndex ? action.pageIndex : 0,
