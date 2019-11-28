@@ -48,22 +48,22 @@ export const NewInput = (props: INewInput) => {
             placeholder={placeholder}
             defaultValue={defaultValue}
             style={{ width: widthInput ? widthInput : "auto" }}
-            value={value}
             onChange={event => onChange(event.target.value)}
+            value={value}
             maxLength={220}
             disabled={disabled ? disabled : false}
         />)
 }
 
 export const NewSelect = (props: INewSelect) => {
-    let { placeholder, list_value, onChange, widthSelect, defaultValue, disabled } = props;
+    let { placeholder, list_value, onChange, widthSelect, defaultValue, disabled, value } = props;
     return (
         <Select
             showSearch
             placeholder={placeholder}
             optionFilterProp="children"
             style={{ width: widthSelect ? widthSelect : "200px" }}
-            defaultValue={defaultValue}
+            value={value}
             onChange={event => onChange(event)}
             disabled={disabled ? disabled : false}
         >
@@ -94,6 +94,7 @@ export const InputTitle = (props: IInputitleProps) => {
     const defaultStyle = {
         margin: "20px 0px",
     }
+
     switch (props.type) {
         case TYPE.INPUT:
             ComponentReturn = (
@@ -111,6 +112,7 @@ export const InputTitle = (props: IInputitleProps) => {
                 <NewSelect
                     defaultValue={defaultValue}
                     list_value={list_value}
+                    value={value}
                     placeholder={placeholder}
                     onChange={event => onChange ? onChange(event) : () => { }}
                     widthSelect={widthSelect}

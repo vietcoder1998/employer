@@ -10,11 +10,13 @@ import { IJobName } from '../../../../../../redux/models/job-names';
 import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
 import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
-import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
+import { findIdWithValue } from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../common/const/method';
 import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import moment from 'moment';
+import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -30,14 +32,32 @@ interface IJobAnnouncementsCreateState {
     type_cpn: string;
     list_em_branches: Array<IEmBranch>;
     body: IAnnoucementBody;
+    id?: string;
+    jobName?: string;
+    address?: string;
+    skills?: Array<string>
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
     match: any;
     history: any;
-    getAnnouncementDetail: Function;
+    getJobAnnouncementDetail: Function;
     getListEmBranches: Function;
 };
+
+const getBody = () => {
+    return {
+        id: null,
+        jobTitle: null,
+        jobNameID: null,
+        employerBranchID: null,
+        description: null,
+        requiredSkillIDs: [],
+        jobType: TYPE.FULLTIME,
+        expirationDate: null,
+        shifts: []
+    }
+}
 
 class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJobAnnouncementsCreateState> {
     constructor(props) {
@@ -84,21 +104,46 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         fri: false,
                         sat: false,
                         sun: false,
-                        genderRequireds: []
+                        genderRequireds: null
                     },
                 ]
             },
+            id: null
         };
     };
 
     async componentDidMount() {
         if (this.props.match.params.id) {
             let id = this.props.match.params.id;
-            await this.props.getAnnouncementDetail(id);
+            await this.props.getJobAnnouncementDetail(id);
         };
 
         this.props.getListEmBranches();
     };
+
+    static getDerivedStateFromProps(props: any, state: IJobAnnouncementsCreateState) {
+        if (
+            props.job_announcement_detail &&
+            props.match.params.id &&
+            props.match.params.id !== state.body.id
+        ) {
+            let job_announcement_detail: IJobAnnouncementDetail = props.job_announcement_detail;
+            let body = getBody();
+            body.id = job_announcement_detail.id
+            body.description = job_announcement_detail.description;
+            body.jobTitle = job_announcement_detail.jobTitle;
+            body.jobNameID = job_announcement_detail.jobName.id;
+            body.jobType = job_announcement_detail.jobType;
+            body.employerBranchID = job_announcement_detail.employerBranchID;
+            body.description = job_announcement_detail.description;
+            body.expirationDate = job_announcement_detail.expirationDate;
+            body.shifts = job_announcement_detail.shifts;
+            return {
+                body,
+            }
+        }
+        return null
+    }
 
     onChangeValue = (event: any, param: string) => {
         let { body } = this.state;
@@ -106,9 +151,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         switch (param) {
             case value:
 
-                break;
-
-            default:
                 break;
         };
         body[param] = value;
@@ -150,8 +192,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     createRequest = async () => {
         let { body } = this.state;
-
-        console.log(body)
         await _requestToServer(
             POST,
             JOB_ANNOUNCEMENTS,
@@ -165,11 +205,19 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     }
 
     render() {
-        let { type_cpn, body } = this.state;
+        let {
+            type_cpn,
+            body,
+            jobName,
+            address,
+            skills
+        } = this.state;
+
         let {
             list_job_names,
             list_em_branches,
-            list_skills
+            list_skills,
+            job_announcement_detail,
         } = this.props;
 
         let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
@@ -187,14 +235,22 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         <div className="announcements-create-content">
                             <InputTitle
                                 type={TYPE.INPUT}
-                                value={body.jobTitle}
                                 title="Tiêu đề"
-                                placeholder="ex: Tuyển nhân viên bán hàng"
                                 widthLabel="200px"
-                                widthInput="500px"
-                                onChange={
-                                    (event: string) => { body.jobTitle = event; this.setState({ body }) }
+                                children={
+                                    <Input
+                                        width={200}
+                                        placeholder="ex: Tuyển nhân viên bán hàng"
+                                        value={body.jobTitle}
+                                        onChange={
+                                            (event: any) => {
+                                                body.jobTitle = event.target.value;
+                                                this.setState({ body });
+                                            }
+                                        }
+                                    />
                                 }
+
                             />
                             <InputTitle
                                 title="Nội dung bài đăng"
@@ -203,8 +259,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             >
                                 <TextArea
                                     rows={5}
-                                    style={{ width: 500 }}
+                                    style={{ width: 600 }}
                                     placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt"
+                                    value={body.description}
                                     onChange={
                                         (event: any) => {
                                             body.description = event.target.value;
@@ -220,11 +277,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             >
                                 <DatePicker
                                     format={"DD/MM/YYYY"}
-                                    style={{ width: 500 }}
+                                    style={{ width: 600 }}
                                     placeholder="ex: 07/12/2019"
+                                    value={body.expirationDate ? moment(body.expirationDate) : null}
                                     onChange={
-                                        (event) => {
-                                            body.expirationDate = event.unix()*1000;
+                                        (event?: any) => {
+                                            event ? body.expirationDate = event.unix() * 1000 : body.expirationDate = null;
                                             this.setState({ body });
                                         }
                                     }
@@ -234,6 +292,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 title="Chọn công việc"
                                 type={TYPE.SELECT}
                                 list_value={list_job_name_options}
+                                value={findIdWithValue(list_job_names, body.jobNameID, "id", "name")}
                                 onChange={
                                     (event: any) => {
                                         body.jobNameID = event;
@@ -241,13 +300,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     }
                                 }
                                 widthLabel="200px"
-                                widthSelect="500px"
+                                widthSelect="600px"
                                 placeholder="ex: Nhân viên văn phòng"
                             />
                             <InputTitle
                                 title="Chọn địa chỉ đăng tuyển"
                                 type={TYPE.SELECT}
                                 list_value={list_em_branches_options}
+                                defaultValue={findIdWithValue(list_em_branches, job_announcement_detail.employerBranchID, "id", "branchName")}
                                 onChange={
                                     (event: any) => {
                                         body.employerBranchID = event;
@@ -255,7 +315,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     }
                                 }
                                 widthLabel="200px"
-                                widthSelect="500px"
+                                widthSelect="600px"
                                 placeholder="ex: Công ti abc"
                             />
 
@@ -269,13 +329,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     placeholder="ex: Giao tiếp, Tiếng Anh"
                                     onChange={
                                         (event: any) => {
-                                            console.log(event)
                                             let list_data = findIdWithValue(list_skills, event, "name")
                                             body.requiredSkillIDs = list_data;
                                             this.setState({ body })
                                         }
                                     }
-                                    style={{ width: 500 }}
+                                    style={{ width: 600 }}
                                 >
                                     {list_skill_options}
                                 </Select>
@@ -284,7 +343,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         <Divider orientation="left" >Thời gian làm việc</Divider>
                         <div className="announcements-create-content">
                             <Tabs
-                                defaultActiveKey={TYPE.FULLTIME} style={{ width: "100%" }}
+                                defaultActiveKey={job_announcement_detail ? job_announcement_detail.jobType : TYPE.FULLTIME} style={{ width: "100%" }}
                                 onChange={(event: string) => {
                                     body.jobType = event;
                                     this.setState({ body });
@@ -369,12 +428,13 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
+    getJobAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_names: state.JobNames.items,
+    job_announcement_detail: state.JobAnnouncementDetail,
     list_skills: state.Skills.items,
     list_em_branches: state.EmBranches.items,
 });

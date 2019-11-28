@@ -1,18 +1,23 @@
-export default function findIdWithValue(list_arr_ex?: Array<any>, value?: any, param?: string): any {
+export const findIdWithValue = (list_arr_ex?: Array<any>, value?: any, param?: string, typeReturn?: string): any => {
     let result: any;
-    if (typeof value === "string") {
+
+    if (typeof value === "string" || typeof value === "number") {
         list_arr_ex.forEach((item: any, index: number) => {
             if (item[param] === value) {
-                result = item.id;
+                if (typeReturn) {
+                    result = item[typeReturn]
+                } else result = item.id;
             }
         })
     } else {
         if (value) {
             let list_arr = [];
-            value.forEach((element: string | number, index) => {
+            value.forEach((element: string | number, index: number) => {
                 list_arr_ex.forEach((item: any, index: number) => {
                     if (item[param] === element) {
-                        list_arr.push(item.id);
+                        if (typeReturn) {
+                            list_arr.push(item[typeReturn])
+                        } else list_arr.push(item.id);
                     }
                 })
             });
@@ -21,6 +26,6 @@ export default function findIdWithValue(list_arr_ex?: Array<any>, value?: any, p
         }
     }
 
-    console.log(result);
+    console.log(result)
     return result;
 }

@@ -1,10 +1,10 @@
 export interface IShiftDetail {
-    id?: string,
+    id?: string|number,
     startTime?: string,
     endTime?: string,
     minSalary?: number,
     maxSalary?: number,
-    unit?: string,
+    unit?: string | 'ca' | 'giờ' | 'ngày' | 'tháng' | 'sản phẩm',
     mon?: boolean,
     tue?: boolean,
     wed?: boolean,
@@ -12,14 +12,12 @@ export interface IShiftDetail {
     fri?: boolean,
     sat?: boolean,
     sun?: boolean,
-    genderRequireds?: [
-        {
-            id?: string,
-            gender?: "FEMALE" | "MALE" | "BOTH",
-            quantity?: number,
-            applied?: number
-        }
-    ]
+    genderRequireds?: Array<{
+        id?: string
+        gender?: 'MALE' | 'FEMALE' | 'BOTH',
+        quantity?: number,
+        applied?: number,
+    }>
 }
 
 export interface IJobAnnouncementDetail {
@@ -65,9 +63,6 @@ export interface IJobAnnouncementDetail {
     hidden?: boolean,
     enableNotification?: boolean,
     priority?: {
-        /**
-         * homePrority ?: HEIGH
-         */
         homePriority?: string,
         homeExpired?: boolean,
         homeExpiration?: number,

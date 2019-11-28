@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
-import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { TYPE } from '../../../../../../common/const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
@@ -13,6 +12,11 @@ import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../redux/models/job-names';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
+import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
+import { _requestToServer } from '../../../../../../services/exec';
+import { POST } from '../../../../../../common/const/method';
+import { JOB_PRIORITY_HOME } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
@@ -20,26 +24,25 @@ const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
 interface JobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
-    getListAnnouncements: Function;
+    getListJobAnnouncements: Function;
     getListEmBranches: Function;
     getTypeManagement: Function;
-    getAnnoucements: Function;
-    getAnnoucementDetail: Function;
+    getJobAnnouncementDetail: Function;
+    getListJobService: Function;
     handleDrawer: Function;
+    handleModal: Function;
 };
 
 interface JobAnnouncementsListState {
     data_table?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
-    state?: string;
     employerID?: string;
     target?: string;
     jobNameID?: string;
     jobId?: string;
     show_modal?: boolean;
     loading?: boolean;
-    pendingJob?: any;
     message?: string;
     list_em_branches?: Array<any>;
     value_type?: string;
@@ -55,6 +58,12 @@ interface JobAnnouncementsListState {
     list_check?: Array<any>;
     state_check_box?: Array<string>;
     open_drawer?: boolean;
+    homePriority?: string;
+    searchPriority?: string;
+    homeExpired: boolean;
+    searchExpired: boolean;
+    job_announcement_detail: IJobAnnouncementDetail;
+    type_modal: string;
 };
 
 class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobAnnouncementsListState> {
@@ -64,13 +73,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             data_table: [],
             pageIndex: 0,
             pageSize: 10,
-            state: null,
             employerID: null,
             jobNameID: null,
             jobId: null,
             show_modal: false,
             loading: false,
-            pendingJob: null,
             message: null,
             list_em_branches: [],
             value_type: null,
@@ -98,22 +105,17 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                 jobShiftFilter: null,
                 jobLocationFilter: null
             },
+
             un_checkbox: false,
             list_check: [],
-            open_drawer: false,
+            homePriority: null,
+            searchPriority: null,
+            homeExpired: false,
+            searchExpired: false,
+            job_announcement_detail: null,
+            type_modal: null,
         };
     }
-
-
-
-    deleteAnnoun = async () => {
-        /* tslint:disable */
-        Swal.fire(
-            "Worksvn thông báo",
-            "Bạn chắc chắn muốn xóa bài đăng này",
-            "warning",
-        )
-    };
 
     columns = [
         {
@@ -211,11 +213,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     options = [
         {
-            value: 'HOME',
+            value: TYPE.JOB_FILTER.homePriority,
             label: 'Trang chủ ',
             children: [
                 {
-                    value: 'TOP',
+                    value: TYPE.TOP,
                     label: 'Tuyển gấp',
                 },
                 {
@@ -225,11 +227,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             ],
         },
         {
-            value: 'SEARCH',
+            value: TYPE.JOB_FILTER.searchPriority,
             label: 'Tìm kiếm',
             children: [
                 {
-                    value: 'HIGHLIGHT',
+                    value: TYPE.HIGHLIGHT,
                     label: 'Nổi bật',
                 },
             ],
@@ -242,7 +244,9 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.list_job_announcements !== prevState.list_job_announcements) {
+        if (nextProps.list_job_announcements &&
+            nextProps.list_job_announcements !== prevState.list_job_announcements
+        ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             let viewCount = (count?: string | number, type?: "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
@@ -262,7 +266,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         />
                     </Tooltip>
                     <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                        <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`}>
+                        <Link to={`/admin/jobs/job-announcements/fix/${localStorage.getItem("id_job_announcement")}`}>
                             <Icon
                                 style={{ padding: "5px 5px" }}
                                 type="edit"
@@ -272,20 +276,32 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         </Link>
                     </Tooltip>
                     <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                        <Link to={`/admin/job-management/copy/${localStorage.getItem("id_job_announcement")}`}>
+                        <Link to={`/admin/jobs/job-announcements/copy/${localStorage.getItem("id_job_announcement")}`}>
                             <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
                         </Link>
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Xóa bài đăng"}>
-                        <Icon style={{ padding: "5px 5px" }} type="delete" theme="twoTone" twoToneColor="red" />
+                        <Icon
+                            style={{ padding: "5px 5px" }}
+                            type="delete"
+                            theme="twoTone"
+                            twoToneColor="red"
+                            onClick={() => nextProps.handleModal("Bạn muốn xóa bài đăng này", TYPE.DELETE)}
+                        />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
-                        <Icon style={{ padding: "5px 5px" }} type="dollar" theme="twoTone" twoToneColor="yellow" onClick={() => nextProps.handleDrawer()} />
+                        <Icon
+                            style={{ padding: "5px 5px" }}
+                            type="dollar"
+                            theme="twoTone"
+                            twoToneColor="yellow"
+                            onClick={async () => {
+                                await nextProps.handleDrawer();
+                                await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
+                            }} />
                     </Tooltip>
                 </div>
             )
-
-
 
             nextProps.list_job_announcements.forEach((item: IJobAnnouncement, index: number) => {
                 data_table.push({
@@ -307,17 +323,49 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             })
 
             return {
-                list_job_announcements: nextProps.list_em_branches,
+                list_job_announcements: nextProps.list_job_announcements,
                 data_table,
                 loading_table: false,
             }
-        } return null;
+        }
+
+        if (
+            nextProps.job_announcement_detail &&
+            nextProps.job_announcement_detail !== prevState.job_announcement_detail
+        ) {
+            let { job_announcement_detail } = nextProps;
+            return {
+                homePriority: job_announcement_detail.priority.homePriority,
+                searchPriority: job_announcement_detail.priority.searchPriority,
+                homeExpired: job_announcement_detail.priority.homeExpired,
+                searchExpired: job_announcement_detail.priority.searchExpired,
+                job_announcement_detail
+            }
+        }
+
+        return null;
     };
 
     async componentDidMount() {
         await this.props.getListEmBranches();
-        await this.searchAnnouncement();
+        await this.searchJobAnnouncement();
     };
+
+    onChoseHomePriority = (event: any) => {
+        this.setState({ homePriority: event });
+    };
+
+    onChoseSearchPriority = (event: any) => {
+        this.setState({ searchPriority: event });
+    };
+
+    onCancelRegisterBenefit = () => {
+        this.props.handleDrawer();
+        this.setState({
+            homePriority: null,
+            searchPriority: null
+        })
+    }
 
     handleId = (event) => {
         if (event.key) {
@@ -343,7 +391,6 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             body.hasPendingApplied = null;
             body.hasRejectedApplied = null;
             event.forEach((element: string) => {
-                console.log(element)
                 let arr = list_param.filter((item: any, index: number) => {
                     return (item.label === element)
                 });
@@ -359,12 +406,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     setPageIndex = async (event: any) => {
         await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
-        await this.searchAnnouncement();
+        await this.searchJobAnnouncement();
     };
 
-    searchAnnouncement = async () => {
+    searchJobAnnouncement = async () => {
         let { body, pageIndex, pageSize } = this.state;
-        this.props.getListAnnouncements(body, pageIndex, pageSize);
+        this.props.getListJobAnnouncements(body, pageIndex, pageSize);
     };
 
     onChangeType = (event: any, param?: string) => {
@@ -419,6 +466,62 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         this.setState({ hidden });
     };
 
+    createRequest = async () => {
+        let { type_modal, homePriority, searchPriority } = this.state;
+        await this.setState({ loading: true });
+        switch (type_modal) {
+            case TYPE.JOB_FILTER.homePriority:
+                await _requestToServer(
+                    POST,
+                    JOB_PRIORITY_HOME + `/${localStorage.getItem('id_job_announcement')}/priority/home`,
+                    { homePriority },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                });
+
+                await this.setState({
+                    loading: false
+                });
+                break;
+
+            case TYPE.JOB_FILTER.searchPriority:
+                await _requestToServer(
+                    POST,
+                    JOB_PRIORITY_HOME + `/${localStorage.getItem('id_job_announcement')}/priority/search`,
+                    { searchPriority },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                });
+                await this.setState({
+                    loading: false
+                });
+                break;
+            default:
+                break;
+        };
+    }
+
+    requeryData = async () => {
+        await this.searchJobAnnouncement();
+        await this.props.getListJobService();
+        await this.props.getJobAnnouncementDetail(localStorage.getItem('id_job_announcement'));
+        await this.props.handleModal();
+    }
+
     render() {
         let {
             data_table,
@@ -426,222 +529,361 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             loading_table,
             un_checkbox,
             list_check,
+            homePriority,
+            searchPriority,
+            homeExpired,
+            searchExpired,
+            body,
+            loading,
         } = this.state;
 
         let {
+            job_announcement_detail,
             totalItems,
             list_job_names,
             list_em_branches,
-            list_job_service
+            list_job_service,
+            open_modal,
+            msg,
+            type_modal
         } = this.props;
+
+        let homeExpiration = job_announcement_detail.priority.homeExpiration;
+        let searchExpiration = job_announcement_detail.priority.searchExpiration;
+        let un_active_home = homeExpiration !== -1 && !homeExpired;
+        let un_active_search = searchExpiration !== -1 && !searchExpired;
 
         return (
             <>
-                <DrawerConfig
-                    title={"Kích hoạt gói dữ liệu"}
-                    width={500}
-                >
-                    <h6>Các gói của bạn</h6>
-                    <>
-                        <label className='normal'>Gói tuyển dụng thường: {list_job_service.nomalQuantity}</label>
-                        <label className='top'>Gói tuyển dụng gấp: {list_job_service.homeTopQuantiy}</label>
-                        <label className='in_day'>Gói tuyển dụng trong ngày: {list_job_service.homeInDayQuantity}</label>
-                        <label className='high_light'>Gói tìm kiếm nổi bật:  {list_job_service.searchHighLightQuantity}</label>
-                    </>
-                    <hr />
-                    <h6>Lựa chọn gói phù hợp <Icon type="check" style={{color: "green"}}/></h6>
-
-
-                </DrawerConfig>
-                <div className="common-content">
-                    <h5>
-                        Quản lí bài đăng
+                <Modal
+                    visible={open_modal}
+                    title={"Workvn thông báo"}
+                    destroyOnClose={true}
+                    onOk={this.createRequest}
+                    onCancel={() => { this.setState({ message: null, loading: false }); this.props.handleModal() }}
+                    footer={[
                         <Button
-                            onClick={() => this.searchAnnouncement()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Icon type="filter" />
-                            Tìm kiếm
-                        </Button>
+                            key="cancel"
+                            children="Hủy"
+                            onClick={() => this.setState({
+                                message: null,
+                                loading: false
+                            })}
+                        />,
                         <Button
-                            onClick={() => this.searchAnnouncement()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Link to='/admin/jobs/job-announcements/create' >
-                                <Icon type="plus" />
-                                Tạo bài đăng mới
-                            </Link>
-                        </Button>
-                    </h5>
-                    <div className="table-operations">
-                        <Row >
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái hoạt động"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Còn hạn</Option>
-                                    <Option value={TYPE.FALSE}>Hêt hạn</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Tên việc đăng tuyển"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
-                                >
-                                    {
-                                        list_job_names &&
-                                        list_job_names.map((item: IJobName, index: number) => <Option key={index} value={item.id}>{item.name}</Option>)
-                                    }
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Chi nhánh tuyển dụng"} />
-                                <Select
-                                    showSearch
-                                    placeholder="Tất cả"
-                                    optionFilterProp="children"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobLocationFilter)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    {
-                                        list_em_branches &&
-                                        list_em_branches.map((item: IEmBranch, index: number) => <Option key={index} value={item.id}>{item.branchName}</Option>)
-                                    }
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Loại công việc"} />
-                                <Select
-                                    showSearch
-                                    placeholder="Tất cả"
-                                    defaultValue="Tất cả"
-                                    optionFilterProp="children"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobType)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.FULLTIME}>Toàn thời gian</Option>
-                                    <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
-                                    <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Gói dịch vụ"} />
-                                <Cascader
-                                    placeholder="Không chọn gói"
-                                    style={{ width: "100%" }}
-                                    options={this.options}
-                                />
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái gói dịch vụ"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    placeholder="Tất cả"
-                                    optionFilterProp="children"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Còn hạn</Option>
-                                    <Option value={TYPE.FALSE}>Hết hạn</Option>
-
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái ẩn/hiện"} />
-                                <Select
-                                    showSearch
-                                    placeholder="Tất cả"
-                                    defaultValue="Tất cả"
-                                    optionFilterProp="children"
-                                    style={{ width: "100%" }}
-                                    value={value_type}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.hidden)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đang ẩn</Option>
-                                    <Option value={TYPE.FALSE}>Đang hiện</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
-                                <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
-                                <Checkbox
-                                    indeterminate={un_checkbox}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event.target.checked);
-                                            this.setState({ un_checkbox: event.target.checked })
-                                        }
-                                    }
-                                >
-                                    Bất kì
-                                </Checkbox>
-                                <CheckboxGroup
-                                    options={plainOptions}
-                                    value={list_check}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event);
-                                            this.setState({ list_check: event })
-                                        }
-                                    }
-                                    disabled={un_checkbox}
-                                />
-                            </Col>
-                        </Row>
-                        <Table
-                            // @ts-ignore
-                            columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
-                            scroll={{ x: 1800 }}
-                            bordered
-                            pagination={{ total: totalItems, showSizeChanger: true }}
-                            size="middle"
-                            onChange={this.setPageIndex}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                    onClick: event => {
-                                    }, // click row
-                                    onMouseEnter: (event) => {
-                                        localStorage.setItem('id_job_announcement', record.key)
-                                    }, // mouse enter row
-                                };
-                            }}
+                            key="ok"
+                            type={type_modal === TYPE.DELETE ? "danger" : "primary"}
+                            icon={type_modal === TYPE.DELETE ? "delete" : "check"}
+                            loading={loading}
+                            children={type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                            onClick={async () => this.createRequest()}
                         />
+                    ]}
+                    children={msg}
+                />
+                <>
+                    <DrawerConfig
+                        title={"Kích hoạt gói dịch vụ tuyển dụng"}
+                        width={800}
+                    >
+                        <h6>Các gói của bạn</h6>
+                        <>
+                            <label className='top'>Gói tuyển dụng gấp: {list_job_service.homeTopQuantiy}</label>
+                            <label className='in_day'>Gói tuyển dụng trong ngày: {list_job_service.homeInDayQuantity}</label>
+                            <label className='high_light'>Gói tìm kiếm nổi bật:  {list_job_service.searchHighLightQuantity}</label>
+                        </>
+                        <hr />
+                        <h6>Hãy chọn gói phù hợp cho bạn <Icon type="check" style={{ color: "green" }} /></h6>
+                        <>
+                            <IptLetterP
+                                style={{ margin: "15px 5px" }}
+                                value={`Nhóm gói tuyển dụng ở trang chủ${homeExpiration !== -1 && homeExpired ? "(Hết hạn)" : ""}`}
+                            >
+                                <Radio.Group onChange={
+                                    (event: any) => this.onChoseHomePriority(event.target.value)}
+                                    value={homePriority}
+                                    disabled={un_active_home}
+                                >
+                                    <Radio value={TYPE.TOP}>Tuyển dụng gấp</Radio>
+                                    <Radio value={TYPE.IN_DAY}>Tuyển dụng trong ngày</Radio>
+                                </Radio.Group>
+                                <Button
+                                    icon="check"
+                                    type={un_active_home ? "ghost" : "primary"}
+                                    style={{
+                                        float: "right"
+                                    }}
+                                    disabled={un_active_home}
+                                    onClick={() => {
+                                        this.setState({ type_modal: TYPE.JOB_FILTER.homePriority });
+                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?");
+                                    }}
+                                >
+                                    Kích hoạt
+                            </Button>
+                            </IptLetterP>
+                            <IptLetterP
+                                style={{ margin: "15px 5px" }}
+                                value={`Nhóm gói tuyển dụng tìm kiếm" ${searchExpiration !== -1 && searchExpired ? "(Hết hạn)" : ""}`}
+                            >
+                                <Radio.Group onChange={
+                                    (event: any) => this.onChoseSearchPriority(event.target.value)}
+                                    value={searchPriority}
+                                    disabled={un_active_search}
+                                >
+                                    <Radio value={TYPE.HIGHLIGHT}>Tìm kiếm nổi bật</Radio>
+                                </Radio.Group>
+                                <Button
+                                    type={un_active_search ? "ghost" : "primary"}
+                                    icon="check"
+                                    style={{
+                                        float: "right"
+                                    }}
+                                    disabled={un_active_search}
+                                    onClick={() => {
+                                        this.setState({ type_modal: TYPE.JOB_FILTER.searchPriority });
+                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?");
+                                    }}
+                                >
+                                    Kích hoạt
+                            </Button>
+                            </IptLetterP>
+                        </>
+                        <div style={{
+                            marginTop: "30px",
+                            textAlign: "center",
+                        }}
+                        >
+                            {
+                                (!homeExpired && homeExpiration !== -1) ||
+                                    (!searchExpired && homeExpiration !== -1) ?
+                                    <span className="italic">(Đang kích hoạt gói dịch vụ)</span> :
+                                    <span className="italic"> (Chưa kích hoạt gói dịch vụ)</span>
+                            }
+                        </div>
+                        <hr />
+                        <div style={{ padding: "40px 10px 20px ", width: "100%" }}>
+                            <Button
+                                icon="close"
+                                type="dashed"
+                                style={{
+                                    float: "left"
+                                }}
+                                onClick={() => this.onCancelRegisterBenefit()}
+                            >
+                                Hủy bỏ thay đổi
+                        </Button>
+
+                        </div>
+                    </DrawerConfig>
+                    <div className="common-content">
+                        <h5>
+                            Quản lí bài đăng
+                        <Button
+                                onClick={() => this.searchJobAnnouncement()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "0px 5px"
+                                }}
+                            >
+                                <Icon type="filter" />
+                                Tìm kiếm
+                        </Button>
+                            <Button
+                                onClick={() => this.searchJobAnnouncement()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "0px 5px"
+                                }}
+                            >
+                                <Link to='/admin/jobs/job-announcements/create' >
+                                    <Icon type="plus" />
+                                    Tạo bài đăng mới
+                            </Link>
+                            </Button>
+                        </h5>
+                        <div className="table-operations">
+                            <Row >
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Trạng thái hoạt động"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        <Option value={TYPE.FALSE}>Còn hạn</Option>
+                                        <Option value={TYPE.TRUE}>Hết hạn</Option>
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Tên việc đăng tuyển"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
+                                    >
+                                        {
+                                            list_job_names &&
+                                            list_job_names.map(
+                                                (item: IJobName, index: number) => <Option key={index} value={item.id}>{item.name}</Option>
+                                            )
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Chi nhánh tuyển dụng"} />
+                                    <Select
+                                        showSearch
+                                        placeholder="Tất cả"
+                                        optionFilterProp="children"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobLocationFilter)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        {
+                                            list_em_branches &&
+                                            list_em_branches.map(
+                                                (item: IEmBranch, index: number) => <Option key={index} value={item.id}>{item.branchName}</Option>
+                                            )
+                                        }
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Loại công việc"} />
+                                    <Select
+                                        showSearch
+                                        placeholder="Tất cả"
+                                        defaultValue="Tất cả"
+                                        optionFilterProp="children"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobType)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        <Option value={TYPE.FULLTIME}>Toàn thời gian</Option>
+                                        <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
+                                        <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Gói dịch vụ"} />
+                                    <Cascader
+                                        placeholder="Không chọn gói"
+                                        style={{ width: "100%" }}
+                                        options={this.options}
+                                        onChange={
+                                            (event: any) => {
+                                                if (event.length === 0) {
+                                                    body.homePriority = null;
+                                                    body.searchPriority = null;
+                                                    this.setState({ body });
+                                                } else this.onChangeType(event[1], event[0]);
+                                            }
+                                        }
+                                    />
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Trạng thái gói dịch vụ"} />
+                                    <Select
+                                        showSearch
+                                        defaultValue="Tất cả"
+                                        placeholder="Tất cả"
+                                        optionFilterProp="children"
+                                        style={{ width: "100%" }}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        <Option value={TYPE.TRUE}>Còn hạn</Option>
+                                        <Option value={TYPE.FALSE}>Hết hạn</Option>
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Trạng thái ẩn/hiện"} />
+                                    <Select
+                                        showSearch
+                                        placeholder="Tất cả"
+                                        defaultValue="Tất cả"
+                                        optionFilterProp="children"
+                                        style={{ width: "100%" }}
+                                        value={value_type}
+                                        onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.hidden)}
+                                    >
+                                        <Option value={null}>Tất cả</Option>
+                                        <Option value={TYPE.TRUE}>Đang ẩn</Option>
+                                        <Option value={TYPE.FALSE}>Đang hiện</Option>
+                                    </Select>
+                                </Col>
+                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                    <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
+                                    <Checkbox
+                                        indeterminate={un_checkbox}
+                                        onChange={
+                                            (event: any) => {
+                                                this.handleCheckBox(event.target.checked);
+                                                this.setState({ un_checkbox: event.target.checked })
+                                            }
+                                        }
+                                    >
+                                        Bất kì
+                                </Checkbox>
+                                    <hr />
+                                    <CheckboxGroup
+                                        options={plainOptions}
+                                        value={list_check}
+                                        onChange={
+                                            (event: any) => {
+                                                this.handleCheckBox(event);
+                                                this.setState({ list_check: event })
+                                            }
+                                        }
+                                        disabled={un_checkbox}
+                                    />
+                                </Col>
+                            </Row>
+                            <Table
+                                // @ts-ignore
+                                columns={this.columns}
+                                loading={loading_table}
+                                dataSource={data_table}
+                                scroll={{ x: 1800 }}
+                                bordered
+                                pagination={{ total: totalItems, showSizeChanger: true }}
+                                size="middle"
+                                onChange={this.setPageIndex}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                        onClick: event => {
+                                        }, // click row
+                                        onMouseEnter: (event) => {
+                                            localStorage.setItem('id_job_announcement', record.key)
+                                        }, // mouse enter row
+                                    };
+                                }}
+                            />
+                        </div>
                     </div>
-                </div>
-            </ >
+                </>
+            </>
         )
     }
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListAnnouncements: (body: IJobAnnouncementsFilter, pageIndex: number, pageSize: number) =>
+    getListJobAnnouncements: (body: IJobAnnouncementsFilter, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS, body, pageIndex, pageSize }),
     getListEmBranches: () =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
     handleDrawer: () =>
-        dispatch({ type: TYPE.HANDLE })
+        dispatch({ type: TYPE.HANDLE }),
+    handleModal: (msg?: string, type_modal?: string) =>
+        dispatch({ type: TYPE.OPEN, msg, type_modal }),
+    getJobAnnouncementDetail: (id: string | number) =>
+        dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
+    getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -649,6 +891,10 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_names: state.JobNames.items,
     list_em_branches: state.EmBranches.items,
     list_job_service: state.JobService,
+    job_announcement_detail: state.JobAnnouncementDetail,
+    open_modal: state.MutilBox.open_modal,
+    msg: state.MutilBox.msg,
+    type_modal: state.MutilBox.type_modal,
     totalItems: state.JobAnnouncements.totalItems
 });
 

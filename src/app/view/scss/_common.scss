@@ -60,10 +60,6 @@ code {
   background-color: #f1f1f1a7;
 }
 
-.ant-modal {
-  width: 80vw !important;
-}
-
 * {
   font-family: $font_base;
 }
@@ -133,6 +129,10 @@ textarea {
   &:hover {
     background-color: rgba(192, 142, 5, 0.897);
   }
+}
+
+.ant-drawer{
+  z-index: 900!important;
 }
 
 .ant-divider-inner-text {

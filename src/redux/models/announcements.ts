@@ -39,12 +39,15 @@ export interface IShifts {
     sat?: boolean,
     sun?: boolean,
     genderRequireds?: Array<{
+        id?: string
         gender?: 'MALE' | 'FEMALE' | 'BOTH',
         quantity?: number,
+        applied?: number,
     }>
 }
 
 export interface IAnnoucementBody {
+    id?: string,
     jobTitle?: string,
     jobNameID?: number,
     employerBranchID?: string,

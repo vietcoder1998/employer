@@ -39,6 +39,10 @@ export const TYPE = {
     CLOSE: "CLOSE",
     HANDLE: "HANDLE",
 
+    HIGHLIGHT: "HIGHLIGHT",
+    IN_DAY: "IN_DAY",
+    TOP: "TOP",
+
     JOB_FILTER: {
         expired: 'expired',
         hidden: 'hidden',
