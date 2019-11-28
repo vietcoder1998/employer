@@ -74,7 +74,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
         };
     }
 
-    EditJob = (
+    editToolAction = (
         <div>
             <Link to={`/admin/em-branches/fix/${localStorage.getItem("id_saved_candidate_profiles")}`}>
                 <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
@@ -153,7 +153,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             fixed: 'right',
             className: 'action',
             width: 100,
-            render: () => this.EditJob
+            render: () => this.editToolAction
         },
     ];
 

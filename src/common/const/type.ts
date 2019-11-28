@@ -35,6 +35,10 @@ export const TYPE = {
     EXIST: "EXIST",
     NON_EXIST: "NON_EXIST",
 
+    OPEN: "OPEN",
+    CLOSE: "CLOSE",
+    HANDLE: "HANDLE",
+
     JOB_FILTER: {
         expired: 'expired',
         hidden: 'hidden',

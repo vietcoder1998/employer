@@ -97,7 +97,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
         };
     }
 
-    EditJob = (
+    editToolAction = (
         <div>
             <Link to={`/admin/em-branches/fix/${localStorage.getItem("id_em_branches")}`}>
                 <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
@@ -169,7 +169,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             fixed: 'right',
             className: 'action',
             width: 100,
-            render: () => this.EditJob
+            render: () => this.editToolAction
         },
     ];
 

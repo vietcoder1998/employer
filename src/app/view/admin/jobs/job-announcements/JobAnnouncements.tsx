@@ -31,6 +31,7 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={JobAnnouncementsList} />
                     <ErrorBoundaryRoute path={`${path}/create`} component={JobAnnouncementsCreate} />
+                    <ErrorBoundaryRoute path={`${path}/copy`} component={JobAnnouncementsCreate} />
                 </Switch>
             </Fragment>
         )

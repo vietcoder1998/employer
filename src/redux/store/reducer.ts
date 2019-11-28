@@ -1,3 +1,6 @@
+import { JobService } from './../reducers/job-service';
+import { MutilBox } from './../reducers/mutil-box';
+import { JobAnnouncementDetail } from './../reducers/job-announcement-detail';
 import { Skills } from './../reducers/skills';
 import { SavedCandidateProfiles } from './../reducers/saved-candidate-profiles';
 import { FindCandidateDetail } from './../reducers/find-candidates-detail';
@@ -24,7 +27,10 @@ const rootReducer = combineReducers({
     FindCandidates,
     FindCandidateDetail,
     SavedCandidateProfiles,
-    Skills
+    Skills,
+    JobAnnouncementDetail,
+    MutilBox,
+    JobService
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

@@ -1,7 +1,7 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, Cascader, Checkbox } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -12,9 +12,10 @@ import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../red
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../redux/models/job-names';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
+import DrawerConfig from '../../../../layout/config/DrawerConfig';
+
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
-
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
 interface JobAnnouncementsListProps extends StateProps, DispatchProps {
@@ -24,6 +25,7 @@ interface JobAnnouncementsListProps extends StateProps, DispatchProps {
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
+    handleDrawer: Function;
 };
 
 interface JobAnnouncementsListState {
@@ -52,6 +54,7 @@ interface JobAnnouncementsListState {
     un_checkbox?: boolean;
     list_check?: Array<any>;
     state_check_box?: Array<string>;
+    open_drawer?: boolean;
 };
 
 class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobAnnouncementsListState> {
@@ -96,19 +99,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                 jobLocationFilter: null
             },
             un_checkbox: false,
-            list_check: []
+            list_check: [],
+            open_drawer: false,
         };
     }
 
-    EditJob = (
-        <div>
-            <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" onClick={() => this.deleteAnnoun()} />
-            <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`}>
-                <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
-            </Link>
-            <Icon key="delete" style={{ padding: "5px 10px" }} type="eye" onClick={() => this.onToggleModal()} />
-        </div>
-    );
+
 
     deleteAnnoun = async () => {
         /* tslint:disable */
@@ -159,7 +155,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             dataIndex: 'jobType',
             className: 'action',
             key: 'jobType',
-            width: 120,
+            width: 110,
         },
         {
             title: 'Ngày đăng',
@@ -176,17 +172,17 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             width: 100,
         },
         {
-            title: 'Ứng tuyển',
-            dataIndex: 'appliedCount',
+            title: 'Đang chờ',
+            dataIndex: 'pendingApplied',
             className: 'action',
-            key: 'appliedCount',
+            key: 'pendingApplied',
             width: 100,
         },
         {
-            title: 'Chấp nhận',
-            dataIndex: 'suitableCount',
+            title: 'Đã chấp nhận',
+            dataIndex: 'acceptedApplied',
             className: 'action',
-            key: 'suitableCount',
+            key: 'acceptedApplied',
             width: 100,
         },
         {
@@ -201,16 +197,16 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
-            width: 150,
+            width: 160,
         },
         {
             title: 'Thao tác',
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 120,
-            render: () => this.EditJob
-        },
+            dataIndex: 'operation',
+            width: 170,
+        }
     ];
 
     options = [
@@ -249,13 +245,47 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         if (nextProps.list_job_announcements !== prevState.list_job_announcements) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (count: string | number | null, type: "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
+            let viewCount = (count?: string | number, type?: "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
                 <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`} >
                     <Button type={type} disabled={count === 0}>
                         <Icon type="team" />{count}
                     </Button>
                 </Link>
-            </div>)
+            </div>);
+
+            let EditToolTip = (hidden?: boolean) => (
+                <div>
+                    <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
+                        <Icon
+                            type={hidden ? "eye-invisible" : "eye"}
+                            style={{ padding: "5px 5px", color: hidden ? "black" : "gray" }}
+                        />
+                    </Tooltip>
+                    <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
+                        <Link to={`/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`}>
+                            <Icon
+                                style={{ padding: "5px 5px" }}
+                                type="edit"
+                                theme="twoTone"
+                                twoToneColor="green"
+                            />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
+                        <Link to={`/admin/job-management/copy/${localStorage.getItem("id_job_announcement")}`}>
+                            <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip placement="topRight" title={"Xóa bài đăng"}>
+                        <Icon style={{ padding: "5px 5px" }} type="delete" theme="twoTone" twoToneColor="red" />
+                    </Tooltip>
+                    <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
+                        <Icon style={{ padding: "5px 5px" }} type="dollar" theme="twoTone" twoToneColor="yellow" onClick={() => nextProps.handleDrawer()} />
+                    </Tooltip>
+                </div>
+            )
+
+
 
             nextProps.list_job_announcements.forEach((item: IJobAnnouncement, index: number) => {
                 data_table.push({
@@ -267,13 +297,15 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    appliedCount: viewCount(item.appliedCount, "default"),
+                    acceptedApplied: viewCount(item.acceptedApplied, "primary"),
                     rejectedApplied: viewCount(item.rejectedApplied, "danger"),
-                    suitableCount: viewCount(item.rejectedApplied, "primary"),
+                    pendingApplied: viewCount(item.pendingApplied, "default"),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority: `${item.priority.homePriority},${item.priority.searchPriority}`
+                    priority: `${item.priority.homePriority},${item.priority.searchPriority}`,
+                    operation: EditToolTip(item.hidden)
                 });
             })
+
             return {
                 list_job_announcements: nextProps.list_em_branches,
                 data_table,
@@ -307,23 +339,18 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                 body.hasRejectedApplied = null;
             }
         } else {
+            body.hasAcceptedApplied = null;
+            body.hasPendingApplied = null;
+            body.hasRejectedApplied = null;
             event.forEach((element: string) => {
+                console.log(element)
                 let arr = list_param.filter((item: any, index: number) => {
                     return (item.label === element)
-                });
-
-                let ivl_arr = list_param.filter((item: any, index: number) => {
-                    return (item.label !== element)
                 });
 
                 arr.forEach((item: any, index) => {
                     body[item.param] = true;
                 });
-
-                ivl_arr.forEach((item: any, index) => {
-                    body[item.param] = false;
-                });
-
             });
         }
 
@@ -389,14 +416,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             default:
                 break;
         };
-
         this.setState({ hidden });
     };
 
     render() {
         let {
             data_table,
-            show_modal,
             value_type,
             loading_table,
             un_checkbox,
@@ -406,28 +431,29 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         let {
             totalItems,
             list_job_names,
-            list_em_branches
-        } = this.props
-        return (
-            <Fragment>
-                <div className="common-content">
-                    <Modal
-                        visible={show_modal}
-                        title="XEM TRƯỚC BÀI ĐĂNG"
-                        onCancel={this.onToggleModal}
-                        style={{ top: "5vh" }}
-                        footer={[
-                            <Button
-                                key="back"
-                                type="danger"
-                                onClick={this.onToggleModal}
-                            >
-                                Thoát
-                        </Button>
-                        ]}
-                    >
-                    </Modal>
+            list_em_branches,
+            list_job_service
+        } = this.props;
 
+        return (
+            <>
+                <DrawerConfig
+                    title={"Kích hoạt gói dữ liệu"}
+                    width={500}
+                >
+                    <h6>Các gói của bạn</h6>
+                    <>
+                        <label className='normal'>Gói tuyển dụng thường: {list_job_service.nomalQuantity}</label>
+                        <label className='top'>Gói tuyển dụng gấp: {list_job_service.homeTopQuantiy}</label>
+                        <label className='in_day'>Gói tuyển dụng trong ngày: {list_job_service.homeInDayQuantity}</label>
+                        <label className='high_light'>Gói tìm kiếm nổi bật:  {list_job_service.searchHighLightQuantity}</label>
+                    </>
+                    <hr />
+                    <h6>Lựa chọn gói phù hợp <Icon type="check" style={{color: "green"}}/></h6>
+
+
+                </DrawerConfig>
+                <div className="common-content">
                     <h5>
                         Quản lí bài đăng
                         <Button
@@ -587,7 +613,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1500 }}
+                            scroll={{ x: 1800 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
@@ -604,7 +630,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         />
                     </div>
                 </div>
-            </Fragment >
+            </ >
         )
     }
 };
@@ -614,12 +640,15 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS, body, pageIndex, pageSize }),
     getListEmBranches: () =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
+    handleDrawer: () =>
+        dispatch({ type: TYPE.HANDLE })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_announcements: state.JobAnnouncements.items,
     list_job_names: state.JobNames.items,
     list_em_branches: state.EmBranches.items,
+    list_job_service: state.JobService,
     totalItems: state.JobAnnouncements.totalItems
 });
 

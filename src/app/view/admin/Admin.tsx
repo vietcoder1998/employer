@@ -29,6 +29,7 @@ interface AdminProps extends StateProps, DispatchProps {
     getListRegions: Function;
     getListJobNames: Function;
     getListSkills: Function;
+    getListJobService: Function;
 }
 
 
@@ -47,6 +48,7 @@ class Admin extends PureComponent<AdminProps, AdminState> {
         this.props.getListRegions();
         this.props.getListJobNames();
         this.props.getListSkills();
+        this.props.getListJobService();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -158,7 +160,8 @@ class Admin extends PureComponent<AdminProps, AdminState> {
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS }),
     getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
-    getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS })
+    getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
+    getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

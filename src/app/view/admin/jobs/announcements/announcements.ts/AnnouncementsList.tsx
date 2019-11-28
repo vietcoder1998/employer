@@ -124,7 +124,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
         }
     };
 
-    EditJob = (
+    editToolAction = (
         <React.Fragment>
             <Icon key="delete" style={{ padding: "5px 10px" }} type="eye" onClick={() => this.onToggleModal()} />
         </React.Fragment>
@@ -206,7 +206,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             fixed: 'right',
             className: 'action',
             width: 160,
-            render: () => this.EditJob
+            render: () => this.editToolAction
         },
     ];
 

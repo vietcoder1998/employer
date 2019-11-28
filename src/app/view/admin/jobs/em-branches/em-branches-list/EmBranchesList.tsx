@@ -77,7 +77,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         };
     }
 
-    EditJob = (
+    editToolAction = (
         <div>
             <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" onClick={() => this.deleteAnnoun()} />
             <Link to={`/admin/em-branches/fix/${localStorage.getItem("id_em_branches")}`}>
@@ -166,7 +166,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             fixed: 'right',
             className: 'action',
             width: 160,
-            render: () => this.EditJob
+            render: () => this.editToolAction
         },
     ];
 
