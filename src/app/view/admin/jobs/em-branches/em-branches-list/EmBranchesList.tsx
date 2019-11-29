@@ -348,7 +348,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 margin: "0px 5px"
                             }}
                         >
-                            <Link to='/admin/em-branches/create' >
+                            <Link to='/admin/jobs/employer-branches/create' >
                                 <Icon type="plus" />
                                 Tạo bài đăng mới
                             </Link>

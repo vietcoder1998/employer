@@ -208,8 +208,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         ).then((res: any) => {
             this.props.history.push('/admin/jobs/job-announcements/list');
         })
-
-        await this.props.get
     }
 
     pretreatmentBody = (body: IAnnoucementBody, type_cpn: string) => {

@@ -68,75 +68,7 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management !== prevState.type_management) {
-            let list_item = [];
-            for (let i = 0; i < nextProps.type_management.length; i++) {
-                const element = nextProps.type_management[i];
-                const list_target = element.targets;
-                let target = "";
-
-                if (list_target.length === 0) {
-                    target = "Mọi đối tượng";
-                } else {
-                    list_target.forEach((element, index) => {
-                        target += element + (index !== list_target.length - 1 ? ', ' : "")
-                    });
-                }
-                list_item.push({ label: element.name + ` ( ${target} ) `, value: element.id });
-            }
-
-            return {
-                list_item,
-                type_management: nextProps.type_management
-            }
-        }
-
-        if (
-            nextProps.match.params.id !== "" &&
-            nextProps.announcement_detail &&
-            nextProps.announcement_detail.id !==
-            prevState.announcement_detail.id
-        ) {
-            let { announcement_detail } = nextProps;
-            let fileList = [];
-            fileList.push({
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: announcement_detail.imageUrl,
-            });
-
-            return {
-                title: announcement_detail.title,
-                content: announcement_detail.content,
-                fileList,
-                hidden: announcement_detail.hidden,
-                announcement_detail,
-                announcementTypeID: announcement_detail.announcementType.id,
-                value_annou: announcement_detail.announcementType.name,
-                type_cpn: TYPE.EDIT
-            }
-        }
-
-        if (prevState.announcementTypeID) {
-            let { list_item, announcementTypeID } = prevState;
-            let value_annou = "";
-            list_item.forEach(item => {
-                if (item.value === announcementTypeID) {
-                    value_annou = item.label
-                }
-            })
-
-            return {
-                value_annou,
-            }
-        }
-
-        return {
-            type_cpn: TYPE.CREATE,
-            value_annou: "Chọn loại bài viết",
-
-        }
+        return null;
     }
 
     async componentDidMount() {
@@ -313,8 +245,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 })
 
 const mapStateToProps = (state: any, ownProps: any) => ({
-    type_management: state.TypeManagement.items,
-    announcement_detail: state.AnnouncementDetail.data
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;
