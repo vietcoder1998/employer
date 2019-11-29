@@ -206,7 +206,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management !== prevState.type_management) {
+        if ( nextProps.type_management && nextProps.type_management !== prevState.type_management) {
             return {
                 type_management: nextProps.type_management,
                 value_type: "Tất cả",
@@ -214,7 +214,7 @@ class FindCandidatesList extends PureComponent<FindCandidatesListProps, FindCand
             }
         }
 
-        if (nextProps.list_find_candidates !== prevState.list_find_candidates) {
+        if (nextProps.list_find_candidates && nextProps.list_find_candidates  !== prevState.list_find_candidates) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             nextProps.list_find_candidates.forEach((item: IFindCandidate, index: number) => {

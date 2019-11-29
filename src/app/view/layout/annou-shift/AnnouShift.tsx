@@ -19,10 +19,6 @@ interface IShiftContent {
     shifts?: IShifts;
 }
 
-interface IShiftProps {
-
-}
-
 export function newShift(): IShifts {
     return {
         id: randomID(8),
@@ -38,36 +34,9 @@ export function newShift(): IShifts {
         fri: false,
         sat: false,
         sun: false,
-        genderRequireds: [
-            { gender: "MALE", quantity: 0 },
-            { gender: "FEMALE", quantity: 0 }
-        ]
+        genderRequireds: [],
     };
 };
-
-export function setTime(value: number, postition: "HOURS" | "MINUTES", defaultValue?: string) {
-    let arrValue = ["00", "00"]
-    if (defaultValue) {
-        arrValue = defaultValue.split(":");
-    }
-
-    let newValue: string | number = value;
-
-    if (value < 10) {
-        newValue = "0" + newValue;
-    } else {
-        newValue = "" + newValue;
-    }
-
-    if (postition === "HOURS") {
-        arrValue[0] = newValue;
-    } else {
-        arrValue[1] = newValue;
-    }
-
-    let result = arrValue[0] + ":" + arrValue[1];
-    return result
-}
 
 export function ShiftContent(props: IShiftContent) {
     const [id, setId] = React.useState(randomID(16));
@@ -86,37 +55,63 @@ export function ShiftContent(props: IShiftContent) {
     const [sun, setSun] = React.useState(false);
     const [typeGender, setTypeGender] = React.useState(true);
     const [genderRequireds, setGenderRequireds] = React.useState([]);
-    let [valueGender] = React.useState([
-        { gender: "MALE", quantity: 0, id: randomID(8) },
-        { gender: "FEMALE", quantity: 0, id: randomID(8) }
+    let [valueGender, setValueGender] = React.useState([
+        { gender: TYPE.MALE, quantity: 0, id: null },
+        { gender: TYPE.FEMALE, quantity: 0, id: null }
     ]);
-    const [valueBoth] = React.useState([
-        { gender: "BOTH", quantity: 0, id: null },
+    let [valueBoth, setValueBoth] = React.useState([
+        { gender: TYPE.BOTH, quantity: 0, id: null },
     ]);
 
     if (props.shifts && props.shifts.id !== id) {
-
-        if (props.shifts.minSalary === 0 && props.shifts.maxSalary === 0) {
+        if (
+            props.shifts.minSalary === 0 &&
+            props.shifts.maxSalary === 0) {
             setAgreement(false)
         }
         setMaxSalary(props.shifts.maxSalary);
         setMinsalary(props.shifts.minSalary);
         setStartTime(props.shifts.startTime);
         setEndTime(props.shifts.endTime);
-        setId(props.shifts.id)
-        setMon(props.shifts.mon)
-        setTue(props.shifts.tue)
-        setWed(props.shifts.wed)
-        setThu(props.shifts.thu)
-        setFri(props.shifts.fri)
-        setSat(props.shifts.sat)
-        setUnit(props.shifts.unit)
-        setSun(props.shifts.sun)
+        setId(props.shifts.id);
+        setMon(props.shifts.mon);
+        setTue(props.shifts.tue);
+        setWed(props.shifts.wed);
+        setThu(props.shifts.thu);
+        setFri(props.shifts.fri);
+        setSat(props.shifts.sat);
+        setUnit(props.shifts.unit);
+        setSun(props.shifts.sun);
         setGenderRequireds(props.shifts.genderRequireds)
+
+        if (
+            props.shifts.genderRequireds &&
+            props.shifts.genderRequireds.length > 0
+        ) {
+            let newValueGender = valueGender;
+            props.shifts.genderRequireds.forEach((item: { id: string, quantity: number, gender: any }) => {
+                if (item.gender === TYPE.BOTH) {
+                    setTypeGender(false);
+                    setValueBoth([item]);
+                } else {
+                    setTypeGender(true);
+                    if (item.gender === TYPE.MALE) {
+                        newValueGender[0] = item;
+                    }
+
+                    if (item.gender === TYPE.FEMALE) {
+                        newValueGender[1] = item;
+                    }
+
+                    setValueGender(newValueGender);
+                }
+            });
+        }
     }
 
     const timeSetup = (
-        <div style={{ display: 'flex', }}
+        <div
+            style={{ display: 'flex', }}
         >
             <IptLetterP value={"Thứ hai"} style={{ textAlign: "center", marginRight: "25px" }}  >
                 <Checkbox
@@ -139,7 +134,8 @@ export function ShiftContent(props: IShiftContent) {
                     checked={wed}
                     onChange={
                         (event: any) => setWed(event.target.checked)
-                    } />
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Thứ năm"} style={{ textAlign: "center", marginRight: "25px" }} >
                 <Checkbox
@@ -176,68 +172,72 @@ export function ShiftContent(props: IShiftContent) {
         </div>
     );
 
-    const handleGender = (value?: number, gender?: 'MALE' | 'FEMALE' | 'BOTH') => {
-        if (gender === 'BOTH') {
-            let newValue = valueBoth.map((item: any, index: number) => {
-                if (item.gender === gender) {
-                    item.quantity = value;
-                }
-
-                return item
-            });
-            setGenderRequireds(newValue);
-        } else {
-            let newValue = valueGender.map((item: any, index: number) => {
-                if (item.gender === gender) {
-                    item.quantity = value;
-                }
-
-                return item
-            });
-
-            let arrVl = newValue.filter((item: any) => {
-                return item.quantity !== 0
-            })
-            setGenderRequireds(arrVl)
-        }
-    }
-
     const target = (
         <div>
             <Radio.Group
                 name="radiogroup"
                 defaultValue={true}
-                onChange={(event: any) => setTypeGender(event.target.value)}
+                value={typeGender}
+                onChange={
+                    (event: any) => setTypeGender(event.target.value)
+                }
             >
                 <Radio value={true}>Theo giới tính</Radio>
                 <Radio value={false}>Theo Số lượng</Radio>
             </Radio.Group>
             <Row style={{ marginTop: 5, display: typeGender ? 'block' : 'none' }}>
+                {/* With Gender */}
                 <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Nam">
+                    <IptLetterP value="Nam" icon="man">
                         <InputNumber
                             min={0}
                             defaultValue={0}
-                            onChange={(event: number) => handleGender(event, "MALE")} />
+                            value={valueGender[0].quantity}
+                            onChange={
+                                (event: number) => {
+                                    let newValueGender = valueGender;
+                                    newValueGender[0].quantity = event;
+                                    setValueGender([newValueGender[0], newValueGender[1]]);
+                                    setGenderRequireds(valueGender)
+                                }
+                            }
+                        />
                     </IptLetterP>
                 </Col>
                 <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Nữ">
+                    <IptLetterP value="Nữ" icon="woman">
                         <InputNumber
                             min={0}
                             defaultValue={0}
-                            onChange={(event: number) => handleGender(event, "FEMALE")}
+                            value={valueGender[1].quantity}
+                            onChange={
+                                (event: number) => {
+                                    let newValueGender = valueGender;
+                                    newValueGender[1].quantity = event;
+                                    setValueGender([newValueGender[0], newValueGender[1]]);
+                                    setGenderRequireds(valueGender)
+                                }
+                            }
                         />
                     </IptLetterP>
                 </Col>
             </Row >
+            {/* With Both */}
             <Row style={{ marginTop: 5, display: !typeGender ? 'block' : 'none' }}>
                 <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Người" style>
+                    <IptLetterP value="Người" icon="team">
                         <InputNumber
-                            min={0}
+                            min={1}
                             defaultValue={0}
-                            onChange={(event: number) => handleGender(event, "BOTH")}
+                            value={valueBoth[0].quantity}
+                            onChange={
+                                (event: number) => {
+                                    let newValueBoth = valueBoth[0];
+                                    newValueBoth.quantity = event;
+                                    setValueBoth([newValueBoth]);
+                                    setGenderRequireds([newValueBoth]);
+                                }
+                            }
                         />
                     </IptLetterP>
                 </Col>
@@ -248,6 +248,7 @@ export function ShiftContent(props: IShiftContent) {
     React.useEffect(
         () => {
             props.onChange({
+                id,
                 startTime,
                 endTime,
                 minSalary: agreement ? minSalary : null,
@@ -262,9 +263,8 @@ export function ShiftContent(props: IShiftContent) {
                 sun,
                 genderRequireds
             });
-
-            return () => { }
         },
+        // eslint-disable-next-line
         [
             startTime,
             endTime,
@@ -280,7 +280,9 @@ export function ShiftContent(props: IShiftContent) {
             sun,
             agreement,
             genderRequireds,
-            typeGender
+            typeGender,
+            valueGender,
+            valueBoth,
         ]
     );
 
@@ -334,9 +336,7 @@ export function ShiftContent(props: IShiftContent) {
                         style={{ marginRight: " 10px" }}
                         checked={agreement}
                         onChange={
-                            (event: boolean) => {
-                                setAgreement(event);
-                            }
+                            (event: boolean) => setAgreement(event)
                         }
                     />
                     {!agreement ? "Theo thỏa thuận" : "Theo định mức"}
@@ -399,7 +399,7 @@ export function ShiftContent(props: IShiftContent) {
                         marginRight: "10px",
                         display: props.removeButton ? "block" : "none"
                     }}
-                    onClick={() => props.removeShift ? props.removeShift(props.id) : () => { }}
+                    onClick={() => props.removeShift(props.id)}
                 >
                     Xóa ca
                 </Button>

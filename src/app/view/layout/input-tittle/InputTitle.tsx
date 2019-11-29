@@ -56,7 +56,7 @@ export const NewInput = (props: INewInput) => {
 }
 
 export const NewSelect = (props: INewSelect) => {
-    let { placeholder, list_value, onChange, widthSelect, defaultValue, disabled, value } = props;
+    let { placeholder, list_value, onChange, widthSelect, disabled, value } = props;
     return (
         <Select
             showSearch

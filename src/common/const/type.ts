@@ -21,6 +21,7 @@ export const TYPE = {
     CREATE: "CREATE",
     EDIT: "EDIT",
     INPUT: "INPUT",
+    COPY: "COPY",
     SELECT: "SELECT",
     DELETE: "DELETE",
     ACTIVE: "ACTIVE",
@@ -96,5 +97,6 @@ export const TYPE = {
     FALSE: "FALSE",
 
     MALE: "MALE",
-    FEMALE: "FEMALE"
+    FEMALE: "FEMALE",
+    BOTH: "BOTH"
 }

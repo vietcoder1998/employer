@@ -12,11 +12,11 @@ import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShif
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import { findIdWithValue } from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST } from '../../../../../../common/const/method';
+import { POST, PUT } from '../../../../../../common/const/method';
 import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
-import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
+
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -28,7 +28,6 @@ interface IJobAnnouncementsCreateState {
     list_item: Array<{ label: string, value: string }>,
     loading: boolean;
     value_annou: string;
-    announcement_detail: any;
     type_cpn: string;
     list_em_branches: Array<IEmBranch>;
     body: IAnnoucementBody;
@@ -69,17 +68,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             list_item: [],
             loading: false,
             value_annou: "",
-            announcement_detail: {
-                id: "",
-                admin: {},
-                viewNumber: 0,
-                modifyAdmin: {},
-                announcementType: { id: 0, name: "", priority: 0 },
-                hidden: false,
-                imageUrl: "",
-                content: "",
-                loading: false,
-            },
             type_cpn: TYPE.CREATE,
             list_em_branches: [],
             body: {
@@ -88,7 +76,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 employerBranchID: null,
                 description: null,
                 requiredSkillIDs: [],
-                jobType: TYPE.FULLTIME,
+                jobType: null,
                 expirationDate: null,
                 shifts: [
                     {
@@ -108,7 +96,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     },
                 ]
             },
-            id: null
+            id: null,
         };
     };
 
@@ -127,7 +115,15 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             props.match.params.id &&
             props.match.params.id !== state.body.id
         ) {
-            let job_announcement_detail: IJobAnnouncementDetail = props.job_announcement_detail;
+            let type_cpn = TYPE.CREATE;
+            if (props.match.url.includes("fix")) {
+                type_cpn = TYPE.EDIT;
+            };
+            if (props.match.url.includes("copy")) {
+                type_cpn = TYPE.COPY;
+            };
+
+            let job_announcement_detail = props.job_announcement_detail;
             let body = getBody();
             body.id = job_announcement_detail.id
             body.description = job_announcement_detail.description;
@@ -138,8 +134,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             body.description = job_announcement_detail.description;
             body.expirationDate = job_announcement_detail.expirationDate;
             body.shifts = job_announcement_detail.shifts;
+            body.requiredSkillIDs = job_announcement_detail.requiredSkills.length && job_announcement_detail.requiredSkills.map((item: any) => { return item.id })
             return {
                 body,
+                type_cpn,
+                id: props.match.params.id
             }
         }
         return null
@@ -159,6 +158,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
+        console.log(event)
         body.shifts[index] = event;
         this.setState({ body })
     };
@@ -183,7 +183,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 if (item.id === id) {
                     body.shifts.splice(index, 1);
                     message.info({ type: "info", message: `Đã xóa ca số :${index}` })
-                }
+                };
             });
         };
 
@@ -191,40 +191,106 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     };
 
     createRequest = async () => {
-        let { body } = this.state;
+        let { body, type_cpn, id } = this.state;
+        let newBody = this.pretreatmentBody(body, type_cpn);
+        let matching = type_cpn === TYPE.EDIT ? `/${id}` : ``;
+        let METHOD = type_cpn === TYPE.EDIT ?  PUT : POST;
+
         await _requestToServer(
-            POST,
-            JOB_ANNOUNCEMENTS,
-            body,
+            METHOD,
+            JOB_ANNOUNCEMENTS + matching,
+            newBody,
             null,
             undefined,
             EMPLOYER_HOST,
             true,
             false,
-        )
+        ).then((res: any) => {
+            this.props.history.push('/admin/jobs/job-announcements/list');
+        })
+
+        await this.props.get
+    }
+
+    pretreatmentBody = (body: IAnnoucementBody, type_cpn: string) => {
+        let newBody = body;
+        newBody.shifts.forEach((element: any, index: number) => {
+            element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
+                if (item.id && type_cpn === TYPE.EDIT) {
+                    return {
+                        id: item.id,
+                        quantity: item.quantity,
+                        gender: item.gender,
+                    }
+                } else {
+                    return {
+                        quantity: item.quantity,
+                        gender: item.gender,
+                    }
+                }
+            });
+
+            element.genderRequireds = element.genderRequireds.filter(
+                (item: any, index: number) => item.quantity && item.quantity !== 0
+            );
+        });
+
+        if (type_cpn !== TYPE.EDIT) {
+            newBody.shifts.forEach((element: IShifts, index: number) => {
+                if (element.id) {
+                    delete element["id"]
+                }
+
+                if (element.minSalary === null) {
+                    element.minSalary = 0;
+                }
+
+                if (element.maxSalary === null) {
+                    element.maxSalary = 0;
+                }
+            })
+        }
+
+        delete newBody["id"];
+        return newBody;
     }
 
     render() {
         let {
             type_cpn,
             body,
-            jobName,
-            address,
-            skills
         } = this.state;
 
         let {
             list_job_names,
             list_em_branches,
             list_skills,
-            job_announcement_detail,
         } = this.props;
+
+        let ct_btn_ex = "Huỷ";
+        let ct_btn_nt = "Lưu lại";
+
+        switch (type_cpn) {
+            case TYPE.COPY:
+                ct_btn_ex = "Huỷ tạo";
+                ct_btn_nt = "Tạo mới(bản sao)";
+                break;
+
+            case TYPE.EDIT:
+                ct_btn_ex = "Huỷ";
+                ct_btn_nt = "Lưu lại";
+                break;
+            case TYPE.CREATE:
+                ct_btn_ex = "Huỷ tạo";
+                ct_btn_nt = "Tạo mới";
+                break;
+            default:
+                break;
+        };
 
         let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
         let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
         let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
-
-        console.log(body.shifts);
 
         return (
             <div className='common-content'>
@@ -242,7 +308,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 widthLabel="200px"
                                 children={
                                     <Input
-                                        width={200}
+                                        style={{ width: 550 }}
                                         placeholder="ex: Tuyển nhân viên bán hàng"
                                         value={body.jobTitle}
                                         onChange={
@@ -253,7 +319,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                         }
                                     />
                                 }
-
                             />
                             <InputTitle
                                 title="Nội dung bài đăng"
@@ -262,7 +327,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             >
                                 <TextArea
                                     rows={5}
-                                    style={{ width: 600 }}
+                                    style={{ width: 550 }}
                                     placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt"
                                     value={body.description}
                                     onChange={
@@ -280,7 +345,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             >
                                 <DatePicker
                                     format={"DD/MM/YYYY"}
-                                    style={{ width: 600 }}
+                                    style={{ width: 550 }}
                                     placeholder="ex: 07/12/2019"
                                     value={body.expirationDate ? moment(body.expirationDate) : null}
                                     onChange={
@@ -303,14 +368,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     }
                                 }
                                 widthLabel="200px"
-                                widthSelect="600px"
+                                widthSelect="550px"
                                 placeholder="ex: Nhân viên văn phòng"
                             />
                             <InputTitle
                                 title="Chọn địa chỉ đăng tuyển"
                                 type={TYPE.SELECT}
                                 list_value={list_em_branches_options}
-                                defaultValue={findIdWithValue(list_em_branches, job_announcement_detail.employerBranchID, "id", "branchName")}
+                                value={findIdWithValue(list_em_branches, body.employerBranchID, "id", "branchName")}
                                 onChange={
                                     (event: any) => {
                                         body.employerBranchID = event;
@@ -318,7 +383,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     }
                                 }
                                 widthLabel="200px"
-                                widthSelect="600px"
+                                widthSelect="550px"
                                 placeholder="ex: Công ti abc"
                             />
 
@@ -330,14 +395,15 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     mode="multiple"
                                     size="default"
                                     placeholder="ex: Giao tiếp, Tiếng Anh"
+                                    value={findIdWithValue(list_skills, body.requiredSkillIDs, "id", "name")}
                                     onChange={
                                         (event: any) => {
-                                            let list_data = findIdWithValue(list_skills, event, "name")
+                                            let list_data = findIdWithValue(list_skills, event, "name", "id")
                                             body.requiredSkillIDs = list_data;
                                             this.setState({ body })
                                         }
                                     }
-                                    style={{ width: 600 }}
+                                    style={{ width: 550 }}
                                 >
                                     {list_skill_options}
                                 </Select>
@@ -346,54 +412,64 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         <Divider orientation="left" >Thời gian làm việc</Divider>
                         <div className="announcements-create-content">
                             <Tabs
-                                activeKey={body ? body.jobType : TYPE.FULLTIME} style={{ width: "100%" }}
+                                activeKey={body.jobType}
+                                style={{ width: "100%" }}
                                 onChange={(event: string) => {
                                     body.jobType = event;
                                     this.setState({ body });
-                                    this.replaceShift();
+                                    type_cpn === TYPE.CREATE && this.replaceShift();
                                 }}
                             >
                                 <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME}>
                                     {body.shifts &&
                                         body.shifts.length > 0 &&
-                                        body.shifts.map((item: IShifts, index: number) => (
-                                            <ShiftContent
-                                                shifts={item}
-                                                key={index}
-                                                type={TYPE.FULLTIME}
-                                                removeButton={false}
-                                                id={item.id}
-                                                onChange={(event) => this.handleBodyShift(event, index)} />
+                                        body.shifts.map((item: any, index: number) => (
+                                            <div key={index}>
+                                                <ShiftContent
+                                                    shifts={item}
+                                                    type={TYPE.FULLTIME}
+                                                    removeButton={false}
+                                                    id={item.id}
+                                                    onChange={(event) => this.handleBodyShift(event, index)}
+                                                />
+                                            </div>
+
                                         ))
                                     }
                                 </TabPane>
                                 <TabPane tab="Bán thời gian" key={TYPE.PARTTIME}>
                                     {body.shifts &&
                                         body.shifts.length > 0 &&
-                                        body.shifts.map((item: IShifts, index: number) => (
-                                            <ShiftContent
-                                                shifts={item}
-                                                key={index}
-                                                index={index}
-                                                type={TYPE.PARTTIME}
-                                                id={item.id}
-                                                removeButton={true}
-                                                removeShift={(id: number | string) => this.removeShift(id)}
-                                                onChange={(event: IShifts) => this.handleBodyShift(event, index)} />))
+                                        body.shifts.map((item: any, index: number) => (
+                                            <div key={index}>
+                                                <ShiftContent
+                                                    shifts={item}
+                                                    index={index}
+                                                    type={TYPE.PARTTIME}
+                                                    id={item.id}
+                                                    removeButton={true}
+                                                    removeShift={(id: number | string) => this.removeShift(id)}
+                                                    onChange={(event: IShifts) => this.handleBodyShift(event, index)}
+                                                />
+                                            </div>
+                                        ))
                                     }
                                     <Button type="primary" icon="plus" onClick={() => this.addShift()} >Thêm ca</Button>
                                 </TabPane>
                                 <TabPane tab="Thực tập sinh" key={TYPE.INTERNSHIP} >
                                     {body.shifts &&
                                         body.shifts.length > 0 &&
-                                        body.shifts.map((item: IShifts, index: number) => (
-                                            < ShiftContent
-                                                shifts={item}
-                                                key={index}
-                                                type={TYPE.INTERNSHIP}
-                                                removeButton={false}
-                                                id={item.id}
-                                                onChange={(event) => this.handleBodyShift(event, index)} />
+                                        body.shifts.map((item: any, index: number) => (
+                                            <div key={index}>
+                                                < ShiftContent
+                                                    shifts={item}
+                                                    type={TYPE.INTERNSHIP}
+                                                    removeButton={false}
+                                                    id={item.id}
+                                                    onChange={(event) => this.handleBodyShift(event, index)}
+                                                />
+                                            </div>
+
                                         ))
                                     }
                                 </TabPane>
@@ -409,7 +485,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 }}
                                 onClick={() => this.createRequest()}
                             >
-                                {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
+                                {ct_btn_nt}
                                 <Icon type="right" />
                             </Button>
                             <Button
@@ -422,7 +498,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 onClick={() => { this.props.history.push('/admin/jobs/job-announcements/list') }}
                             >
                                 <Icon type="close" />
-                                {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
+                                {ct_btn_ex}
                             </Button>
                         </div>
                     </Col>

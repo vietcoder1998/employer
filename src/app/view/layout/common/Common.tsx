@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Icon } from 'antd';
 
 export const Titlelabel = (props: any) => {
     return <label className="title-label">{" " + props.value + " "}</label>
@@ -11,9 +12,9 @@ export const IptLetter = (props: any) => {
 
 export const IptLetterP = (props: any) => {
     return (
-        <div style={props.style ? {...props.style} : null}>
+        <div style={props.style ? { ...props.style } : null}>
             <p>
-                <span className="important-letter">{" " + props.value + " "}</span>
+                <span className="important-letter">{props.icon ? <Icon type={props.icon} /> : " "}{" " + (props.value ? props.value : " ") + " "}</span>
             </p>
             {props.children ? props.children : null}
         </div>

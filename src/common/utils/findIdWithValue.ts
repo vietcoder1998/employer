@@ -1,8 +1,15 @@
-export const findIdWithValue = (list_arr_ex?: Array<any>, value?: any, param?: string, typeReturn?: string): any => {
-    let result: any;
+/**
+ * 
+ * @param arr_ex Array<any> : Example value to checktype
+ * @param value Value to find
+ * @param param type param of arr_ex to compare
+ * @param typeReturn type param of arr_ex to return
+ */
 
+export const findIdWithValue = (arr_ex?: Array<any>, value?: any, param?: string, typeReturn?: string): any => {
+    let result: any;
     if (typeof value === "string" || typeof value === "number") {
-        list_arr_ex.forEach((item: any, index: number) => {
+        arr_ex.forEach((item: any, index: number) => {
             if (item[param] === value) {
                 if (typeReturn) {
                     result = item[typeReturn]
@@ -10,22 +17,16 @@ export const findIdWithValue = (list_arr_ex?: Array<any>, value?: any, param?: s
             }
         })
     } else {
-        if (value) {
+        if (value && value !== []) {
             let list_arr = [];
             value.forEach((element: string | number, index: number) => {
-                list_arr_ex.forEach((item: any, index: number) => {
-                    if (item[param] === element) {
-                        if (typeReturn) {
-                            list_arr.push(item[typeReturn])
-                        } else list_arr.push(item.id);
-                    }
-                })
+                let new_arr = arr_ex.filter((item: any, index: number) => { return item[param] === element });
+                new_arr.forEach((item: any, index: any) => list_arr.push(item[typeReturn]));
             });
 
             result = list_arr;
         }
     }
 
-    console.log(result)
     return result;
 }

@@ -266,19 +266,18 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         />
                     </Tooltip>
                     <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                        <Link to={`/admin/jobs/job-announcements/fix/${localStorage.getItem("id_job_announcement")}`}>
-                            <Icon
-                                style={{ padding: "5px 5px" }}
-                                type="edit"
-                                theme="twoTone"
-                                twoToneColor="green"
-                            />
-                        </Link>
+                        <Icon
+                            style={{ padding: "5px 5px" }}
+                            type="edit"
+                            theme="twoTone"
+                            twoToneColor="green"
+                            onClick={() => nextProps.history.push(`/admin/jobs/job-announcements/fix/${localStorage.getItem("id_job_announcement")}`)}
+                        />
                     </Tooltip>
                     <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                        <Link to={`/admin/jobs/job-announcements/copy/${localStorage.getItem("id_job_announcement")}`}>
-                            <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
-                        </Link>
+                        <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" onClick={() => {
+                            nextProps.history.push(`/admin/jobs/job-announcements/copy/${localStorage.getItem("id_job_announcement")}`)
+                        }} />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                         <Icon
@@ -411,7 +410,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     searchJobAnnouncement = async () => {
         let { body, pageIndex, pageSize } = this.state;
-        this.props.getListJobAnnouncements(body, pageIndex, pageSize);
+        await this.props.getListJobAnnouncements(body, pageIndex, pageSize);
     };
 
     onChangeType = (event: any, param?: string) => {
@@ -515,9 +514,23 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             case TYPE.DELETE:
                 await _requestToServer(
                     DELETE,
-                    JOB_ANNOUNCEMENTS + `/${localStorage.getIt}`,
-                    EMPLOYER_HOST
-                )
+                    JOB_ANNOUNCEMENTS + `/${localStorage.getItem('id_job_announcement')}`,
+                    undefined,
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res) => {
+                    if (res) {
+                        this.searchJobAnnouncement();
+                        this.props.handleModal();
+                    }
+                })
+                await this.setState({
+                    loading: false
+                });
+                break;
             default:
                 break;
         };
