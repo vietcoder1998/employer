@@ -25,7 +25,7 @@ export interface IAnnouncement {
 }
 
 export interface IShifts {
-    id?: string|number,
+    id?: string,
     startTime?: string,
     endTime?: string,
     minSalary?: number,

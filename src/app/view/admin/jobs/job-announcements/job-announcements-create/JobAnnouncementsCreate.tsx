@@ -223,6 +223,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
         let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
         let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+
+        console.log(body.shifts);
+
         return (
             <div className='common-content'>
                 <h5>
@@ -343,7 +346,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         <Divider orientation="left" >Thời gian làm việc</Divider>
                         <div className="announcements-create-content">
                             <Tabs
-                                defaultActiveKey={job_announcement_detail ? job_announcement_detail.jobType : TYPE.FULLTIME} style={{ width: "100%" }}
+                                activeKey={body ? body.jobType : TYPE.FULLTIME} style={{ width: "100%" }}
                                 onChange={(event: string) => {
                                     body.jobType = event;
                                     this.setState({ body });
@@ -355,6 +358,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                         body.shifts.length > 0 &&
                                         body.shifts.map((item: IShifts, index: number) => (
                                             <ShiftContent
+                                                shifts={item}
                                                 key={index}
                                                 type={TYPE.FULLTIME}
                                                 removeButton={false}
@@ -368,6 +372,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                         body.shifts.length > 0 &&
                                         body.shifts.map((item: IShifts, index: number) => (
                                             <ShiftContent
+                                                shifts={item}
                                                 key={index}
                                                 index={index}
                                                 type={TYPE.PARTTIME}
@@ -382,7 +387,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     {body.shifts &&
                                         body.shifts.length > 0 &&
                                         body.shifts.map((item: IShifts, index: number) => (
-                                            <ShiftContent
+                                            < ShiftContent
+                                                shifts={item}
                                                 key={index}
                                                 type={TYPE.INTERNSHIP}
                                                 removeButton={false}

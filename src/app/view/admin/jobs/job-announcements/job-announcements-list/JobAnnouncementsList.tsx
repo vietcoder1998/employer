@@ -14,8 +14,8 @@ import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST } from '../../../../../../common/const/method';
-import { JOB_PRIORITY_HOME } from '../../../../../../services/api/private.api';
+import { POST, DELETE } from '../../../../../../common/const/method';
+import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 
 let { Option } = Select;
@@ -467,7 +467,8 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
     };
 
     createRequest = async () => {
-        let { type_modal, homePriority, searchPriority } = this.state;
+        let { homePriority, searchPriority } = this.state;
+        let { type_modal } = this.props;
         await this.setState({ loading: true });
         switch (type_modal) {
             case TYPE.JOB_FILTER.homePriority:
@@ -510,6 +511,13 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     loading: false
                 });
                 break;
+
+            case TYPE.DELETE:
+                await _requestToServer(
+                    DELETE,
+                    JOB_ANNOUNCEMENTS + `/${localStorage.getIt}`,
+                    EMPLOYER_HOST
+                )
             default:
                 break;
         };
@@ -615,8 +623,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     }}
                                     disabled={un_active_home}
                                     onClick={() => {
-                                        this.setState({ type_modal: TYPE.JOB_FILTER.homePriority });
-                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?");
+                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?", TYPE.JOB_FILTER.homePriority);
                                     }}
                                 >
                                     Kích hoạt
@@ -641,8 +648,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     }}
                                     disabled={un_active_search}
                                     onClick={() => {
-                                        this.setState({ type_modal: TYPE.JOB_FILTER.searchPriority });
-                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?");
+                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?", TYPE.JOB_FILTER.searchPriority);
                                     }}
                                 >
                                     Kích hoạt

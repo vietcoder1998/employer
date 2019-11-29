@@ -5,6 +5,7 @@ import { IptLetterP, IptLetter } from '../common/Common';
 import randomID from '../../../../common/utils/randomID';
 import { IShifts } from '../../../../redux/models/announcements';
 import { TYPE } from '../../../../common/const/type';
+import moment from 'moment';
 const { Option } = Select;
 
 interface IShiftContent {
@@ -15,6 +16,11 @@ interface IShiftContent {
     removeButton?: boolean;
     onChange?: Function;
     removeShift?: Function;
+    shifts?: IShifts;
+}
+
+interface IShiftProps {
+
 }
 
 export function newShift(): IShifts {
@@ -64,6 +70,7 @@ export function setTime(value: number, postition: "HOURS" | "MINUTES", defaultVa
 }
 
 export function ShiftContent(props: IShiftContent) {
+    const [id, setId] = React.useState(randomID(16));
     const [startTime, setStartTime] = React.useState(null);
     const [endTime, setEndTime] = React.useState(null);
     const [minSalary, setMinsalary] = React.useState(null);
@@ -80,36 +87,91 @@ export function ShiftContent(props: IShiftContent) {
     const [typeGender, setTypeGender] = React.useState(true);
     const [genderRequireds, setGenderRequireds] = React.useState([]);
     let [valueGender] = React.useState([
-        { gender: "MALE", quantity: 0 },
-        { gender: "FEMALE", quantity: 0 }
+        { gender: "MALE", quantity: 0, id: randomID(8) },
+        { gender: "FEMALE", quantity: 0, id: randomID(8) }
     ]);
     const [valueBoth] = React.useState([
-        { gender: "BOTH", quantity: 0 },
+        { gender: "BOTH", quantity: 0, id: null },
     ]);
+
+    if (props.shifts && props.shifts.id !== id) {
+
+        if (props.shifts.minSalary === 0 && props.shifts.maxSalary === 0) {
+            setAgreement(false)
+        }
+        setMaxSalary(props.shifts.maxSalary);
+        setMinsalary(props.shifts.minSalary);
+        setStartTime(props.shifts.startTime);
+        setEndTime(props.shifts.endTime);
+        setId(props.shifts.id)
+        setMon(props.shifts.mon)
+        setTue(props.shifts.tue)
+        setWed(props.shifts.wed)
+        setThu(props.shifts.thu)
+        setFri(props.shifts.fri)
+        setSat(props.shifts.sat)
+        setUnit(props.shifts.unit)
+        setSun(props.shifts.sun)
+        setGenderRequireds(props.shifts.genderRequireds)
+    }
 
     const timeSetup = (
         <div style={{ display: 'flex', }}
         >
             <IptLetterP value={"Thứ hai"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox onChange={(event: any) => setMon(event.target.checked)} />
+                <Checkbox
+                    checked={mon}
+                    onChange={
+                        (event: any) => setMon(event.target.checked)
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Thứ ba"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox onChange={(event: any) => setTue(event.target.checked)} />
+                <Checkbox
+                    checked={tue}
+                    onChange={
+                        (event: any) => setTue(event.target.checked)
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Thứ tư"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox onChange={(event: any) => setWed(event.target.checked)} />
+                <Checkbox
+                    checked={wed}
+                    onChange={
+                        (event: any) => setWed(event.target.checked)
+                    } />
             </IptLetterP>
             <IptLetterP value={"Thứ năm"} style={{ textAlign: "center", marginRight: "25px" }} >
-                <Checkbox onChange={(event: any) => setThu(event.target.checked)} />
+                <Checkbox
+                    checked={thu}
+                    onChange={
+                        (event: any) => setThu(event.target.checked)
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Thứ sáu"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox onChange={(event: any) => setFri(event.target.checked)} />
+                <Checkbox
+                    checked={fri}
+                    onChange={
+                        (event: any) => setFri(event.target.checked)
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Thứ bảy"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox onChange={(event: any) => setSat(event.target.checked)} />
+                <Checkbox
+                    checked={sat}
+                    onChange={
+                        (event: any) => setSat(event.target.checked)
+                    }
+                />
             </IptLetterP>
             <IptLetterP value={"Chủ nhật"} style={{ textAlign: "center", marginRight: "25px" }}>
-                <Checkbox onChange={(event: any) => setSun(event.target.checked)} />
+                <Checkbox
+                    checked={sun}
+                    onChange={
+                        (event: any) => setSun(event.target.checked)
+                    }
+                />
             </IptLetterP>
         </div>
     );
@@ -203,7 +265,6 @@ export function ShiftContent(props: IShiftContent) {
 
             return () => { }
         },
-        // eslint-disable-next-line 
         [
             startTime,
             endTime,
@@ -235,9 +296,7 @@ export function ShiftContent(props: IShiftContent) {
         >
             <div
                 style={{
-                    position: "absolute",
-                    top: "20px",
-                    right: "20px",
+                    textAlign: "right",
                     display: props.type === TYPE.PARTTIME ? 'block' : 'none'
                 }}
             >
@@ -252,6 +311,7 @@ export function ShiftContent(props: IShiftContent) {
                     <TimePicker
                         placeholder="Bắt đầu"
                         format={"HH:mm"}
+                        value={startTime ? moment(startTime, "HH:mm") : null}
                         onChange={(time: any, timeString: string) => setStartTime(timeString)}
                     />
                 </InputTitle>
@@ -262,6 +322,7 @@ export function ShiftContent(props: IShiftContent) {
                     <TimePicker
                         placeholder="Kết thúc"
                         format={"HH:mm"}
+                        value={endTime ? moment(endTime, "HH:mm") : null}
                         onChange={(time: any, timeString: string) => setEndTime(timeString)}
                     />
                 </InputTitle>
@@ -271,6 +332,7 @@ export function ShiftContent(props: IShiftContent) {
                     <Switch
                         defaultChecked={true}
                         style={{ marginRight: " 10px" }}
+                        checked={agreement}
                         onChange={
                             (event: boolean) => {
                                 setAgreement(event);
@@ -284,6 +346,7 @@ export function ShiftContent(props: IShiftContent) {
                         <IptLetterP value={"Tối thiểu(VND)"} >
                             <InputNumber
                                 placeholder='ex: 5000000'
+                                value={minSalary}
                                 min={0}
                                 step={1000}
                                 onChange={(value: number) => setMinsalary(value)}
@@ -294,6 +357,7 @@ export function ShiftContent(props: IShiftContent) {
                     <Col xs={12} sm={12} md={8} lg={8} xl={8} >
                         <IptLetterP value={"Tối đa(VND)"}  >
                             <InputNumber
+                                value={maxSalary}
                                 placeholder='ex: 5000000'
                                 min={minSalary + 1000}
                                 step={1000}
@@ -306,7 +370,7 @@ export function ShiftContent(props: IShiftContent) {
                         <IptLetterP value={"Theo"} >
                             <Select
                                 style={{ width: "90px" }}
-                                defaultValue="ca"
+                                value={unit ? unit : "ca"}
                                 placeholder="ex: giờ"
                                 onChange={(value: string) => setUnit(value)}
                                 disabled={!agreement}
