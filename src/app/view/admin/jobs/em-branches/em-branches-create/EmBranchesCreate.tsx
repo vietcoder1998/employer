@@ -1,11 +1,16 @@
 import React, { PureComponent } from 'react'
-import { Upload, Modal, Icon, Divider, Switch, Row, Col, Button } from 'antd';
+import { Upload, Modal, Icon, Divider, Row, Col, Button, Input } from 'antd';
 import { connect } from 'react-redux';
-import CKEditor from 'ckeditor4-react';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { Link } from 'react-router-dom';
 import { TYPE } from '../../../../../../common/const/type';
+import Mapcontainer from '../../../../layout/map/Map';
+import { IAppState } from '../../../../../../redux/store/reducer';
+import { _requestToServer } from '../../../../../../services/exec';
+import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { POST } from '../../../../../../common/const/method';
 
 interface EmBranchesCreateState {
     title?: string;
@@ -21,12 +26,20 @@ interface EmBranchesCreateState {
     value_annou?: string;
     announcement_detail?: any;
     type_cpn?: string;
+    body?: {
+        branchName?: string,
+        contactEmail?: string,
+        contactPhone?: string,
+        lat?: number,
+        lon?: number
+    }
 }
 
 interface EmBranchesCreateProps extends StateProps, DispatchProps {
     getTypeManagements: Function;
     getAnnouncementDetail: Function;
     match?: any;
+    history?: any;
 }
 
 function getBase64(file) {
@@ -52,16 +65,12 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
             fileList: [],
             hidden: false,
             value_annou: "",
-            announcement_detail: {
-                id: "",
-                admin: {},
-                viewNumber: 0,
-                modifyAdmin: {},
-                announcementType: { id: 0, name: "", priority: 0 },
-                hidden: false,
-                imageUrl: "",
-                content: "",
-                loading: false,
+            body: {
+                branchName: null,
+                contactEmail: null,
+                contactPhone: null,
+                lat: 0,
+                lon: 0
             },
             type_cpn: TYPE.CREATE,
         }
@@ -80,160 +89,141 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
     };
 
 
-    getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    };
-
-    handleCancel = () => this.setState({ previewVisible: false });
-
-    handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-        });
-    };
-
-    // handleRemove = async() => {
-    //     let {fileList} = this.state;
-    //     let data = fileList[1]
-    //     fileList= [data];
-    //     await this.setState({fileList})
-    // }
-
-    handleChange = async ({ fileList }) => {
-        await this.setState({ fileList, previewImage: true });
-    };
-
+    onChangeValueBody = (value: any, param: string) => {
+        let { body } = this.state;
+        body[param] = value;
+        this.setState({ body });
+    }
     createRequest = async () => {
-        // let { fileList, hidden, title, announcementTypeID } = this.state;
+        let { body } = this.state;
+        let { mapState } = this.props;
+        body.lat = mapState.marker.lat;
+        body.lon = mapState.marker.lng;
+
+        await _requestToServer(
+            POST,
+            EM_BRANCHES_API,
+            body,
+            null,
+            undefined,
+            EMPLOYER_HOST,
+            true,
+            false,
+        ).then((res: any) => {
+            if (res) {
+                this.props.history.push('/admin/jobs/employer-branches/list');
+            }
+        })
     }
 
     render() {
-        let { title, list_item, previewImage, previewVisible, hidden, content, fileList, value_annou, type_cpn } = this.state;
-        const uploadButton = (
-            <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
-
+        let { mapState } = this.props;
         return (
             <div className='common-content'>
                 <h5>
-                    Tạo bài viết mới
+                    Thêm chi nhánh
                 </h5>
-                <Divider orientation="left" >Nội dung bài viết</Divider>
-                <div className="Announcements-create-content">
-                    <InputTitle
-                        type={TYPE.INPUT}
-                        value={title}
-                        title="Nhập tiêu đề bài viết"
-                        placeholder="Tiêu đề"
-                        widthLabel="200px"
-                        widthInput="350px"
-                        onChange={event => this.setState({ title: event })}
-                    />
-                    <InputTitle
-                        type={TYPE.SELECT}
-                        title="Chọn loại bài viết"
-                        widthLabel="200px"
-                        placeholder="Loại bài viết"
-                        defaultValue="Loại bài viết"
-                        widthComponent="400px"
-                        value={value_annou}
-                        list_value={list_item}
-                        onChange={event => this.setState({ announcementTypeID: event })}
-                    />
-
-                    <InputTitle
-                        type="SWITCH"
-                        title="Trạng thái"
-                        widthLabel="200px"
-                    >
-                        <Switch checked={!hidden} onClick={() => { this.setState({ hidden: !hidden }) }} />
-                        <label style={{ width: "40px", textAlign: "center", fontWeight: 500 }}>
-                            {hidden ? "Ẩn" : "Hiện"}
-                        </label>
-                    </InputTitle>
-
-                    <InputTitle
-                        title="Nội dung"
-                        widthLabel="200px"
-                        placeholder="Loại bài viết"
-                    >
-                    </InputTitle>
-                    <CKEditor
-                        id={"yeah"}
-                        editorName="editor2"
-                        config={{
-                            extraPlugins: 'stylesheetparser'
-                        }}
-                        onBeforeLoad={CKEDITOR => (CKEDITOR.disableAutoInline = true)}
-                        onInit={event => {
-                        }} fa-address-book
-                        data={content}
-                    />
-                </div>
                 <Row>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Divider orientation="left" >Thay đổi ảnh đại diện</Divider>
-                        <div className="Announcements-create-content">
-                            <Upload
-                                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
-                                listType="picture-card"
-                                onChange={this.handleChange}
-                                onPreview={this.handlePreview}
-                                fileList={fileList}
+                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
+                    <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
+                        <Divider orientation="left" >Thông tin sơ lược</Divider>
+                        <div className="announcements-create-content">
+                            <InputTitle
+                                type={TYPE.INPUT}
+                                title="Tên chi nhánh"
+                                widthLabel="200px"
+                                children={
+                                    <Input
+                                        style={{ width: 550 }}
+                                        prefix={<Icon type="shop" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                        placeholder="ex: Công ti cổ phần công nghệ Worksvn JSC"
+                                        onChange={
+                                            (event: any) => this.onChangeValueBody(event.target.value, "branchName")
+
+                                        }
+                                    />
+                                }
+                            />
+                            <InputTitle
+                                title="Địa chỉ email"
+                                widthLabel="200px"
+                                widthComponent="400px"
                             >
-                                {fileList.length >= 2 ? null : uploadButton}
-                            </Upload>
+                                <Input
+                                    style={{ width: 550 }}
+                                    type="email"
+                                    prefix={<Icon type="mail" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                    placeholder="e.x: worksvn@gmail.com"
+                                    onChange={
+                                        (event: any) => this.onChangeValueBody(event.target.value, "contactEmail")
+                                    }
+                                />
+                            </InputTitle>
+                            <InputTitle
+                                title="Số điện thoại"
+                                type="text"
+                                widthLabel="200px"
+                                children={
+                                    <Input
+                                        style={{ width: 550 }}
+                                        prefix={<Icon type="phone" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                        placeholder="ex: 0982398465"
+                                        onChange={
+                                            (event: any) => this.onChangeValueBody(event.target.value, "contactPhone")
+                                        }
+                                    />
+                                }
+                            />
+                            <InputTitle
+                                title="Vị trí"
+                                widthLabel="200px"
+                                placeholder="ex: Nhân viên văn phòng"
+                                children={
+                                    <Input
+                                        value={mapState.location}
+                                        placeholder="Chọn vị trí trên bản đồ"
+                                        style={{ width: 550 }}
+                                        readOnly
+                                    />
+                                }
+                            />
+                            <InputTitle
+                                title="Bản đồ"
+                                widthLabel="200px"
+                                placeholder="ex: Nhân viên văn phòng"
+                                children={
+                                    <Mapcontainer />
+                                }
+                            />
+                            <Divider orientation="left" >Hoàn tất</Divider>
+                            <div className="em-branches-create-content">
+                                <Button
+                                    type="primary"
+                                    prefix={"check"}
+                                    style={{
+                                        margin: "10px 10px",
+                                        float: "right"
+                                    }}
+                                    onClick={() => this.createRequest()}
+                                >
+                                    <Icon type="right" />
+                                </Button>
+                                <Button
+                                    type="danger"
+                                    prefix={"check"}
+                                    style={{
+                                        margin: "10px 10px",
+                                        float: "right"
+                                    }}
+                                // onClick={() => { this.props.history.push('/admin/jobs/job-announcements/list') }}
+                                >
+                                    <Icon type="close" />
+                                </Button>
+                            </div>
                         </div>
                     </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                        <Divider orientation="left" >Người sửa cuối cùng</Divider>
-
-                    </Col>
-
+                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
                 </Row>
-                <Divider orientation="left" >Hoàn tất</Divider>
-                <div className="Announcements-create-content">
-                    <Button
-                        type="primary"
-                        prefix={"check"}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                    >
-                        {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
-                        <Icon type="right" />
-                    </Button>
-                    <Button
-                        type="danger"
-                        prefix={"check"}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                    >
-                        <Link to='/admin/job-management/list'>
-                            <Icon type="close" />
-                            {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
-                        </Link>
-                    </Button>
-                </div>
-                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                    <img alt="example" style={{ width: '100%', height: "80vh" }} src={previewImage} />
-                </Modal>
             </div >
         )
     }
@@ -244,7 +234,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
 })
 
-const mapStateToProps = (state: any, ownProps: any) => ({
+const mapStateToProps = (state: IAppState, ownProps: any) => ({
+    mapState: state.MutilBox.mapState
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

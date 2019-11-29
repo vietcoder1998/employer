@@ -10,3 +10,9 @@ export const handleModal = (msg?: string, type_modal?: string, title?: string, c
     msg,
     children
 })
+
+export const handleMapMarker = ( marker?: any, location?: any) => ({
+    type: TYPE.OPEN,
+    marker,
+    location,
+})

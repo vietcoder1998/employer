@@ -350,7 +350,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                         >
                             <Link to='/admin/jobs/employer-branches/create' >
                                 <Icon type="plus" />
-                                Tạo bài đăng mới
+                                Tạo chi nhánh mới
                             </Link>
                         </Button>
                     </h5>

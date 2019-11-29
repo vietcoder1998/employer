@@ -69,6 +69,10 @@ export const REDUX = {
     },
     JOB_SERVICE: {
         GET_JOB_SERVICE: "GET_JOB_SERVICE"
+    },
+
+    MAP: {
+        SET_MAP_STATE: "SET_MAP_STATE"
     }
 };
 
