@@ -131,8 +131,8 @@ textarea {
   }
 }
 
-.ant-drawer{
-  z-index: 900!important;
+.ant-drawer {
+  z-index: 900 !important;
 }
 
 .ant-divider-inner-text {
@@ -268,18 +268,6 @@ ul {
 
 // wrapper
 .wrapper {
-  i {
-    &:hover {
-      color: rgb(190, 188, 188);
-    }
-    width: 20px;
-    height: 20px;
-  }
-
-  &:hover {
-    box-shadow: rgba(71, 71, 71, 0.2) 0px 0px 5px 0px;
-  }
-
   .header-experience {
     font-size: 20px;
     font-weight: 500;
@@ -380,7 +368,7 @@ ul {
 }
 
 svg {
-  margin-bottom: 5px!important;
+  margin-bottom: 5px !important;
 }
 
 .ant-pagination-item-link {

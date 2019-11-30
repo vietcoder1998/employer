@@ -39,7 +39,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     static getDerivedStateFromProps(nextProps: IFindCandidatesDetailProps, prevState: IFindCandidatesDetailState) {
         if (
             nextProps.match.params.id &&
-            nextProps.match.params.id !== prevState.id
+            nextProps.match.params.id !== prevState.id 
         ) {
             let { body } = prevState;
             let { id } = nextProps.match.params;
@@ -53,6 +53,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             nextProps.find_candidates_detail &&
             nextProps.find_candidates_detail !== prevState.body
         ) {
+
             let body = nextProps.find_candidates_detail;
             return {
                 body
@@ -93,50 +94,44 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         }
     }
     render() {
-        let { type_cpn } = this.state;
+        let { type_cpn, body } = this.state;
 
         return (
             <div className='common-content'>
                 <h5>
                     Tạo bài viết mới
                 </h5>
-                <Row>
-                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
-                    <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
-                        <>
-                            <>
-                                <CandidateProfile  />
-                            </>
-                            <div className="find-candidate-create-content">
-                                <Button
-                                    type="primary"
-                                    prefix={"check"}
-                                    style={{
-                                        margin: "10px 10px",
-                                        float: "right"
-                                    }}
-                                >
-                                    {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
-                                    <Icon type="right" />
-                                </Button>
-                                <Button
-                                    type="danger"
-                                    prefix={"check"}
-                                    style={{
-                                        margin: "10px 10px",
-                                        float: "right"
-                                    }}
-                                >
-                                    <Link to='/admin/job-management/list'>
-                                        <Icon type="close" />
-                                        {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
-                                    </Link>
-                                </Button>
-                            </div>
-                        </>
-                    </Col>
-                    <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
-                </Row>
+                <>
+                    <>
+                        <CandidateProfile data={body} />
+                    </>
+                    <div className="find-candidate-create-content">
+                        <Button
+                            type="primary"
+                            prefix={"check"}
+                            style={{
+                                margin: "10px 10px",
+                                float: "right"
+                            }}
+                        >
+                            {type_cpn === TYPE.CREATE ? "Tạo mới" : "Lưu lại"}
+                            <Icon type="right" />
+                        </Button>
+                        <Button
+                            type="danger"
+                            prefix={"check"}
+                            style={{
+                                margin: "10px 10px",
+                                float: "right"
+                            }}
+                        >
+                            <Link to='/admin/job/find-candidates/list'>
+                                <Icon type="close" />
+                                {type_cpn === TYPE.CREATE ? "Hủy bài" : "Hủy sửa"}
+                            </Link>
+                        </Button>
+                    </div>
+                </>
             </div >
         )
     }

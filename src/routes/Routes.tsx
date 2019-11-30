@@ -7,6 +7,8 @@ const Route = require("react-router-dom").Route;
 const Redirect = require("react-router-dom").Redirect;
 const Admin = lazy(() => import('./../app/view/admin/Admin'));
 const Login = lazy(() => import('./../app/view/login/Login'));
+const NotFound = lazy(() => import('./../app/view/not-found/NotFound'));
+
 
 export default function Routes(props) {
   const cookies = new Cookies();
@@ -22,7 +24,7 @@ export default function Routes(props) {
         <Suspense fallback={<FallBack />}>
           <Route exact path='/login' component={Login} /> :
         </Suspense>
-        <Redirect from='*' to={is_authen ? (last_url ? last_url : "/admin/jobs/job-announcements/list") : "/login"} />
+        <Redirect from='/login' to={is_authen ? (last_url ? last_url : "/admin/jobs/job-announcements/list") : "/login"} />
       </Router>
     </Fragment >
   );
