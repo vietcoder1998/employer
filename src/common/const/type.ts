@@ -26,6 +26,8 @@ export const TYPE = {
     DELETE: "DELETE",
     ACTIVE: "ACTIVE",
     UN_ACTIVE: "UN_ACTIVE",
+    LIST: "LIST",
+    VIEW: "VIEW",
 
     HIDDEN: "HIDDEN",
     SHOW: "SHOW",
@@ -78,7 +80,7 @@ export const TYPE = {
         jobNameIDs: 'jobNameIDs',
         skillIDs: 'skillIDs',
         languageIDs: "languageIDs",
-        unlocked: "",
+        unlocked: "unlocked",
         ids: "ids",
     },
 

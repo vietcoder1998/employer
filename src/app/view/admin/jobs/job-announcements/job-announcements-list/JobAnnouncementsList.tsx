@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../../common/const/actions';
+import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
 import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
@@ -17,6 +17,8 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { POST, DELETE } from '../../../../../../common/const/method';
 import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { IDrawerState } from 'antd/lib/drawer';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
@@ -258,7 +260,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             </div>);
 
             let EditToolTip = (hidden?: boolean) => (
-                <div>
+                <>
                     <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
                         <Icon
                             type={hidden ? "eye-invisible" : "eye"}
@@ -285,7 +287,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                             type="delete"
                             theme="twoTone"
                             twoToneColor="red"
-                            onClick={() => nextProps.handleModal("Bạn muốn xóa bài đăng này", TYPE.DELETE)}
+                            onClick={() => nextProps.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
                         />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
@@ -299,7 +301,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                 await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
                             }} />
                     </Tooltip>
-                </div>
+                </>
             )
 
             nextProps.list_job_announcements.forEach((item: IJobAnnouncement, index: number) => {
@@ -467,9 +469,9 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
 
     createRequest = async () => {
         let { homePriority, searchPriority } = this.state;
-        let { type_modal } = this.props;
+        let { modalState } = this.props;
         await this.setState({ loading: true });
-        switch (type_modal) {
+        switch (modalState.type_modal) {
             case TYPE.JOB_FILTER.homePriority:
                 await _requestToServer(
                     POST,
@@ -564,9 +566,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             list_job_names,
             list_em_branches,
             list_job_service,
-            open_modal,
-            msg,
-            type_modal
+            modalState
         } = this.props;
 
         let homeExpiration = job_announcement_detail.priority.homeExpiration;
@@ -577,30 +577,37 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         return (
             <>
                 <Modal
-                    visible={open_modal}
+                    visible={modalState.open_modal}
                     title={"Workvn thông báo"}
                     destroyOnClose={true}
                     onOk={this.createRequest}
-                    onCancel={() => { this.setState({ message: null, loading: false }); this.props.handleModal() }}
+                    onCancel={() => {
+                        this.setState({ message: null, loading: false });
+                        this.props.handleModal();
+                    }}
                     footer={[
                         <Button
                             key="cancel"
                             children="Hủy"
-                            onClick={() => this.setState({
-                                message: null,
-                                loading: false
-                            })}
+                            onClick={() => {
+                                this.setState({
+                                    message: null,
+                                    loading: false
+                                });
+
+                                this.props.handleModal()
+                            }}
                         />,
                         <Button
                             key="ok"
-                            type={type_modal === TYPE.DELETE ? "danger" : "primary"}
-                            icon={type_modal === TYPE.DELETE ? "delete" : "check"}
+                            type={modalState.type_modal === TYPE.DELETE ? "danger" : "primary"}
+                            icon={modalState.type_modal === TYPE.DELETE ? "delete" : "check"}
                             loading={loading}
-                            children={type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                            children={modalState.type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
                             onClick={async () => this.createRequest()}
                         />
                     ]}
-                    children={msg}
+                    children={modalState.msg}
                 />
                 <>
                     <DrawerConfig
@@ -636,7 +643,10 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     }}
                                     disabled={un_active_home}
                                     onClick={() => {
-                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?", TYPE.JOB_FILTER.homePriority);
+                                        this.props.handleModal(modalState = {
+                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                            type_modal: TYPE.JOB_FILTER.homePriority
+                                        });
                                     }}
                                 >
                                     Kích hoạt
@@ -896,10 +906,10 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS, body, pageIndex, pageSize }),
     getListEmBranches: () =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
-    handleDrawer: () =>
-        dispatch({ type: TYPE.HANDLE }),
-    handleModal: (msg?: string, type_modal?: string) =>
-        dispatch({ type: TYPE.OPEN, msg, type_modal }),
+    handleDrawer: (drawerState: IDrawerState) =>
+        dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
+    handleModal: (modalState: IModalState) =>
+        dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
     getJobAnnouncementDetail: (id: string | number) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
@@ -911,9 +921,8 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_em_branches: state.EmBranches.items,
     list_job_service: state.JobService,
     job_announcement_detail: state.JobAnnouncementDetail,
-    open_modal: state.MutilBox.open_modal,
-    msg: state.MutilBox.msg,
-    type_modal: state.MutilBox.type_modal,
+    modalState: state.MutilBox.modalState,
+    drawerState: state.MutilBox.drawerState,
     totalItems: state.JobAnnouncements.totalItems
 });
 

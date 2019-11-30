@@ -40,7 +40,7 @@ function callFindCandidates(action: any) {
             },
             undefined,
             EMPLOYER_HOST,
-            false,
+            undefined,
             false
         )
     }

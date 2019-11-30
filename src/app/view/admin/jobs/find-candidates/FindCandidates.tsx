@@ -16,21 +16,13 @@ interface IFindCandidatesProps extends StateProps, DispatchProps {
 }
 
 class FindCandidates extends PureComponent<IFindCandidatesProps, IFindCandidatesState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show_menu: true,
-            to_logout: false,
-        }
-    }r
-
     render() {
         let {path} = this.props.match
         return (
             <Fragment >
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={FindCandidatesList} />
-                    <ErrorBoundaryRoute path={`${path}/detail`} component={FindCandidatesDetail} />
+                    <ErrorBoundaryRoute path={`${path}/detail/:id`} component={FindCandidatesDetail} />
                 </Switch>
             </Fragment>
         )

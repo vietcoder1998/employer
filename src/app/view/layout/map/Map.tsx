@@ -1,12 +1,13 @@
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
-import React, { Component } from 'react';
+import React from 'react';
 import './Map.scss';
 import { connect } from 'react-redux';
 import GeoCode from 'react-geocode';
 import { REDUX } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
+import { IMapState } from '../../../../redux/models/mutil-box';
 
-interface MapContainerState {
+interface IMapContainerState {
     showingInfoWindow: boolean,
     activeMarker: any,
     selectedPlace: any,
@@ -16,11 +17,12 @@ interface MapContainerState {
     location: string,
 }
 
-interface MapContainerProps extends StateProps, DispatchProps {
+interface IMapContainerProps extends StateProps, DispatchProps {
     setMapState: Function;
+    onChange: Function;
 }
 
-class MapContainer extends React.Component<MapContainerProps, MapContainerState> {
+class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainerState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +30,7 @@ class MapContainer extends React.Component<MapContainerProps, MapContainerState>
             activeMarker: {},
             selectedPlace: {},
             marker: {
-                lat: 120, lng: 112
+                lat: 0, lng: 0
             },
             location: ''
         };
@@ -59,7 +61,7 @@ class MapContainer extends React.Component<MapContainerProps, MapContainerState>
                 location = response.results[0].formatted_address;
                 localStorage.setItem('location', location);
                 this.setState({ location, marker });
-                this.props.setMapState(marker, location);
+                this.props.setMapState({ marker, location });
             },
 
             error => {
@@ -69,9 +71,10 @@ class MapContainer extends React.Component<MapContainerProps, MapContainerState>
     }
 
     render() {
-        let { marker, location, showingInfoWindow, activeMarker } = this.state;
+        let { showingInfoWindow, activeMarker } = this.state;
         let { mapState } = this.props;
-        console.log(mapState.marker);
+        let { marker } = mapState;
+        let { location } = mapState;
         return (
             <Map className='map-wraper'
                 google={window["google"]}
@@ -79,7 +82,8 @@ class MapContainer extends React.Component<MapContainerProps, MapContainerState>
                 zoom={15}
                 onClick={this._setMapState}
             >
-                <Marker onClick={this._onMarkerClick}
+                <Marker
+                    onClick={this._onMarkerClick}
                     name={location}
                     position={{ lat: marker.lat, lng: marker.lng }}
                 />
@@ -100,7 +104,7 @@ const mapStateTopProps = (state: IAppState) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    setMapState: (marker, location) => dispatch({ type: REDUX.MAP.SET_MAP_STATE, marker, location })
+    setMapState: (mapState: IMapState) => dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState })
 });
 
 type StateProps = ReturnType<typeof mapStateTopProps>;

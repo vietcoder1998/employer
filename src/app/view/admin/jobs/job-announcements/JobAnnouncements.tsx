@@ -25,7 +25,7 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
     }r
 
     render() {
-        let {path} = this.props.match
+        let {path} = this.props.match;
         return (
             <Fragment >
                 <Switch>

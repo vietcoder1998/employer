@@ -31,6 +31,7 @@ class EmBranches extends PureComponent<IEmBranchesProps, IEmBranchesState> {
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={EmBranchesList} />
                     <ErrorBoundaryRoute path={`${path}/create`} component={EmBranchesCreate} />
+                    <ErrorBoundaryRoute path={`${path}/fix/:id`} component={EmBranchesCreate} />
                 </Switch>
             </Fragment>
         )

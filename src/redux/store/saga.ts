@@ -13,6 +13,7 @@ import { SavedCandidateProfilesWatcher } from '../sagas/saved-candidate-profiles
 import { SkillsWatcher } from '../sagas/skills';
 import { JobAnnouncementDetailWatcher } from '../sagas/job-announcement-detail';
 import { JobServiceWatcher } from '../sagas/job-service';
+import { LanguagesWatcher } from '../sagas/languages';
 
 export default function* rootSaga() {
     yield all([
@@ -30,5 +31,6 @@ export default function* rootSaga() {
         SkillsWatcher(),
         JobAnnouncementDetailWatcher(),
         JobServiceWatcher(),
+        LanguagesWatcher(),
     ])
 } 

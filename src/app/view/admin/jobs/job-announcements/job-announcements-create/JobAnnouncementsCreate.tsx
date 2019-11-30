@@ -158,7 +158,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
-        console.log(event)
         body.shifts[index] = event;
         this.setState({ body })
     };
@@ -194,7 +193,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let { body, type_cpn, id } = this.state;
         let newBody = this.pretreatmentBody(body, type_cpn);
         let matching = type_cpn === TYPE.EDIT ? `/${id}` : ``;
-        let METHOD = type_cpn === TYPE.EDIT ?  PUT : POST;
+        let METHOD = type_cpn === TYPE.EDIT ? PUT : POST;
 
         await _requestToServer(
             METHOD,
@@ -307,6 +306,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 children={
                                     <Input
                                         style={{ width: 550 }}
+                                        type="text"
+                                        maxLength={260}
                                         placeholder="ex: Tuyển nhân viên bán hàng"
                                         value={body.jobTitle}
                                         onChange={
@@ -326,6 +327,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 <TextArea
                                     rows={5}
                                     style={{ width: 550 }}
+                                    maxLength={260}
                                     placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt"
                                     value={body.description}
                                     onChange={

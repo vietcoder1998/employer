@@ -77,18 +77,14 @@ function* getListFindCandidateDetailData(action: any) {
 }
 
 function callFindCandidateDetail(action: any) {
-    let id = "";
-    if (action.id) {
-        id = action.id;
-    }
     return _requestToServer(
         GET,
-        FIND_CANDIDATE_DETAIL + `/${id}/profile`,
-        undefined,
+        FIND_CANDIDATE_DETAIL + `/${action.id}/profile`,
+        action.body ? action.body : null,
         undefined,
         undefined,
         EMPLOYER_HOST,
-        false,
+        true,
         false,
     )
 }

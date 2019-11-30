@@ -1,46 +1,76 @@
+import { IMutilBox } from './../models/mutil-box';
 import { REDUX } from './../../common/const/actions';
-import { TYPE } from './../../common/const/type';
-let initState = {
-    open: false,
-    open_modal: false,
-    title: "",
-    type_modal: "",
-    children: "",
-    msg: "",
+
+let initState: IMutilBox = {
+    drawerState: {
+        title: "",
+        open_drawer: false,
+        children: null,
+        type_drawer: null,
+    },
+    modalState: {
+        title: null,
+        msg: null,
+        open_modal: false,
+        type_modal: null,
+        children: null,
+    },
     mapState: {
         marker: {
             lat: 21.038693,
             lng: 105.782235,
         },
-        location: null
+        location: "Hà Nội"
     }
-
 };
 
 export const MutilBox = (state: typeof initState = initState, action: any) => {
+    console.log(action)
     switch (action.type) {
-        case TYPE.HANDLE:
+        case REDUX.HANDLE_DRAWER:
             return {
                 ...state,
-                open: !state.open
+                drawerState: {
+                    open_drawer:
+                        action.drawerState &&
+                            action.drawerState.open_drawer ?
+                            action.drawerState.open_drawer :
+                            !state.drawerState.open_drawer
+                },
             };
 
-        case TYPE.OPEN:
+        case REDUX.HANDLE_MODAL:
             return {
                 ...state,
-                msg: action.msg,
-                open_modal: !state.open_modal,
-                type_modal: action.type_modal,
-                title: action.title,
-                children: action.children
+                modalState: {
+                    ...action.modalState,
+                    open_modal:
+                        action.modalState &&
+                            action.modalState.open_modal ?
+                            action.modalState.open_modal :
+                            !state.modalState.open_modal,
+
+                    msg:
+                        action.modalState &&
+                            action.modalState.msg ?
+                            action.modalState.msg :
+                            "",
+                },
             };
 
         case REDUX.MAP.SET_MAP_STATE:
             return {
                 ...state,
                 mapState: {
-                    marker: action.marker,
-                    location: action.location
+                    ...action.mapState,
+                    marker:
+                        action.mapState &&
+                            action.mapState.marker ?
+                            action.mapState.marker :
+                            {
+                                lat: 21.038693,
+                                lng: 105.782235,
+                            }
                 }
             };
 

@@ -28,7 +28,7 @@ function* getListSavedCandidateProfilesData(action: any) {
 function callSavedCandidateProfiles(action: any) {
     return _requestToServer(
         GET,
-        SAVED_CANDIDATE_PROFILES,
+        SAVED_CANDIDATE_PROFILES + '/saved',
         null,
         {
             pageIndex: action.pageIndex ? action.pageIndex : 0,

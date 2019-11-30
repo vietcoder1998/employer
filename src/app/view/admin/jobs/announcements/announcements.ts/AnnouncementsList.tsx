@@ -1,10 +1,9 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, DatePicker, Rate, Tabs, List, Avatar, Skeleton, Checkbox, Input } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Modal, Rate, Tabs, List, Avatar, Skeleton, Checkbox, Input } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
-import { Link } from 'react-router-dom';
 import { IptLetter } from '../../../../layout/common/Common';
 import { ModalConfig } from '../../../../layout/modal-config/ModalConfig';
 import { _requestToServer } from '../../../../../../services/exec';
@@ -171,14 +170,6 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             key: 'modifyAdmin',
             width: 110,
         },
-
-        {
-            title: 'Trạng thái',
-            dataIndex: 'hidden',
-            className: 'action',
-            key: 'hidden',
-            width: 100,
-        },
         {
             title: 'Loại bài viết',
             dataIndex: 'announcementType',
@@ -242,7 +233,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                     createdDate: timeConverter(item.createdDate, 1000),
                     lastModified: item.lastModified !== -1 ? timeConverter(item.lastModified, 1000) : "",
                     imageUrl: <ImageRender src={item.imageUrl} alt="Ảnh đại diện" />,
-                    hidden: !item.hidden ? "Hiện" : "Ẩn",
+                    // hidden: !item.hidden ? "Hiện" : "Ẩn",
                     announcementType: item.announcementType.name,
                 });
             });
@@ -551,7 +542,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                     toggleModal={() => {
                         this.setState({ open_config_modal: !open_config_modal })
                     }}
-                    handleOk={async () => {}}
+                    handleOk={async () => { }}
                     handleClose={async () => this.toggleModalConfig()}
                 >
                     <div>
@@ -574,40 +565,9 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                             <Icon type="filter" />
                             Tìm kiếm
                         </Button>
-                        <Button
-                            onClick={() => this.searchAnnouncement()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Link to='/admin/job-management/create'>
-                                <Icon type="plus" />
-                                Tạo bài viết mới
-                            </Link>
-                        </Button>
                     </h5>
                     <div className="table-operations">
                         <Row>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6}>
-                                <p>
-                                    <IptLetter value={"Chọn loại đối tượng"} />
-                                </p>
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={this.onChangeTarget}
-                                >
-                                    <Option value={undefined}>Tất cả</Option>
-                                    <Option value={TYPE.SCHOOL}>Nhà trường</Option>
-                                    <Option value={TYPE.EMPLOYER}>Nhà tuyển dụng</Option>
-                                    <Option value={TYPE.CANDIDATE}>Ứng viên</Option>
-                                    <Option value={TYPE.STUDENT}>Học sinh </Option>
-                                    <Option value={TYPE.PUBLIC}>Public</Option>
-                                </Select>
-                            </Col>
                             <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6}>
                                 <p>
                                     <IptLetter value={"Chọn loại bài đăng"} />
@@ -626,28 +586,6 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                                         list_annou_types.map((item, index) => <Option key={index}
                                             value={item.id}>{item.name}</Option>)
                                     }
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={12} lg={14} xl={12} xxl={8}>
-                                <p>
-                                    <IptLetter value={"Chọn thời gian đăng bài"} />
-                                </p>
-                                <DatePicker
-                                    placeholder="ex: 02/05/2019"
-                                    defaultValue={undefined}
-                                    onChange={this.onChangeCreatedDate}
-                                    format={'DD/MM/YYYY'}
-                                />
-
-                                <Select
-                                    showSearch
-                                    style={{ margin: "0px 10px" }}
-                                    defaultValue={"Trạng thái"}
-                                    onChange={this.onChangeHidden}
-                                >
-                                    <Option value={undefined}>Tất cả</Option>
-                                    <Option value={0}>Đã ẩn</Option>
-                                    <Option value={-1}>Hiện</Option>
                                 </Select>
                             </Col>
                         </Row>

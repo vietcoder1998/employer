@@ -1,3 +1,4 @@
+import { Languages } from './../reducers/languages';
 import { JobService } from './../reducers/job-service';
 import { MutilBox } from './../reducers/mutil-box';
 import { JobAnnouncementDetail } from './../reducers/job-announcement-detail';
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
     Skills,
     JobAnnouncementDetail,
     MutilBox,
-    JobService
+    JobService,
+    Languages
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

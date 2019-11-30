@@ -1,18 +1,17 @@
+import { REDUX } from './../../common/const/actions';
+import { IModalState, IMapState, IDrawerState } from './../models/mutil-box';
 import { TYPE } from './../../common/const/type';
-export const handleDrawer = () => ({
-    type: TYPE.HANDLE,
+export const handleDrawer = (drawerState?: IDrawerState) => ({
+    type: REDUX.HANDLE_DRAWER,
+    drawerState
 });
 
-export const handleModal = (msg?: string, type_modal?: string, title?: string, children?: any) => ({
-    type: TYPE.OPEN,
-    title,
-    type_modal,
-    msg,
-    children
+export const handleModal = (modalState?: IModalState ) => ({
+    type: REDUX.HANDLE_MODAL,
+    modalState
 })
 
-export const handleMapMarker = ( marker?: any, location?: any) => ({
-    type: TYPE.OPEN,
-    marker,
-    location,
+export const handleMapMarker = (mapState?: IMapState ) => ({
+    type: REDUX.MAP.SET_MAP_STATE,
+    mapState
 })

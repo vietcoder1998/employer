@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer } from 'antd';
 import { connect } from 'react-redux';
 import { IAppState } from '../../../../redux/store/reducer';
-import { TYPE } from '../../../../common/const/type';
+import { REDUX } from '../../../../common/const/actions';
 
 interface IDrawerConfigProps extends StateProps, DispatchProps {
     open: boolean;
@@ -16,33 +16,33 @@ interface IDrawerConfigState {
 
 }
 
-class DrawerConfig extends React.PureComponent<IDrawerConfigProps, IDrawerConfigState> {
+class DrawerConfig extends React.Component<IDrawerConfigProps, IDrawerConfigState> {
     render() {
         let {
-            open,
             handleDrawer,
+            drawerState,
+            width,
             children,
             title,
-            width,
         } = this.props;
         return (
             <Drawer
                 title={title ? title : "Danh mục"}
-                visible={open}
+                visible={drawerState && drawerState.open_drawer}
                 width={width}
                 onClose={() => handleDrawer()}
             >
-                {children}
+                {children }
             </Drawer>
         )
     }
 }
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    open: state.MutilBox.open
+    drawerState: state.MutilBox.drawerState
 })
 const mapDispatchToProps = (dispatch: any, ownProps) => ({
-    handleDrawer: () => dispatch({ type: TYPE.HANDLE }),
+    handleDrawer: (drawerState) => dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>

@@ -54,18 +54,20 @@ export class DropdownConfig extends React.PureComponent<IDropdownConfigProps, ID
     render() {
         let {
             children,
+            param
         } = this.props;
 
         let { isOpen } = this.state;
         return (
             <React.Fragment>
                 <span style={{ padding: "5px" }} onClick={this.toggleDropdown}>
-                    <Icon type={isOpen ? "up" : "down"} style={{color: "white"}} />
+                    {param}
+                    <Icon type={isOpen ? "up" : "down"} style={{ color: "white" }} />
                 </span>
                 <div
                     className={`dropdown-config${isOpen ? " visible" : " hidden"}`}
                     onClick={this.toggleDropdown}
-                    onInvalidCapture={() => {console.log("uninvalid")}}
+                    onInvalidCapture={() => { console.log("uninvalid") }}
                 >
                     {children ? children : null}
                 </div>

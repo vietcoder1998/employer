@@ -30,6 +30,7 @@ interface AdminProps extends StateProps, DispatchProps {
     getListJobNames: Function;
     getListSkills: Function;
     getListJobService: Function;
+    getListLanguages: Function;
 }
 
 
@@ -49,6 +50,7 @@ class Admin extends PureComponent<AdminProps, AdminState> {
         this.props.getListJobNames();
         this.props.getListSkills();
         this.props.getListJobService();
+        this.props.getListLanguages();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -96,17 +98,22 @@ class Admin extends PureComponent<AdminProps, AdminState> {
                             onClick={() => this.setState({ show_menu: !show_menu })}
                         />
                         <div className="avatar-header" >
-                            <Avatar
-                                icon="user"
-                                style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    border: "solid #fff 2px",
-                                }}
-                            />
-                            <DropdownConfig>
-                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
+
+                            <DropdownConfig
+                                param={
+                                    <Avatar
+                                        icon="user"
+                                        style={{
+                                            width: "30px",
+                                            height: "30px",
+                                            border: "solid #fff 2px",
+                                            margin: "0px 5px"
+                                        }}
+                                    />
+                                }
+                            >
                                 <OptionConfig icon="user" key="2" value="" label="Tài khoản" onClick={() => { }} />
+                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
                             </DropdownConfig>
                         </div>
                     </Header>
@@ -146,7 +153,6 @@ class Admin extends PureComponent<AdminProps, AdminState> {
                             <ErrorBoundaryRoute path={`${match.url}/convenient-service`} component={ConvernientService} />
                             <ErrorBoundaryRoute path={`${match.url}/more-info`} component={MoreInfo} />
                         </Switch>
-
                     </Content>
                 </Layout>
                 <>
@@ -161,6 +167,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS }),
     getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
+    getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
 })
 

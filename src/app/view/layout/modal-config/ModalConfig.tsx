@@ -50,7 +50,7 @@ export class ModalConfig extends React.Component<IModalConfigProps, IModalConfig
                 <div
                     className={`modal-config-bg${isOpen ? " " : " none"}`}
                     style={{ ...style }}
-                    onKeyPress={event => { console.log(event.keyCode); if (event.keyCode === 27) { this.closeModal() } }}
+                    onKeyPress={event => {if (event.keyCode === 27) { this.closeModal() } }}
                 ></div>
                 <div
                     className={`modal-config${isOpen ? " active" : " none-active"}`}

@@ -1,18 +1,19 @@
-import React, { PureComponent } from 'react'
-import { Upload, Modal, Icon, Divider, Row, Col, Button, Input } from 'antd';
+import React from 'react'
+import { Icon, Divider, Row, Col, Button, Input } from 'antd';
 import { connect } from 'react-redux';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
-import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Link } from 'react-router-dom';
+import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
 import Mapcontainer from '../../../../layout/map/Map';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { _requestToServer } from '../../../../../../services/exec';
 import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import { POST } from '../../../../../../common/const/method';
+import { POST, PUT } from '../../../../../../common/const/method';
+import { IEmBranch } from '../../../../../../redux/models/em-branches';
+import { IMapState } from '../../../../../../redux/models/mutil-box';
 
-interface EmBranchesCreateState {
+interface IEmBranchesCreateState {
     title?: string;
     announcementTypeID: string;
     type_management?: Array<any>;
@@ -33,25 +34,17 @@ interface EmBranchesCreateState {
         lat?: number,
         lon?: number
     }
+    id?: string;
 }
 
 interface EmBranchesCreateProps extends StateProps, DispatchProps {
-    getTypeManagements: Function;
-    getAnnouncementDetail: Function;
     match?: any;
     history?: any;
+    getListEmBranches?: Function;
+    handleMap?: Function;
 }
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-
-class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCreateState> {
+class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranchesCreateState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -73,51 +66,101 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                 lon: 0
             },
             type_cpn: TYPE.CREATE,
+            id: null,
         }
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        return null;
+    static getDerivedStateFromProps(nextProps: any, prevState: IEmBranchesCreateState) {
+        if (
+            nextProps.match.params.id &&
+            nextProps.match.params.id !== prevState.id
+        ) {
+            let type_cpn = TYPE.CREATE;
+            if (nextProps.match.url.includes("fix")) {
+                type_cpn = TYPE.EDIT;
+            };
+            let { body } = prevState;
+            console.log("run")
+            nextProps.list_em_branches.forEach((element: IEmBranch) => {
+                if (element.id === nextProps.match.params.id) {
+                    nextProps.handleMap({ marker: { lat: element.lat, lng: element.lon }, location: element.address });
+                    body.branchName = element.branchName;
+                    body.lon = element.lon;
+                    body.lat = element.lat;
+                    body.contactEmail = element.contactEmail;
+                    body.contactPhone = element.contactPhone;
+                }
+            });
+
+            return {
+                body,
+                type_cpn,
+                id: nextProps.match.params.id
+            }
+        }
+        return null
     }
 
     async componentDidMount() {
-        await this.props.getTypeManagements()
-        if (this.props.match.params.id) {
-            let id = this.props.match.params.id;
-            await this.props.getAnnouncementDetail(id);
-        }
+        await this.props.getListEmBranches()
     };
 
-
-    onChangeValueBody = (value: any, param: string) => {
-        let { body } = this.state;
-        body[param] = value;
-        this.setState({ body });
-    }
     createRequest = async () => {
-        let { body } = this.state;
+        let { body, type_cpn } = this.state;
         let { mapState } = this.props;
         body.lat = mapState.marker.lat;
         body.lon = mapState.marker.lng;
 
-        await _requestToServer(
-            POST,
-            EM_BRANCHES_API,
-            body,
-            null,
-            undefined,
-            EMPLOYER_HOST,
-            true,
-            false,
-        ).then((res: any) => {
-            if (res) {
-                this.props.history.push('/admin/jobs/employer-branches/list');
-            }
-        })
+        switch (type_cpn) {
+            case TYPE.CREATE:
+                await _requestToServer(
+                    POST,
+                    EM_BRANCHES_API,
+                    body,
+                    null,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false,
+                ).then((res: any) => {
+                    if (res) {
+                        this.props.history.push('/admin/jobs/em-branches/list');
+                    }
+                })
+                break;
+            case TYPE.EDIT:
+                await _requestToServer(
+                    PUT,
+                    EM_BRANCHES_API + `/${localStorage.getItem("id_em_branches")}`,
+                    body,
+                    null,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false,
+                ).then((res: any) => {
+                    if (res) {
+                        this.props.history.push('/admin/jobs/em-branches/list');
+                    }
+                })
+                break;
+
+
+            default:
+                break;
+        }
     }
 
     render() {
         let { mapState } = this.props;
+        let { body, type_cpn } = this.state;
+
+        let btcc = "Hủy";
+        let btnx = "Tạo mới"
+
+        if (type_cpn === TYPE.EDIT) {
+            btnx = "Lưu lại"
+        }
         return (
             <div className='common-content'>
                 <h5>
@@ -134,12 +177,17 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                                 widthLabel="200px"
                                 children={
                                     <Input
+                                        value={body.branchName}
                                         style={{ width: 550 }}
+                                        type="text"
+                                        maxLength={260}
                                         prefix={<Icon type="shop" style={{ color: "gray", marginBottom: "-5px" }} />}
                                         placeholder="ex: Công ti cổ phần công nghệ Worksvn JSC"
                                         onChange={
-                                            (event: any) => this.onChangeValueBody(event.target.value, "branchName")
-
+                                            (event: any) => {
+                                                body["branchName"] = event.target.value;
+                                                this.setState({ body });
+                                            }
                                         }
                                     />
                                 }
@@ -151,11 +199,16 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                             >
                                 <Input
                                     style={{ width: 550 }}
+                                    maxLength={260}
                                     type="email"
                                     prefix={<Icon type="mail" style={{ color: "gray", marginBottom: "-5px" }} />}
                                     placeholder="e.x: worksvn@gmail.com"
+                                    value={body.contactEmail}
                                     onChange={
-                                        (event: any) => this.onChangeValueBody(event.target.value, "contactEmail")
+                                        (event: any) => {
+                                            body["contactEmail"] = event.target.value;
+                                            this.setState({ body });
+                                        }
                                     }
                                 />
                             </InputTitle>
@@ -166,10 +219,16 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                                 children={
                                     <Input
                                         style={{ width: 550 }}
+                                        type="text"
+                                        maxLength={260}
                                         prefix={<Icon type="phone" style={{ color: "gray", marginBottom: "-5px" }} />}
                                         placeholder="ex: 0982398465"
+                                        value={body.contactPhone}
                                         onChange={
-                                            (event: any) => this.onChangeValueBody(event.target.value, "contactPhone")
+                                            (event: any) => {
+                                                body["contactPhone"] = event.target.value;
+                                                this.setState({ body });
+                                            }
                                         }
                                     />
                                 }
@@ -183,6 +242,8 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                                         value={mapState.location}
                                         placeholder="Chọn vị trí trên bản đồ"
                                         style={{ width: 550 }}
+                                        type="text"
+                                        maxLength={260}
                                         readOnly
                                     />
                                 }
@@ -204,10 +265,11 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                                         margin: "10px 10px",
                                         float: "right"
                                     }}
+                                    icon="right"
                                     onClick={() => this.createRequest()}
-                                >
-                                    <Icon type="right" />
-                                </Button>
+                                    children={btnx}
+                                />
+
                                 <Button
                                     type="danger"
                                     prefix={"check"}
@@ -215,10 +277,10 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
                                         margin: "10px 10px",
                                         float: "right"
                                     }}
-                                // onClick={() => { this.props.history.push('/admin/jobs/job-announcements/list') }}
-                                >
-                                    <Icon type="close" />
-                                </Button>
+                                    icon="close"
+                                    onClick={() => { this.props.history.push('/admin/jobs/em-branches/list') }}
+                                    children={btcc}
+                                />
                             </div>
                         </div>
                     </Col>
@@ -230,12 +292,18 @@ class EmBranchesCreate extends PureComponent<EmBranchesCreateProps, EmBranchesCr
 }
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getTypeManagements: () => dispatch({ type: REDUX_SAGA.TYPE_MANAGEMENT.GET_TYPE_MANAGEMENT }),
-    getAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
+    getListEmBranches: (pageIndex: number = 0, pageSize: number = 0) =>
+        dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES, pageIndex, pageSize }),
+    handleMap: (mapState: IMapState) =>
+        dispatch({
+            type: REDUX.MAP.SET_MAP_STATE,
+            mapState
+        })
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    mapState: state.MutilBox.mapState
+    mapState: state.MutilBox.mapState,
+    list_em_branches: state.EmBranches.items
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

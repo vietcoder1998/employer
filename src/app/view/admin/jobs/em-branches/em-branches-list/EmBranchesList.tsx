@@ -1,20 +1,26 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal } from 'antd';
+import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
+import { Button, Table, Icon, Select, Row, Col, Modal, Tooltip } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './EmBranchesList.scss';
-import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { TYPE } from '../../../../../../common/const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IEmBranch, IEmBranchesFilter } from '../../../../../../redux/models/em-branches';
 import { IRegion } from '../../../../../../redux/models/regions';
+import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { _requestToServer } from '../../../../../../services/exec';
+import { DELETE } from '../../../../../../common/const/method';
+import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 let { Option } = Select;
 
 interface EmBranchesListProps extends StateProps, DispatchProps {
     match?: any;
+    history?: any;
+    handleModal: Function;
     getListEmBranchs: Function;
     getTypeManagement: Function;
     getAnnoucements: Function;
@@ -77,23 +83,38 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         };
     }
 
-    editToolAction = (
-        <div>
-            <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" onClick={() => this.deleteAnnoun()} />
-            <Link to={`/admin/em-branches/fix/${localStorage.getItem("id_em_branches")}`}>
-                <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
-            </Link>
-            <Icon key="delete" style={{ padding: "5px 10px" }} type="eye" onClick={() => this.onToggleModal()} />
-        </div>
+    editToolAction = () => (
+        <>
+            <Tooltip
+                title="Xóa chi nhánh"
+            >
+                <Icon
+                    style={{ padding: "5px 10px" }}
+                    type="delete"
+                    theme="twoTone"
+                    twoToneColor="red"
+                    onClick={
+                        () => this.deleteAnnoun()
+                    }
+                />
+            </Tooltip>
+            <Tooltip
+                title="Xem chi tiết (sửa)"
+            >
+                <Icon
+                    style={{ padding: "5px 10px" }}
+                    type="edit"
+                    theme="twoTone"
+                    onClick={() => {
+                        this.props.history.push(`/admin/jobs/em-branches/fix/${localStorage.getItem("id_em_branches")}`)
+                    }}
+                />
+            </Tooltip>
+        </>
     );
 
     deleteAnnoun = async () => {
-        /* tslint:disable */
-        Swal.fire(
-            "Worksvn thông báo",
-            "Bạn chắc chắn muốn xóa bài đăng này",
-            "warning",
-        )
+        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", type_modal: TYPE.DELETE });
     };
 
     columns = [
@@ -166,7 +187,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             fixed: 'right',
             className: 'action',
             width: 160,
-            render: () => this.editToolAction
+            render: () => this.editToolAction()
         },
     ];
 
@@ -296,36 +317,82 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         this.setState({ hidden });
     };
 
+    createRequest = async () => {
+        let { modalState } = this.props;
+        this.setState({ loading: true })
+        switch (modalState.type_modal) {
+            case TYPE.DELETE:
+                await _requestToServer(
+                    DELETE,
+                    EM_BRANCHES_API,
+                    [localStorage.getItem('id_em_branches')],
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res) => {
+                    if (res) {
+                        this.setState({ loading: false });
+                        this.searchEmBranch();
+                        this.props.handleModal();
+                    }
+                })
+                break;
+
+            default:
+                break;
+        }
+    }
+
     render() {
         let {
             data_table,
-            show_modal,
             loading_table,
+            loading
         } = this.state;
 
         let {
             totalItems,
-            list_regions
+            list_regions,
+            modalState,
         } = this.props
         return (
             <Fragment>
                 <div className="common-content">
                     <Modal
-                        visible={show_modal}
-                        title="XEM TRƯỚC BÀI ĐĂNG"
-                        onCancel={this.onToggleModal}
-                        style={{ top: "5vh" }}
+                        visible={modalState.open_modal}
+                        title={"Workvn thông báo"}
+                        destroyOnClose={true}
+                        onOk={this.createRequest}
+                        onCancel={() => {
+                            this.setState({ loading: false });
+                            this.props.handleModal();
+                        }}
                         footer={[
                             <Button
-                                key="back"
-                                type="danger"
-                                onClick={this.onToggleModal}
-                            >
-                                Thoát
-                        </Button>
+                                key="cancel"
+                                children="Hủy"
+                                onClick={() => {
+                                    this.setState({
+                                        message: null,
+                                        loading: false
+                                    });
+
+                                    this.props.handleModal()
+                                }}
+                            />,
+                            <Button
+                                key="ok"
+                                type={modalState.type_modal === TYPE.DELETE ? "danger" : "primary"}
+                                icon={modalState.type_modal === TYPE.DELETE ? "delete" : "check"}
+                                loading={loading}
+                                children={modalState.type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                                onClick={async () => this.createRequest()}
+                            />
                         ]}
-                    >
-                    </Modal>
+                        children={modalState.msg}
+                    />
 
                     <h5>
                         Quản lí chi nhánh
@@ -348,7 +415,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 margin: "0px 5px"
                             }}
                         >
-                            <Link to='/admin/jobs/employer-branches/create' >
+                            <Link to='/admin/jobs/em-branches/create' >
                                 <Icon type="plus" />
                                 Tạo chi nhánh mới
                             </Link>
@@ -417,12 +484,18 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListEmBranchs: (body: any, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES, body, pageIndex, pageSize }),
+    handleModal: (modalState: IModalState) =>
+        dispatch({
+            type: REDUX.HANDLE_MODAL,
+            modalState
+        })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_em_branches: state.EmBranches.items,
     totalItems: state.EmBranches.totalItems,
     list_regions: state.Regions.items,
+    modalState: state.MutilBox.modalState
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -6,8 +6,8 @@ export const ANNOUNCEMENTS = '/api/employers/announcements';
 export const ANNOU_COMMENTS = '/api/employers/announcements';
 export const ANNOU_TYPES = '/api/employers/announcementTypes';
 export const FIND_CANDIDATES = '/api/employers/candidates/query';
-export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates/query';
-export const SAVED_CANDIDATE_PROFILES = '/api/employers/services/profile/unlock/limit/quantity';
+export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
+export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';
 
 export const HOME_TOP_SERVICE = '/api/employers/services/jobs/priority/home/TOP/quantity';
 export const HOME_INDAY_SERVICE = '/api/employers/services/jobs/priority/home/IN_DAY/quantity';

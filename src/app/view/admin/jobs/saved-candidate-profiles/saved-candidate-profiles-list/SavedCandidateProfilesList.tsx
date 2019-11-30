@@ -100,18 +100,19 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             className: 'action',
             fixed: 'left',
         },
+
+        {
+            title: 'Ảnh',
+            width: 30,
+            dataIndex: 'avatarUrl',
+            key: 'avatarUrl',
+        },
         {
             title: 'Ngày lưu',
             dataIndex: 'createdDate',
             className: 'action',
             key: 'createdDate',
             width: 100,
-        },
-        {
-            title: 'Ảnh',
-            width: 30,
-            dataIndex: 'avatarUrl',
-            key: 'avatarUrl',
         },
         {
             title: 'Trạng thái',
@@ -163,15 +164,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management !== prevState.type_management) {
-            return {
-                type_management: nextProps.type_management,
-                value_type: "Tất cả",
-                announcementTypeID: null
-            }
-        }
-
-        if (nextProps.list_find_candidates !== prevState.list_find_candidates) {
+        if (nextProps.list_find_candidates && nextProps.list_find_candidates !== prevState.list_find_candidates) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             nextProps.list_find_candidates.forEach((item: ISavedCandidateProfile, index: number) => {
@@ -188,7 +181,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 });
             })
             return {
-                list_find_candidates: nextProps.type_management,
+                list_find_candidates: nextProps.list_find_candidates,
                 data_table,
                 loading_table: false,
             }
@@ -244,7 +237,6 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                         ]}
                     >
                     </Modal>
-
                     <h5>
                         Danh sách ứng viên đã lưu
                     </h5>

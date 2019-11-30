@@ -1,5 +1,5 @@
 export const breakCumb =  [
-    {label: "employer-branches", name: "Quản lí chi nhánh", icon: "loading", url: "/employer-branches" },
+    {label: "em-branches", name: "Quản lí chi nhánh", icon: "loading", url: "/em-branches" },
     {label: "jobs", name: "Tuyển dụng", icon: null, url: "/jobs"},
     {label: "jobs-announcement", name: "Quản lí bài đăng", icon: null, url: "/jobs-announcement"},
     {label: "jobs", name: "Tuyển dụng", icon: null, url: "/jobs"},
