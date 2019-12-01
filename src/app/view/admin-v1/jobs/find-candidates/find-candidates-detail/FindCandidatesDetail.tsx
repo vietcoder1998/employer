@@ -121,7 +121,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     body && body.saved ? DELETE : POST,
                     SAVED_CANDIDATE_PROFILES + (body && body.saved ? '/saved' : `/${id}/saved`),
                     body && body.saved ? [id] : undefined,
-                    null,
+                    undefined,
                     undefined,
                     EMPLOYER_HOST,
                     true,

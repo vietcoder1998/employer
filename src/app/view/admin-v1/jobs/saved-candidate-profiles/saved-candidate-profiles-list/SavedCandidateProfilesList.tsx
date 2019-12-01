@@ -9,6 +9,7 @@ import { DELETE } from '../../../../../../common/const/method';
 import { _requestToServer } from '../../../../../../services/exec';
 import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -77,12 +78,15 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
         };
     }
 
-    editToolAction = (
-        <>
+    editToolAction = () => {
+        let id = localStorage.getItem("id_candidate")
+        return <>
             <Icon
-                style={{ padding: "5px 10px" , color: ""}}
+                style={{ padding: "5px 10px", color: "" }}
                 type="search"
-                onClick={() => this.props.history.push(`/v1/admin/jobs/find-candidates/${localStorage.getItem("id_candidate")}`)}
+                onClick={() => this.props.history.push(
+                    routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`
+                )}
             />
             <Popconfirm
                 placement="topRight"
@@ -94,7 +98,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" />
             </Popconfirm>
         </>
-    );
+    };
 
     columns = [
         {
@@ -166,7 +170,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             fixed: 'right',
             className: 'action',
             width: 100,
-            render: () => this.editToolAction
+            render: () => this.editToolAction()
         },
     ];
 
@@ -200,7 +204,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.candidate.address ? item.candidate.address : "",
                     region: item.candidate.region ? item.candidate.region.name : "",
-                    birthday: timeConverter(item.candidate.birthday, 1000),
+                    birthday: item.candidate.birthday !== -1 ? timeConverter(item.candidate.birthday, 1000) : null,
                     createdDate: timeConverter(item.createdDate, 1000),
                 });
             })
@@ -244,7 +248,9 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             true,
             false,
         ).then(
-            (res: any) => { if (res) { this.searchSavedCandidateProfiles() } }
+            (res: any) => {
+                if (res) { this.searchSavedCandidateProfiles() }
+            }
         )
     }
 
