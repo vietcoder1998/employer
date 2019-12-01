@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react'
 import ErrorBoundaryRoute from '../../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
-import PendingJobsList from './announcements.ts/AnnouncementsList';
+import PendingJobsList from './announcements/AnnouncementsList';
 const Switch = require("react-router-dom").Switch;
 
 interface JobAnnouncementsState {
@@ -15,14 +15,6 @@ interface JobAnnouncementsProps extends StateProps, DispatchProps {
 }
 
 class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncementsState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show_menu: true,
-            to_logout: false,
-        }
-    }r
-
     render() {
         let  {path} = this.props.match
         return (

@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 import SavedCandidateProfilesList from './saved-candidate-profiles-list/SavedCandidateProfilesList';
-import SavedCandidateProfileDetail from './saved-candidate-profiles-detail/SavedCandidateProfileDetail';
 const Switch = require("react-router-dom").Switch;
 
 interface SavedCandidateProfileState {
@@ -30,7 +29,6 @@ class SavedCandidateProfile extends PureComponent<SavedCandidateProfileProps, Sa
             <Fragment >
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={SavedCandidateProfilesList} />
-                    <ErrorBoundaryRoute path={`${path}/create`} component={SavedCandidateProfileDetail} />
                 </Switch>
             </Fragment>
         )

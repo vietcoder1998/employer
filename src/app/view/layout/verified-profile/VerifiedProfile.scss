@@ -1,0 +1,19 @@
+.verified-profile {
+  padding: 5px;
+  .ic-ct-id {
+    padding: 10px 40px;
+  }
+
+  min-height: 50vh;
+
+  .ic-ct-img {
+    padding: 10px 40px;
+    .ic {
+      border: solid gray 1px;
+      border-radius: 3px;
+      padding: 3px;
+      height: 300px;
+      width: 100%;
+    }
+  }
+}

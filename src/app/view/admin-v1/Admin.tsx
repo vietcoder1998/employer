@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Menu, Breadcrumb, BackTop } from 'antd';
+import { Layout, Icon, Avatar, Breadcrumb, BackTop } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
@@ -139,13 +139,13 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <Icon type="home" />
                                 </a>
                             </Breadcrumb.Item>
-                            {data_breakcumb.map(item => {
+                            {data_breakcumb.map((item: any) => {
                                 let newBreakCump = null;
-                                breakCumb.forEach((item_brk, index) => {
+                                breakCumb.forEach((item_brk: any, index: number) => {
                                     if (item_brk.label === item) {
                                         newBreakCump = (
                                             <Breadcrumb.Item key={index}>
-                                                <a href={item_brk.url} >{item_brk.name}</a>
+                                                {!item_brk.disable ? <a href={item_brk.url} >{item_brk.name}</a> : <label>{item_brk.name}</label> }
                                             </Breadcrumb.Item>
                                         )
                                     }

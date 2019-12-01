@@ -1,12 +1,14 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Modal, Avatar } from 'antd';
+import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
 import { timeConverter } from '../../../../../../common/utils/convertTime';
-import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { Link } from 'react-router-dom';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { ISavedCandidateProfile } from '../../../../../../redux/models/saved-candidate-profiles';
+import { DELETE } from '../../../../../../common/const/method';
+import { _requestToServer } from '../../../../../../services/exec';
+import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -20,6 +22,7 @@ let ImageRender = (props: any) => {
 
 interface SavedCandidateProfilesListProps extends StateProps, DispatchProps {
     match?: any;
+    history?: any;
     getListSavedCandidateProfiles: Function;
     getAnnoucementDetail: Function;
 };
@@ -57,7 +60,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             adminID: null,
             list_find_candidates: [],
             id: null,
-            loading_table: false,
+            loading_table: true,
             body: {
                 gender: null,
                 birthYearStart: null,
@@ -75,21 +78,23 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     }
 
     editToolAction = (
-        <div>
-            <Link to={`/v1/admin/em-branches/fix/${localStorage.getItem("id_saved_candidate_profiles")}`}>
-                <Icon style={{ padding: "5px 10px" }} type="edit" theme="twoTone" />
-            </Link>
-        </div>
+        <>
+            <Icon
+                style={{ padding: "5px 10px" , color: ""}}
+                type="search"
+                onClick={() => this.props.history.push(`/v1/admin/jobs/find-candidates/${localStorage.getItem("id_candidate")}`)}
+            />
+            <Popconfirm
+                placement="topRight"
+                title={"Xóa khỏi danh sách"}
+                onConfirm={(event: any) => this.createRequest()}
+                okText="Xóa"
+                cancelText="Hủy"
+            >
+                <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" />
+            </Popconfirm>
+        </>
     );
-
-    deleteAnnoun = async () => {
-        /* tslint:disable */
-        Swal.fire(
-            "Worksvn thông báo",
-            "Bạn chắc chắn muốn xóa bài đăng này",
-            "warning",
-        )
-    };
 
     columns = [
         {
@@ -106,6 +111,13 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             width: 30,
             dataIndex: 'avatarUrl',
             key: 'avatarUrl',
+        },
+        {
+            title: 'Trạng thái',
+            className: 'action',
+            dataIndex: 'unlocked',
+            key: 'unlocked',
+            width: 100,
         },
         {
             title: 'Ngày lưu',
@@ -168,10 +180,22 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             nextProps.list_find_candidates.forEach((item: ISavedCandidateProfile, index: number) => {
+                const Lock = () => (
+                    <>
+                        <Tooltip placement="top" title={item.candidate.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
+                            <Icon
+                                type={item.candidate.unlocked ? "unlock" : "lock"}
+                                style={{ padding: "5px 5px", color: item.candidate.unlocked ? "green" : "red" }}
+                            />
+                        </Tooltip>
+                    </>
+                );
+
                 data_table.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} alt="Ảnh đại diện" />,
+                    unlocked: <Lock />,
                     name: (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : ""),
                     lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.candidate.address ? item.candidate.address : "",
@@ -205,8 +229,24 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
 
     searchSavedCandidateProfiles = async () => {
         let { pageIndex, pageSize } = this.state;
-        this.props.getListSavedCandidateProfiles(pageIndex, pageSize);
+        await this.props.getListSavedCandidateProfiles(pageIndex, pageSize);
     };
+
+    createRequest = async () => {
+        let id = localStorage.getItem("id_candidate");
+        await _requestToServer(
+            DELETE,
+            SAVED_CANDIDATE_PROFILES + '/saved',
+            [id],
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            true,
+            false,
+        ).then(
+            (res: any) => { if (res) { this.searchSavedCandidateProfiles() } }
+        )
+    }
 
     render() {
         let {
@@ -256,7 +296,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                                     onClick: event => {
                                     }, // click row
                                     onMouseEnter: (event) => {
-                                        localStorage.setItem('id_saved_candidate_profiles', record.key)
+                                        localStorage.setItem('id_candidate', record.key)
                                     }, // mouse enter row
                                 };
                             }}

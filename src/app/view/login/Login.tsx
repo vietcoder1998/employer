@@ -38,7 +38,6 @@ class Login extends PureComponent<LoginProps, LoginState> {
     }
 
     componentWillMount() {
-        const cookies = new Cookies();
         let is_authen = localStorage.getItem("token") ? true : false;
         let last_url = localStorage.getItem("last_url");
         if (is_authen) {
@@ -69,7 +68,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             if (last_url) {
                 window.location.href = last_url
             } else {
-                window.location.href = '/v1/admin/annoucements'
+                window.location.href = '/v1/admin/announcements'
             }
         }
     }

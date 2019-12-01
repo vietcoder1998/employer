@@ -15,6 +15,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { DELETE } from '../../../../../../common/const/method';
 import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 let { Option } = Select;
 
 interface EmBranchesListProps extends StateProps, DispatchProps {
@@ -75,7 +76,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             hidden: false,
             list_em_branches: [],
             id: null,
-            loading_table: false,
+            loading_table: true,
             body: {
                 regionID: null,
                 headquarters: null,
@@ -105,9 +106,11 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     style={{ padding: "5px 10px" }}
                     type="edit"
                     theme="twoTone"
-                    onClick={() => {
-                        this.props.history.push(`/v1/admin/jobs/em-branches/fix/${localStorage.getItem("id_em_branches")}`)
-                    }}
+                    onClick={() =>
+                        this.props.history.push(
+                            routeLink.EM_BRANCHES + routePath.CREATE + `/${localStorage.getItem("id_em_branches")}`
+                        )
+                    }
                 />
             </Tooltip>
         </>

@@ -6,8 +6,6 @@ import EmBranchesCreate from './em-branches-create/EmBranchesCreate';
 const Switch = require("react-router-dom").Switch;
 
 interface IEmBranchesState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface IEmBranchesProps extends StateProps, DispatchProps {
@@ -16,14 +14,6 @@ interface IEmBranchesProps extends StateProps, DispatchProps {
 }
 
 class EmBranches extends PureComponent<IEmBranchesProps, IEmBranchesState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show_menu: true,
-            to_logout: false,
-        }
-    }r
-
     render() {
         let  {path} = this.props.match
         return (

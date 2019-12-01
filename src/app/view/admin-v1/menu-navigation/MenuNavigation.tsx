@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Layout, Menu, Icon } from 'antd';
 import './MenuNavigation.scss';
 // @ts-ignore
@@ -51,7 +51,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="pendings-jobs">
-                        <Link to={'/v1/admin/jobs/annoucements/list'}>
+                        <Link to={'/v1/admin/jobs/announcements/list'}>
                             <Icon type="loading-3-quarters" />
                             <span>Bài viết</span>
                         </Link>
@@ -63,7 +63,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
-                        <Link to={'/v1/admin/jobs/saved-candidate-profiles/list'}>
+                        <Link to={'/v1/admin/jobs/saved-candidate/list'}>
                             <Icon type="idcard" />
                             <span>Hồ sơ đã lưu</span>
                         </Link>

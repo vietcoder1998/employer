@@ -1,8 +1,9 @@
-import {notification} from 'antd';
-import {GET, POST, PUT, DELETE} from '../common/const/method';
-import {_delete, _get, _post, _put} from './base-api';
+import { exceptionShowNoti } from './../config/exception';
+import { notification } from 'antd';
+import { GET, POST, PUT, DELETE } from '../common/const/method';
+import { _delete, _get, _post, _put } from './base-api';
 import Swal from 'sweetalert2';
-import {authHeaders} from "./auth";
+import { authHeaders } from "./auth";
 
 export const _requestToServer = async (
     method: string,
@@ -59,26 +60,16 @@ export const _requestToServer = async (
         }
         return response;
     } catch (err) {
-        let code;
         let msg;
         if (err.response) {
             let data = err.response.data;
             if (data) {
-                code = data.code;
                 msg = data.msg;
-            } else {
-                code = err.response.code;
-            }
+            } 
         } else {
-            code = "UNKNOWN";
             msg = err.message;
         }
-        if (show_noti) {
-            notification.error({
-                message: "Có lỗi xảy ra (" + code + ")",
-                description: msg,
-            })
-        }
+        exceptionShowNoti(err, show_noti);
         if (show_alert) {
             Swal.fire(
                 "Có lỗi xảy ra",

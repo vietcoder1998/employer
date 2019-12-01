@@ -89,7 +89,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             hidden: false,
             list_job_announcements: [],
             id: null,
-            loading_table: false,
+            loading_table: true,
             body: {
                 expired: null,
                 hidden: null,

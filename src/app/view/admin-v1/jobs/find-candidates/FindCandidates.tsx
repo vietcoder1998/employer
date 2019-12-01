@@ -6,8 +6,6 @@ import FindCandidatesDetail from './find-candidates-detail/FindCandidatesDetail'
 const Switch = require("react-router-dom").Switch;
 
 interface IFindCandidatesState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface IFindCandidatesProps extends StateProps, DispatchProps {

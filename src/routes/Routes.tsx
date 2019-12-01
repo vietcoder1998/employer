@@ -17,9 +17,9 @@ export default function Routes(props) {
         <Suspense fallback={<FallBack />} >
           <Route path={'/v1/admin'} component={Admin} />
         </Suspense>
-        {/* <Suspense fallback={<FallBack />} >
-          <Route path={'/'} component={NotFound} />
-        </Suspense> */}
+        <Suspense fallback={<FallBack />} >
+          <Route exact path={'/404'} component={NotFound} />
+        </Suspense>
       </Router>
     </React.Fragment >
   );

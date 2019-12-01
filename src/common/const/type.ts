@@ -28,6 +28,8 @@ export const TYPE = {
     UN_ACTIVE: "UN_ACTIVE",
     LIST: "LIST",
     VIEW: "VIEW",
+    SAVE: "SAVE",
+    UNLOCK: "UNLOCK",
 
     HIDDEN: "HIDDEN",
     SHOW: "SHOW",

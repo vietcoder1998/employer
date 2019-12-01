@@ -13,7 +13,7 @@ export const IptLetter = (props: any) => {
 export const IptLetterP = (props: any) => {
     return (
         <div style={props.style ? { ...props.style } : null}>
-            <p style={{marginTop: 10}}>
+            <p style={{ marginTop: 10 }}>
                 <span className="important-letter">{props.icon ? <Icon type={props.icon} /> : " "}{" " + (props.value ? props.value : " ") + " "}</span>
             </p>
             {props.children ? props.children : null}
@@ -36,3 +36,9 @@ export function Timer(props: any) {
         </label>
     )
 };
+
+export const NotUpdate = (props?: any) => (
+    <label style={{ fontStyle: "italic" }}>
+        {props.msg ? props.msg : "Chưa cập nhật"}
+    </label>
+);

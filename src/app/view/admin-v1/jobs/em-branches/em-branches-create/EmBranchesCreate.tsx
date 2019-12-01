@@ -12,6 +12,7 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { POST, PUT } from '../../../../../../common/const/method';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import { IMapState } from '../../../../../../redux/models/mutil-box';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 interface IEmBranchesCreateState {
     title?: string;
@@ -123,7 +124,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                     false,
                 ).then((res: any) => {
                     if (res) {
-                        this.props.history.push('/v1/admin/jobs/em-branches/list');
+                        this.props.history.push(routeLink.EM_BRANCHES + routePath.LIST);
                     }
                 })
                 break;
@@ -139,7 +140,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                     false,
                 ).then((res: any) => {
                     if (res) {
-                        this.props.history.push('/v1/admin/jobs/em-branches/list');
+                        this.props.history.push(routeLink.EM_BRANCHES + routePath.LIST);
                     }
                 })
                 break;
@@ -277,7 +278,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                                         float: "right"
                                     }}
                                     icon="close"
-                                    onClick={() => { this.props.history.push('/v1/admin/jobs/em-branches/list') }}
+                                    onClick={() => { this.props.history.push(routeLink.EM_BRANCHES + routePath.LIST) }}
                                     children={btcc}
                                 />
                             </div>

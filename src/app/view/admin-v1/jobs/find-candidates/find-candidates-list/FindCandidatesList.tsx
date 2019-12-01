@@ -13,6 +13,7 @@ import { ISkill } from '../../../../../../redux/models/find-candidates-detail';
 import { ILanguage } from '../../../../../../redux/models/languages';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {
@@ -198,7 +199,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                             <Icon
                                 style={{ padding: "5px 5px", color: "blue" }}
                                 type="file-search"
-                                onClick={() => nextProps.history.push(`/v1/admin/jobs/find-candidates/detail/${localStorage.getItem('id_candidate')}`)}
+                                onClick={() => nextProps.history.push(routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${localStorage.getItem('id_candidate')}`)}
                             />
                         </Tooltip>
                     </>
@@ -427,19 +428,11 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
         </>
     }
 
-    profileCandidate = () => {
-        return (
-            <>
-            </>
-        )
-    }
-
     render() {
         let {
             data_table,
             loading_table,
             open_drawer,
-            body,
         } = this.state;
 
         let {

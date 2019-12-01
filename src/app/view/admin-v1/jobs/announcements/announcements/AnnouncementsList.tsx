@@ -10,6 +10,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { DELETE } from '../../../../../../common/const/method';
 import { ANNOU_COMMENTS } from '../../../../../../services/api/private.api';
 import { IAnnouCommentsBody, IAnnouComment } from '../../../../../../redux/models/annou-comments';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 let { Option } = Select;
 const { TabPane } = Tabs;
@@ -131,7 +132,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
 
     toFixJob = () => {
         let id = localStorage.getItem('id_mgm');
-        this.props.history.push(`/v1/admin/job-management/fix/${id}`);
+        this.props.history.push(`${routeLink.ANNOUNCEMENT + routePath.FIX + "/" + id}`);
     };
 
     columns = [

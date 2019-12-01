@@ -1,16 +1,15 @@
 import React from 'react'
-import { Icon, Avatar, Row, Col, Timeline, Progress, Tag, Rate } from 'antd';
+import { Icon, Avatar, Row, Col, Progress, Tag, Rate } from 'antd';
 import './CandidateProfile.scss';
-import { IFindCandidateDetail, ILanguageSkill } from '../../../../redux/models/find-candidates-detail';
+import { IFindCandidateDetail } from '../../../../redux/models/find-candidates-detail';
 // @ts-ignore
 import backGround from '../../../../assets/image/rodan.png';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
-import { InputTitle } from '../input-tittle/InputTitle';
-import { ISkill } from '../../../../redux/models/skills';
 import { TYPE } from '../../../../common/const/type';
 import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
 import { timeConverter } from '../../../../common/utils/convertTime';
+import { NotUpdate } from '../common/Common';
 
 
 interface ICandidateProfileState {
@@ -18,14 +17,14 @@ interface ICandidateProfileState {
     to_logout: boolean;
     location?: string;
     data_breakcumb?: Array<string>
-}
+};
 
 interface ICandidateProfileProps {
     data?: IFindCandidateDetail
-}
+};
 
 function CandidateProfile(props: ICandidateProfileProps) {
-    const { data } = props;
+    let { data } = props;
 
     return (
         <div className="candidate-profile test">
@@ -39,11 +38,13 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <div className="hr-center" />
                     <div className="block-image">
                         <Avatar
+                            // @ts-ignore
                             src={data ? data.avatarUrl : avatar}
                             style={{
                                 height: 140,
                                 width: 140,
-                                border: "solid white 2px"
+                                border: "solid white 2px",
+                                fontSize: 60
                             }}
                         />
                         <h4>
@@ -59,21 +60,22 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 Mô tả bản thân
                             </h6>
                             <p>
-                                {data ? data.description : ""}
+                                {data ? data.description : <NotUpdate />}
                             </p>
                         </div>
                         <div className="info">
                             <ul>
                                 <li>
                                     <label className="block-span">Ngày sinh</label>
-                                    <label>{data && data.birthday ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : "Chưa cập nhật"}</label>
+                                    <label>{data && data.birthday !== -1 ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : <NotUpdate />}</label>
                                 </li>
                                 <li>
                                     <label className="block-span">Số điện thoại</label>
                                     <label>
                                         <strong>
                                             {data && data.phone ? data.phone :
-                                                <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>}
+                                                (data && data.unlocked ? <NotUpdate /> : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>)
+                                            }
                                         </strong>
                                     </label>
                                 </li>
@@ -88,7 +90,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 </li>
                                 <li>
                                     <label className="block-span">Địa chỉ</label>
-                                    <label>{data ? data.address : "Chưa cập nhật"}</label>
+                                    <label>{data && (data.address || data.address !== "") ? data.address : <NotUpdate />}</label>
                                 </li>
                             </ul>
                         </div>
@@ -108,9 +110,10 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     reserve={true}
                                 >
                                     {data && data.experiences && data.experiences.length > 0 ?
-                                        data.experiences.map((item: any) =>
+                                        data.experiences.map((item: any, index: number) =>
                                             <TimeLineConfigItem
                                                 color="#1890ff"
+                                                key={index}
                                             >
                                                 <ul>
                                                     <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
@@ -120,7 +123,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 </ul>
                                             </TimeLineConfigItem>
                                         )
-                                        : "Chưa cập nhật"
+                                        : <NotUpdate />
                                     }
                                 </TimeLineConfig>
                             </div>
@@ -137,9 +140,10 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     reserve={true}
                                 >
                                     {data && data.educations && data.educations.length > 0 ?
-                                        data.educations.map((item: any) =>
+                                        data.educations.map((item: any, index: number) =>
                                             <TimeLineConfigItem
                                                 color="#1890ff"
+                                                key={index}
                                             >
                                                 <ul>
                                                     <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
@@ -149,7 +153,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 </ul>
                                             </TimeLineConfigItem>
                                         )
-                                        : "Chưa cập nhật"
+                                        : <NotUpdate />
                                     }
                                 </TimeLineConfig>
                             </div>
@@ -170,17 +174,18 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                         data.languageSkills.length > 0 ?
                                         data.languageSkills.map(
                                             (item: any, index: number) => (
-                                                <div>
+                                                <div key={index} style={{ padding: "10px" }}>
                                                     <p>{item.language.level}</p>
                                                     <Progress type="circle"
+                                                        width={80}
                                                         // @ts-ignore
                                                         percent={parseInt((item.score / 900) * 100)} format={percent => `${percent}%`} />
                                                     <h5>
-                                                        {item.language.name + "(" + `${item.certificate}` + (item.score ? " - " + item.score : "") + ")"}
+                                                        {item.language.name + "(" + item.certificate + (item.score ? " - " + item.score : "") + ")"}
                                                     </h5>
                                                 </div>
                                             )
-                                        ) : "Chưa có kĩ năng"}
+                                        ) : <NotUpdate />}
                                 </div>
                             </div>
                         </div>
@@ -194,9 +199,6 @@ function CandidateProfile(props: ICandidateProfileProps) {
                             <div style={{ padding: "10px" }}>
                                 <div>
                                     {data && data.gender === TYPE.MALE ? <><Icon type="man" /> Nam giới</> : <><Icon type="woman" /> Nũ giới</>}
-                                </div>
-                                <div>
-                                    <Icon type="idcard" /> Độc thân
                                 </div>
                             </div>
                         </div>
@@ -214,8 +216,8 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     data.skills &&
                                     data.skills.length > 0 ?
                                     data.skills.map(
-                                        (item: ISkill, index: number) => (<Tag color="geekblue" style={{ padding: "5px 10px", margin: 5 }}>{item.name}</Tag>)
-                                    ) : "Chưa có kĩ năng"}
+                                        (item: any, index: number) => (<Tag key={index} color="geekblue" style={{ padding: "5px 10px", margin: 5 }}>{item.name}</Tag>)
+                                    ) : <NotUpdate />}
                             </div>
                         </div>
                     </Col>
@@ -247,6 +249,5 @@ function CandidateProfile(props: ICandidateProfileProps) {
         </div>
     )
 }
-
 
 export default CandidateProfile

@@ -5,7 +5,7 @@ import { Button, Table, Icon, Select, Row, Col, Modal, Input } from 'antd';
 import { timeConverter } from '../../../../common/utils/convertTime';
 import './MoreInfo.scss';
 import { _requestToServer } from '../../../../services/exec';
-import { GET, POST } from '../../../../common/const/method';
+import { GET } from '../../../../common/const/method';
 import { PENDING_JOBS_API } from '../../../../services/api/private.api';
 import { authHeaders } from '../../../../services/auth';
 import { EMPLOYER_HOST } from '../../../../environment/dev';
@@ -186,7 +186,7 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
             nextProps.list_jobs.forEach((item, index) => {
                 data_table.push({
                     key: item.id,
-                    index: (index + (pageIndex ? pageIndex : 0) *  (pageSize ? pageSize : 10) + 1),
+                    index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     jobName: item.jobName.name,
                     state: <Label type={item.state} value={item.state} />,
                     address: item.address ? item.address : "",
@@ -255,22 +255,6 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
         this.setState({ jobId });
     }
 
-    handlePendingJob = async (state?: string) => {
-        let { jobId, message } = this.state;
-        await this.setState({ loading: true });
-        await _requestToServer(
-            POST,
-            { message },
-            PENDING_JOBS_API + `/${jobId}/${state}`,
-            EMPLOYER_HOST,
-            authHeaders,
-            null,
-            true
-        );
-        await this.setState({ loading: false });
-        await this.onToggleModal();
-        await this.searchJob();
-    }
 
     render() {
         let { data_table, show_job, loading, pendingJob, message, loading_table } = this.state;
@@ -399,6 +383,7 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
                             </Row>
                         </div>
                         <Table
+                            // @ts-ignore
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}

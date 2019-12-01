@@ -35,9 +35,9 @@ class Jobs extends PureComponent<JobsProps, JobsState> {
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/job-announcements`} component={JobAnnouncements} />
                     <ErrorBoundaryRoute path={`${path}/em-branches`} component={EmBranches} />
-                    <ErrorBoundaryRoute path={`${path}/annoucements`} component={Announcements} />
+                    <ErrorBoundaryRoute path={`${path}/announcements`} component={Announcements} />
                     <ErrorBoundaryRoute path={`${path}/find-candidates`} component={FindCandidates} />
-                    <ErrorBoundaryRoute path={`${path}/saved-candidate-profiles`} component={SavedCandidateProfiles} />
+                    <ErrorBoundaryRoute path={`${path}/saved-candidate`} component={SavedCandidateProfiles} />
                 </Switch>
             </Fragment>
         )
