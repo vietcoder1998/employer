@@ -71,7 +71,7 @@
         padding: 0px 50px;
 
         .profile-description {
-            height: 110px;
+          height: 110px;
         }
 
         h6 {
@@ -109,9 +109,10 @@
       .language-skills {
         padding: 10px 10px;
         text-align: left;
-        display: inline-flex;
         .content-l-q {
           text-align: center;
+          display: grid;
+          grid-template-columns: auto auto auto auto;
         }
       }
     }

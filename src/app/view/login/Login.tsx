@@ -20,7 +20,8 @@ interface LoginState {
 }
 
 interface LoginProps {
-    form?: any
+    form?: any;
+    history?: any;
 }
 
 class Login extends PureComponent<LoginProps, LoginState> {
@@ -36,6 +37,15 @@ class Login extends PureComponent<LoginProps, LoginState> {
         }
     }
 
+    componentWillMount() {
+        const cookies = new Cookies();
+        let is_authen = localStorage.getItem("token") ? true : false;
+        let last_url = localStorage.getItem("last_url");
+        if (is_authen) {
+            window.location.href = last_url;
+        }
+    }
+
     createRequest = async () => {
         let { password, username } = this.state;
         let res = await _requestToServer(
@@ -43,7 +53,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             OAUTH2_LOGIN,
             { username, password },
             undefined,
-            loginHeaders("worksvn-employer-web","worksvn-employer-web@works.vn"),
+            loginHeaders("worksvn-employer-web", "worksvn-employer-web@works.vn"),
             OAUTH2_HOST,
             null,
             false,
@@ -59,7 +69,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             if (last_url) {
                 window.location.href = last_url
             } else {
-                window.location.href = '/admin/annoucements'
+                window.location.href = '/v1/admin/annoucements'
             }
         }
     }
@@ -100,7 +110,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                         <Col xs={24} sm={16} md={12} lg={8} xl={6} >
                             <div className="r-p-content test">
                                 <div className='msg-noti '>
-                                    <h5 style={{textAlign: "center"}}>Đăng nhập</h5>
+                                    <h5 style={{ textAlign: "center" }}>Đăng nhập</h5>
                                     <Form onSubmit={this.handleSubmit} className="login-form">
                                         <p>Tên đăng nhập</p>
                                         <Form.Item>

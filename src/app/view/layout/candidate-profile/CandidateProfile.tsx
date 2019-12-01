@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon, Avatar, Row, Col, Timeline, Progress, Tag, Rate } from 'antd';
 import './CandidateProfile.scss';
-import { IFindCandidateDetail } from '../../../../redux/models/find-candidates-detail';
+import { IFindCandidateDetail, ILanguageSkill } from '../../../../redux/models/find-candidates-detail';
 // @ts-ignore
 import backGround from '../../../../assets/image/rodan.png';
 // @ts-ignore
@@ -9,6 +9,8 @@ import avatar from '../../../../assets/image/test_avatar.jpg';
 import { InputTitle } from '../input-tittle/InputTitle';
 import { ISkill } from '../../../../redux/models/skills';
 import { TYPE } from '../../../../common/const/type';
+import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
+import { timeConverter } from '../../../../common/utils/convertTime';
 
 
 interface ICandidateProfileState {
@@ -64,7 +66,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                             <ul>
                                 <li>
                                     <label className="block-span">Ngày sinh</label>
-                                    <label>28-4-1998</label>
+                                    <label>{data && data.birthday ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : "Chưa cập nhật"}</label>
                                 </li>
                                 <li>
                                     <label className="block-span">Số điện thoại</label>
@@ -86,7 +88,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 </li>
                                 <li>
                                     <label className="block-span">Địa chỉ</label>
-                                    <label>{data ? data.address : ""}</label>
+                                    <label>{data ? data.address : "Chưa cập nhật"}</label>
                                 </li>
                             </ul>
                         </div>
@@ -98,21 +100,58 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <Col md={12} >
                         <div className="wrapper">
                             <h6> <Icon type="project" /> Kinh nghiệm</h6>
-                            <hr />
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
                             <div>
-                                <Timeline pending="Recording..." reverse={false}>
-                                </Timeline>
+                                <TimeLineConfig
+                                    reserve={true}
+                                >
+                                    {data && data.experiences && data.experiences.length > 0 ?
+                                        data.experiences.map((item: any) =>
+                                            <TimeLineConfigItem
+                                                color="#1890ff"
+                                            >
+                                                <ul>
+                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
+                                                    <li><strong>đến :  {item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
+                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>tại :{item.companyName}</li>
+                                                    <li style={{ marginTop: "20px" }}>{item.description}</li>
+                                                </ul>
+                                            </TimeLineConfigItem>
+                                        )
+                                        : "Chưa cập nhật"
+                                    }
+                                </TimeLineConfig>
                             </div>
                         </div>
                     </Col>
                     <Col md={12}>
                         <div className="wrapper">
                             <h6> <Icon type="read" />Học vấn</h6>
-                            <hr />
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
                             <div>
-                                <Timeline pending="Recording..." reverse={false}>
-                                    <Timeline.Item key={12}> basdf</Timeline.Item>
-                                </Timeline>
+                                <TimeLineConfig
+                                    reserve={true}
+                                >
+                                    {data && data.educations && data.educations.length > 0 ?
+                                        data.educations.map((item: any) =>
+                                            <TimeLineConfigItem
+                                                color="#1890ff"
+                                            >
+                                                <ul>
+                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
+                                                    <li><strong>đến :  {item.finishedDate === -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
+                                                    <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{item.school}</li>
+                                                    <li style={{ marginTop: "10px" }}>{item.description}</li>
+                                                </ul>
+                                            </TimeLineConfigItem>
+                                        )
+                                        : "Chưa cập nhật"
+                                    }
+                                </TimeLineConfig>
                             </div>
                         </div>
                     </Col>
@@ -121,24 +160,27 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <Col md={12} >
                         <div className="wrapper">
                             <h6> <Icon type="message" /> Trình độ ngoại ngữ</h6>
-                            <hr />
-                            <div className="language-skills">
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
+                            <div className="language-skills" >
                                 <div className="content-l-q">
                                     {data &&
                                         data.languageSkills &&
                                         data.languageSkills.length > 0 ?
                                         data.languageSkills.map(
                                             (item: any, index: number) => (
-                                                <>
+                                                <div>
                                                     <p>{item.language.level}</p>
                                                     <Progress type="circle"
                                                         // @ts-ignore
-                                                        percent={parseInt((880 / 900) * 100)} format={percent => `${percent}%`} />
-                                                    <h5>{item.language.name + "(" + `${item.certificate}` + ")"}</h5>
-                                                </>
+                                                        percent={parseInt((item.score / 900) * 100)} format={percent => `${percent}%`} />
+                                                    <h5>
+                                                        {item.language.name + "(" + `${item.certificate}` + (item.score ? " - " + item.score : "") + ")"}
+                                                    </h5>
+                                                </div>
                                             )
                                         ) : "Chưa có kĩ năng"}
-
                                 </div>
                             </div>
                         </div>
@@ -146,8 +188,10 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <Col md={12}>
                         <div className="wrapper">
                             <h6><Icon type="heart" />Tình trạng quan hệ</h6>
-                            <hr />
-                            <div>
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
+                            <div style={{ padding: "10px" }}>
                                 <div>
                                     {data && data.gender === TYPE.MALE ? <><Icon type="man" /> Nam giới</> : <><Icon type="woman" /> Nũ giới</>}
                                 </div>
@@ -162,7 +206,9 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <Col md={12} >
                         <div className="wrapper">
                             <h6> <Icon type="solution" />Kĩ năng </h6>
-                            <hr />
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
                             <div className="skills">
                                 {data &&
                                     data.skills &&
@@ -176,9 +222,11 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     <Col md={12}>
                         <div className="wrapper">
                             <h6><Icon type="like" />Đánh giá của nhà tuyển dụng</h6>
-                            <hr />
-                            <div>
-                                <label className="block-span">Thái độ </label><label></label>
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
+                            <div >
+                                <label className="block-span">Số lượt đánh giá</label>{data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}<label></label>
                                 <div>
                                     <label className="block-span">Thái độ </label>
                                     <Rate disabled value={data ? data.rating.jobAccomplishmentRating : 1} />

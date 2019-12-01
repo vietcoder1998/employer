@@ -25,7 +25,6 @@ let initState: IMutilBox = {
 };
 
 export const MutilBox = (state: typeof initState = initState, action: any) => {
-    console.log(action)
     switch (action.type) {
         case REDUX.HANDLE_DRAWER:
             return {

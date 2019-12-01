@@ -1,0 +1,185 @@
+import React, { PureComponent } from 'react'
+import { Layout, Icon, Avatar, Menu, Breadcrumb, BackTop } from 'antd';
+import MenuNavigation from './menu-navigation/MenuNavigation';
+import './Admin.scss';
+import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
+import { connect } from 'react-redux';
+import clearStorage from '../../../services/clearStorage';
+import { breakCumb } from '../../../common/const/break-cumb';
+import Jobs from './jobs/Jobs';
+import ConnectSchools from './connect-schools/ConnectSchools';
+import ConvernientService from './convernient-service/ConvernientService';
+import MoreInfo from './more-info/MoreInfo';
+import { IAppState } from '../../../redux/store/reducer';
+import { REDUX_SAGA } from '../../../common/const/actions';
+import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
+import Loading from '../layout/loading/Loading';
+
+const Switch = require("react-router-dom").Switch;
+const { Content, Header } = Layout;
+
+interface AdminState {
+    show_menu: boolean;
+    to_logout: boolean;
+    location?: string;
+    data_breakcumb?: Array<string>,
+    loading?: boolean,
+    pathname?: string,
+}
+
+interface AdminProps extends StateProps, DispatchProps {
+    match: Readonly<any>;
+    getListRegions: Function;
+    getListJobNames: Function;
+    getListSkills: Function;
+    getListJobService: Function;
+    getListLanguages: Function;
+}
+
+
+class Admin extends PureComponent<AdminProps, AdminState> {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show_menu: false,
+            to_logout: false,
+            location: "/",
+            data_breakcumb: [],
+            loading: true,
+        }
+    }
+
+    async componentDidMount() {
+        this.props.getListRegions();
+        this.props.getListJobNames();
+        this.props.getListSkills();
+        this.props.getListJobService();
+        this.props.getListLanguages();
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.location.pathname !== prevState.pathname) {
+            localStorage.setItem("last_url", nextProps.location.pathname);
+            let list_breakcumb = nextProps.location.pathname.split("/");
+            let data_breakcumb = [];
+            list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
+
+            return {
+                pathname: nextProps.location.pathname,
+                data_breakcumb,
+                loading: false
+            }
+        }
+        return null
+    }
+
+    menu = (
+        <Menu>
+            <Menu.Item onClick={() => clearStorage()}>
+                <span>
+                    Đăng xuất
+                </span>
+            </Menu.Item>
+        </Menu>
+    );
+
+    render() {
+        let { show_menu, data_breakcumb, loading } = this.state;
+        let { path } = this.props.match;
+        return (
+            <Layout>
+                <MenuNavigation
+                    show_menu={show_menu}
+                    onCallLoading={() => this.setState({ loading: true })}
+                />
+                <Layout>
+                    <Header style={{ background: '#fff', padding: 0 }}>
+                        <Icon
+                            className="trigger"
+                            type={show_menu ? 'menu-unfold' : 'menu-fold'}
+                            style={{
+                                marginTop: "20px",
+                                color: "white"
+                            }}
+                            onClick={() => this.setState({ show_menu: !show_menu })}
+                        />
+                        <div className="avatar-header" >
+                            <DropdownConfig
+                                param={
+                                    <Avatar
+                                        icon="user"
+                                        style={{
+                                            width: "30px",
+                                            height: "30px",
+                                            border: "solid #fff 2px",
+                                            margin: "0px 5px"
+                                        }}
+                                    />
+                                }
+                            >
+                                <OptionConfig icon="user" key="2" value="" label="Tài khoản" onClick={() => { }} />
+                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
+                            </DropdownConfig>
+                        </div>
+                    </Header>
+                    <Content
+                        style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            background: '#fff',
+                            minHeight: 280,
+                            border: "solid #80808036 1px"
+                        }}
+                    >
+                        <Breadcrumb >
+                            <Breadcrumb.Item >
+                                <a href='/v1/admin' >
+                                    <Icon type="home" />
+                                </a>
+                            </Breadcrumb.Item>
+                            {data_breakcumb.map(item => {
+                                let newBreakCump = null;
+                                breakCumb.forEach((item_brk, index) => {
+                                    if (item_brk.label === item) {
+                                        newBreakCump = (
+                                            <Breadcrumb.Item key={index}>
+                                                <a href={item_brk.url} >{item_brk.name}</a>
+                                            </Breadcrumb.Item>
+                                        )
+                                    }
+                                })
+
+                                return newBreakCump
+                            })}
+                        </Breadcrumb>
+                        {!loading ? <Switch>
+                            <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
+                            <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
+                            <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
+                            <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
+                        </Switch> : <Loading />}
+                    </Content>
+                </Layout>
+                <>
+                    <BackTop />
+                </>
+            </Layout >
+        )
+    }
+}
+
+const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
+    getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS }),
+    getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
+    getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
+    getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
+    getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
+})
+
+const mapStateToProps = (state: IAppState, ownProps: any) => ({
+})
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Admin)

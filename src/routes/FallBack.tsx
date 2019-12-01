@@ -13,7 +13,7 @@ export default function FallBack(props) {
                 <div className='msg-noti a_c'>
                     <p className=' a_c'>
                         Đang tải thông tin
-                                    </p>
+                    </p>
                     <p className="icon-noti">
                         <Icon
                             type="loading"

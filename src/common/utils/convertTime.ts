@@ -1,15 +1,26 @@
 import * as moment from 'moment';
 
-export const timeConverter = (value?: any, number?: number) => {
+export const timeConverter = (value?: any, number?: number, format?: string) => {
     let time;
-    if (value) {
-        if (!number) {
-            time = moment(value, "DD/MM/YYYY");
-        } else {
-            time = moment.unix(value / number).format("DD/MM/YYYY");
+    let formatTime = "DD/MM/YYYY";
+    if (format) {
+        formatTime = format
+    }
+
+    try {
+        
+        if (value) {
+            if (!number) {
+                if (format)
+                    time = moment(value, formatTime);
+            } else {
+                time = moment.unix(value / number).format(formatTime);
+            }
+            return time;
         }
-        return time;
-    } else return false;
+    } catch (err) {
+        return "Sai định dạng";
+    }
 };
 
 export const momentToUnix = (value) => {
