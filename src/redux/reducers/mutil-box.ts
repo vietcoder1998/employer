@@ -1,3 +1,4 @@
+import { TYPE } from './../../common/const/type';
 import { IMutilBox } from './../models/mutil-box';
 import { REDUX } from './../../common/const/actions';
 
@@ -21,7 +22,8 @@ let initState: IMutilBox = {
             lng: 105.782235,
         },
         location: "Hà Nội"
-    }
+    },
+    loading: false,
 };
 
 export const MutilBox = (state: typeof initState = initState, action: any) => {
@@ -72,6 +74,12 @@ export const MutilBox = (state: typeof initState = initState, action: any) => {
                             }
                 }
             };
+
+        case TYPE.HANDLE:
+            return {
+                ...state,
+                loading: action.loading 
+            }
 
         default:
             return state;

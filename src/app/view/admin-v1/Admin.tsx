@@ -14,11 +14,12 @@ import { IAppState } from '../../../redux/store/reducer';
 import { REDUX_SAGA } from '../../../common/const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
 import Loading from '../layout/loading/Loading';
+import { TYPE } from '../../../common/const/type';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
 
-interface AdminState {
+interface IAdminState {
     show_menu: boolean;
     to_logout: boolean;
     location?: string;
@@ -27,8 +28,10 @@ interface AdminState {
     pathname?: string,
 }
 
-interface AdminProps extends StateProps, DispatchProps {
+interface IAdminProps extends StateProps, DispatchProps {
     match: Readonly<any>;
+    location: any;
+    handleLoading: Function;
     getListRegions: Function;
     getListJobNames: Function;
     getListSkills: Function;
@@ -37,7 +40,7 @@ interface AdminProps extends StateProps, DispatchProps {
 }
 
 
-class Admin extends PureComponent<AdminProps, AdminState> {
+class Admin extends PureComponent<IAdminProps, IAdminState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,40 +60,39 @@ class Admin extends PureComponent<AdminProps, AdminState> {
         this.props.getListLanguages();
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps: IAdminProps, prevState: IAdminState) {
         if (nextProps.location.pathname !== prevState.pathname) {
-            localStorage.setItem("last_url", nextProps.location.pathname);
             let list_breakcumb = nextProps.location.pathname.split("/");
             let data_breakcumb = [];
             list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
+            window.scrollTo(0, 0);
+            setTimeout(() => {
+                nextProps.handleLoading(false);
+            }, 250);
 
             return {
                 pathname: nextProps.location.pathname,
                 data_breakcumb,
-                loading: false
             }
         }
+
         return null
     }
 
-    menu = (
-        <Menu>
-            <Menu.Item onClick={() => clearStorage()}>
-                <span>
-                    Đăng xuất
-                </span>
-            </Menu.Item>
-        </Menu>
-    );
+    componentWillUnmount() {
+        window.removeEventListener("scroll", () => { });
+    }
 
     render() {
-        let { show_menu, data_breakcumb, loading } = this.state;
+        let { show_menu, data_breakcumb } = this.state;
         let { path } = this.props.match;
+        let { loading } = this.props;
+
         return (
             <Layout>
                 <MenuNavigation
                     show_menu={show_menu}
-                    onCallLoading={() => this.setState({ loading: true })}
+                    onCallLoading={() => this.props.handleLoading(true)}
                 />
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
@@ -174,9 +176,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
+    handleLoading: (loading: boolean) => dispatch({ type: TYPE.HANDLE, loading })
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
+    loading: state.MutilBox.loading
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

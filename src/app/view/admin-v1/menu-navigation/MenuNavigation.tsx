@@ -27,7 +27,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 theme="dark"
                 mode="inline"
                 defaultSelectedKeys={[state_bar]}
-                onClick={event => localStorage.setItem("state_bar", event.key)}
+                onClick={event => {localStorage.setItem("state_bar", event.key); props.onCallLoading()}}
             >
                 <SubMenu
                     key="sub1"

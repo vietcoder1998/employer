@@ -26,4 +26,5 @@ export interface IMutilBox {
     modalState?: IModalState,
     drawerState?: IDrawerState,
     mapState?: IMapState,
+    loading?: boolean,
 }
