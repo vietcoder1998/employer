@@ -153,7 +153,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 
     render() {
         let { body, visible, loading } = this.state;
-        let { unlock_turn, modalState , find_candidates_detail} = this.props;
+        let { unlock_turn, modalState, find_candidates_detail } = this.props;
 
         if (!find_candidates_detail || !find_candidates_detail.id) {
             return <Result
@@ -161,7 +161,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 title="404"
                 subTitle="Sorry, the page you visited does not exist."
                 extra={<Button type="primary">Back Home</Button>}
-            /> 
+            />
         }
 
         return (
@@ -215,7 +215,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     ]}
                 >
                     Bạn muốn mở khóa cho ứng viên :
-                    <Steps>
+                        <Steps>
                         <Step status="finish" title="Ứng viên" icon={<Icon type="user" />} />
                         <Step status="finish" title="Thông tin" icon={<Icon type="solution" />} />
                         <Step status="process" title="Trả phí" icon={<Icon type="loading" />} />
@@ -277,7 +277,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             Mở khóa {unlock_turn ? `(${unlock_turn})` : null}
                         </Button>
                         <Button
-                            type="primary"
+                            type={body && body.saved ? "danger" : "primary"}
                             prefix={"check"}
                             style={{
                                 margin: "10px 10px",

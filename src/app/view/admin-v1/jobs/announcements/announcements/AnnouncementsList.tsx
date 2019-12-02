@@ -197,7 +197,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 160,
+            width: 80,
             render: () => this.editToolAction
         },
     ];
@@ -563,13 +563,13 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
                                 margin: "0px 5px"
                             }}
                         >
-                            <Icon type="filter" />
+                            <Icon type={loading_table ? "loading" : "filter" }/>
                             Tìm kiếm
                         </Button>
                     </h5>
                     <div className="table-operations">
                         <Row>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6}>
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6}>
                                 <p>
                                     <IptLetter value={"Chọn loại bài đăng"} />
                                 </p>

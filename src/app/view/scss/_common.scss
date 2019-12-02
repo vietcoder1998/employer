@@ -19,26 +19,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.not-found{
+  position: fixed;
+  top: 0px;
+  height: 100vh;
+  width: 100vw;
+  z-index: -2;
+}
+
 .ant-layout {
   height: auto !important;
 }
 .ant-layout-content {
-  margin: 60px 10px 10px !important;
-  padding: 10px 10px !important;
+  margin: 60px 20px 10px !important;
+  padding: 20px 20px !important;
   background-color: none;
-  min-height: 100vh !important;
-}
-
-.ant-layout-has-sider {
-  margin-bottom: -20px;
-}
-
-.ant-menu-item {
-  padding-left: 30px !important;
-}
-
-.ant-menu-submenu-title {
-  padding-left: 20px !important;
+  min-height: calc(100vh - 70px)!important;
+  border: none;
 }
 
 .ant-breadcrumb {
@@ -48,10 +45,6 @@ code {
 .all-content {
   background-color: whitesmoke;
   height: calc(100vh - 120px);
-}
-
-.ant-layout-sider-children {
-  position: fixed;
 }
 
 .ant-modal-body {
@@ -222,7 +215,7 @@ h5 {
   display: inline-flex;
   height: 50px !important;
   border-bottom: solid $color_border 1px;
-  box-shadow: 0 0 40px 0 rgba(47, 53, 63, 0.218);
+  // box-shadow: 0 0 40px 0 rgba(47, 53, 63, 0.218);
   background-color: $color_worksvn !important;
 }
 
@@ -267,7 +260,11 @@ ul {
 }
 
 .ant-layout-sider-children {
+  position: fixed;
   overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed;
+  
   /* width */
   &::-webkit-scrollbar {
     width: 5px;
@@ -287,6 +284,8 @@ ul {
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  padding-bottom: 65px;
 }
 
 // wrapper

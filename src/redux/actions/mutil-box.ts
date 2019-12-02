@@ -9,12 +9,13 @@ export const handleDrawer = (drawerState?: IDrawerState) => ({
 export const handleModal = (modalState?: IModalState) => ({
     type: REDUX.HANDLE_MODAL,
     modalState
-})
+});
 
 export const handleMapMarker = (mapState?: IMapState) => ({
     type: REDUX.MAP.SET_MAP_STATE,
     mapState
-})
+});
+
 export const handleLoading = (loading: boolean) => ({
     type: TYPE.HANDLE, loading
-})
+});

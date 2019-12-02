@@ -407,7 +407,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 margin: "0px 5px"
                             }}
                         >
-                            <Icon type="filter" />
+                            <Icon type={loading_table ? "loading" : "filter" }/>
                             Tìm kiếm
                         </Button>
                         <Button
@@ -426,7 +426,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     </h5>
                     <div className="table-operations">
                         <Row >
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Cơ sở chính"} />
                                 <Select
                                     showSearch
@@ -439,7 +439,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     <Option value={TYPE.NON_EXIST}>Cơ sở phụ</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tên việc đăng tuyển"} />
                                 <Select
                                     showSearch

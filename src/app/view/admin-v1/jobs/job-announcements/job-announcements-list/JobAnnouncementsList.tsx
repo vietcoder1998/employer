@@ -68,6 +68,7 @@ interface JobAnnouncementsListState {
     type_modal: string;
 };
 
+
 class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobAnnouncementsListState> {
     constructor(props) {
         super(props);
@@ -130,7 +131,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         },
         {
             title: 'Tiêu đề',
-            width: 180,
+            width: 200,
             dataIndex: 'title',
             key: 'jobTitle',
         },
@@ -139,13 +140,13 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             title: 'Tên công việc',
             dataIndex: 'jobName',
             key: 'jobName',
-            width: 180,
+            width: 200,
         },
         {
             title: 'Chi nhánh',
             dataIndex: 'employerBranchName',
             key: 'employerBranchName',
-            width: 180,
+            width: 200,
         },
         {
             title: 'Trạng thái',
@@ -209,7 +210,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 170,
+            width: 180,
         }
     ];
 
@@ -318,7 +319,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     rejectedApplied: viewCount(item.rejectedApplied, "danger"),
                     pendingApplied: viewCount(item.pendingApplied, "default"),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority: `${item.priority.homePriority},${item.priority.searchPriority}`,
+                    priority: `${item.priority.homePriority ?  item.priority.homePriority : "" }${item.priority.searchPriority}`,
                     operation: EditToolTip(item.hidden)
                 });
             })
@@ -716,7 +717,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     margin: "0px 5px"
                                 }}
                             >
-                                <Icon type="filter" />
+                                <Icon type={loading_table ? "loading" : "filter" }/>
                                 Tìm kiếm
                         </Button>
                             <Button
@@ -735,7 +736,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                         </h5>
                         <div className="table-operations">
                             <Row >
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Trạng thái hoạt động"} />
                                     <Select
                                         showSearch
@@ -748,7 +749,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         <Option value={TYPE.TRUE}>Hết hạn</Option>
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Tên việc đăng tuyển"} />
                                     <Select
                                         showSearch
@@ -764,7 +765,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         }
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Chi nhánh tuyển dụng"} />
                                     <Select
                                         showSearch
@@ -782,7 +783,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         }
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Loại công việc"} />
                                     <Select
                                         showSearch
@@ -798,7 +799,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Gói dịch vụ"} />
                                     <Cascader
                                         placeholder="Không chọn gói"
@@ -815,7 +816,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         }
                                     />
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Trạng thái gói dịch vụ"} />
                                     <Select
                                         showSearch
@@ -830,7 +831,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         <Option value={TYPE.FALSE}>Hết hạn</Option>
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Trạng thái ẩn/hiện"} />
                                     <Select
                                         showSearch
@@ -846,7 +847,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                         <Option value={TYPE.FALSE}>Đang hiện</Option>
                                     </Select>
                                 </Col>
-                                <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                                <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                     <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
                                     <Checkbox
                                         indeterminate={un_checkbox}
@@ -878,7 +879,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                 columns={this.columns}
                                 loading={loading_table}
                                 dataSource={data_table}
-                                scroll={{ x: 1800 }}
+                                scroll={{ x: 1700 }}
                                 bordered
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"

@@ -34,75 +34,84 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     src={data ? data.coverUrl : backGround}
                     alt={"rodan"}
                 />
-                <div className="header-content">
-                    <div className="hr-center" />
-                    <div className="block-image">
-                        <Avatar
-                            // @ts-ignore
-                            src={data ? data.avatarUrl : avatar}
-                            style={{
-                                height: 140,
-                                width: 140,
-                                border: "solid white 2px",
-                                fontSize: 60
-                            }}
-                        />
-                        <h4>
-                            {data ? data.lastName + " " + data.firstName : ""}
-                        </h4>
-                        <p>
+                <Row>
+                    <Col sm={1} md={1} lg={2}></Col>
+                    <Col sm={22} md={22} lg={20}>
+                        <div className="header-content">
+                            <div className="block-image">
+                                <Avatar
+                                    // @ts-ignore
+                                    src={data ? data.avatarUrl : avatar}
+                                    style={{
+                                        height: 140,
+                                        width: 140,
+                                        border: "solid white 2px",
+                                        fontSize: 60
+                                    }}
+                                />
+                                <h4>
+                                    {data ? data.lastName + " " + data.firstName : ""}
+                                </h4>
+                                <p>
 
-                        </p>
-                    </div>
-                    <div className="description">
-                        <div className="profile-description">
-                            <h6>
-                                Mô tả bản thân
+                                </p>
+                            </div>
+                            <div className="description">
+                                <div className="profile-description">
+                                    <h6>
+                                        Thông tin liên hệ
                             </h6>
-                            <p>
-                                {data ? data.description : <NotUpdate />}
-                            </p>
+                                    <li>
+                                        <label className="block-span">Số điện thoại</label>
+                                        <label>
+                                            <strong>
+                                                {data && data.phone ? data.phone :
+                                                    (data && data.unlocked ? <NotUpdate /> : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>)
+                                                }
+                                            </strong>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label className="block-span">Thư điện tử</label>
+                                        <label>
+                                            <strong>
+                                                {data && data.email ?
+                                                    data.email : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>}
+                                            </strong>
+                                        </label>
+                                    </li>
+
+                                </div>
+                                <div className="hr-center" />
+                                <div className="info">
+                                    <ul>
+                                        <li>
+                                            <label className="block-span">Giới tính</label>
+                                            {data && data.gender === TYPE.MALE ? <><Icon type="man" /> Nam giới</> : <><Icon type="woman" /> Nũ giới</>}
+                                        </li>
+                                        <li>
+                                            <label className="block-span">Ngày sinh</label>
+                                            <label>{data && data.birthday !== -1 ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : <NotUpdate />}</label>
+                                        </li>
+
+                                        <li>
+                                            <label className="block-span">Địa chỉ</label>
+                                            <label>{data && data.address && data.address !== "" ? data.address : <NotUpdate />}</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div className="info">
-                            <ul>
-                                <li>
-                                    <label className="block-span">Ngày sinh</label>
-                                    <label>{data && data.birthday !== -1 ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : <NotUpdate />}</label>
-                                </li>
-                                <li>
-                                    <label className="block-span">Số điện thoại</label>
-                                    <label>
-                                        <strong>
-                                            {data && data.phone ? data.phone :
-                                                (data && data.unlocked ? <NotUpdate /> : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>)
-                                            }
-                                        </strong>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label className="block-span">Thư điện tử</label>
-                                    <label>
-                                        <strong>
-                                            {data && data.email ?
-                                                data.email : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>}
-                                        </strong>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label className="block-span">Địa chỉ</label>
-                                    <label>{data && (data.address || data.address !== "") ? data.address : <NotUpdate />}</label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                    </Col>
+                    <Col sm={1} md={1} lg={2}></Col>
+                </Row>
             </div>
             <div className="candidate-profile-body">
                 <Row >
                     <Col md={12} >
                         <div className="wrapper">
                             <h6> <Icon type="project" /> Kinh nghiệm</h6>
-                            <div style={{ paddingLeft: "25px" }}>
+                            <div style={{ paddingLeft: "30px" }}>
                                 <hr />
                             </div>
                             <div>
@@ -192,14 +201,17 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     </Col>
                     <Col md={12}>
                         <div className="wrapper">
-                            <h6><Icon type="heart" />Tình trạng quan hệ</h6>
+                            <h6><Icon type="heart" />Mô tả bản thân</h6>
                             <div style={{ paddingLeft: "25px" }}>
                                 <hr />
                             </div>
                             <div style={{ padding: "10px" }}>
                                 <div>
-                                    {data && data.gender === TYPE.MALE ? <><Icon type="man" /> Nam giới</> : <><Icon type="woman" /> Nũ giới</>}
+
                                 </div>
+                                <p>
+                                    {data && data.description ? data.description : <NotUpdate />}
+                                </p>
                             </div>
                         </div>
                     </Col>

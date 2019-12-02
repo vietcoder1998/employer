@@ -12,8 +12,7 @@ export default function Loading(props: any) {
             style={{
                 width: "100%",
                 height: "100%",
-                paddingTop: "20vh",
-
+                padding: "18vh 0vh",
             }}
         >
             <h4 className='a_c'

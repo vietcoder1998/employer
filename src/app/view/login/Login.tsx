@@ -39,9 +39,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
 
     componentWillMount() {
         let is_authen = localStorage.getItem("token") ? true : false;
-        let last_url = localStorage.getItem("last_url");
         if (is_authen) {
-            window.location.href = last_url;
+            window.location.href = "/v1/admin/jobs/announcements/list";
         }
     }
 
@@ -64,12 +63,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             cookie.set("actk", res.data.accessToken, { expires: exp, path: "/" });
             localStorage.setItem("token", res.data.accessToken);
             localStorage.setItem("userID", res.data.userID);
-            let last_url = localStorage.getItem("last_url");
-            if (last_url) {
-                window.location.href = last_url
-            } else {
-                window.location.href = '/v1/admin/announcements'
-            }
+            window.location.href = '/v1/admin/jobs/announcements/list'
         }
     }
 
@@ -105,8 +99,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     className="login"
                 >
                     <Row>
-                        <Col xs={0} sm={4} md={6} lg={8} xl={9} xxl={8}  ></Col>
-                        <Col xs={24} sm={16} md={12} lg={8} xl={6} >
+                        <Col xs={0} sm={4} md={7} lg={7} xl={8} xxl={8}  ></Col>
+                        <Col xs={24} sm={16} md={10} lg={10} xl={8} >
                             <div className="r-p-content test">
                                 <div className='msg-noti '>
                                     <h5 style={{ textAlign: "center" }}>Đăng nhập</h5>
@@ -174,7 +168,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                 </p>
                             </div>
                         </Col>
-                        <Col xs={0} sm={4} md={6} lg={8} xl={9}></Col>
+                        <Col xs={0} sm={4} md={7} lg={7} xl={8}></Col>
                     </Row>
                 </div>
                 <Footer />

@@ -23,15 +23,31 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
         state_bar = localStorage.getItem("state_bar")
     }
     return (
-        <Sider trigger={null} collapsible collapsed={show_menu} >
-            <div className="logo" style={{ padding: show_menu ? "20px 0px" : "0px 0px"  }} >
-                <img src={!show_menu ? logo : logoIcon} style={{ height: "30px", marginLeft: 12, marginTop: 10 }} alt="worksvnlogo" />
+        <Sider
+            trigger={null}
+            collapsible
+            collapsed={show_menu}
+            theme="light"
+        >
+            <div className="logo" >
+                <img
+                    src={!show_menu ? logo : logoIcon}
+                    style={{ height: "30px", marginLeft: 12, marginTop: 10 }}
+                    alt="worksvnlogo"
+                />
             </div>
             <Menu
-                theme="dark"
                 mode="inline"
                 defaultSelectedKeys={[state_bar]}
-                onClick={event => { localStorage.setItem("state_bar", event.key); props.onCallLoading() }}
+                style={{
+                    borderRight: "none",
+                    width: "100%",
+                    padding: "50px 0px"
+                }}
+                onClick={(event: any) => {
+                    localStorage.setItem("state_bar", event.key);
+                    props.onCallLoading()
+                }}
             >
                 <SubMenu
                     key="sub1"

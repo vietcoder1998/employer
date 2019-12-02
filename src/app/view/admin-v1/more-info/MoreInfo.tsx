@@ -308,7 +308,7 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
                                 float: "right",
                             }}
                         >
-                            <Icon type="filter" />
+                            <Icon type={loading_table ? "loading" : "filter" }/>
                             Tìm kiếm
                         </Button>
                     </h5>

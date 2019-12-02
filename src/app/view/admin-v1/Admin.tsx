@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Breadcrumb, BackTop } from 'antd';
+import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
@@ -15,6 +15,7 @@ import { REDUX_SAGA } from '../../../common/const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
 import Loading from '../layout/loading/Loading';
 import { TYPE } from '../../../common/const/type';
+import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -95,7 +96,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                     onCallLoading={() => this.props.handleLoading(true)}
                 />
                 <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }}>
+                    <Header style={{ padding: 0 }}>
                         <Icon
                             className="trigger"
                             type={show_menu ? 'menu-unfold' : 'menu-fold'}
@@ -129,8 +130,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             margin: '24px 16px',
                             padding: 24,
                             background: '#fff',
-                            minHeight: 280,
-                            border: "solid #80808036 1px"
                         }}
                     >
                         <Breadcrumb >
@@ -145,7 +144,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     if (item_brk.label === item) {
                                         newBreakCump = (
                                             <Breadcrumb.Item key={index}>
-                                                {!item_brk.disable ? <a href={item_brk.url} >{item_brk.name}</a> : <label>{item_brk.name}</label> }
+                                                {!item_brk.disable ? <a href={item_brk.url} >{item_brk.name}</a> : <label>{item_brk.name}</label>}
                                             </Breadcrumb.Item>
                                         )
                                     }
@@ -154,12 +153,21 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 return newBreakCump
                             })}
                         </Breadcrumb>
-                        {!loading ? <Switch>
-                            <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
-                            <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
-                            <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
-                            <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
-                        </Switch> : <Loading />}
+                        {!loading ?
+                            <Row>
+                                <Col sm={1} md={1} lg={2}></Col>
+                                <Col sm={22} md={22} lg={20}>
+                                    <Switch>
+                                        <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
+                                        <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
+                                        <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
+                                        <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
+                                        <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
+                                    </Switch>
+                                </Col>
+                                <Col sm={1} md={1} lg={2}></Col>
+                            </Row>
+                            : <Loading />}
                     </Content>
                 </Layout>
                 <>

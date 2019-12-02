@@ -1,5 +1,3 @@
-
-
 export const routePath = {
     ADMIN: `/v1/admin`,
     LIST: '/list',

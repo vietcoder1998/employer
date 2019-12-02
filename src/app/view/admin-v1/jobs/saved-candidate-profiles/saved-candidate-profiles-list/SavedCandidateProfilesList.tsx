@@ -147,7 +147,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             title: 'Đại chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 320,
+            width: 250,
         },
         {
             title: 'Tỉnh thành',
@@ -292,7 +292,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 800 }}
+                            scroll={{ x: 1000 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

@@ -152,7 +152,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 120,
+            width: 80,
         },
     ];
 
@@ -463,7 +463,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                 margin: "0px 5px"
                             }}
                         >
-                            <Icon type="filter" />
+                            <Icon type={loading_table ? "loading" : "filter" }/>
                             Tìm kiếm
                         </Button>
                         <Button
@@ -480,7 +480,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                     </h5>
                     <div className="table-operations">
                         <Row >
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái tìm việc"} />
                                 <Select
                                     showSearch
@@ -493,7 +493,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FALSE}>Đã có việc</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Đã xác minh hồ sơ"} />
                                 <Select
                                     showSearch
@@ -508,7 +508,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FALSE}>Chưa xác minh</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Giới tính"} />
                                 <Select
                                     showSearch
@@ -521,7 +521,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FEMALE}>Nữ</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tỉnh thành"} />
                                 <Select
                                     showSearch
@@ -538,7 +538,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     }
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái tìm việc"} />
                                 <Select
                                     showSearch
@@ -551,7 +551,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FEMALE}>Nữ</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái hồ sơ"} />
                                 <Select
                                     showSearch
@@ -564,7 +564,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FALSE}>Chưa hoàn thiện</Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tình trạng xác minh"} />
                                 <Select
                                     showSearch
@@ -577,7 +577,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     <Option value={TYPE.FALSE}>Chưa xác minh </Option>
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={6} lg={5} xl={6} xxl={6} >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái mở khóa"} />
                                 <Select
                                     showSearch
@@ -597,7 +597,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 800 }}
+                            scroll={{ x: 1000 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
