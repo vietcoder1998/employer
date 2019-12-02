@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps } from 'antd';
+import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
@@ -55,6 +55,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             nextProps.match.params.id !== prevState.id
         ) {
             let { id } = nextProps.match.params;
+            nextProps.getFindCandidateDetail(id);
             return {
                 id
             }
@@ -71,7 +72,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 body,
                 process
             }
-        } 
+        }
 
         return null
     }
@@ -108,12 +109,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 ).then((res: any) => {
                     if (res) {
                         this.props.getFindCandidateDetail(id);
-                        this.setState({loading: false});
+                        this.setState({ loading: false });
                     }
                 })
                 setTimeout(() => {
                     this.props.handleModal();
-                }, 2000);
+                }, 1000);
                 break;
 
             case TYPE.SAVE:
@@ -140,7 +141,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 
     turnBack = () => {
         setTimeout(() => {
-            this.props.history.push( routeLink.FIND_CANDIDATES + routePath.LIST );
+            this.props.history.push(routeLink.FIND_CANDIDATES + routePath.LIST);
         }, 500);
     }
 
@@ -151,8 +152,17 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     }
 
     render() {
-        let {  body, visible, loading } = this.state;
-        let { unlock_turn, modalState } = this.props;
+        let { body, visible, loading } = this.state;
+        let { unlock_turn, modalState , find_candidates_detail} = this.props;
+
+        if (!find_candidates_detail || !find_candidates_detail.id) {
+            return <Result
+                status="404"
+                title="404"
+                subTitle="Sorry, the page you visited does not exist."
+                extra={<Button type="primary">Back Home</Button>}
+            /> 
+        }
 
         return (
             <>

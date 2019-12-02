@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message } from 'antd';
+import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
 import { connect } from 'react-redux';
 import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -262,6 +262,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             list_job_names,
             list_em_branches,
             list_skills,
+            job_announcement_detail
         } = this.props;
 
         let ct_btn_ex = "Huỷ";
@@ -288,6 +289,17 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
         let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
         let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+
+        if (
+            type_cpn === TYPE.EDIT &&( !job_announcement_detail || !job_announcement_detail.id)
+        ) {
+            return <Result
+                status="404"
+                title="404"
+                subTitle="Sorry, the page you visited does not exist."
+                extra={<Button type="primary">Back Home</Button>}
+            />
+        }
 
         return (
             <div className='common-content'>

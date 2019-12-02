@@ -196,7 +196,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 );
 
                 data_table.push({
-                    key: item.id,
+                    key: item.candidate.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,

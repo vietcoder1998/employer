@@ -1,7 +1,9 @@
 import React from 'react'
 import { Icon } from 'antd';
 // @ts-ignore
-import CatGif from './../../../../assets/image/cat-chocolate.gif';
+// import CatGif from './../../../../assets/image/cat-chocolate.gif';
+import CatGif from './../../../../assets/image/rainbow-cat-gif-7.gif';
+
 
 export default function Loading(props: any) {
     return (
@@ -26,7 +28,7 @@ export default function Loading(props: any) {
                     </p>
                 <img src={CatGif}
                     style={{
-                        width: 200,
+                        width: 400,
                         height: 200,
                     }}
                     alt="gif"

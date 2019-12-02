@@ -2,7 +2,11 @@ import React from 'react'
 import { Layout, Menu, Icon } from 'antd';
 import './MenuNavigation.scss';
 // @ts-ignore
-import logo from '../../../../logo-01.png'
+// import logo from '../../../../logo-01.png'
+// @ts-ignore
+import logo from '../../../../assets/image/logo-white.png'
+// @ts-ignore
+import logoIcon from '../../../../assets/image/logo-icon-white.png'
 import { Link } from 'react-router-dom';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -20,14 +24,14 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
     }
     return (
         <Sider trigger={null} collapsible collapsed={show_menu} >
-            <div className="logo" style={{ padding: show_menu ? "20px 0px" : "0px 0px" }} >
-                <img src={logo} style={{ height: "40px", display: !show_menu ? "block" : "none" }} alt="worksvnlogo" />
+            <div className="logo" style={{ padding: show_menu ? "20px 0px" : "0px 0px"  }} >
+                <img src={!show_menu ? logo : logoIcon} style={{ height: "30px", marginLeft: 12, marginTop: 10 }} alt="worksvnlogo" />
             </div>
             <Menu
                 theme="dark"
                 mode="inline"
                 defaultSelectedKeys={[state_bar]}
-                onClick={event => {localStorage.setItem("state_bar", event.key); props.onCallLoading()}}
+                onClick={event => { localStorage.setItem("state_bar", event.key); props.onCallLoading() }}
             >
                 <SubMenu
                     key="sub1"
