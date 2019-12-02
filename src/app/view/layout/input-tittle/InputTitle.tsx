@@ -48,7 +48,7 @@ export const NewInput = (props: INewInput) => {
             placeholder={placeholder}
             defaultValue={defaultValue}
             style={{ width: widthInput ? widthInput : "auto" }}
-            onChange={event => onChange(event.target.value)}
+            onChange={(event: any)=> onChange(event.target.value)}
             value={value}
             maxLength={220}
             disabled={disabled ? disabled : false}
@@ -64,7 +64,7 @@ export const NewSelect = (props: INewSelect) => {
             optionFilterProp="children"
             style={{ width: widthSelect ? widthSelect : "200px" }}
             value={value}
-            onChange={event => onChange(event)}
+            onChange={(event: any)=> onChange(event)}
             disabled={disabled ? disabled : false}
         >
             {
@@ -114,7 +114,7 @@ export const InputTitle = (props: IInputitleProps) => {
                     list_value={list_value}
                     value={value}
                     placeholder={placeholder}
-                    onChange={event => onChange ? onChange(event) : () => { }}
+                    onChange={(event: any)=> onChange ? onChange(event) : () => { }}
                     widthSelect={widthSelect}
                 />
             );

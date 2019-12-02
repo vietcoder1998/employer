@@ -10,7 +10,7 @@ export interface IEmBranch {
     address?: string,
     lat?: number,
     lon?: number,
-    headquarters?: false,
+    headquarters?: boolean,
     createdDate?: number,
     totalJob?: number
 }

@@ -118,7 +118,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     type="text"
                                                     placeholder="Tên đăng nhập"
                                                     onChange={
-                                                        event => this.setState({ username: event.target.value })
+                                                        (event: any)=> this.setState({ username: event.target.value })
                                                     }
                                                     onPressEnter={
                                                         (event) => { if (exactly) { this.handleSubmit(event) } }
@@ -137,7 +137,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     placeholder="Mật khẩu"
                                                     type="password"
                                                     maxLength={160}
-                                                    onChange={event => this.setState({ password: event.target.value })}
+                                                    onChange={(event: any)=> this.setState({ password: event.target.value })}
                                                 />,
                                             )}
                                         </Form.Item>

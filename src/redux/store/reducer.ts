@@ -1,3 +1,5 @@
+import { ConnectSchoolsDetail } from './../reducers/connect-school-detail';
+import { ConnectSchools } from './../reducers/connect-schools';
 import { Languages } from './../reducers/languages';
 import { JobService } from './../reducers/job-service';
 import { MutilBox } from './../reducers/mutil-box';
@@ -32,7 +34,9 @@ const rootReducer = combineReducers({
     JobAnnouncementDetail,
     MutilBox,
     JobService,
-    Languages
+    Languages,
+    ConnectSchools,
+    ConnectSchoolsDetail,
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

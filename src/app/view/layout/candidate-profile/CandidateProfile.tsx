@@ -11,7 +11,6 @@ import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
 import { timeConverter } from '../../../../common/utils/convertTime';
 import { NotUpdate } from '../common/Common';
 
-
 interface ICandidateProfileState {
     show_menu: boolean;
     to_logout: boolean;

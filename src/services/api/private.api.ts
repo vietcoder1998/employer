@@ -8,13 +8,14 @@ export const ANNOU_TYPES = '/api/employers/announcementTypes';
 export const FIND_CANDIDATES = '/api/employers/candidates/query';
 export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
 export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';
+export const CONNECT_SCHOOL = '/api/employers/connections/schools';
+
 
 export const HOME_TOP_SERVICE = '/api/employers/services/jobs/priority/home/TOP/quantity';
 export const HOME_INDAY_SERVICE = '/api/employers/services/jobs/priority/home/IN_DAY/quantity';
 export const SEARCH_HIGHT_LIGHT_SERVICE = '/api/employers/services/jobs/priority/search/HIGHLIGHT/quantity';
 export const NORMAL_SERVICE = '/api/employers/services/jobs/limit/quantity';
 export const UN_LOCK_PROFILE_SERVICE = '/api/employers/services/profile/unlock/limit/quantity';
-
 export const JOB_PRIORITY_HOME = '/api/employers/jobs/';
 
 

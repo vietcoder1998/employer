@@ -1,0 +1,33 @@
+.card-school {
+  margin: 5vh auto;
+  max-width: 250px;
+  width: 25vw;
+  height: 320px;
+  background-color: whitesmoke;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  transition: 0.25s;
+
+  .image-schools {
+    height: 80%;
+    margin-left: -25%;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    .school-action {
+      bottom: -60px;
+    }
+  }
+  .school-action {
+    text-align: center;
+    position: absolute;
+    height: 60%;
+    width: 100%;
+    bottom: -100px;
+    transition: 0.5s;
+    border: solid gray 1px;
+    background-color: snow;
+  }
+}

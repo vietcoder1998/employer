@@ -70,12 +70,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Quản lí chi nhánh</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="pendings-jobs">
-                        <Link to={'/v1/admin/jobs/announcements/list'}>
-                            <Icon type="loading-3-quarters" />
-                            <span>Bài viết</span>
-                        </Link>
-                    </Menu.Item>
                     <Menu.Item key="3">
                         <Link to={'/v1/admin/jobs/find-candidates/list'}>
                             <Icon type="user-add" />
@@ -99,15 +93,9 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="5">
-                        <Link to={'/v1/admin/data/languages/list'}>
+                        <Link to={'/v1/admin/connect-schools/list'}>
                             <Icon type="search" />
                             <span>Tìm kiếm </span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="6">
-                        <Link to={'/v1/admin/data/majors/list'}>
-                            <Icon type="contacts" />
-                            <span>Danh sách sự kiện</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>
@@ -121,7 +109,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="7">
-                        <Link to={'/v1/admin/data/languages/list'}>
+                        <Link to={'/v1/admin/connect-schools/list'}>
                             <Icon type="shopping" />
                             <span>Mua gói</span>
                         </Link>
@@ -142,6 +130,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
+                    <Menu.Item key="pendings-jobs">
+                        <Link to={'/v1/admin/jobs/announcements/list'}>
+                            <Icon type="loading-3-quarters" />
+                            <span>Bài viết</span>
+                        </Link>
+                    </Menu.Item>
                     <Menu.Item key="9">
                         <Link to={'/v1/admin/data/languages/list'}>
                             <Icon type="team" />

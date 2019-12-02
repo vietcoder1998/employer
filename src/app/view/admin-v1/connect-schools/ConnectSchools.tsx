@@ -1,6 +1,8 @@
 import React, { PureComponent, Fragment } from 'react'
 import './ConnectSchools.scss';
 import { connect } from 'react-redux';
+import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
+import ConnectSchoolList from './ConnectSchoolsList/connect-school-list/ConnectSchoolList';
 const Switch = require("react-router-dom").Switch;
 
 interface ConnectSchoolsState {
@@ -23,10 +25,12 @@ class ConnectSchools extends PureComponent<ConnectSchoolsProps, ConnectSchoolsSt
     }
 
     render() {
-    //    let  {path} = this.props.match
+           let  {path} = this.props.match
         return (
             <Fragment >
                 <Switch>
+                    {/* <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} /> */}
+                    <ErrorBoundaryRoute path={`${path}/list`} component={ConnectSchoolList} />
                 </Switch>
             </Fragment>
         )

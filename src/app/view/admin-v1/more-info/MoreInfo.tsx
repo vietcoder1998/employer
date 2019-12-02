@@ -273,14 +273,13 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
                             key="reason-msg"
                             value={message}
                             placeholder="Vui lòng điền lí do từ chối"
-                            onChange={event => this.setState({ message: event.target.value })}
+                            onChange={(event: any)=> this.setState({ message: event.target.value })}
                             rows={3}
                             style={{ margin: "10px 0px", }}
                         />,
                         <Button
                             key="back"
                             type="danger"
-                            onClick={async () => await this.handlePendingJob("rejected")}
                             disabled={!is_reject}
                         >
                             Từ chối
@@ -289,7 +288,6 @@ class MoreInfo extends PureComponent<PendingJobProps, MoreInfotate> {
                             key="submit"
                             type="primary"
                             loading={loading}
-                            onClick={async () => await this.handlePendingJob("accepted")}
                             disabled={is_reject}
                         >
                             Chấp nhận

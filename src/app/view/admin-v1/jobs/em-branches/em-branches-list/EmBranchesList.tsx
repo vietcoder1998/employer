@@ -467,9 +467,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
                             onChange={this.setPageIndex}
-                            onRow={(record, rowIndex) => {
+                            onRow={(record: any, rowIndex: any) => {
                                 return {
-                                    onClick: event => {
+                                    onClick: (event: any)=> {
                                     }, // click row
                                     onMouseEnter: (event) => {
                                         localStorage.setItem('id_em_branches', record.key)

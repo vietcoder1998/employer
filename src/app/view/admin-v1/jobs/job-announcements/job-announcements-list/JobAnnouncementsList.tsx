@@ -884,11 +884,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"
                                 onChange={this.setPageIndex}
-                                onRow={(record, rowIndex) => {
+                                onRow={(record: any, rowIndex: any) => {
                                     return {
-                                        onClick: event => {
+                                        onClick: (event: any)=> {
                                         }, // click row
-                                        onMouseEnter: (event) => {
+                                        onMouseEnter: (event: any) => {
+                                            console.log(record)
                                             localStorage.setItem('id_job_announcement', record.key)
                                         }, // mouse enter row
                                     };

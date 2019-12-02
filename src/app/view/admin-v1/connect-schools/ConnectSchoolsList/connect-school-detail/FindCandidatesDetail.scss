@@ -1,0 +1,42 @@
+.top-dropdown {
+  z-index: 999;
+  width: 100vw;
+  left: 0px;
+  min-height: 20px;
+  padding: 10px 20px 10px 200px;
+  transition: 0.25s;
+  transition-delay: 0.25s;
+  position: fixed;
+  background-color: white;
+  border-radius: 0px;
+  display: flex;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  .quick-info {
+    display: flex;
+    .name-h {
+        margin: 0px;
+        padding: 0px 10px;
+        text-transform: capitalize;
+        h6{
+            margin: 0px;
+        }
+    }
+  }
+
+  .unlock-btn {
+    padding: 10px 20px;
+    background-color: #188fff;
+    position: absolute;
+    right: 25px!important;
+    color: whitesmoke;
+    border-radius: 3px;
+    border: none;
+    height: auto;
+    letter-spacing: 0.5;
+    &:hover {
+      background-color: #1270c8d9;
+      color: white;
+    }
+  }
+}
