@@ -96,7 +96,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                     onCallLoading={() => this.props.handleLoading(true)}
                 />
                 <Layout>
-                    <Header style={{ padding: 0 }}>
+                    <Header style={{ padding: 0, zIndex: 900 }}>
                         <Icon
                             className="trigger"
                             type={show_menu ? 'menu-unfold' : 'menu-fold'}

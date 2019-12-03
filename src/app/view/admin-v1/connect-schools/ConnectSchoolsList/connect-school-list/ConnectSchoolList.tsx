@@ -2,7 +2,7 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Avatar, Drawer, Slider, Tooltip } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Avatar, Drawer, Slider, Tooltip, Pagination, Collapse } from 'antd';
 import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
 import { IptLetterP } from '../../../../layout/common/Common';
@@ -16,7 +16,10 @@ import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import CardSchool from '../../../../layout/card-schools/CardSchool';
+import Loading from '../../../../layout/loading/Loading';
+import DrawerConfig from '../../../../layout/config/DrawerConfig';
 let { Option } = Select;
+const { Panel } = Collapse;
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -28,18 +31,19 @@ let ImageRender = (props: any) => {
     }
 };
 
-interface ConnectSchoolsListProps extends StateProps, DispatchProps {
+interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     handleModal: Function;
+    handleDrawer: Function;
     getListConnectSchools: Function;
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
 };
 
-interface ConnectSchoolsListState {
-    data_table?: Array<any>;
+interface IConnectSchoolsListState {
+    data_table?: Array<IConnectSchool>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
@@ -51,7 +55,7 @@ interface ConnectSchoolsListState {
     birthday?: number;
     adminID?: string;
     hidden?: boolean;
-    list_connect_schools?: Array<any>;
+    list_connect_schools?: Array<IConnectSchool>;
     id?: string;
     loading_table?: boolean;
     body?: IConnectSchoolsFilter;
@@ -59,13 +63,13 @@ interface ConnectSchoolsListState {
     type_view?: string;
 };
 
-class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, ConnectSchoolsListState> {
+class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConnectSchoolsListState> {
     constructor(props) {
         super(props);
         this.state = {
             data_table: [],
             pageIndex: 0,
-            pageSize: 10,
+            pageSize: 6,
             show_modal: false,
             loading: false,
             announcementTypeID: null,
@@ -180,21 +184,17 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps: IConnectSchoolsListProps, prevState: IConnectSchoolsListState) {
         if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
-            let { pageIndex, pageSize } = prevState;
-            let data_table = [];
-            nextProps.list_connect_schools.forEach((item: IConnectSchool, index: number) => {
-                data_table.push({
-
-                });
-            })
+            let { list_connect_schools } = prevState;
+            if (nextProps.list_connect_schools) {
+                list_connect_schools = nextProps.list_connect_schools;
+            }
             return {
-                list_connect_schools: nextProps.type_management,
-                data_table,
+                list_connect_schools,
                 loading_table: false,
             }
-        }
+        } return null;
     };
 
     async componentDidMount() {
@@ -208,12 +208,25 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
-        await this.searchConnectSchools();
+        await this.setState({ pageIndex: event - 1, });
+        await this.searchConnectSchools(event - 1, "pageIndex");
     };
 
-    searchConnectSchools = async () => {
+    setPageSize = async (event: number) => {
+        await this.setState({ pageSize: 10 * event });
+        await this.searchConnectSchools(event * 10, "pageSize");
+    }
+
+    searchConnectSchools = async (event?: number, type?: string) => {
         let { body, pageIndex, pageSize } = this.state;
+        if (type === "pageIndex") {
+            pageIndex = event;
+        }
+
+        if (type === "pageSize") {
+            pageSize = event;
+        }
+        await this.setState({ loading_table: true })
         await this.props.getListConnectSchools(body, pageIndex, pageSize);
     };
 
@@ -243,8 +256,10 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
 
     render() {
         let {
-            data_table,
+            list_connect_schools,
             loading_table,
+            pageIndex,
+            pageSize,
             open_drawer,
         } = this.state;
 
@@ -255,6 +270,50 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
 
         return (
             <>
+                <DrawerConfig
+                    title="Thông tin nhà trường"
+                    width={900}
+                >
+                    <Collapse
+                        defaultActiveKey={['1']}
+                    // onChange={callback}
+                    // expandIconPosition={expandIconPosition}
+                    >
+                        <Panel header="This is panel header 1" key="1">
+                            <div>
+                                em Ipsum is that it has a more-or-less normal distrib
+                                ution of letters, as opposed to using 'Content here, co
+                                ntent here', making it look like readable English. Many desktop publis
+                                hing packages and web page editors now use Lorem Ipsum as their default mo
+                                del text, and a search for 'lorem ipsum' will unc
+                                over many web sites still in their infancy. Various versions ha
+                                ve evolved over the years, sometimes by accident, sometime
+                            </div>
+                        </Panel>
+                        <Panel header="This is panel header 2" key="2" >
+                            <div>
+                                em Ipsum is that it has a more-or-less normal distrib
+                                ution of letters, as opposed to using 'Content here, co
+                                ntent here', making it look like readable English. Many desktop publis
+                                hing packages and web page editors now use Lorem Ipsum as their default mo
+                                del text, and a search for 'lorem ipsum' will unc
+                                over many web sites still in their infancy. Various versions ha
+                                ve evolved over the years, sometimes by accident, sometime
+                            </div>
+                        </Panel>
+                        <Panel header="This is panel header 3" key="3" >
+                            <div>
+                                em Ipsum is that it has a more-or-less normal distrib
+                                ution of letters, as opposed to using 'Content here, co
+                                ntent here', making it look like readable English. Many desktop publis
+                                hing packages and web page editors now use Lorem Ipsum as their default mo
+                                del text, and a search for 'lorem ipsum' will unc
+                                over many web sites still in their infancy. Various versions ha
+                                ve evolved over the years, sometimes by accident, sometime
+                            </div>
+                        </Panel>
+                    </Collapse>
+                </DrawerConfig>
                 <div className="common-content">
                     <h5>
                         Tìm kiếm ứng viên
@@ -283,21 +342,6 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
                                     <Option value={null}>Tất cả</Option>
                                     <Option value={TYPE.TRUE}>Đang tìm việc</Option>
                                     <Option value={TYPE.FALSE}>Đã có việc</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Đã xác minh hồ sơ"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={
-                                        (event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileVerified)
-                                    }
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đã xác minh</Option>
-                                    <Option value={TYPE.FALSE}>Chưa xác minh</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
@@ -345,9 +389,20 @@ class ConnectSchoolsList extends React.Component<ConnectSchoolsListProps, Connec
                             </Col>
                         </Row>
                         <div className="school-content">
-                            {data_table && data_table.length > 0 ? data_table.map(
-                                (item: IConnectSchool, index: number) => <CardSchool />
-                           ): null}
+                            {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ? list_connect_schools.map(
+                                (item: IConnectSchool, index: number) => <div onClick={() => this.props.handleDrawer()}><CardSchool key={index} {...item} /></div>
+                            ) : null) : <Loading />}
+                        </div>
+                        <div style={{ textAlign: "center", margin: " 40px 20px", }}>
+                            <Pagination
+                                showQuickJumper
+                                showSizeChanger
+                                current={pageIndex + 1}
+                                pageSize={pageSize}
+                                total={totalItems}
+                                onShowSizeChange={(event: any) => this.setPageSize(event)}
+                                onChange={(event: any) => this.setPageIndex(event)}
+                            />
                         </div>
                     </div>
                 </div>

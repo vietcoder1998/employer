@@ -77,7 +77,6 @@ export const _requestToServer = async (
                 'error',
             );
         }
-        throw err;
     }
 };
 

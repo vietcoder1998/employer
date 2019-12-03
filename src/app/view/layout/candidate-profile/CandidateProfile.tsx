@@ -24,42 +24,57 @@ interface ICandidateProfileProps {
 
 function CandidateProfile(props: ICandidateProfileProps) {
     let { data } = props;
+    let [avatarUrl, setAvatarUrl] = React.useState(avatar);
+    let [coverUrl, setcoverUrl] = React.useState(backGround);
+
+    let [onErrAvatar, setErrAvatar] = React.useState(false);
+    let [onErrCover, setErrCover] = React.useState(false);
+
+    if (data && data.avatarUrl !== avatarUrl) {
+        setAvatarUrl(data.avatarUrl);
+    }
+
+    if (data && data.coverUrl !== coverUrl) {
+        setcoverUrl(data.coverUrl);
+    }
 
     return (
         <div className="candidate-profile test">
             <div className="candidate-profile-header">
                 <img
                     className="cover-image-profile"
-                    src={data ? data.coverUrl : backGround}
+                    src={!onErrCover && coverUrl ? coverUrl : backGround}
                     alt={"rodan"}
+                    onError={()=> setErrCover(true)}
                 />
                 <Row>
                     <Col sm={1} md={1} lg={2}></Col>
                     <Col sm={22} md={22} lg={20}>
-                        <div className="header-content">
+                        <div
+                            className="header-content"
+                        >
                             <div className="block-image">
                                 <Avatar
                                     // @ts-ignore
-                                    src={data ? data.avatarUrl : avatar}
+                                    src={!onErrAvatar && avatarUrl ? avatarUrl : avatar}
                                     style={{
                                         height: 140,
                                         width: 140,
                                         border: "solid white 2px",
                                         fontSize: 60
                                     }}
+                                    // @ts-ignore
+                                    onError={() => setErrAvatar(true)}
                                 />
                                 <h4>
                                     {data ? data.lastName + " " + data.firstName : ""}
                                 </h4>
-                                <p>
-
-                                </p>
                             </div>
                             <div className="description">
                                 <div className="profile-description">
                                     <h6>
                                         Thông tin liên hệ
-                            </h6>
+                                     </h6>
                                     <li>
                                         <label className="block-span">Số điện thoại</label>
                                         <label>

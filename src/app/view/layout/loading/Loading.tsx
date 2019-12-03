@@ -13,6 +13,7 @@ export default function Loading(props: any) {
                 width: "100%",
                 height: "100%",
                 padding: "18vh 0vh",
+                textAlign: "center"
             }}
         >
             <h4 className='a_c'

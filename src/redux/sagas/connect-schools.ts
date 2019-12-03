@@ -26,7 +26,11 @@ function callConnectSchools(action: any) {
         POST,
         CONNECT_SCHOOL + `/request/query`,
         action.body ? action.body : null,
-        undefined,
+        {
+            pageIndex: action.pageIndex ? action.pageIndex : 0,
+            pageSize: action.pageSize ? action.pageSize : 6
+
+        },
         undefined,
         EMPLOYER_HOST,
         false,

@@ -14,6 +14,7 @@ import CandidateProfile from '../../../../layout/candidate-profile/CandidateProf
 import { VerifiedProfile } from '../../../../layout/verified-profile/VerifiedProfile';
 import './FindCandidatesDetail.scss';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import Loading from '../../../../layout/loading/Loading';
 const { TabPane } = Tabs;
 const { Step } = Steps;
 
@@ -25,6 +26,7 @@ interface IFindCandidatesDetailState {
     visible?: boolean;
     process?: boolean;
     loading?: boolean;
+    fail?: boolean;
 }
 
 interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
@@ -44,7 +46,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             type_cpn: TYPE.CREATE,
             visible: false,
             process: false,
-            loading: false,
+            loading: true,
+            fail: false,
         }
     }
 
@@ -57,7 +60,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             let { id } = nextProps.match.params;
             nextProps.getFindCandidateDetail(id);
             return {
-                id
+                id,
             }
         }
 
@@ -70,7 +73,9 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             let process = body.unlocked;
             return {
                 body,
-                process
+                process,
+                loading: false,
+                fail: false
             }
         }
 
@@ -109,9 +114,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 ).then((res: any) => {
                     if (res) {
                         this.props.getFindCandidateDetail(id);
-                        this.setState({ loading: false });
                     }
-                })
+                });
                 setTimeout(() => {
                     this.props.handleModal();
                 }, 1000);
@@ -132,11 +136,17 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         this.props.getFindCandidateDetail(id);
                         this.setState({ loading: false });
                     }
-                })
+                }).catch(
+                    () => this.catchErr()
+                )
                 break;
             default:
                 break;
         }
+    }
+
+    catchErr() {
+        return this.setState({ fail: true })
     }
 
     turnBack = () => {
@@ -152,16 +162,20 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     }
 
     render() {
-        let { body, visible, loading } = this.state;
-        let { unlock_turn, modalState, find_candidates_detail } = this.props;
+        let { body, visible, loading, fail } = this.state;
+        let { unlock_turn, modalState } = this.props;
 
-        if (!find_candidates_detail || !find_candidates_detail.id) {
+        if (fail) {
             return <Result
                 status="404"
                 title="404"
                 subTitle="Sorry, the page you visited does not exist."
                 extra={<Button type="primary">Back Home</Button>}
             />
+        }
+
+        if (loading && !fail) {
+            return <Loading />
         }
 
         return (
@@ -255,9 +269,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         <Button
                             type="danger"
                             prefix={"check"}
-                            style={{
-                                margin: "10px 10px",
-                            }}
                             icon="left"
                             onClick={() => this.turnBack()}
                         >
@@ -267,7 +278,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             type="primary"
                             prefix={"check"}
                             style={{
-                                margin: "10px 10px",
                                 float: "right"
                             }}
                             icon="unlock"
@@ -280,7 +290,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             type={body && body.saved ? "danger" : "primary"}
                             prefix={"check"}
                             style={{
-                                margin: "10px 10px",
+                                marginRight: 10,
                                 float: "right"
                             }}
                             icon={loading ? "loading" : "save"}
