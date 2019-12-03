@@ -3,6 +3,7 @@ import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 import JobAnnouncementsList from './job-announcements-list/JobAnnouncementsList';
 import JobAnnouncementsCreate from './job-announcements-create/JobAnnouncementsCreate';
+import JobAnnouncementsApply from './job-announcements-apply/JobAnnouncementsApply';
 const Switch = require("react-router-dom").Switch;
 
 interface JobAnnouncementsState {
@@ -33,6 +34,7 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
                     <ErrorBoundaryRoute path={`${path}/create`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/copy/:id`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/fix/:id`} component={JobAnnouncementsCreate} />
+                    <ErrorBoundaryRoute path={`${path}/apply/:id`} component={JobAnnouncementsApply} />
                 </Switch>
             </Fragment>
         )

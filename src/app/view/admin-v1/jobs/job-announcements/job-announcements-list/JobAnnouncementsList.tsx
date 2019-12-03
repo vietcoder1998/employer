@@ -19,6 +19,7 @@ import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
@@ -252,13 +253,16 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (count?: string | number, type?: "link" | "default" | "ghost" | "primary" | "dashed" | "danger") => (<div>
-                <Link to={`/v1/admin/job-management/fix/${localStorage.getItem("id_job_announcement")}`} >
-                    <Button type={type} disabled={count === 0}>
-                        <Icon type="team" />{count}
-                    </Button>
-                </Link>
-            </div>);
+            let viewCount = (count?: string | number, color?: "red" | "#1687f2" | "orange") => (
+
+                <>
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${localStorage.getItem("id_job_announcement")}`} >
+                        <div style={{color}}>
+                            {count} <Icon type="team"  disabled={count === 0} />
+                        </div>
+                    </Link>
+                </>
+            );
 
             let EditToolTip = (hidden?: boolean) => (
                 <>
@@ -315,11 +319,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.acceptedApplied, "primary"),
-                    rejectedApplied: viewCount(item.rejectedApplied, "danger"),
-                    pendingApplied: viewCount(item.pendingApplied, "default"),
+                    acceptedApplied: viewCount(item.acceptedApplied, "#1687f2"),
+                    rejectedApplied: viewCount(item.rejectedApplied, "red"),
+                    pendingApplied: viewCount(item.pendingApplied, "orange"),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority: `${item.priority.homePriority ?  item.priority.homePriority : "" }${item.priority.searchPriority}`,
+                    priority: `${item.priority.homePriority ? item.priority.homePriority : ""}${item.priority.searchPriority}`,
                     operation: EditToolTip(item.hidden)
                 });
             })
@@ -717,7 +721,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                     margin: "0px 5px"
                                 }}
                             >
-                                <Icon type={loading_table ? "loading" : "filter" }/>
+                                <Icon type={loading_table ? "loading" : "filter"} />
                                 Tìm kiếm
                         </Button>
                             <Button
@@ -886,7 +890,7 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                                 onChange={this.setPageIndex}
                                 onRow={(record: any, rowIndex: any) => {
                                     return {
-                                        onClick: (event: any)=> {
+                                        onClick: (event: any) => {
                                         }, // click row
                                         onMouseEnter: (event: any) => {
                                             console.log(record)

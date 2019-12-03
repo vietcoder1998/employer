@@ -108,7 +108,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     theme="twoTone"
                     onClick={() =>
                         this.props.history.push(
-                            routeLink.EM_BRANCHES + routePath.CREATE + `/${localStorage.getItem("id_em_branches")}`
+                            routeLink.EM_BRANCHES + routePath.FIX + `/${localStorage.getItem("id_em_branches")}`
                         )
                     }
                 />

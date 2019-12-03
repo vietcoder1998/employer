@@ -16,6 +16,7 @@ import { JobServiceWatcher } from '../sagas/job-service';
 import { LanguagesWatcher } from '../sagas/languages';
 import { ConnectSchoolDetailWatcher } from '../sagas/connect-school-detail';
 import { ConnectSchoolsWatcher } from '../sagas/connect-schools';
+import { ApplyJobsWatcher } from '../sagas/apply-job';
 
 export default function* rootSaga() {
     yield all([
@@ -35,6 +36,7 @@ export default function* rootSaga() {
         JobServiceWatcher(),
         LanguagesWatcher(),
         ConnectSchoolDetailWatcher(),
-        ConnectSchoolsWatcher()
+        ConnectSchoolsWatcher(),
+        ApplyJobsWatcher()
     ])
 } 

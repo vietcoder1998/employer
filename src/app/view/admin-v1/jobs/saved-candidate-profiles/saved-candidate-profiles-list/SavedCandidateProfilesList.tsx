@@ -13,7 +13,7 @@ import { routeLink, routePath } from '../../../../../../common/const/break-cumb'
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
-        return <Avatar src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
+        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
     } else {
         return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
             <Icon type="area-chart" />

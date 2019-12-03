@@ -16,6 +16,8 @@ import { JobNames } from './../reducers/job-names';
 import { Regions } from './../reducers/regions';
 import { EmBranches } from './../reducers/em-branches';
 import { JobAnnouncements } from '../reducers/job-announcements';
+import { ApplyJobs } from './../reducers/apply-job';
+
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
@@ -37,6 +39,7 @@ const rootReducer = combineReducers({
     Languages,
     ConnectSchools,
     ConnectSchoolsDetail,
+    ApplyJobs
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;
