@@ -14,6 +14,7 @@ import { ILanguage } from '../../../../../../redux/models/languages';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { Link } from 'react-router-dom';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {
@@ -128,7 +129,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
             width: 100,
         },
         {
-            title: 'Đại chỉ',
+            title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
             width: 320,
@@ -200,6 +201,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                             <a
                                 href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Icon
                                     style={{ padding: "5px 5px", color: "blue" }}
@@ -460,28 +462,37 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                 <div className="common-content">
                     <h5>
                         Tìm kiếm ứng viên
-                        <Button
-                            onClick={() => this.searchFindCandidate()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Icon type={loading_table ? "loading" : "filter"} />
-                            Tìm kiếm
-                        </Button>
-                        <Button
-                            onClick={() => { this.setState({ open_drawer: true }) }}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Icon type="search" />
-                            Bộ lọc nâng cao
-                        </Button>
+                        <Tooltip title="Tìm kiếm" >
+                            <Button
+                                onClick={() => this.searchFindCandidate()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "5px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height:  "45px",
+                                    width: "45px"
+                                }}
+                                icon={loading_table ? "loading" : "search"}
+                            />
+                        </Tooltip>
+                        <Link to={routeLink.FIND_CANDIDATES + routePath.CREATE} >
+                            <Tooltip title="Bộ lọc nâng cao" >
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        float: "right",
+                                        margin: "5px 10px",
+                                        padding: "10px",
+                                        borderRadius: "50%",
+                                        height:  "45px",
+                                        width: "45px"
+                                    }}
+                                    icon={"file-search"}
+                                />
+                            </Tooltip>
+                        </Link>
                     </h5>
                     <div className="table-operations">
                         <Row >

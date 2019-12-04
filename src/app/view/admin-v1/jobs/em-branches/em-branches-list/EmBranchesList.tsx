@@ -399,30 +399,37 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 
                     <h5>
                         Quản lí chi nhánh
-                        <Button
-                            onClick={() => this.searchEmBranch()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Icon type={loading_table ? "loading" : "filter" }/>
-                            Tìm kiếm
-                        </Button>
-                        <Button
-                            onClick={() => this.searchEmBranch()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Link to='/v1/admin/jobs/em-branches/create' >
-                                <Icon type="plus" />
-                                Tạo chi nhánh mới
-                            </Link>
-                        </Button>
+                        <Tooltip title="Tìm kiếm" >
+                            <Button
+                                onClick={() => this.searchEmBranch()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "5px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height:  "45px",
+                                    width: "45px"
+                                }}
+                                icon={loading_table ? "loading" : "search"}
+                            />
+                        </Tooltip>
+                        <Link to={routeLink.EM_BRANCHES + routePath.CREATE} >
+                            <Tooltip title="Tạo chi nhánh mới" >
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        float: "right",
+                                        margin: "5px 10px",
+                                        padding: "10px",
+                                        borderRadius: "50%",
+                                        height:  "45px",
+                                        width: "45px"
+                                    }}
+                                    icon={"plus"}
+                                />
+                            </Tooltip>
+                        </Link>
                     </h5>
                     <div className="table-operations">
                         <Row >
@@ -440,7 +447,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Tên việc đăng tuyển"} />
+                                <IptLetterP value={"Tỉnh thành"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
@@ -469,7 +476,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {
-                                    onClick: (event: any)=> {
+                                    onClick: (event: any) => {
                                     }, // click row
                                     onMouseEnter: (event) => {
                                         localStorage.setItem('id_em_branches', record.key)

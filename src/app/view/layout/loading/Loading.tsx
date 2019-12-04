@@ -10,14 +10,13 @@ export default function Loading(props: any) {
         <div
             className="fallback-content test"
             style={{
-                width: "100%",
                 height: "100%",
-                padding: "18vh 0vh",
+                width: "100%",
+                padding: "9vw 5vw",
                 textAlign: "center"
             }}
         >
             <h4 className='a_c'
-            // style={{ color: "white" }}
             >
                 Đang tải trang
                 </h4>
@@ -28,8 +27,8 @@ export default function Loading(props: any) {
                     </p>
                 <img src={CatGif}
                     style={{
-                        width: 400,
-                        height: 200,
+                        width: "30%",
+                        height: "15%",
                     }}
                     alt="gif"
                 />

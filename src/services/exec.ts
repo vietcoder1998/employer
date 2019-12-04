@@ -2,7 +2,6 @@ import { exceptionShowNoti } from './../config/exception';
 import { notification, message } from 'antd';
 import { GET, POST, PUT, DELETE } from '../common/const/method';
 import { _delete, _get, _post, _put } from './base-api';
-import Swal from 'sweetalert2';
 import { authHeaders } from "./auth";
 
 export const _requestToServer = async (

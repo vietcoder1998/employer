@@ -350,7 +350,7 @@ export function ShiftContent(props: IShiftContent) {
                         <TimePicker
                             placeholder="Bắt đầu"
                             format={"HH:mm"}
-                            style={{ width: "100px" }}
+                            style={{ width: "90%" }}
                             value={startTime ? moment(startTime, "HH:mm") : null}
                             onChange={(time: any, timeString: string) => setStartTime(timeString)}
                         />
@@ -359,7 +359,7 @@ export function ShiftContent(props: IShiftContent) {
                         <TimePicker
                             placeholder="Kết thúc"
                             format={"HH:mm"}
-                            style={{ width: "100px" }}
+                            style={{ width: "90%" }}
                             value={endTime ? moment(endTime, "HH:mm") : null}
                             onChange={(time: any, timeString: string) => setEndTime(timeString)}
                         />

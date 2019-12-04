@@ -274,27 +274,13 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 </div>
             );
 
-            let EditToolTip = (hidden?: boolean) => (
+            let EditToolTip = (hidden?: boolean, id?: string) => (
                 <>
                     <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
                         <Icon
                             type={hidden ? "eye-invisible" : "eye"}
                             style={{ padding: "5px 5px", color: hidden ? "black" : "gray" }}
                         />
-                    </Tooltip>
-                    <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                        <Icon
-                            style={{ padding: "5px 5px" }}
-                            type="edit"
-                            theme="twoTone"
-                            twoToneColor="green"
-                            onClick={() => nextProps.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${localStorage.getItem("id_job_announcement")}`)}
-                        />
-                    </Tooltip>
-                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                        <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" onClick={() => {
-                            nextProps.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE + `/${localStorage.getItem("id_job_announcement")}`)
-                        }} />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                         <Icon
@@ -305,12 +291,25 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             onClick={() => nextProps.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
                         />
                     </Tooltip>
+                    <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
+                            <Icon
+                                style={{ padding: "5px 5px" }}
+                                type="edit"
+                                theme="twoTone"
+                                twoToneColor="green"
+                            />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} >
+                            <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
+                        </Link>
+                    </Tooltip>
                     <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                         <Icon
-                            style={{ padding: "5px 5px" }}
                             type="dollar"
-                            theme="twoTone"
-                            twoToneColor="yellow"
+                            style={{ padding: "5px 8px", color: "orange" }}
                             onClick={async () => {
                                 await nextProps.handleDrawer();
                                 await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
@@ -334,7 +333,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: `${item.priority.homePriority ? item.priority.homePriority : ""}${item.priority.searchPriority}`,
-                    operation: EditToolTip(item.hidden)
+                    operation: EditToolTip(item.hidden, item.id)
                 });
             })
 
@@ -723,30 +722,37 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <div className="common-content">
                         <h5>
                             Quản lí bài đăng
-                        <Button
-                                onClick={() => this.searchJobAnnouncement()}
-                                type="primary"
-                                style={{
-                                    float: "right",
-                                    margin: "0px 5px"
-                                }}
-                            >
-                                <Icon type={loading_table ? "loading" : "filter"} />
-                                Tìm kiếm
-                        </Button>
-                            <Button
-                                onClick={() => this.searchJobAnnouncement()}
-                                type="primary"
-                                style={{
-                                    float: "right",
-                                    margin: "0px 5px"
-                                }}
-                            >
-                                <Link to='/v1/admin/jobs/job-announcements/create' >
-                                    <Icon type="plus" />
-                                    Tạo bài đăng mới
+                            <Tooltip title="Tìm kiếm" >
+                                <Button
+                                    onClick={() => this.searchJobAnnouncement()}
+                                    type="primary"
+                                    style={{
+                                        float: "right",
+                                        margin: "5px 10px",
+                                        padding: "10px",
+                                        borderRadius: "50%",
+                                        height: "45px",
+                                        width: "45px"
+                                    }}
+                                    icon={loading_table ? "loading" : "search"}
+                                />
+                            </Tooltip>
+                            <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE} >
+                                <Tooltip title="Tạo bài đăng mới" >
+                                    <Button
+                                        type="primary"
+                                        style={{
+                                            float: "right",
+                                            margin: "5px 10px",
+                                            padding: "10px",
+                                            borderRadius: "50%",
+                                            height: "45px",
+                                            width: "45px"
+                                        }}
+                                        icon={"plus"}
+                                    />
+                                </Tooltip>
                             </Link>
-                            </Button>
                         </h5>
                         <div className="table-operations">
                             <Row >

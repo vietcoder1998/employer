@@ -2,34 +2,21 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Avatar, Drawer, Slider, Tooltip, Pagination, Collapse } from 'antd';
-import { timeConverter } from '../../../../../../common/utils/convertTime';
+import { Button, Select, Row, Col, Tooltip, Pagination, Collapse } from 'antd';
+// import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../../redux/models/regions';
-import { IConnectSchools, IConnectSchoolsFilter, IConnectSchool } from '../../../../../../redux/models/connect-schools';
-import { findIdWithValue } from '../../../../../../common/utils/findIdWithValue';
-import { ISkill } from '../../../../../../redux/models/find-candidates-detail';
-import { ILanguage } from '../../../../../../redux/models/languages';
+import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../../redux/models/connect-schools';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+// import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import CardSchool from '../../../../layout/card-schools/CardSchool';
 import Loading from '../../../../layout/loading/Loading';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 let { Option } = Select;
 const { Panel } = Collapse;
-
-let ImageRender = (props: any) => {
-    if (props.src && props.src !== "") {
-        return <Avatar src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
-    } else {
-        return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
-            <Icon type="area-chart" />
-        </div>
-    }
-};
 
 interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
@@ -260,7 +247,6 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             loading_table,
             pageIndex,
             pageSize,
-            open_drawer,
         } = this.state;
 
         let {
@@ -272,7 +258,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             <>
                 <DrawerConfig
                     title="Thông tin nhà trường"
-                    width={900}
+                    width={"50vw"}
                 >
                     <Collapse
                         defaultActiveKey={['1']}
@@ -316,18 +302,22 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 </DrawerConfig>
                 <div className="common-content">
                     <h5>
-                        Tìm kiếm ứng viên
-                        <Button
-                            onClick={() => this.searchConnectSchools()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                                margin: "0px 5px"
-                            }}
-                        >
-                            <Icon type={loading_table ? "loading" : "filter"} />
-                            Tìm kiếm
-                        </Button>
+                        Kết nối trường học
+                        <Tooltip title="Tìm kiếm trường học" >
+                            <Button
+                                onClick={() => this.searchConnectSchools()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "5px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height:  "45px",
+                                    width: "45px"
+                                }}
+                                icon={loading_table ? "loading" : "search"}
+                            />
+                        </Tooltip>
                     </h5>
                     <div className="table-operations">
                         <Row >

@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message, Result, Empty } from 'antd';
+import { Icon, Divider, Row, Col, Button, Tabs, message, Empty } from 'antd';
 import { connect } from 'react-redux';
-import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IJobName } from '../../../../../../redux/models/job-names';
-import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
-import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
+import {  IShifts } from '../../../../../../redux/models/announcements';
+import { ShiftContent} from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import { _requestToServer } from '../../../../../../services/exec';
 import { PUT } from '../../../../../../common/const/method';
@@ -20,8 +18,6 @@ import './JobAnnouncementsApply.scss';
 import { IShiftDetail } from '../../../../../../redux/models/job-annoucement-detail';
 import Loading from '../../../../layout/loading/Loading';
 
-const { TextArea } = Input;
-const { Option } = Select;
 const { TabPane } = Tabs;
 
 interface IJobAnnouncementsApplyState {
@@ -142,7 +138,6 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
     searchShift = (id?: string, type?: string, default_id?: string) => {
         let { list_apply_jobs } = this.state;
-        console.log(default_id)
         this.setState({ loading: true })
         let list_shifts = [];
         setTimeout(() => {
@@ -184,7 +179,6 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
     render() {
         let {
             state,
-            list_apply_jobs,
             list_rejected,
             list_accepted,
             list_pending,
@@ -194,7 +188,6 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             l_btn
         } = this.state;
 
-        let is_empty = list_apply_jobs.length === 0;
         return (
             <div className='common-content'>
                 <h5>
@@ -203,7 +196,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 <Divider orientation="left" >Danh sách yêu cầu</Divider>
                 <div className="announcements-Apply-content">
                     <Row>
-                        <Col xs={24} md={8} lg={12} xl={12} xxl={12}>
+                        <Col xs={24} md={10} lg={12} xl={12} xxl={12}>
                             {<Tabs
                                 activeKey={state}
                                 style={{ width: "100%" }}
@@ -277,7 +270,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 </TabPane>
                             </Tabs>}
                         </Col>
-                        <Col xs={24} md={16} lg={12} xl={12} xxl={12}>
+                        <Col xs={24} md={14} lg={12} xl={12} xxl={12}>
                             <p
                                 style={{
                                     margin: "10px 20px -10px",
@@ -290,16 +283,16 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 <div className="job-announcements-apply">
                                     {
                                         list_shifts && 
-                                        list_shifts.length > 0 &&
+                                        list_shifts.length > 0 ?
                                         list_shifts.map(
                                             (item: IShifts, index: number) => {
                                                 if (item) {
                                                     return <ShiftContent key={index} id={item.id} shifts={item} removeButton={false} disableChange={true} />
                                                 }
 
-                                                return
+                                                return null
                                             }
-                                        )
+                                        ) : <Empty style={{ paddingTop: "5vh" }} />
                                     }
                                 </div>
                             }
