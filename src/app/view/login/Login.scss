@@ -1,13 +1,17 @@
 .login {
-    padding: 20px 40px;
     height: calc(100vh - 120px);
+    background-color: whitesmoke;
     .r-p-content {
         background-color: white;
-        padding: 20px 30px;
-
+        padding: 20px 10px;
         p{
             font-weight: 500;
             font-size: 1rem;
+            margin-bottom: 5px;
         }
     }
+}
+
+.ant-tabs-nav-scroll {
+    padding: 0 25%;
 }

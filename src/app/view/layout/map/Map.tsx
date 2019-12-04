@@ -60,6 +60,8 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                 let { location } = this.state;
                 location = response.results[0].formatted_address;
                 localStorage.setItem('location', location);
+                localStorage.setItem('lat', lat);
+                localStorage.setItem('lon', lng);
                 this.setState({ location, marker });
                 this.props.setMapState({ marker, location });
             },

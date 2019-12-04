@@ -14,7 +14,6 @@ import { ILanguage } from '../../../../../../redux/models/languages';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
-import { Link } from 'react-router-dom';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {
@@ -471,28 +470,27 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                     margin: "5px 10px",
                                     padding: "10px",
                                     borderRadius: "50%",
-                                    height:  "45px",
+                                    height: "45px",
                                     width: "45px"
                                 }}
                                 icon={loading_table ? "loading" : "search"}
                             />
                         </Tooltip>
-                        <Link to={routeLink.FIND_CANDIDATES + routePath.CREATE} >
-                            <Tooltip title="Bộ lọc nâng cao" >
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        float: "right",
-                                        margin: "5px 10px",
-                                        padding: "10px",
-                                        borderRadius: "50%",
-                                        height:  "45px",
-                                        width: "45px"
-                                    }}
-                                    icon={"file-search"}
-                                />
-                            </Tooltip>
-                        </Link>
+                        <Tooltip title="Bộ lọc nâng cao" >
+                            <Button
+                                onClick={() => this.setState({open_drawer: true})}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "5px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height: "45px",
+                                    width: "45px"
+                                }}
+                                icon={"file-search"}
+                            />
+                        </Tooltip>
                     </h5>
                     <div className="table-operations">
                         <Row >
