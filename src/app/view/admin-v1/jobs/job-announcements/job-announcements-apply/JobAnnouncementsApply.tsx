@@ -16,6 +16,8 @@ import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { IApplyJob } from '../../../../../../redux/models/apply-job';
+import { ApplyJobItem } from '../../../../layout/job-apply/JobApplyItem';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -30,7 +32,7 @@ interface IJobAnnouncementsApplyState {
     value_annou: string;
     type_cpn: string;
     list_em_branches: Array<IEmBranch>;
-    body?: Array<IApplyJob>;
+    list_apply_jobs?: Array<IApplyJob>;
     id?: string;
     jobName?: string;
     address?: string;
@@ -59,7 +61,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             value_annou: "",
             list_em_branches: [],
             type_cpn: null,
-            body: [],
+            list_apply_jobs: [],
             id: null,
         };
     };
@@ -75,12 +77,11 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
     static getDerivedStateFromProps(props: IJobAnnouncementsApplyProps, state: IJobAnnouncementsApplyState) {
         if (
-            props.list_apply_jobs &&
             props.match.params.id &&
             props.match.params.id !== state.id
         ) {
             let list_apply_jobs = props.list_apply_jobs;
-            const param =  new URLSearchParams(props.location.search);
+            const param = new URLSearchParams(props.location.search);
             const state = param.get('state');
             return {
                 id: props.match.params.id,
@@ -91,29 +92,27 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
         if (
             props.list_apply_jobs &&
-            props.match.params.id &&
-            props.match.params.id !== state.id
+            props.list_apply_jobs !== state.list_apply_jobs
         ) {
             let list_apply_jobs = props.list_apply_jobs;
             return {
-                id: props.match.params.id,
                 list_apply_jobs
             }
         }
+
         return null
     }
 
     render() {
         let {
-            body,
             state,
+            list_apply_jobs
         } = this.state;
 
         let {
             list_job_names,
             list_em_branches,
             list_skills,
-            list_apply_jobs
         } = this.props;
 
         let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
@@ -134,22 +133,34 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 activeKey={state}
                                 style={{ width: "100%" }}
                                 onChange={(state: string) => {
-                                    this.setState({state})
+                                    this.setState({ state })
                                 }}
                             >
                                 <TabPane tab="Đang chờ" key={TYPE.PENDING}>
                                     {
-                                        //TODO: Pending Applied Job
+                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
+                                            return (
+                                                <ApplyJobItem key={index} data={item} />
+                                            )
+                                        })) : null
                                     }
                                 </TabPane>
                                 <TabPane tab="Chấp nhận" key={TYPE.ACCEPTED}>
                                     {
-                                        //TODO: Pending Accepted Job
+                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
+                                            return (
+                                                <ApplyJobItem key={index} data={item} />
+                                            )
+                                        })) : null
                                     }
                                 </TabPane>
                                 <TabPane tab="Từ chối" key={TYPE.REJECTED} >
                                     {
-                                        //TODO: Pending Rejected Job
+                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
+                                            return (
+                                                <ApplyJobItem key={index} data={item} />
+                                            )
+                                        })) : null
                                     }
                                 </TabPane>
                             </Tabs>
@@ -164,7 +175,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                         style={{
                             margin: "10px 10px",
                         }}
-                        onClick={() => { this.props.history.push('/v1/admin/jobs/job-announcements/list') }}
+                        onClick={() => { this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST) }}
                     >
                         <Icon type="left" />
                         Quay lại
@@ -177,7 +188,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getApplyJobs: (id?: string, body?: string) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, body }),
+    getApplyJobs: (id?: string, list_apply_jobs?: string) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, list_apply_jobs }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
 });
 

@@ -253,9 +253,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string) => (
+            let viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, ) => (
                 <>
-                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${localStorage.getItem("id_job_announcement")}?state=${state}`} disabled={count === 0 ? true : false} >
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`} disabled={count === 0 ? true : false} >
                         <div style={{ color }}>
                             {count} <Icon type="team" />
                         </div>
@@ -318,9 +318,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.acceptedApplied, "#1687f2", TYPE.ACCEPTED),
-                    rejectedApplied: viewCount(item.rejectedApplied, "red", TYPE.REJECTED),
-                    pendingApplied: viewCount(item.pendingApplied, "orange", TYPE.PENDING),
+                    acceptedApplied: viewCount(item.id, item.acceptedApplied, "#1687f2", TYPE.ACCEPTED),
+                    rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED),
+                    pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: `${item.priority.homePriority ? item.priority.homePriority : ""}${item.priority.searchPriority}`,
                     operation: EditToolTip(item.hidden)
