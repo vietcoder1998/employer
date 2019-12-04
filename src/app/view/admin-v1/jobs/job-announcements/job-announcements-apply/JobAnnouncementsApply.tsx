@@ -18,6 +18,7 @@ import moment from 'moment';
 import { IApplyJob } from '../../../../../../redux/models/apply-job';
 import { ApplyJobItem } from '../../../../layout/job-apply/JobApplyItem';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import './JobAnnouncementsApply.scss';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -140,7 +141,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                     {
                                         list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
                                             return (
-                                                <ApplyJobItem key={index} data={item} />
+                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
                                             )
                                         })) : null
                                     }
@@ -149,7 +150,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                     {
                                         list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
                                             return (
-                                                <ApplyJobItem key={index} data={item} />
+                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
                                             )
                                         })) : null
                                     }
@@ -158,14 +159,17 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                     {
                                         list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
                                             return (
-                                                <ApplyJobItem key={index} data={item} />
+                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
                                             )
                                         })) : null
                                     }
                                 </TabPane>
                             </Tabs>
                         </Col>
-                        <Col xs={24} md={12} lg={12} xl={12} xxl={16}></Col>
+                        <Col xs={24} md={12} lg={12} xl={12} xxl={16}>
+                            <div className="job-announcements-apply">
+                            </div>
+                        </Col>
                     </Row>
                 </div>
                 <div className="Announcements-Apply-content">
