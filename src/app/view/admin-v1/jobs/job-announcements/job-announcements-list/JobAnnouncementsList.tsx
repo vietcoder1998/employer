@@ -103,7 +103,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 excludedJobIDs: null,
                 jobNameIDs: null,
                 jobGroupIDs: null,
-                hasPendingApplied: null,
+                hasPendingApplied: true,
                 hasAcceptedApplied: null,
                 hasRejectedApplied: null,
                 jobShiftFilter: null,
@@ -111,7 +111,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             },
 
             un_checkbox: false,
-            list_check: [],
+            list_check: ["Đang chờ"],
             homePriority: null,
             searchPriority: null,
             homeExpired: false,

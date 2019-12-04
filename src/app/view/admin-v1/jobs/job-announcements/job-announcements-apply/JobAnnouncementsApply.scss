@@ -1,6 +1,13 @@
 .job-announcements-apply {
   height: calc(90vh - 300px) ;
   border: solid rgb(199, 199, 199) 1px;
-  margin: 40px;
+  margin: 40px 10px;
   border-radius: 5px;
+  overflow-y: auto;
+}
+
+.content-apply {
+    height: calc(90vh - 320px);
+    overflow-y: auto;
+    position: relative;
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
+import { Icon, Divider, Row, Col, Button, Input, DatePicker, Select, Tabs, message, Result, Empty } from 'antd';
 import { connect } from 'react-redux';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
@@ -19,6 +19,8 @@ import { IApplyJob } from '../../../../../../redux/models/apply-job';
 import { ApplyJobItem } from '../../../../layout/job-apply/JobApplyItem';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import './JobAnnouncementsApply.scss';
+import { IShiftDetail } from '../../../../../../redux/models/job-annoucement-detail';
+import Loading from '../../../../layout/loading/Loading';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -39,6 +41,11 @@ interface IJobAnnouncementsApplyState {
     address?: string;
     skills?: Array<string>
     state?: string;
+    list_pending?: Array<IApplyJob>;
+    list_accepted?: Array<IApplyJob>;
+    list_rejected?: Array<IApplyJob>;
+    list_shifts?: Array<IShiftDetail>;
+    default_id?: string;
 };
 
 interface IJobAnnouncementsApplyProps extends StateProps, DispatchProps {
@@ -64,6 +71,11 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             type_cpn: null,
             list_apply_jobs: [],
             id: null,
+            list_pending: [],
+            list_accepted: [],
+            list_rejected: [],
+            list_shifts: [],
+            default_id: null
         };
     };
 
@@ -96,79 +108,166 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             props.list_apply_jobs !== state.list_apply_jobs
         ) {
             let list_apply_jobs = props.list_apply_jobs;
+            let list_pending = [];
+            let list_accepted = [];
+            let list_rejected = [];
+            if (list_apply_jobs && list_apply_jobs.length > 0) {
+                list_apply_jobs.forEach((item: IApplyJob, index: number) => {
+                    switch (item.state) {
+                        case TYPE.PENDING:
+                            list_pending.push(item);
+                            break;
+                        case TYPE.REJECTED:
+                            list_rejected.push(item);
+                            break;
+                        case TYPE.ACCEPTED:
+                            list_accepted.push(item);
+                            break;
+
+                        default:
+                            break;
+                    }
+                })
+            }
             return {
-                list_apply_jobs
+                list_apply_jobs,
+                list_pending,
+                list_rejected,
+                list_accepted,
             }
         }
 
         return null
     }
 
+    searchShift = (id?: string, type?: string, default_id?: string) => {
+        let { list_apply_jobs } = this.state;
+        console.log(default_id)
+        this.setState({ loading: true })
+        let list_shifts = [];
+        setTimeout(() => {
+            if (id) {
+                list_apply_jobs.forEach((item: IApplyJob) => {
+                    if (id === item.candidate.id) {
+                        list_shifts = item.appliedShifts;
+                    }
+                });
+            }
+
+            this.setState({ list_shifts, loading: false })
+        }, 250);
+
+        this.setState({default_id})
+    }
+
+    createRequest() {
+
+    }
     render() {
         let {
             state,
-            list_apply_jobs
+            list_apply_jobs,
+            list_rejected,
+            list_accepted,
+            list_pending,
+            list_shifts,
+            loading,
+            default_id
         } = this.state;
 
-        let {
-            list_job_names,
-            list_em_branches,
-            list_skills,
-        } = this.props;
-
-        let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
-        let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
-        let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let is_empty = list_apply_jobs.length === 0;
+        console.log(list_shifts)
 
         return (
             <div className='common-content'>
                 <h5>
                     Quản lí yêu cầu ứng tuyển
                 </h5>
-                <Divider orientation="left" >Nội dung bài viết</Divider>
+                <Divider orientation="left" >Danh sách yêu cầu</Divider>
                 <div className="announcements-Apply-content">
                     <Row>
-                        <Col xs={24} md={12} lg={12} xl={12} xxl={8}>
-
-                            <Tabs
+                        <Col xs={24} md={8} lg={12} xl={12} xxl={12}>
+                            {is_empty ? <Empty /> : <Tabs
                                 activeKey={state}
                                 style={{ width: "100%" }}
                                 onChange={(state: string) => {
                                     this.setState({ state })
                                 }}
                             >
-                                <TabPane tab="Đang chờ" key={TYPE.PENDING}>
-                                    {
-                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
-                                            return (
-                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
-                                            )
-                                        })) : null
-                                    }
+                                <TabPane tab="Đang chờ" key={TYPE.PENDING} disabled={list_pending.length === 0}>
+                                    <div className="content-apply">
+                                        {
+                                            list_pending.length > 0 ? (list_pending.map((item: IApplyJob, index: number) =>
+                                                <ApplyJobItem
+                                                    type="PENDING"
+                                                    key={index}
+                                                    data={item}
+                                                    id={item.candidate.id}
+                                                    id_default={item.candidate.id === default_id}
+                                                    onClick={
+                                                        (event: string) => this.searchShift(event, TYPE.PENDING, item.candidate.id)
+                                                    }
+                                                />
+                                            )) : null
+                                        }
+                                    </div>
                                 </TabPane>
-                                <TabPane tab="Chấp nhận" key={TYPE.ACCEPTED}>
-                                    {
-                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
-                                            return (
-                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
-                                            )
-                                        })) : null
-                                    }
+                                <TabPane tab="Chấp nhận" key={TYPE.ACCEPTED} disabled={list_accepted.length === 0}>
+                                    <div className="content-apply">
+                                        {
+                                            list_accepted.length > 0 ? (list_accepted.map((item: IApplyJob, index: number) =>
+                                                <ApplyJobItem
+                                                    type="ACCEPTED"
+                                                    key={index}
+                                                    data={item}
+                                                    id={item.candidate.id}
+                                                    id_default={item.candidate.id === default_id}
+                                                    onClick={
+                                                        (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.candidate.id)
+                                                    }
+                                                />
+                                            )) : null
+                                        }
+                                    </div>
                                 </TabPane>
-                                <TabPane tab="Từ chối" key={TYPE.REJECTED} >
-                                    {
-                                        list_apply_jobs && list_apply_jobs.length > 0 ? (list_apply_jobs.map((item: IApplyJob, index: number) => {
-                                            return (
-                                                <ApplyJobItem key={index} data={item} id={item.candidate.id} />
-                                            )
-                                        })) : null
-                                    }
+                                <TabPane tab="Từ chối" key={TYPE.REJECTED} disabled={list_rejected.length === 0} >
+                                    <div className="content-apply">
+                                        {
+                                            list_rejected.length > 0 ? (list_rejected.map(
+                                                (item: IApplyJob, index: number) =>
+                                                    <ApplyJobItem
+                                                        type="REJECTED"
+                                                        key={index}
+                                                        data={item}
+                                                        id={item.candidate.id}
+                                                        id_default={item.candidate.id === default_id}
+                                                        onClick={
+                                                            (event: string) => this.searchShift(event, TYPE.REJECTED, item.candidate.id)
+                                                        }
+                                                    />
+                                            )) : null
+                                        }
+                                    </div>
                                 </TabPane>
-                            </Tabs>
+                            </Tabs>}
                         </Col>
-                        <Col xs={24} md={12} lg={12} xl={12} xxl={16}>
-                            <div className="job-announcements-apply">
-                            </div>
+                        <Col xs={24} md={16} lg={12} xl={12} xxl={12}>
+                            {loading ? <Loading /> :
+                                <div className="job-announcements-apply">
+                                    {
+                                        list_shifts && list_shifts.length > 0 ?
+                                            list_shifts.map(
+                                                (item: IShifts, index: number) => {
+                                                    if (item) {
+                                                        return <ShiftContent key={index} id={item.id} shifts={item} removeButton={false} disableChange={true} />
+                                                    }
+
+                                                    return
+                                                }
+                                            ) : <Empty />
+                                    }
+                                </div>
+                            }
                         </Col>
                     </Row>
                 </div>

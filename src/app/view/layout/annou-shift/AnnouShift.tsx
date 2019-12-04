@@ -14,6 +14,7 @@ interface IShiftContent {
     index?: number;
     type?: string;
     removeButton?: boolean;
+    disableChange?: boolean;
     onChange?: Function;
     removeShift?: Function;
     shifts?: IShifts;
@@ -111,132 +112,78 @@ export function ShiftContent(props: IShiftContent) {
 
     const timeSetup = (
         <div
-            style={{ display: 'flex', }}
+            style={{
+                display: 'flex',
+                pointerEvents: props.disableChange ? "none" : "visible"
+            }}
         >
-            <IptLetterP value={"Thứ hai"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox
-                    checked={mon}
-                    onChange={
-                        (event: any) => setMon(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Thứ ba"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox
-                    checked={tue}
-                    onChange={
-                        (event: any) => setTue(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Thứ tư"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox
-                    checked={wed}
-                    onChange={
-                        (event: any) => setWed(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Thứ năm"} style={{ textAlign: "center", marginRight: "25px" }} >
-                <Checkbox
-                    checked={thu}
-                    onChange={
-                        (event: any) => setThu(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Thứ sáu"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox
-                    checked={fri}
-                    onChange={
-                        (event: any) => setFri(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Thứ bảy"} style={{ textAlign: "center", marginRight: "25px" }}  >
-                <Checkbox
-                    checked={sat}
-                    onChange={
-                        (event: any) => setSat(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-            <IptLetterP value={"Chủ nhật"} style={{ textAlign: "center", marginRight: "25px" }}>
-                <Checkbox
-                    checked={sun}
-                    onChange={
-                        (event: any) => setSun(event.target.checked)
-                    }
-                />
-            </IptLetterP>
-        </div>
-    );
-
-    const target = (
-        <div>
-            <Radio.Group
-                name="radiogroup"
-                defaultValue={true}
-                value={typeGender}
-                onChange={
-                    (event: any) => setTypeGender(event.target.value)
-                }
-            >
-                <Radio value={true}>Theo giới tính</Radio>
-                <Radio value={false}>Theo Số lượng</Radio>
-            </Radio.Group>
-            <Row style={{ marginTop: 5, display: typeGender ? 'block' : 'none' }}>
-                {/* With Gender */}
-                <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Nam" icon="man">
-                        <InputNumber
-                            min={0}
-                            defaultValue={0}
-                            value={valueGender[0].quantity}
+            <Row>
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ hai"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                        <Checkbox
+                            checked={mon}
                             onChange={
-                                (event: number) => {
-                                    let newValueGender = valueGender;
-                                    newValueGender[0].quantity = event;
-                                    setValueGender([newValueGender[0], newValueGender[1]]);
-                                    setGenderRequireds(valueGender)
-                                }
+                                (event: any) => setMon(event.target.checked)
                             }
                         />
                     </IptLetterP>
                 </Col>
-                <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Nữ" icon="woman">
-                        <InputNumber
-                            min={0}
-                            defaultValue={0}
-                            value={valueGender[1].quantity}
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ ba"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                        <Checkbox
+                            checked={tue}
                             onChange={
-                                (event: number) => {
-                                    let newValueGender = valueGender;
-                                    newValueGender[1].quantity = event;
-                                    setValueGender([newValueGender[0], newValueGender[1]]);
-                                    setGenderRequireds(valueGender)
-                                }
+                                (event: any) => setTue(event.target.checked)
                             }
                         />
                     </IptLetterP>
                 </Col>
-            </Row >
-            {/* With Both */}
-            <Row style={{ marginTop: 5, display: !typeGender ? 'block' : 'none' }}>
-                <Col xs={12} sm={12} md={12} lg={10} xl={12}>
-                    <IptLetterP value="Người" icon="team">
-                        <InputNumber
-                            min={1}
-                            defaultValue={0}
-                            value={valueBoth[0].quantity}
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ tư"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                        <Checkbox
+                            checked={wed}
                             onChange={
-                                (event: number) => {
-                                    let newValueBoth = valueBoth[0];
-                                    newValueBoth.quantity = event;
-                                    setValueBoth([newValueBoth]);
-                                    setGenderRequireds([newValueBoth]);
-                                }
+                                (event: any) => setWed(event.target.checked)
+                            }
+                        />
+                    </IptLetterP>
+                </Col>
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ năm"} style={{ textAlign: "center", marginRight: "25px" }} >
+                        <Checkbox
+                            checked={thu}
+                            onChange={
+                                (event: any) => setThu(event.target.checked)
+                            }
+                        />
+                    </IptLetterP>
+                </Col>
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ sáu"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                        <Checkbox
+                            checked={fri}
+                            onChange={
+                                (event: any) => setFri(event.target.checked)
+                            }
+                        />
+                    </IptLetterP>
+                </Col>
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Thứ bảy"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                        <Checkbox
+                            checked={sat}
+                            onChange={
+                                (event: any) => setSat(event.target.checked)
+                            }
+                        />
+                    </IptLetterP>
+                </Col>
+                <Col sm={8} md={8} lg={4} xl={3} >
+                    <IptLetterP value={"Chủ nhật"} style={{ textAlign: "center", marginRight: "25px" }}>
+                        <Checkbox
+                            checked={sun}
+                            onChange={
+                                (event: any) => setSun(event.target.checked)
                             }
                         />
                     </IptLetterP>
@@ -245,27 +192,109 @@ export function ShiftContent(props: IShiftContent) {
         </div>
     );
 
+    const target = () => {
+        if (props.shifts.genderRequireds) {
+            return (<div>
+                <Radio.Group
+                    name="radiogroup"
+                    defaultValue={true}
+                    value={typeGender}
+                    onChange={
+                        (event: any) => setTypeGender(event.target.value)
+                    }
+                >
+                    <Radio value={true}>Theo giới tính</Radio>
+                    <Radio value={false}>Theo Số lượng</Radio>
+                </Radio.Group>
+                <Row style={{ marginTop: 5, display: typeGender ? 'block' : 'none' }}>
+                    {/* With Gender */}
+                    <Col xs={12} sm={12} md={12} lg={10} xl={12}>
+                        <IptLetterP value="Nam" icon="man">
+                            <InputNumber
+                                min={0}
+                                defaultValue={0}
+                                value={valueGender[0].quantity}
+                                onChange={
+                                    (event: number) => {
+                                        let newValueGender = valueGender;
+                                        newValueGender[0].quantity = event;
+                                        setValueGender([newValueGender[0], newValueGender[1]]);
+                                        setGenderRequireds(valueGender)
+                                    }
+                                }
+                            />
+                        </IptLetterP>
+                    </Col>
+                    <Col xs={12} sm={12} md={12} lg={10} xl={12}>
+                        <IptLetterP value="Nữ" icon="woman">
+                            <InputNumber
+                                min={0}
+                                defaultValue={0}
+                                value={valueGender[1].quantity}
+                                onChange={
+                                    (event: number) => {
+                                        let newValueGender = valueGender;
+                                        newValueGender[1].quantity = event;
+                                        setValueGender([newValueGender[0], newValueGender[1]]);
+                                        setGenderRequireds(valueGender)
+                                    }
+                                }
+                            />
+                        </IptLetterP>
+                    </Col>
+                </Row >
+                {/* With Both */}
+                <Row style={{ marginTop: 5, display: !typeGender ? 'block' : 'none' }}>
+                    <Col xs={12} sm={12} md={12} lg={10} xl={12}>
+                        <IptLetterP value="Người" icon="team">
+                            <InputNumber
+                                min={1}
+                                defaultValue={0}
+                                value={valueBoth[0].quantity}
+                                onChange={
+                                    (event: number) => {
+                                        let newValueBoth = valueBoth[0];
+                                        newValueBoth.quantity = event;
+                                        setValueBoth([newValueBoth]);
+                                        setGenderRequireds([newValueBoth]);
+                                    }
+                                }
+                            />
+                        </IptLetterP>
+                    </Col>
+                </Row>
+            </div>)
+        }
+
+        return;
+    };
+
     React.useEffect(
         () => {
-            props.onChange({
-                id,
-                startTime,
-                endTime,
-                minSalary: agreement ? minSalary : null,
-                unit: agreement ? unit : null,
-                maxSalary: agreement ? maxSalary : null,
-                mon,
-                tue,
-                wed,
-                thu,
-                fri,
-                sat,
-                sun,
-                genderRequireds
-            });
+            if (props.shifts && props.onChange && props.id !== null && !props.disableChange) {
+                props.onChange({
+                    id,
+                    startTime,
+                    endTime,
+                    minSalary: agreement ? minSalary : null,
+                    unit: agreement ? unit : null,
+                    maxSalary: agreement ? maxSalary : null,
+                    mon,
+                    tue,
+                    wed,
+                    thu,
+                    fri,
+                    sat,
+                    sun,
+                    genderRequireds
+                });
+            }
+
+            return;
         },
         // eslint-disable-next-line
         [
+            id,
             startTime,
             endTime,
             minSalary,
@@ -286,14 +315,18 @@ export function ShiftContent(props: IShiftContent) {
         ]
     );
 
+    if (!props.shifts) {
+        return
+    }
+
     return (
         <div
             style={{
-                margin: "20px 0px",
+                margin: "10px 10px",
                 border: "solid gray 1px",
                 borderRadius: "5px",
-                padding: "20px 40px",
-                position: "relative"
+                padding: "2vh 2vw",
+                position: "relative",
             }}
         >
             <div
@@ -304,30 +337,34 @@ export function ShiftContent(props: IShiftContent) {
             >
                 <IptLetter value={`Ca số: ${props.index + 1} `} />
             </div>
-            <div style={{ display: props.type === TYPE.INTERNSHIP ? 'none' : 'flex' }}>
-                <InputTitle
-                    title="Chọn thời gian:"
-                    widthLabel="80px"
-                    style={{ width: "50%", position: "relative" }}
-                >
-                    <TimePicker
-                        placeholder="Bắt đầu"
-                        format={"HH:mm"}
-                        value={startTime ? moment(startTime, "HH:mm") : null}
-                        onChange={(time: any, timeString: string) => setStartTime(timeString)}
-                    />
-                </InputTitle>
-                <InputTitle
-                    widthLabel="80px"
-                    style={{ width: "50%", position: "relative" }}
-                >
-                    <TimePicker
-                        placeholder="Kết thúc"
-                        format={"HH:mm"}
-                        value={endTime ? moment(endTime, "HH:mm") : null}
-                        onChange={(time: any, timeString: string) => setEndTime(timeString)}
-                    />
-                </InputTitle>
+
+            <div style={{ display: props.type === TYPE.INTERNSHIP ? 'none' : 'block' }}>
+                <Row>
+                    <Col sm={24} md={24} lg={8} xl={8} xxl={8}>
+                        <p
+                            children="Chọn thời gian:"
+                        />
+                    </Col>
+                    <Col sm={24} md={12} lg={8} xl={8} xxl={8}>
+
+                        <TimePicker
+                            placeholder="Bắt đầu"
+                            format={"HH:mm"}
+                            style={{ width: "100px" }}
+                            value={startTime ? moment(startTime, "HH:mm") : null}
+                            onChange={(time: any, timeString: string) => setStartTime(timeString)}
+                        />
+                    </Col>
+                    <Col sm={24} md={12} lg={8} xl={8} xxl={8}>
+                        <TimePicker
+                            placeholder="Kết thúc"
+                            format={"HH:mm"}
+                            style={{ width: "100px" }}
+                            value={endTime ? moment(endTime, "HH:mm") : null}
+                            onChange={(time: any, timeString: string) => setEndTime(timeString)}
+                        />
+                    </Col>
+                </Row>
             </div>
             <>
                 <InputTitle title="Mức lương" >
@@ -338,11 +375,12 @@ export function ShiftContent(props: IShiftContent) {
                         onChange={
                             (event: boolean) => setAgreement(event)
                         }
+                        disabled={props.disableChange}
                     />
                     {!agreement ? "Theo thỏa thuận" : "Theo định mức"}
                 </InputTitle>
                 <Row >
-                    <Col xs={12} sm={12} md={8} lg={8} xl={8} >
+                    <Col xs={12} sm={12} md={12} lg={12} xl={8} >
                         <IptLetterP value={"Tối thiểu(VND)"} >
                             <InputNumber
                                 placeholder='ex: 5000000'
@@ -354,7 +392,7 @@ export function ShiftContent(props: IShiftContent) {
                             />
                         </IptLetterP>
                     </Col>
-                    <Col xs={12} sm={12} md={8} lg={8} xl={8} >
+                    <Col xs={12} sm={12} md={12} lg={12} xl={8} >
                         <IptLetterP value={"Tối đa(VND)"}  >
                             <InputNumber
                                 value={maxSalary}
@@ -366,7 +404,7 @@ export function ShiftContent(props: IShiftContent) {
                             />
                         </IptLetterP>
                     </Col>
-                    <Col xs={12} sm={12} md={8} lg={8} xl={8} >
+                    <Col xs={12} sm={12} md={12} lg={12} xl={8} >
                         <IptLetterP value={"Theo"} >
                             <Select
                                 style={{ width: "90px" }}
@@ -389,7 +427,7 @@ export function ShiftContent(props: IShiftContent) {
                 <InputTitle title="Ngày làm" children={timeSetup} />
             </div>
             <>
-                <InputTitle title="Đối tượng" children={target} />
+                {props.shifts.genderRequireds ? <InputTitle title="Đối tượng" children={target()} /> : undefined}
             </>
             <>
                 <Button
@@ -399,7 +437,7 @@ export function ShiftContent(props: IShiftContent) {
                         marginRight: "10px",
                         display: props.removeButton ? "block" : "none"
                     }}
-                    onClick={() => props.removeShift(props.id)}
+                    onClick={() => props.removeShift ? props.removeShift(props.id) : undefined}
                 >
                     Xóa ca
                 </Button>

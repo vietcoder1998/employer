@@ -47,7 +47,6 @@ export interface IApplyJobs {
     totalItems?: number;
 }
 
-
 export class ApplyJobsDto {
     private _ApplyJob: IApplyJob;
     constructor() {

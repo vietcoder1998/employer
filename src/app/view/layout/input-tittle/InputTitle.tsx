@@ -136,7 +136,7 @@ export const InputTitle = (props: IInputitleProps) => {
                         fontWeight: 550,
                         fontFamily: "IBMPlexSanLights",
                         lineHeight: "30px",
-                        width: !props.widthLabel ? "150px" : props.widthLabel
+                        width: !props.widthLabel ? undefined : props.widthLabel
                     }}
                 >
                     {props.title}
