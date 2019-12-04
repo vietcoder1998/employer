@@ -1,20 +1,19 @@
 import React, { PureComponent, Fragment } from 'react'
 import ErrorBoundaryRoute from '../../../../../routes/ErrorBoundaryRoute';
-import { connect } from 'react-redux';
 import PendingJobsList from './announcements/AnnouncementsList';
 const Switch = require("react-router-dom").Switch;
 
-interface JobAnnouncementsState {
+interface IJobAnnouncementsState {
     show_menu: boolean;
     to_logout: boolean;
 }
 
-interface JobAnnouncementsProps extends StateProps, DispatchProps {
+interface IJobAnnouncementsProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncementsState> {
+export default class JobAnnouncements extends PureComponent<IJobAnnouncementsProps, IJobAnnouncementsState> {
     render() {
         let  {path} = this.props.match
         return (
@@ -26,14 +25,3 @@ class JobAnnouncements extends PureComponent<JobAnnouncementsProps, JobAnnouncem
         )
     }
 }
-
-const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-})
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-})
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(JobAnnouncements)

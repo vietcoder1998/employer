@@ -1,10 +1,10 @@
 import { IApplyJobs } from '../models/apply-job';
-import { POST } from '../../common/const/method';
 import { APPLY_JOB } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
 import { EMPLOYER_HOST } from '../../environment/dev';
+import { GET } from './../../common/const/method';
 
 function* getListApplyJobsData(action: any) {
     let res = yield call(callApplyJobs, action);
@@ -31,9 +31,11 @@ function* getListApplyJobsData(action: any) {
 function callApplyJobs(action: any) {
     if (action.id) {
         return _requestToServer(
-            POST,
-            APPLY_JOB  + action.id ? `/${action.id}/apply/candicates` : undefined,
-            action.body ? action.body : null,
+            GET,
+            APPLY_JOB + (action.id ? `/${action.id}/apply/candidates` : undefined),
+            {
+                state: action.body ? action.body : null,
+            },
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,
                 pageSize: action.pageSize ? action.pageSize : 10
@@ -41,7 +43,6 @@ function callApplyJobs(action: any) {
             undefined,
             EMPLOYER_HOST,
             undefined,
-            false
         )
     }
 }

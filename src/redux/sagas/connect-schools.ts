@@ -1,6 +1,5 @@
 import { POST } from './../../common/const/method';
 import { IConnectSchools } from './../models/connect-schools';
-import { GET } from '../../common/const/method';
 import { CONNECT_SCHOOL } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

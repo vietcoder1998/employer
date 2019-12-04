@@ -1,39 +1,22 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
-import { connect } from 'react-redux';
 import FindCandidatesList from './find-candidates-list/FindCandidatesList';
 import FindCandidatesDetail from './find-candidates-detail/FindCandidatesDetail';
 const Switch = require("react-router-dom").Switch;
 
-interface IFindCandidatesState {
-}
-
-interface IFindCandidatesProps extends StateProps, DispatchProps {
+interface IFindCandidatesProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-class FindCandidates extends PureComponent<IFindCandidatesProps, IFindCandidatesState> {
-    render() {
-        let  {path} = this.props.match
-        return (
-            <Fragment >
-                <Switch>
-                    <ErrorBoundaryRoute path={`${path}/list`} component={FindCandidatesList} />
-                    <ErrorBoundaryRoute path={`${path}/detail/:id`} component={FindCandidatesDetail} />
-                </Switch>
-            </Fragment>
-        )
-    }
+export default function FindCandidates(props: IFindCandidatesProps) {
+    let { path } = props.match
+    return (
+        <Fragment >
+            <Switch>
+                <ErrorBoundaryRoute path={`${path}/list`} component={FindCandidatesList} />
+                <ErrorBoundaryRoute path={`${path}/detail/:id`} component={FindCandidatesDetail} />
+            </Switch>
+        </Fragment>
+    )
 }
-
-const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-})
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-})
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(FindCandidates)

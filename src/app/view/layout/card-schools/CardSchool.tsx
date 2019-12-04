@@ -58,7 +58,7 @@ export default function CardSchool(props: IConnectSchool) {
                         {props.region.name}
                     </div> : null
             }
-            <img className="image-schools" src={props && props.coverUrl ? props.coverUrl : backGround} />
+            <img className="image-schools" src={props && props.coverUrl ? props.coverUrl : backGround} alt="background" />
             <div
                 className="school-action"
                 style={{

@@ -1,7 +1,6 @@
 import React, { PureComponent, Fragment } from 'react'
 import './Jobs.scss';
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
-import { connect } from 'react-redux';
 import JobAnnouncements from './job-announcements/JobAnnouncements';
 import EmBranches from './em-branches/EmBranches';
 import Announcements from './announcements/Announcements';
@@ -9,25 +8,17 @@ import FindCandidates from './find-candidates/FindCandidates';
 import SavedCandidateProfiles from './saved-candidate-profiles/SavedCandidateProfiles';
 const Switch = require("react-router-dom").Switch;
 
-interface JobsState {
+interface IJobsState {
     show_menu: boolean;
     to_logout: boolean;
 }
 
-interface JobsProps extends StateProps, DispatchProps {
+interface IJobsProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-class Jobs extends PureComponent<JobsProps, JobsState> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show_menu: true,
-            to_logout: false,
-        }
-    }
-
+export default class Jobs extends PureComponent<IJobsProps, IJobsState> {
     render() {
         let  {path} = this.props.match;
         return (
@@ -43,14 +34,3 @@ class Jobs extends PureComponent<JobsProps, JobsState> {
         )
     }
 }
-
-const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-})
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-})
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(Jobs)

@@ -25,7 +25,7 @@ let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
-interface JobAnnouncementsListProps extends StateProps, DispatchProps {
+interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
     getListJobAnnouncements: Function;
     getListEmBranches: Function;
@@ -36,7 +36,7 @@ interface JobAnnouncementsListProps extends StateProps, DispatchProps {
     handleModal: Function;
 };
 
-interface JobAnnouncementsListState {
+interface IJobAnnouncementsListState {
     data_table?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
@@ -70,7 +70,7 @@ interface JobAnnouncementsListState {
 };
 
 
-class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobAnnouncementsListState> {
+class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJobAnnouncementsListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -253,12 +253,11 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
         ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (count?: string | number, color?: "red" | "#1687f2" | "orange") => (
-
+            let viewCount = (count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string) => (
                 <>
-                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${localStorage.getItem("id_job_announcement")}`} >
-                        <div style={{color}}>
-                            {count} <Icon type="team"  disabled={count === 0} />
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${localStorage.getItem("id_job_announcement")}?state=${state}`} disabled={count === 0 ? true : false} >
+                        <div style={{ color }}>
+                            {count} <Icon type="team" />
                         </div>
                     </Link>
                 </>
@@ -278,12 +277,12 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                             type="edit"
                             theme="twoTone"
                             twoToneColor="green"
-                            onClick={() => nextProps.history.push(`/v1/admin/jobs/job-announcements/fix/${localStorage.getItem("id_job_announcement")}`)}
+                            onClick={() => nextProps.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${localStorage.getItem("id_job_announcement")}`)}
                         />
                     </Tooltip>
                     <Tooltip placement="top" title={"Đăng bài tương tự"}>
                         <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" onClick={() => {
-                            nextProps.history.push(`/v1/admin/jobs/job-announcements/copy/${localStorage.getItem("id_job_announcement")}`)
+                            nextProps.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE + `/${localStorage.getItem("id_job_announcement")}`)
                         }} />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Xóa bài đăng"}>
@@ -319,9 +318,9 @@ class JobAnnouncementsList extends PureComponent<JobAnnouncementsListProps, JobA
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.acceptedApplied, "#1687f2"),
-                    rejectedApplied: viewCount(item.rejectedApplied, "red"),
-                    pendingApplied: viewCount(item.pendingApplied, "orange"),
+                    acceptedApplied: viewCount(item.acceptedApplied, "#1687f2", TYPE.ACCEPTED),
+                    rejectedApplied: viewCount(item.rejectedApplied, "red", TYPE.REJECTED),
+                    pendingApplied: viewCount(item.pendingApplied, "orange", TYPE.PENDING),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: `${item.priority.homePriority ? item.priority.homePriority : ""}${item.priority.searchPriority}`,
                     operation: EditToolTip(item.hidden)
