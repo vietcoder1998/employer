@@ -9,12 +9,10 @@ import { IJobName } from '../../../../../../redux/models/job-names';
 import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
 import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
-import { findIdWithValue } from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST, PUT } from '../../../../../../common/const/method';
-import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
+import { PUT } from '../../../../../../common/const/method';
+import { APPLY_JOB } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import moment from 'moment';
 import { IApplyJob } from '../../../../../../redux/models/apply-job';
 import { ApplyJobItem } from '../../../../layout/job-apply/JobApplyItem';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
@@ -45,6 +43,7 @@ interface IJobAnnouncementsApplyState {
     list_accepted?: Array<IApplyJob>;
     list_rejected?: Array<IApplyJob>;
     list_shifts?: Array<IShiftDetail>;
+    l_btn?: boolean;
     default_id?: string;
 };
 
@@ -75,7 +74,8 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             list_accepted: [],
             list_rejected: [],
             list_shifts: [],
-            default_id: null
+            default_id: null,
+            l_btn: false
         };
     };
 
@@ -157,12 +157,30 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             this.setState({ list_shifts, loading: false })
         }, 250);
 
-        this.setState({default_id})
+        this.setState({ default_id })
     }
 
-    createRequest() {
-
+    createRequest = async (cid?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => {
+        let { id } = this.state;
+        await this.setState({ l_btn: true });
+        await _requestToServer(
+            PUT,
+            APPLY_JOB + `/${id}/apply/candidates/${cid}/state/${state}`,
+            undefined,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false
+        ).then((res: any) => {
+            if (res) {
+                message.success("Thành công", 3)
+                this.props.getApplyJobs(id);
+            }
+        })
+        await this.setState({ l_btn: false })
     }
+
     render() {
         let {
             state,
@@ -172,68 +190,75 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             list_pending,
             list_shifts,
             loading,
-            default_id
+            default_id,
+            l_btn
         } = this.state;
 
         let is_empty = list_apply_jobs.length === 0;
-        console.log(list_shifts)
-
         return (
             <div className='common-content'>
                 <h5>
-                    Quản lí yêu cầu ứng tuyển
+                    Danh sách ứng viên Công việc
                 </h5>
                 <Divider orientation="left" >Danh sách yêu cầu</Divider>
                 <div className="announcements-Apply-content">
                     <Row>
                         <Col xs={24} md={8} lg={12} xl={12} xxl={12}>
-                            {is_empty ? <Empty /> : <Tabs
+                            {<Tabs
                                 activeKey={state}
                                 style={{ width: "100%" }}
                                 onChange={(state: string) => {
                                     this.setState({ state })
                                 }}
                             >
-                                <TabPane tab="Đang chờ" key={TYPE.PENDING} disabled={list_pending.length === 0}>
+                                <TabPane
+                                    tab={`Đang chờ`}
+                                    key={TYPE.PENDING}
+                                    disabled={list_pending.length === 0}
+                                    style={{ paddingRight: 10 }}
+                                >
                                     <div className="content-apply">
                                         {
-                                            list_pending.length > 0 ? (list_pending.map((item: IApplyJob, index: number) =>
+                                            list_pending.length === 0 ? <Empty style={{ paddingTop: "5vh" }} /> : (list_pending.map((item: IApplyJob, index: number) =>
                                                 <ApplyJobItem
-                                                    type="PENDING"
                                                     key={index}
+                                                    type="PENDING"
+                                                    l_btn={l_btn}
                                                     data={item}
                                                     id={item.candidate.id}
                                                     id_default={item.candidate.id === default_id}
+                                                    onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                     onClick={
                                                         (event: string) => this.searchShift(event, TYPE.PENDING, item.candidate.id)
                                                     }
                                                 />
-                                            )) : null
+                                            ))
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab="Chấp nhận" key={TYPE.ACCEPTED} disabled={list_accepted.length === 0}>
+                                <TabPane tab={`Chấp nhận`} key={TYPE.ACCEPTED} disabled={list_accepted.length === 0}>
                                     <div className="content-apply">
                                         {
-                                            list_accepted.length > 0 ? (list_accepted.map((item: IApplyJob, index: number) =>
+                                            list_accepted.length === 0 ? <Empty style={{ paddingTop: "5vh" }} /> : (list_accepted.map((item: IApplyJob, index: number) =>
                                                 <ApplyJobItem
-                                                    type="ACCEPTED"
                                                     key={index}
+                                                    type={"ACCEPTED"}
                                                     data={item}
                                                     id={item.candidate.id}
                                                     id_default={item.candidate.id === default_id}
+                                                    onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                     onClick={
                                                         (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.candidate.id)
                                                     }
                                                 />
-                                            )) : null
+                                            ))
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab="Từ chối" key={TYPE.REJECTED} disabled={list_rejected.length === 0} >
+                                <TabPane tab={`Từ chối`} key={TYPE.REJECTED} disabled={list_rejected.length === 0} >
                                     <div className="content-apply">
                                         {
-                                            list_rejected.length > 0 ? (list_rejected.map(
+                                            list_rejected.length === 0 ? <Empty style={{ paddingTop: "5vh" }} /> : list_rejected.map(
                                                 (item: IApplyJob, index: number) =>
                                                     <ApplyJobItem
                                                         type="REJECTED"
@@ -241,30 +266,40 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                         data={item}
                                                         id={item.candidate.id}
                                                         id_default={item.candidate.id === default_id}
+                                                        onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                         onClick={
                                                             (event: string) => this.searchShift(event, TYPE.REJECTED, item.candidate.id)
                                                         }
                                                     />
-                                            )) : null
+                                            )
                                         }
                                     </div>
                                 </TabPane>
                             </Tabs>}
                         </Col>
                         <Col xs={24} md={16} lg={12} xl={12} xxl={12}>
+                            <p
+                                style={{
+                                    margin: "10px 20px -10px",
+                                    fontWeight: 600
+                                }}
+                            >
+                                Thông tin ca
+                            </p>
                             {loading ? <Loading /> :
                                 <div className="job-announcements-apply">
                                     {
-                                        list_shifts && list_shifts.length > 0 ?
-                                            list_shifts.map(
-                                                (item: IShifts, index: number) => {
-                                                    if (item) {
-                                                        return <ShiftContent key={index} id={item.id} shifts={item} removeButton={false} disableChange={true} />
-                                                    }
-
-                                                    return
+                                        list_shifts && 
+                                        list_shifts.length > 0 &&
+                                        list_shifts.map(
+                                            (item: IShifts, index: number) => {
+                                                if (item) {
+                                                    return <ShiftContent key={index} id={item.id} shifts={item} removeButton={false} disableChange={true} />
                                                 }
-                                            ) : <Empty />
+
+                                                return
+                                            }
+                                        )
                                     }
                                 </div>
                             }

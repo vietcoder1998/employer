@@ -9,6 +9,7 @@ import moment from 'moment';
 import { IApplyJob } from '../../../../redux/models/apply-job';
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../common/const/break-cumb';
+import { timeConverter } from '../../../../common/utils/convertTime';
 const { Option } = Select;
 
 interface IApplyJobItem {
@@ -16,12 +17,13 @@ interface IApplyJobItem {
     id?: any;
     index?: number;
     removeButton?: boolean;
-    onChange?: Function;
-    onClick?: Function;
-    removeApplyJob?: Function;
     data?: IApplyJob;
     id_default?: boolean;
+    l_btn?: boolean;
     type?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+    onChangeType?: Function;
+    onClick?: Function;
+    removeApplyJob?: Function;
 }
 
 // TODO : Get List Job Dto
@@ -31,9 +33,10 @@ export function ApplyJobItem(props: IApplyJobItem) {
     let { data } = props;
     return (
         <div
+            className="job-apply-item"
             style={{
                 margin: "10px 0px",
-                border: `solid ${props.id_default ? "#34dcf3fi": "gray"} 1px`,
+                border: `solid ${props.id_default ? "#5dabea" : "gray"} 1px`,
                 borderRadius: "5px",
                 padding: "10px 15px",
                 position: "relative",
@@ -41,7 +44,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 minHeight: 120,
                 width: "100%",
                 display: "inline-block",
-                cursor: "pointed"
+                cursor: "pointed",
             }}
         >
             <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
@@ -50,11 +53,17 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 </Tooltip>
             </Link>
             <div
-                style={{ display: "inline-flex" }}
+                style={{ 
+                    border: "dashed gray 1px",
+                    display: "inline-flex" ,
+                    borderRadius: 5,
+                    padding: 2,
+                    width: "100%"
+                }}
                 onClick={() => props.onClick ? props.onClick(id) : null}
             >
                 <div style={{ width: 60, height: 60 }}>
-                    <Avatar style={{ width: 60, height: 60 }} shape="square" src={data.candidate.avatarUrl} alt="anh" icon="user" />
+                    <Avatar style={{ width: "4vw", height: "4vw" }} shape="square" src={data.candidate.avatarUrl} alt="anh" icon="user" />
                 </div>
                 <div style={{ padding: "0px 15px" }}>
                     <h6>
@@ -64,6 +73,14 @@ export function ApplyJobItem(props: IApplyJobItem) {
                     <p style={{ fontStyle: "italic" }}>
                         {data ? data.message : <NotUpdate msg="Không có" />}
                     </p>
+                    <span
+                        style={{
+                            fontSize: "0.7rem",
+                            float: "right"
+                        }}
+                    >
+                        {data && timeConverter(data.appliedDate, 1000, "HH:mm DD-MM-YY")}
+                    </span>
                 </div>
             </div>
             <div>
@@ -78,7 +95,8 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         float: "right",
                         display: props.type !== TYPE.ACCEPTED ? "block" : "none"
                     }}
-                    onClick={() => props.removeApplyJob ? props.removeApplyJob(props.id) : null}
+                    loading={props.l_btn}
+                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.ACCEPTED) : undefined}
                 />
                 <Button
                     type={"danger"}
@@ -91,7 +109,8 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         float: "right",
                         display: props.type !== TYPE.REJECTED ? "block" : "none"
                     }}
-                    onClick={() => props.removeApplyJob ? props.removeApplyJob(props.id) : null}
+                    loading={props.l_btn}
+                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.REJECTED) : undefined}
                 />
                 <Button
                     icon="pause"
@@ -106,10 +125,10 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         boxShadow: "orange",
                         display: props.type !== TYPE.PENDING ? "block" : "none"
                     }}
-                    onClick={() => props.removeApplyJob ? props.removeApplyJob(props.id) : null}
+                    loading={props.l_btn}
+                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.PENDING) : undefined}
                 />
             </div>
-
         </div >
     )
 }

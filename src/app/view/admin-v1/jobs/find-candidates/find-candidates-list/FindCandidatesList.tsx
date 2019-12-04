@@ -194,14 +194,18 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             nextProps.list_find_candidates.forEach((item: IFindCandidate, index: number) => {
-                let EditToolTip = () => (
+                let EditToolTip = (id?: string) => (
                     <>
                         <Tooltip placement="top" title={"Xem chi tiết"}>
-                            <Icon
-                                style={{ padding: "5px 5px", color: "blue" }}
-                                type="file-search"
-                                onClick={() => nextProps.history.push(routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${localStorage.getItem('id_candidate')}`)}
-                            />
+                            <a
+                                href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`}
+                                target="_blank"
+                            >
+                                <Icon
+                                    style={{ padding: "5px 5px", color: "blue" }}
+                                    type="search"
+                                />
+                            </a>
                         </Tooltip>
                     </>
                 );
@@ -227,7 +231,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                     region: item.region ? item.region.name : "",
                     birthday: item.birthday === -1 ? "" : timeConverter(item.birthday, 1000),
                     unlocked: Lock(),
-                    operation: EditToolTip()
+                    operation: EditToolTip(item.id)
                 });
             })
             return {
@@ -464,7 +468,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                 margin: "0px 5px"
                             }}
                         >
-                            <Icon type={loading_table ? "loading" : "filter" }/>
+                            <Icon type={loading_table ? "loading" : "filter"} />
                             Tìm kiếm
                         </Button>
                         <Button
@@ -605,7 +609,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {
-                                    onClick: (event: any)=> {
+                                    onClick: (event: any) => {
                                     }, // click row
                                     onMouseEnter: (event) => {
                                         localStorage.setItem('id_candidate', record.key)

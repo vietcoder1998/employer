@@ -254,13 +254,24 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
             let viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, ) => (
-                <>
-                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`} disabled={count === 0 ? true : false} >
-                        <div style={{ color }}>
-                            {count} <Icon type="team" />
-                        </div>
-                    </Link>
-                </>
+                <div
+                    style={{
+                        pointerEvents: count === 0 ? 'none' : undefined
+                    }}
+                >
+                    <Tooltip title="Xem chi tiết">
+                        <Link
+                            to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
+                            disabled={count === 0 ? true : false}
+                            target="_blank"
+                        >
+                            <div style={{ color }}>
+                                {count} <Icon type="team" />
+                            </div>
+                        </Link>
+                    </Tooltip>
+
+                </div>
             );
 
             let EditToolTip = (hidden?: boolean) => (

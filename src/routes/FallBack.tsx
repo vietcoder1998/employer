@@ -5,9 +5,12 @@ export default function FallBack(props) {
     return (
         <div className="fallback-content test"
             style={{
-                zIndex: 2,
+                zIndex: 999,
                 width: "100vw",
                 height: "100vh",
+                position: "fixed",
+                top: 0,
+                left: 0,
                 backgroundColor: "#fff"
             }}
         >

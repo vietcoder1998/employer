@@ -1,5 +1,5 @@
 import { exceptionShowNoti } from './../config/exception';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import { GET, POST, PUT, DELETE } from '../common/const/method';
 import { _delete, _get, _post, _put } from './base-api';
 import Swal from 'sweetalert2';
@@ -51,11 +51,10 @@ export const _requestToServer = async (
                 })
             }
             if (show_alert) {
-                Swal.fire(
-                    "Thành công",
+                message.success(
                     response.msg,
-                    'success',
-                );
+                    3
+                )
             }
         }
         return response;
@@ -71,11 +70,10 @@ export const _requestToServer = async (
         }
         exceptionShowNoti(err, show_noti);
         if (show_alert) {
-            Swal.fire(
-                "Có lỗi xảy ra",
+            message.error(
                 msg,
-                'error',
-            );
+                3
+            )
         }
     }
 };

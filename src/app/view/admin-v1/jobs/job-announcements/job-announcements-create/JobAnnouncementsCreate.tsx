@@ -304,7 +304,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    Tạo bài viết mới
+                   {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)": "Tạo bài viết mới"}  
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
