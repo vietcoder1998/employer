@@ -63,17 +63,19 @@ export const _requestToServer = async (
             let data = err.response.data;
             if (data) {
                 msg = data.msg;
-            } 
+            }
         } else {
             msg = err.message;
         }
-        exceptionShowNoti(err, show_noti);
+
         if (show_alert) {
             message.error(
                 msg,
                 3
             )
-        }
+
+        } else
+            exceptionShowNoti(err);
     }
 };
 

@@ -107,6 +107,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Tiện ích dịch vụ</span>
                         </span>
                     }
+                    disabled={true}
                 >
                     <Menu.Item key="7">
                         <Link to={'/v1/admin/connect-schools/list'}>

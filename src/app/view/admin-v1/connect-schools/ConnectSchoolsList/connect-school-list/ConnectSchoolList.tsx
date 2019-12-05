@@ -2,19 +2,22 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Select, Row, Col, Tooltip, Pagination, Collapse } from 'antd';
+import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty } from 'antd';
 // import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../../redux/models/regions';
 import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../../redux/models/connect-schools';
-import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { IModalState, IMapState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 // import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import CardSchool from '../../../../layout/card-schools/CardSchool';
 import Loading from '../../../../layout/loading/Loading';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
+import MapContainter from '../../../../layout/map/Map';
+import { IConnectSchoolDetail } from '../../../../../../redux/models/connect-school-detail';
+import TextArea from 'antd/lib/input/TextArea';
 let { Option } = Select;
 const { Panel } = Collapse;
 
@@ -23,10 +26,12 @@ interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     history?: any;
     handleModal: Function;
     handleDrawer: Function;
+    handleMapState: (mapState: IMapState) => any;
     getListConnectSchools: Function;
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
+    getConnectSchoolDetail: (id?: string) => any;
 };
 
 interface IConnectSchoolsListState {
@@ -48,6 +53,9 @@ interface IConnectSchoolsListState {
     body?: IConnectSchoolsFilter;
     open_drawer: boolean;
     type_view?: string;
+    dataSchool?: any;
+    connect_schools_detail?: IConnectSchoolDetail,
+    message?: string;
 };
 
 class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConnectSchoolsListState> {
@@ -66,10 +74,9 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             list_connect_schools: [],
             id: null,
             loading_table: true,
-            body: {
-
-            },
-            open_drawer: false
+            message: null,
+            open_drawer: false,
+            connect_schools_detail: {}
         };
     }
 
@@ -181,7 +188,21 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 list_connect_schools,
                 loading_table: false,
             }
-        } return null;
+        }
+
+        if (nextProps.connect_schools_detail && nextProps.connect_schools_detail !== prevState.connect_schools_detail) {
+            let { connect_schools_detail } = prevState;
+            if (nextProps.connect_schools_detail) {
+                connect_schools_detail = nextProps.connect_schools_detail;
+            }
+
+            return {
+                connect_schools_detail,
+                loading_table: false,
+            }
+        }
+
+        return null;
     };
 
     async componentDidMount() {
@@ -217,10 +238,6 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         await this.props.getListConnectSchools(body, pageIndex, pageSize);
     };
 
-    onCloseDrawer = () => {
-        this.setState({ open_drawer: false })
-    };
-
     onChangeType = (event: any, param?: string) => {
         let { body } = this.state;
         let { list_regions } = this.props;
@@ -241,12 +258,28 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ body });
     };
 
+    onSetDataSchool = async (id: string) => {
+        let { list_connect_schools } = this.props;
+        console.log(id)
+        let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
+        let dataSchool = filter_arr[0];
+        this.setState({ dataSchool });
+        this.props.handleMapState({ marker: { lat: dataSchool.lat, lng: dataSchool.lon } })
+        await this.props.handleDrawer();
+        setTimeout(() => {
+            if (dataSchool.state) {
+                this.props.getConnectSchoolDetail(id)
+            }
+        }, 250);
+    }
+
     render() {
         let {
             list_connect_schools,
             loading_table,
             pageIndex,
             pageSize,
+            connect_schools_detail
         } = this.state;
 
         let {
@@ -262,41 +295,41 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 >
                     <Collapse
                         defaultActiveKey={['1']}
-                    // onChange={callback}
-                    // expandIconPosition={expandIconPosition}
+                        bordered={false}
                     >
-                        <Panel header="This is panel header 1" key="1">
-                            <div>
-                                em Ipsum is that it has a more-or-less normal distrib
-                                ution of letters, as opposed to using 'Content here, co
-                                ntent here', making it look like readable English. Many desktop publis
-                                hing packages and web page editors now use Lorem Ipsum as their default mo
-                                del text, and a search for 'lorem ipsum' will unc
-                                over many web sites still in their infancy. Various versions ha
-                                ve evolved over the years, sometimes by accident, sometime
+                        <Panel header="Chi tiết" key="1">
+                            <div className='sc-dr-if'>
+                                <div className="">
+
+                                </div>
+                                <MapContainter style={{ pointerEvent: "none" }} />
                             </div>
                         </Panel>
-                        <Panel header="This is panel header 2" key="2" >
-                            <div>
-                                em Ipsum is that it has a more-or-less normal distrib
-                                ution of letters, as opposed to using 'Content here, co
-                                ntent here', making it look like readable English. Many desktop publis
-                                hing packages and web page editors now use Lorem Ipsum as their default mo
-                                del text, and a search for 'lorem ipsum' will unc
-                                over many web sites still in their infancy. Various versions ha
-                                ve evolved over the years, sometimes by accident, sometime
-                            </div>
+                        <Panel header={"Lời từ phía nhà trường"} key="2" >
+                            <TextArea
+                                value={
+                                    connect_schools_detail ?
+                                        (connect_schools_detail.owner === TYPE.EMPLOYER ?
+                                            connect_schools_detail.replyMessage : connect_schools_detail.requestMessage
+                                        ) : "Chưa có yêu cầu kết nối"
+                                }
+
+                                disabled={connect_schools_detail.owner === TYPE.SCHOOL}
+                            />
                         </Panel>
-                        <Panel header="This is panel header 3" key="3" >
-                            <div>
-                                em Ipsum is that it has a more-or-less normal distrib
-                                ution of letters, as opposed to using 'Content here, co
-                                ntent here', making it look like readable English. Many desktop publis
-                                hing packages and web page editors now use Lorem Ipsum as their default mo
-                                del text, and a search for 'lorem ipsum' will unc
-                                over many web sites still in their infancy. Various versions ha
-                                ve evolved over the years, sometimes by accident, sometime
-                            </div>
+                        <Panel header="Lời mời từ phía bạn" key="3" >
+                            <TextArea
+                                value={
+                                    connect_schools_detail ?
+                                        (connect_schools_detail.owner === TYPE.SCHOOL ?
+                                            connect_schools_detail.replyMessage : connect_schools_detail.requestMessage
+                                        ) : "Chưa có yêu cầu kết nối"
+                                }
+
+                                onChange={(event: any) => {
+                                    this.setState({connect_schools_detail})
+                                }}
+                            />
                         </Panel>
                     </Collapse>
                 </DrawerConfig>
@@ -312,7 +345,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                     margin: "5px 10px",
                                     padding: "10px",
                                     borderRadius: "50%",
-                                    height:  "45px",
+                                    height: "45px",
                                     width: "45px"
                                 }}
                                 icon={loading_table ? "loading" : "search"}
@@ -380,8 +413,16 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                         </Row>
                         <div className="school-content">
                             {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ? list_connect_schools.map(
-                                (item: IConnectSchool, index: number) => <div onClick={() => this.props.handleDrawer()}><CardSchool key={index} {...item} /></div>
-                            ) : null) : <Loading />}
+                                (item: IConnectSchool, index: number) =>
+                                    <div
+                                        key={index}
+                                        onClick={
+                                            () => this.onSetDataSchool(item.id)
+                                        }
+                                    >
+                                        <CardSchool key={index} {...item} />
+                                    </div>
+                            ) : <Empty />) : <Loading />}
                         </div>
                         <div style={{ textAlign: "center", margin: " 40px 20px", }}>
                             <Pagination
@@ -404,14 +445,19 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListConnectSchools: (body: IConnectSchoolsFilter, pageIndex: number, pageSize: number) =>
         dispatch({ type: REDUX_SAGA.CONNECT_SCHOOL.GET_CONNECT_SCHOOL, body, pageIndex, pageSize }),
+    getConnectSchoolDetail: (id?: string) =>
+        dispatch({ type: REDUX_SAGA.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL, id }),
     handleModal: (modalState: IModalState) =>
         dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
     handleDrawer: (drawerState: IDrawerState) =>
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
+    handleMapState: (mapState: IMapState) =>
+        dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_connect_schools: state.ConnectSchools.items,
+    connect_schools_detail: state.ConnectSchoolsDetail,
     totalItems: state.ConnectSchools.totalItems,
     list_regions: state.Regions.items,
     list_skills: state.Skills.items,

@@ -29,8 +29,9 @@ class DrawerConfig extends React.Component<IDrawerConfigProps, IDrawerConfigStat
             <Drawer
                 title={title ? title : "Danh mục"}
                 visible={drawerState && drawerState.open_drawer}
-                style={{width: width ? width: 500 }}
+                width={width}
                 onClose={() => handleDrawer()}
+                destroyOnClose={true}
             >
                 {children }
             </Drawer>

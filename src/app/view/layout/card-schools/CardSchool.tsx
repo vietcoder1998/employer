@@ -92,12 +92,12 @@ export default function CardSchool(props: IConnectSchool) {
                     className="action-school"
                     style={{ textAlign: "center" }}
                 >
-                    <p>
+                    <div>
                         <div className="view">
                             Xem chi tiết
                             <Icon type="search" />
                         </div>
-                    </p>
+                    </div>
                 </div>
             </div>
 

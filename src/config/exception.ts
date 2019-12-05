@@ -1,12 +1,10 @@
 import { notification } from 'antd';
 
-export const exceptionShowNoti = async (err: any, show_noti: boolean) => {
+export const exceptionShowNoti = async (err: any) => {
     if (err && err && err.response && err.response.data) {
         let res = err.response.data;
         if (res.code) {
-            if (show_noti) {
-                notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
-            }
+            notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
         }
 
     } else {

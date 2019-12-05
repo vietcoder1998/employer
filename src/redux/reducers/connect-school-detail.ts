@@ -7,7 +7,7 @@ export const ConnectSchoolsDetail = (state: IConnectSchoolDetail = initState, ac
     switch (action.type) {
         case REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL:
             return {
-                ...action.state
+                ...action.data
             };
 
         default:
