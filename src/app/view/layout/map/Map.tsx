@@ -19,6 +19,7 @@ interface IMapContainerState {
 
 interface IMapContainerProps extends StateProps, DispatchProps {
     style?: CSSProperties;
+    disabled?: boolean;
     setMapState: Function;
     onChange: Function;
 }
@@ -42,35 +43,41 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28")
     }
 
-    _onMarkerClick = (props, marker, e) =>
-        this.setState({
-            selectedPlace: props,
-            activeMarker: marker,
-            showingInfoWindow: true
-        });
+    _onMarkerClick = (props, marker, e) => {
+        if (!this.props.disabled) {
+            this.setState({
+                selectedPlace: props,
+                activeMarker: marker,
+                showingInfoWindow: true
+            });
+        }
+    }
+
 
     _setMapState = (t, map, coord) => {
-        const { latLng } = coord;
-        let { marker } = this.state;
-        const lat = latLng.lat();
-        const lng = latLng.lng();
-        marker.lat = lat;
-        marker.lng = lng;
-        GeoCode.fromLatLng(marker.lat, marker.lng).then(
-            response => {
-                let { location } = this.state;
-                location = response.results[0].formatted_address;
-                localStorage.setItem('location', location);
-                localStorage.setItem('lat', lat);
-                localStorage.setItem('lon', lng);
-                this.setState({ location, marker });
-                this.props.setMapState({ marker, location });
-            },
+        if (!this.props.disabled) {
+            const { latLng } = coord;
+            let { marker } = this.state;
+            const lat = latLng.lat();
+            const lng = latLng.lng();
+            marker.lat = lat;
+            marker.lng = lng;
+            GeoCode.fromLatLng(marker.lat, marker.lng).then(
+                response => {
+                    let { location } = this.state;
+                    location = response.results[0].formatted_address;
+                    localStorage.setItem('location', location);
+                    localStorage.setItem('lat', lat);
+                    localStorage.setItem('lon', lng);
+                    this.setState({ location, marker });
+                    this.props.setMapState({ marker, location });
+                },
 
-            error => {
-                console.error(error);
-            }
-        )
+                error => {
+                    console.error(error);
+                }
+            )
+        }
     }
 
     render() {

@@ -18,7 +18,7 @@ interface IMenuNavigationProps {
 
 export default function MenuNavigation(props: IMenuNavigationProps) {
     let { show_menu } = props;
-    let state_bar = '1';
+    let state_bar = '0';
     if (localStorage.getItem("state_bar")) {
         state_bar = localStorage.getItem("state_bar")
     }
@@ -58,6 +58,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
+                    <Menu.Item key="0">
+                        <Link to={'/v1/admin/jobs/job-announcements/create'}>
+                            <Icon type="file" />
+                            <span>Đăng bài</span>
+                        </Link>
+                    </Menu.Item>
                     <Menu.Item key="1">
                         <Link to={'/v1/admin/jobs/job-announcements/list'}>
                             <Icon type="carry-out" />

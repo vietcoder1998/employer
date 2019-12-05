@@ -7,7 +7,7 @@ export const Titlelabel = (props: any) => {
 };
 
 export const IptLetter = (props: any) => {
-    return <span className="important-letter">{" " + props.value + " "}</span>
+    return <div style={{padding: "5px 2px"}} > <span className="important-letter">{" " + props.value + "  "}</span>{props.children ? props.children : ""}</div>
 };
 
 export const IptLetterP = (props: any) => {
@@ -37,7 +37,7 @@ export function Timer(props: any) {
     )
 };
 
-export const NotUpdate = (props?: any) => (
+export const NotUpdate = (props?: {msg?: string}) => (
     <label style={{ fontStyle: "italic" }}>
         {props.msg ? props.msg : "Chưa cập nhật"}
     </label>

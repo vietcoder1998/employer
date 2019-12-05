@@ -13,13 +13,13 @@ export default function CardSchool(props: IConnectSchool) {
     let color = "gray";
     switch (props.state) {
         case TYPE.PENDING:
-            color = "#ff2828cc";
+            color = "orange";
             break;
         case TYPE.ACCEPTED:
             color = "green";
             break;
         case TYPE.REJECTED:
-            color = "orange";
+            color = "#ff2828cc";
             break;
 
         default:

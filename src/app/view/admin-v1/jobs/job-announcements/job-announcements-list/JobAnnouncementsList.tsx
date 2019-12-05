@@ -728,7 +728,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     type="primary"
                                     style={{
                                         float: "right",
-                                        margin: "5px 10px",
+                                        margin: "0px 10px",
                                         padding: "10px",
                                         borderRadius: "50%",
                                         height: "45px",
@@ -743,7 +743,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         type="primary"
                                         style={{
                                             float: "right",
-                                            margin: "5px 10px",
+                                            margin: "0px 10px",
                                             padding: "10px",
                                             borderRadius: "50%",
                                             height: "45px",

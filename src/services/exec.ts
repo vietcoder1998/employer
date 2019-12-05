@@ -76,6 +76,8 @@ export const _requestToServer = async (
 
         } else
             exceptionShowNoti(err);
+
+        throw err;
     }
 };
 
