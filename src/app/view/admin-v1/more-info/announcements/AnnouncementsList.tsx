@@ -1,16 +1,16 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../../common/const/actions';
+import { REDUX_SAGA } from '../../../../../common/const/actions';
 import { Button, Table, Icon, Select, Row, Col, Modal, Rate, Tabs, List, Avatar, Skeleton, Checkbox, Input } from 'antd';
-import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
-import { TYPE } from '../../../../../../common/const/type';
-import { IptLetter } from '../../../../layout/common/Common';
-import { ModalConfig } from '../../../../layout/modal-config/ModalConfig';
-import { _requestToServer } from '../../../../../../services/exec';
-import { DELETE } from '../../../../../../common/const/method';
-import { ANNOU_COMMENTS } from '../../../../../../services/api/private.api';
-import { IAnnouCommentsBody, IAnnouComment } from '../../../../../../redux/models/annou-comments';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { timeConverter, momentToUnix } from '../../../../../common/utils/convertTime';
+import { TYPE } from '../../../../../common/const/type';
+import { IptLetter } from '../../../layout/common/Common';
+import { ModalConfig } from '../../../layout/modal-config/ModalConfig';
+import { _requestToServer } from '../../../../../services/exec';
+import { DELETE } from '../../../../../common/const/method';
+import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
+import { IAnnouCommentsBody, IAnnouComment } from '../../../../../redux/models/annou-comments';
+import { routeLink, routePath } from '../../../../../common/const/break-cumb';
 
 let { Option } = Select;
 const { TabPane } = Tabs;

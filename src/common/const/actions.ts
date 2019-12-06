@@ -8,6 +8,9 @@ export const REDUX = {
     PENDING_JOBS: {
         GET_PENDING_JOBS: "GET_PENDING_JOBS",
     },
+    ADMIN_ACCOUNT:  {
+        GET_ADMIN_ACCOUNT: "GET_ADMIN_ACCOUNT"
+    },
     JOB_NAMES: {
         GET_JOB_NAMES: "GET_JOB_NAMES",
         GET_SINGLE_JOB_NAME: "GET_SINGLE_JOB_NAME"
@@ -85,6 +88,9 @@ export const REDUX = {
 };
 
 export const REDUX_SAGA = {
+    ADMIN_ACCOUNT:  {
+        GET_ADMIN_ACCOUNT: "GET_ADMIN_ACCOUNT_DATA"
+    },
     PENDING_JOBS: {
         GET_PENDING_JOBS: "GET_PENDING_JOBS_DATA",
     },

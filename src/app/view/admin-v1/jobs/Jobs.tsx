@@ -3,7 +3,6 @@ import './Jobs.scss';
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
 import JobAnnouncements from './job-announcements/JobAnnouncements';
 import EmBranches from './em-branches/EmBranches';
-import Announcements from './announcements/Announcements';
 import FindCandidates from './find-candidates/FindCandidates';
 import SavedCandidateProfiles from './saved-candidate-profiles/SavedCandidateProfiles';
 const Switch = require("react-router-dom").Switch;
@@ -26,7 +25,6 @@ export default class Jobs extends PureComponent<IJobsProps, IJobsState> {
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/job-announcements`} component={JobAnnouncements} />
                     <ErrorBoundaryRoute path={`${path}/em-branches`} component={EmBranches} />
-                    <ErrorBoundaryRoute path={`${path}/announcements`} component={Announcements} />
                     <ErrorBoundaryRoute path={`${path}/find-candidates`} component={FindCandidates} />
                     <ErrorBoundaryRoute path={`${path}/saved-candidate`} component={SavedCandidateProfiles} />
                 </Switch>

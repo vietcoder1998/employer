@@ -10,7 +10,7 @@ export const APPLY_JOB = '/api/employers/jobs';
 export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
 export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';
 export const CONNECT_SCHOOL = '/api/employers/connections/schools';
-
+export const ADMIN_ACCOUNT = '/api/employers';
 
 export const HOME_TOP_SERVICE = '/api/employers/services/jobs/priority/home/TOP/quantity';
 export const HOME_INDAY_SERVICE = '/api/employers/services/jobs/priority/home/IN_DAY/quantity';

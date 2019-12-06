@@ -1,0 +1,124 @@
+.account-profile {
+  margin: 30px 0px;
+  position: relative;
+  border-radius: 3px;
+  $padding_base: 60px;
+  $height_head: 400px;
+  transition: 0.5s;
+  $color_black: black;
+  $color_gray: rgb(185, 185, 185);
+
+  .block-span {
+    width: 100px !important;
+    color: #168ECD;
+  }
+
+  .account-profile-header {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    span {
+      letter-spacing: 0.5px;
+    }
+
+    .hr-center {
+      height: 1px;
+      width: 100vw;
+      margin-left: -50vw;
+      border-bottom: solid $color_gray 1px;
+    }
+
+    .cover-image-profile {
+      width: 100%;
+      opacity: 0.15;
+      z-index: 0;
+      position: absolute;
+      min-height: auto;
+    }
+
+    .header-content {
+      top: 0px;
+      right: 0px;
+      width: 100%;
+      min-height: 300px;
+      padding: 3vw 0px;
+      z-index: 2;
+      display: flex;
+
+      li {
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+      }
+
+      .block-image {
+        min-height: 22vw;
+        width: 22vw;
+        border: solid $color_gray 1px;
+        margin: 2vw 0vw;
+        padding: 2vw 10px;
+        text-align: center;
+        border-radius: 3px;
+      }
+
+      h4 {
+        margin: 10px 0px;
+        letter-spacing: 1px;
+        text-transform: capitalize;
+      }
+
+      .description {
+        width: calc(100% - 22vw);
+        padding: 10px 0 10px 50px;
+
+        .profile-description {
+          min-height: 110px;;
+        }
+
+        h6 {
+          margin: 10px 0px 15px !important;
+          font-weight: 600;
+        }
+
+        p {
+          letter-spacing: 0.5px;
+          line-height: 1.6;
+          font-size: 0.6rem;
+        }
+      }
+
+      .info {
+        padding: 25px 0px;
+        li {
+          padding: 0px 3px;
+        }
+      }
+    }
+  }
+
+  .account-profile-body {
+    min-height: 500px;
+    padding: 5vh 5vw;
+    .wrapper {
+      padding: 0px 10px;
+
+      h6 {
+        color: cornflowerblue !important;
+        text-transform: uppercase;
+        i {
+          padding-right: 10px;
+          color: gray;
+        }
+      }
+
+      .language-skills {
+        padding: 10px 10px;
+        text-align: left;
+        .content-l-q {
+          text-align: center;
+          display: grid;
+          grid-template-columns: auto auto auto auto;
+        }
+      }
+    }
+  }
+}

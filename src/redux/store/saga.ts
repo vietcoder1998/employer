@@ -17,26 +17,32 @@ import { LanguagesWatcher } from '../sagas/languages';
 import { ConnectSchoolDetailWatcher } from '../sagas/connect-school-detail';
 import { ConnectSchoolsWatcher } from '../sagas/connect-schools';
 import { ApplyJobsWatcher } from '../sagas/apply-job';
+import { AdminAccountWatcher } from '../sagas/admin-account';
 
 export default function* rootSaga() {
-    yield all([
-        JobAnnouncementsWatcher(),
-        EmBranchesWatcher(),
-        RegionsWatcher(),
-        JobNameWatcher(),
-        AnnouncementsWatcher(),
-        AnnouncementDetailWatcher(),
-        AnnouCommentsWatcher(),
-        AnnouTypesWatcher(),
-        FindCandidateDetailWatcher(),
-        FindCandidatesWatcher(),
-        SavedCandidateProfilesWatcher(),
-        SkillsWatcher(),
-        JobAnnouncementDetailWatcher(),
-        JobServiceWatcher(),
-        LanguagesWatcher(),
-        ConnectSchoolDetailWatcher(),
-        ConnectSchoolsWatcher(),
-        ApplyJobsWatcher()
-    ])
+    try {
+        yield all([
+            JobAnnouncementsWatcher(),
+            EmBranchesWatcher(),
+            RegionsWatcher(),
+            JobNameWatcher(),
+            AnnouncementsWatcher(),
+            AnnouncementDetailWatcher(),
+            AnnouCommentsWatcher(),
+            AnnouTypesWatcher(),
+            FindCandidateDetailWatcher(),
+            FindCandidatesWatcher(),
+            SavedCandidateProfilesWatcher(),
+            SkillsWatcher(),
+            JobAnnouncementDetailWatcher(),
+            JobServiceWatcher(),
+            LanguagesWatcher(),
+            ConnectSchoolDetailWatcher(),
+            ConnectSchoolsWatcher(),
+            ApplyJobsWatcher(),
+            AdminAccountWatcher()
+        ])
+    } catch (err) {
+        throw err;
+    }
 } 

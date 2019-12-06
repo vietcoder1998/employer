@@ -1,12 +1,6 @@
-@import "./../../../scss/variable";
-
 .job-detail {
   padding: 5px;
   margin: 5px 10px;
-
-  p, span, label {
-    font-family: $font_base;
-  }
 
   //Job
   .detail-job {
@@ -25,7 +19,6 @@
     min-height: 212px;
 
     p {
-      font-family: $font_base;
       width: 100%;
       border: none;
     }
@@ -120,7 +113,6 @@
         height: 92%;
         width: 92%;
         margin: 5px 5px;
-        border: solid $color_border 1px;
         margin: none;
         background-color: white;
 
@@ -134,7 +126,6 @@
         }
 
         p {
-          font-family: $font_base;
           font-size: 0.8rem;
           font-weight: 400;
         }

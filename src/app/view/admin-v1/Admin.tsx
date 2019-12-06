@@ -5,17 +5,18 @@ import './Admin.scss';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
-import { breakCumb } from '../../../common/const/break-cumb';
+import { breakCumb, routeLink } from '../../../common/const/break-cumb';
 import Jobs from './jobs/Jobs';
 import ConnectSchools from './connect-schools/ConnectSchools';
 import ConvernientService from './convernient-service/ConvernientService';
-import MoreInfo from './more-info/MoreInfo';
 import { IAppState } from '../../../redux/store/reducer';
 import { REDUX_SAGA } from '../../../common/const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
 import Loading from '../layout/loading/Loading';
 import { TYPE } from '../../../common/const/type';
 import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
+import { Link } from 'react-router-dom';
+import MoreInfo from './more-info/MoreInfo ';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -120,7 +121,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     />
                                 }
                             >
-                                <OptionConfig icon="user" key="2" value="" label="Tài khoản" onClick={() => { }} />
+                                <Link to={routeLink.ADMIN_ACCOUNTS}>
+                                    <OptionConfig icon="user" key="2" value="" label="Tài khoản"  />
+                                </Link>
                                 <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
                             </DropdownConfig>
                         </div>

@@ -200,8 +200,10 @@ h5 {
   font-family: $font_base !important;
   color: black !important;
   font-weight: 600 !important;
-  margin: 0.7em 0em !important;
+  margin: 1.1em 0em !important;
 }
+
+
 
 .ant-layout-header {
   padding: 0px 20px !important;
@@ -484,8 +486,9 @@ svg {
 }
 
 i {
-  :hover {
+  &:hover {
     cursor: pointer;
+    transform: scale(1.1);
   }
 }
 

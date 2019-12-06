@@ -8,13 +8,16 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListAnnouCommentsData(action: any) {
     let res = yield call(callAnnouComments, action);
+    let data: IAnnouComments = {};
+
     if (res) {
-        let data: IAnnouComments = res.data;
-        yield put({
-            type: REDUX.ANNOU_COMMENTS.GET_ANNOU_COMMENTS,
-            data
-        });
+        data = res.data
     }
+
+    yield put({
+        type: REDUX.ANNOU_COMMENTS.GET_ANNOU_COMMENTS,
+        data
+    });
 }
 
 function callAnnouComments(action: any) {

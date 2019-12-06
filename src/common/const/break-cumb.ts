@@ -14,6 +14,8 @@ export const routePath = {
     JOB_ANNOUNCEMENTS: '/job-announcements',
     ANNOUNCEMENT: '/announcements',
     CONNECT_SCHOOLS: '/connect-schools',
+    MORE_INFO: '/more-info',
+    ADMIN_ACCOUNT: '/admin-account'
 };
 
 export const routeLink = {
@@ -21,8 +23,9 @@ export const routeLink = {
     FIND_CANDIDATES: routePath.ADMIN + routePath.JOBS + routePath.FIND_CANDIDATES,
     SAVE_CANDIDATE: routePath.ADMIN + routePath.JOBS + routePath.SAVE_CANDIDATE,
     JOB_ANNOUNCEMENTS: routePath.ADMIN + routePath.JOBS + routePath.JOB_ANNOUNCEMENTS,
-    ANNOUNCEMENT: routePath.ADMIN + routePath.JOBS + routePath.ANNOUNCEMENT,
+    ANNOUNCEMENT: routePath.ADMIN + routePath.MORE_INFO + routePath.ANNOUNCEMENT,
     CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
+    ADMIN_ACCOUNTS: routePath.ADMIN + routePath.MORE_INFO + routePath.ADMIN_ACCOUNT
 };
 
 export const breakCumb = [
@@ -33,10 +36,11 @@ export const breakCumb = [
     { label: "fix", name: "Chỉnh sửa", icon: null, url: "/fix", disable: true },
     { label: "apply", name: "Ứng tuyển", icon: null, url: "/apply", disable: true },
 
-    { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST  },
+    { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
     { label: "job-announcements", name: "Quản lí bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
     { label: "em-branches", name: "Quản lí chi nhánh", icon: "loading", url: routeLink.EM_BRANCHES + routePath.LIST },
     { label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: routeLink.FIND_CANDIDATES + routePath.LIST },
     { label: "saved-candidate", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.SAVE_CANDIDATE + routePath.LIST },
-    { label: "connect-schools", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST }
+    { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
+    { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST }
 ]

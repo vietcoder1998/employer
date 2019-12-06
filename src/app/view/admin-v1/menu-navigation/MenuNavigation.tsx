@@ -8,6 +8,7 @@ import logo from '../../../../assets/image/logo-white.png'
 // @ts-ignore
 import logoIcon from '../../../../assets/image/logo-icon-white.png'
 import { Link } from 'react-router-dom';
+import { routeLink, routePath } from '../../../../common/const/break-cumb';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -138,7 +139,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="pendings-jobs">
-                        <Link to={'/v1/admin/jobs/announcements/list'}>
+                        <Link to={routeLink.ANNOUNCEMENT + routePath.LIST}>
                             <Icon type="loading-3-quarters" />
                             <span>Bài viết</span>
                         </Link>
@@ -153,6 +154,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         <Link to={'/v1/admin/data/majors/list'}>
                             <Icon type="read" />
                             <span>Hướng dẫn</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="11">
+                        <Link to={routeLink.ADMIN_ACCOUNTS}>
+                            <Icon type="profile" />
+                            <span>Tài khoản của bạn</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

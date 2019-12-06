@@ -1,18 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Icon, Avatar } from 'antd';
 import './JobProperties.scss'
-import { convertStringToArray } from '../../../../../common/utils/convertStringToArray';
-import { IptLetter } from '../../../layout/common/Common';
-import { weekDays } from '../../../../../common/utils/day';
-import { timeConverter } from '../../../../../common/utils/convertTime';
+import { convertStringToArray } from '../../../../common/utils/convertStringToArray';
+import { IptLetter } from '../common/Common';
+import { weekDays } from '../../../../common/utils/day';
+import { timeConverter } from '../../../../common/utils/convertTime';
 
-interface JobPropertiesProps {
+interface IJobPropertiesProps {
     job_detail?: any;
 }
 
-interface JobPropertiesState { }
+interface IJobPropertiesState { }
 
-export default class JobProperties extends PureComponent<JobPropertiesProps, JobPropertiesState> {
+export default class JobProperties extends PureComponent<IJobPropertiesProps,IJobPropertiesState> {
     render() {
         let { job_detail } = this.props;
         let list_des = job_detail && convertStringToArray(job_detail.data.description);

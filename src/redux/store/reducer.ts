@@ -1,3 +1,4 @@
+import { AdminAccount } from './../reducers/admin-account';
 import { ConnectSchoolsDetail } from './../reducers/connect-school-detail';
 import { ConnectSchools } from './../reducers/connect-schools';
 import { Languages } from './../reducers/languages';
@@ -39,7 +40,8 @@ const rootReducer = combineReducers({
     Languages,
     ConnectSchools,
     ConnectSchoolsDetail,
-    ApplyJobs
+    ApplyJobs,
+    AdminAccount
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;
