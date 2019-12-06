@@ -134,7 +134,7 @@ textarea {
   width: 100%;
   display: flex;
   .title-inside {
-    width: 150px ;
+    width: 150px;
     margin-right: 20px;
     position: relative;
   }
@@ -195,15 +195,6 @@ td {
   font-weight: 400 !important;
   font-family: $font_base !important;
 }
-
-h5 {
-  font-family: $font_base !important;
-  color: black !important;
-  font-weight: 600 !important;
-  margin: 1.1em 0em !important;
-}
-
-
 
 .ant-layout-header {
   padding: 0px 20px !important;
@@ -505,6 +496,13 @@ i {
 .test {
   border: solid $color_border 1px;
   border-radius: 3px;
+}
+
+h5 {
+  font-family: $font_base !important;
+  color: black !important;
+  font-weight: 600 !important;
+  margin: 1.1em 0em !important;
 }
 
 // For Border

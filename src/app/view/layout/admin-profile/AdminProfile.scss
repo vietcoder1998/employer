@@ -1,36 +1,69 @@
 .account-profile {
-  margin: 30px 0px;
   position: relative;
   border-radius: 3px;
+  position: relative;
+  transition: 0.5s;
+  height: 200px;
+  $color_black: black;
+  $color_gray: rgb(17, 13, 13);
   $padding_base: 60px;
   $height_head: 400px;
-  transition: 0.5s;
-  $color_black: black;
-  $color_gray: rgb(185, 185, 185);
+  min-height: 80vh;
+  display: block;
 
   .block-span {
     width: 100px !important;
-    color: #168ECD;
+    color: #168ecd;
+  }
+
+  .block-image {
+    text-align: center;
+    border-radius: 3px;
+    position: absolute;
+    top: 15vw;
+    left: 5vw;
+    display: inline-flex;
+
+    .content-avatar {
+      height: "8vw";
+      width: "8vw";
+      border: "solid white 2px";
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+
+    }
+
+    .name-employer {
+      background-color: rgba(44, 44, 44, 0.476);
+      color: white;
+      padding-top: 5vw;
+      font-weight: 700;
+      letter-spacing: 1;
+      font-size: 1.5vw;
+      padding: 1.5vw 5vw 0;
+      height: 5vw;
+      margin-top: 3vw;
+      width: auto;
+      margin-left: -4vw;
+      border-radius: 5px;
+    }
   }
 
   .account-profile-header {
     position: relative;
     overflow: hidden;
     border-radius: 3px;
+    height: 25vw;
     span {
       letter-spacing: 0.5px;
     }
 
-    .hr-center {
-      height: 1px;
-      width: 100vw;
-      margin-left: -50vw;
-      border-bottom: solid $color_gray 1px;
-    }
-
     .cover-image-profile {
       width: 100%;
-      opacity: 0.15;
+      opacity: 1;
+      min-width: 100%;
+      min-height: 100%;
       z-index: 0;
       position: absolute;
       min-height: auto;
@@ -40,85 +73,111 @@
       top: 0px;
       right: 0px;
       width: 100%;
-      min-height: 300px;
-      padding: 3vw 0px;
       z-index: 2;
+      height: 300px;
       display: flex;
-
-      li {
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-      }
-
-      .block-image {
-        min-height: 22vw;
-        width: 22vw;
-        border: solid $color_gray 1px;
-        margin: 2vw 0vw;
-        padding: 2vw 10px;
-        text-align: center;
-        border-radius: 3px;
-      }
-
-      h4 {
-        margin: 10px 0px;
-        letter-spacing: 1px;
-        text-transform: capitalize;
-      }
-
-      .description {
-        width: calc(100% - 22vw);
-        padding: 10px 0 10px 50px;
-
-        .profile-description {
-          min-height: 110px;;
-        }
-
-        h6 {
-          margin: 10px 0px 15px !important;
-          font-weight: 600;
-        }
-
-        p {
-          letter-spacing: 0.5px;
-          line-height: 1.6;
-          font-size: 0.6rem;
-        }
-      }
-
-      .info {
-        padding: 25px 0px;
-        li {
-          padding: 0px 3px;
-        }
-      }
+      overflow: hidden;
     }
   }
 
   .account-profile-body {
     min-height: 500px;
-    padding: 5vh 5vw;
-    .wrapper {
-      padding: 0px 10px;
+    height: auto;
+    margin: 0px -10px;
 
-      h6 {
-        color: cornflowerblue !important;
-        text-transform: uppercase;
-        i {
-          padding-right: 10px;
-          color: gray;
+    .description-info {
+      width: 100%;
+      min-height: 25vh;
+      padding: 0.5vw 2vw;
+      margin-bottom: 20px;
+      text-align: center;
+      border-radius: 3px;
+      position: relative;
+      background-color: whitesmoke;
+      &:hover {
+        background-color: rgba(162, 212, 255, 0.408);
+      }
+
+      .image-f-d {
+       height: 20vw;
+        width: 100%;
+      }
+
+      li {
+        display: inline-flex;
+        width: 100%;
+        padding: 5px 0px;
+        .info {
+          margin-top: -5px;
+          padding: 5px 10px;
         }
       }
 
-      .language-skills {
-        padding: 10px 10px;
-        text-align: left;
-        .content-l-q {
-          text-align: center;
-          display: grid;
-          grid-template-columns: auto auto auto auto;
-        }
+      img {
+        height: 100%;
+        float: center;
       }
+
+      .fix {
+        width: 100%;
+        margin: 20px 0px 10px;
+        background-color: #168ecd;
+        border: none;
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+      }
+
+      .exit {
+        width: 45%;
+        margin: 20px 0px 10px;
+        margin-right: 10%;
+        background-color: #cd6816;
+        border: none;
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+      }
+
+      .accepted {
+        width: 45%;
+        margin: 20px 0px 10px;
+        background-color: #16cd41;
+        border: none;
+        color: white;
+        border-radius: 3px;
+        padding: 5px;
+      }
+
+      .image-f-d {
+        position: relative;
+      }
+    }
+  }
+}
+
+.upload-image {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  transition: 250ms;
+  text-align: center;
+  font-size: 20px;
+  padding: calc(50% - 10px) 0px;
+  display: hidden;
+  color: white;
+  opacity: 0;
+
+  z-index: 2;
+  &:hover {
+    background-color: rgba(39, 39, 39, 0.285);
+    display: block;
+    opacity: 1;
+    font-size: 20px;
+    p {
+      font-size: 15;
     }
   }
 }

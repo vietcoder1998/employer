@@ -16,30 +16,7 @@ export const VerifiedProfile = (props: any) => {
                 </p>
             </div>
             <Row>
-                <Col xs={24} sm={24} md={12} lg={12} xxl={12}>
-                    <div className="ic-ct-img">
-                        <h6>Ảnh mặt trước</h6>
-                        <div>
-                            {data && data.identityCardFrontImageUrl ?
-                                <img className="ic" src={data && data.identityCardFrontImageUrl} alt="Ảnh trước" /> :
-                                <NotUpdate msg={"Chưa có ảnh mặt trước"} />
-                            }
-                        </div>
-                    </div>
-
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xxl={12}>
-                    <div className="ic-ct-img">
-                        <h6>Ảnh mặt sau</h6>
-                        <div>
-                            {data && data.identityCardBackImageUrl ?
-                                <img className="ic" src={data && data.identityCardBackImageUrl} alt="Ảnh sau" /> :
-                                <NotUpdate msg={"Chưa có ảnh mặt sau"} />
-                            }
-                        </div>
-                    </div>
-
-                </Col>
+              
             </Row>
         </div>
     )

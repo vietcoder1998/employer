@@ -91,14 +91,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     <h5>
                         Tình trạng hồ sơ
                     </h5>
-                    <Tabs defaultActiveKey="1">
-                        <TabPane tab="Hồ sơ cá nhân" key="1">
-                            <AdminProfile data={body} />
-                        </TabPane>
-                        <TabPane tab="Hồ sơ xác thực" key="2">
-                            <VerifiedProfile data={body} />
-                        </TabPane>
-                    </Tabs>
+                    <AdminProfile data={body} />
                 </div >
             </>
         )
