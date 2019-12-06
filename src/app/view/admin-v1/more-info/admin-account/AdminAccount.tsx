@@ -34,7 +34,7 @@ interface IAdminAccountProps extends StateProps, DispatchProps {
     history?: any;
     getAccountAdmin: Function;
     getJobService: Function;
-    handleModal: Function;
+    handleMap: (mapState: IMapState) => any;
 }
 
 class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountState> {
@@ -56,11 +56,20 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
     };
 
     static getDerivedStateFromProps(nextProps: IAdminAccountProps, prevState: IAdminAccountState) {
-        if (nextProps.admin_account && nextProps.admin_account !== prevState.admin_account)
+        if (nextProps.admin_account && nextProps.admin_account !== prevState.admin_account) {
+            nextProps.handleMap({
+                location: nextProps.admin_account.address,
+                marker: {
+                    lat: nextProps.admin_account.lat,
+                    lng: nextProps.admin_account.lon,
+                }
+            })
             return {
                 admin_account: nextProps.admin_account,
                 body: nextProps.admin_account
             }
+        }
+
 
         return null
     }

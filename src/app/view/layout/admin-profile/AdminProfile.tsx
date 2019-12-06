@@ -14,20 +14,25 @@ import { connect } from 'react-redux';
 import TextArea from 'antd/lib/input/TextArea';
 import MapContainter from './../map/Map';
 import { IMapState } from '../../../../redux/models/mutil-box';
-import { REDUX } from '../../../../common/const/actions';
+import { REDUX, REDUX_SAGA } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
+import { _requestToServer } from '../../../../services/exec';
+import { PUT } from '../../../../common/const/method';
+import { ADMIN_ACCOUNT } from '../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../environment/dev';
 
 interface IAdminProfileProps extends StateProps, DispatchProps {
     data?: IAdminAccount,
-    handleMap?: (mapState: IMapState) => any;
 };
 
 function AdminProfile(props: IAdminProfileProps) {
     let { data } = props;
     let [id, setId] = React.useState(null);
+    let [loading, setLoading] = React.useState(false)
     // Error loading 
     let [onErrLogo, setErrLogo] = React.useState(false);
     let [onErrCover, setErrCover] = React.useState(false);
+    let [hotUpdate, setHotUpdate] = React.useState(false);
 
     // Fix State
     let [fixDescription, setFixDescription] = React.useState(false);
@@ -37,11 +42,13 @@ function AdminProfile(props: IAdminProfileProps) {
     let [fixIBCard, setFixIBCard] = React.useState(false);
     let [fixName, setFixName] = React.useState(false);
 
-    // Change data
+    // Change Image
     let [coverUrl, setCoverUrl] = React.useState(null);
     let [logoUrl, setLogoUrl] = React.useState(null);
-    let [name, setName] = React.useState(null);
-    let [description, setDescription] = React.useState(null);
+    let [identityCardFrontImageUrl, setIdentityCardFrontImageUrl] = React.useState(null);
+    let [identityCardBackImageUrl, setIdentityCardABackImageUrl] = React.useState(null);
+
+    // Change Profile
     let [employerName, setEmployerName] = React.useState(null);
     let [email, setEmail] = React.useState(null);
     let [phone, setPhone] = React.useState(null);
@@ -49,14 +56,114 @@ function AdminProfile(props: IAdminProfileProps) {
     let [lat, setLat] = React.useState(null);
     let [lon, setLon] = React.useState(null);
 
-    if (props.data && props.data.id !== id) {
+    // Change Description
+    let [description, setDescription] = React.useState(null);
+
+    // Map and address and region;
+    let [address, setAddress] = React.useState(null);
+
+    // SetRegion
+    let [region, setRegion] = React.useState(null);
+
+    if (props.data && props.data.id !== id || hotUpdate) {
+        // Set id
         setId(props.data.id);
+
+        // Set Logo and CoverUrl, Indentity Card;
         setLogoUrl(props.data.logoUrl);
         setCoverUrl(props.data.coverUrl);
+        setIdentityCardFrontImageUrl(props.data.identityCardFrontImageUrl);
+        setIdentityCardABackImageUrl(props.data.identityCardBackImageUrl);
+
+        // Set Region
+        setRegion(props.data.region && props.data.region.name);
+
+        // Set Data for url
+        setEmployerName(props.data.employerName);
         setDescription(props.data.description);
         setEmail(props.data.email);
-        setLogoUrl(props.data.logoUrl);
+        setPhone(props.data.phone);
+        setTaxCode(props.data.taxCode);
+
+        // Map
+        setAddress(props.data.address);
+        setLat(props.data.lon);
+        setLon(props.data.lon);
+
+        if (hotUpdate) {
+            setHotUpdate(false);
+        }
+
+        setLoading(false);
     }
+
+    // Update description
+    async function _onUpdateUpdateDescription() {
+        await setLoading(true)
+        await _requestToServer(
+            PUT,
+            ADMIN_ACCOUNT + '/description',
+            {
+                description
+            },
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            true
+        ).then(
+            (res: any) => {
+                if (res) {
+                    recallApi();
+                }
+            }
+        )
+    }
+
+    // Update Profile
+    async function _onUpdateProfile() {
+        await setLoading(true);
+        await _requestToServer(
+            PUT,
+            ADMIN_ACCOUNT + '/profile',
+            {
+                employerName,
+                phone,
+                email,
+                lat: props.mapState.marker.lat,
+                lon: props.mapState.marker.lng,
+                taxCode
+            },
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            true
+        ).then(
+            (res: any) => {
+                if (res) {
+                    recallApi();
+                }
+            }
+        )
+    }
+
+    function _onUpdateCoverUrl() {
+
+    }
+
+    function _onUpdateLogoUrl() {
+
+    }
+
+    // Reback update
+    async function recallApi() {
+        await props.getAdminAccount();
+        setTimeout(() => {
+            setHotUpdate(true);
+        }, 500);
+    }
+
 
     return (
         <div className="account-profile">
@@ -109,8 +216,7 @@ function AdminProfile(props: IAdminProfileProps) {
                     />
                 </div>
                 <div className="name-employer">
-                    {data && data.employerName ? data.employerName : <NotUpdate />}
-                    <Icon type={"edit"} style={{ marginLeft: "10px" }} />
+                    {employerName ? employerName : <NotUpdate />}
                 </div>
             </div>
             <div className="account-profile-body">
@@ -120,23 +226,26 @@ function AdminProfile(props: IAdminProfileProps) {
                             <IptLetterP value={"Mô tả"} />
                             <TextArea
                                 placeholder="Sơ lược về nhà tuyển dụng"
-                                value={data && data.description}
+                                value={description}
                                 rows={7}
                                 disabled={!fixDescription}
+                                onChange={(event: any) => setDescription(event.target.value)}
                             />
                             {
                                 fixDescription ?
                                     <>
                                         <button className="exit" onClick={() => {
                                             setFixDescription(!fixDescription);
+                                            setHotUpdate(true);
                                         }}>
                                             <Icon type="close" />
                                             Hủy
                                         </button>
                                         <button className="accepted" onClick={() => {
                                             setFixDescription(!fixDescription);
+                                            _onUpdateUpdateDescription();
                                         }}>
-                                            <Icon type="check" />
+                                            <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
                                     </> :
@@ -144,21 +253,42 @@ function AdminProfile(props: IAdminProfileProps) {
                                         className="fix"
                                         onClick={() => {
                                             setFixDescription(!fixDescription);
+
                                         }}>
                                         <Icon type="edit" />
                                         Chỉnh sửa
                                     </button>
                             }
                         </div>
-                        <div className="description-info">
+                        <div id="abc" className="description-info">
                             <IptLetterP value={"Thông tin liên hệ"} />
                             <ul>
                                 <li>
                                     {
                                         fixInfo ?
                                             <Input
+                                                prefix={<Icon type="user" />}
+                                                value={employerName}
+                                                onChange={(event: any) => setEmployerName(event.target.value)}
+                                            />
+                                            :
+                                            <>
+                                                <Icon type="user" />
+                                                <div
+                                                    className="info"
+                                                >
+                                                    {employerName ? employerName : <NotUpdate />}
+                                                </div>
+                                            </>
+                                    }
+                                </li>
+                                <li>
+                                    {
+                                        fixInfo ?
+                                            <Input
                                                 prefix={<Icon type="mail" />}
-                                                value={data && data.email}
+                                                value={email}
+                                                onChange={(event: any) => setEmail(event.target.value)}
                                             />
                                             :
                                             <>
@@ -166,7 +296,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {data && data.email ? data.email : <NotUpdate />}
+                                                    {email ? email : <NotUpdate />}
                                                 </div>
                                             </>
                                     }
@@ -176,7 +306,8 @@ function AdminProfile(props: IAdminProfileProps) {
                                         fixInfo ?
                                             <Input
                                                 prefix={<Icon type="phone" />}
-                                                value={data && data.phone}
+                                                value={phone}
+                                                onChange={(event: any) => setPhone(event.target.value)}
                                             />
                                             :
                                             <>
@@ -184,7 +315,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {data && data.phone ? data.phone : <NotUpdate />}
+                                                    {phone ? phone : <NotUpdate />}
                                                 </div>
                                             </>
                                     }
@@ -194,7 +325,8 @@ function AdminProfile(props: IAdminProfileProps) {
                                         fixInfo ?
                                             <Input
                                                 prefix={<Icon type="file-search" />}
-                                                value={data && data.taxCode}
+                                                value={taxCode}
+                                                onChange={(event: any) => setTaxCode(event.target.value)}
                                             />
                                             :
                                             <>
@@ -202,7 +334,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {data && data.taxCode ? data.taxCode : <NotUpdate />}
+                                                    {taxCode ? taxCode : <NotUpdate />}
                                                 </div>
                                             </>
                                     }
@@ -213,14 +345,16 @@ function AdminProfile(props: IAdminProfileProps) {
                                     <>
                                         <button className="exit" onClick={() => {
                                             setFixInfo(!fixInfo);
+                                            setHotUpdate(true);
                                         }}>
                                             <Icon type="close" />
                                             Hủy
                                         </button>
                                         <button className="accepted" onClick={() => {
                                             setFixInfo(!fixInfo);
+                                            _onUpdateProfile();
                                         }}>
-                                            <Icon type="check" />
+                                            <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
                                     </> :
@@ -239,10 +373,10 @@ function AdminProfile(props: IAdminProfileProps) {
                             <ul>
                                 <li>
                                     {
-                                        fixInfo ?
+                                        fixMap ?
                                             <Input
                                                 prefix={<Icon type="mail" />}
-                                                value={data && data.email}
+                                                value={address}
                                             />
                                             :
                                             <>
@@ -250,9 +384,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {data &&
-                                                        data.region &&
-                                                        data.region.name ? data.region.name : <NotUpdate />}
+                                                    {region ? region : <NotUpdate />}
                                                 </div>
                                             </>
                                     }
@@ -262,26 +394,28 @@ function AdminProfile(props: IAdminProfileProps) {
                                     <div
                                         className="info"
                                     >
-                                        {data && data.address ? data.address : <NotUpdate />}
+                                        {address ? address : <NotUpdate />}
                                     </div>
                                 </li>
                             </ul>
 
                             <MapContainter
-                                style={{ width: "100%", height: "200px" }} disabled={true} />
+                                style={{ width: "100%", height: "200px" }} disabled={!fixMap} />
                             {
                                 fixMap ?
                                     <>
                                         <button className="exit" onClick={() => {
                                             setFixMap(!fixMap);
+                                            setHotUpdate(true);
                                         }}>
                                             <Icon type="close" />
                                             Hủy
                                         </button>
                                         <button className="accepted" onClick={() => {
                                             setFixMap(!fixMap);
+                                            _onUpdateProfile();
                                         }}>
-                                            <Icon type="check" />
+                                            <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
                                     </> :
@@ -306,8 +440,8 @@ function AdminProfile(props: IAdminProfileProps) {
                                         <Icon type="camera" theme={"filled"} />
                                     }
                                 />
-                                {data && data.identityCardFrontImageUrl ?
-                                    <img className="ic" src={data && data.identityCardFrontImageUrl} alt="Ảnh trước" /> :
+                                {identityCardFrontImageUrl ?
+                                    <img className="ic" src={identityCardFrontImageUrl} alt="Ảnh trước" /> :
                                     <NotUpdate msg={"Chưa có ảnh mặt trước"} />
                                 }
                             </div>
@@ -316,6 +450,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                     <>
                                         <button className="exit" onClick={() => {
                                             setFixIFCard(!fixIFCard);
+                                            setHotUpdate(true);
                                         }}>
                                             <Icon type="close" />
                                             Hủy
@@ -323,7 +458,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                         <button className="accepted" onClick={() => {
                                             setFixIFCard(!fixIFCard);
                                         }}>
-                                            <Icon type="check" />
+                                            <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
                                     </> :
@@ -348,8 +483,8 @@ function AdminProfile(props: IAdminProfileProps) {
                                         </>
                                     }
                                 />
-                                {data && data.identityCardBackImageUrl ?
-                                    <img className="ic" src={data && data.identityCardBackImageUrl} alt="Ảnh sau" /> :
+                                {identityCardBackImageUrl ?
+                                    <img className="ic" src={identityCardBackImageUrl} alt="Ảnh sau" /> :
                                     <NotUpdate msg={"Chưa có ảnh mặt sau"} />
                                 }
                             </div>
@@ -358,6 +493,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                     <>
                                         <button className="exit" onClick={() => {
                                             setFixIBCard(!fixIBCard);
+                                            setHotUpdate(true);
                                         }}>
                                             <Icon type="close" />
                                             Hủy
@@ -365,7 +501,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                         <button className="accepted" onClick={() => {
                                             setFixIBCard(!fixIBCard);
                                         }}>
-                                            <Icon type="check" />
+                                            <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
                                     </> :
@@ -391,7 +527,8 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    hanleMap: (mapState: IMapState) => dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState })
+    handleMap: (mapState?: IMapState) => dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState }),
+    getAdminAccount: (id?: string) => dispatch({ type: REDUX_SAGA.ADMIN_ACCOUNT.GET_ADMIN_ACCOUNT, id })
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

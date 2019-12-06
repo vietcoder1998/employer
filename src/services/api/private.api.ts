@@ -19,7 +19,6 @@ export const NORMAL_SERVICE = '/api/employers/services/jobs/limit/quantity';
 export const UN_LOCK_PROFILE_SERVICE = '/api/employers/services/profile/unlock/limit/quantity';
 export const JOB_PRIORITY_HOME = '/api/employers/jobs/';
 
-
 export const SKILLS = "/api/skills";
 export const TYPE_SCHOOLS = "/api/employers/data/schoolTypes";
 export const JOB_GROUPS = "/api/employers/data/jobGroups";

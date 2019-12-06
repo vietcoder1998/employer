@@ -476,10 +476,13 @@ svg {
   }
 }
 
-i {
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.1);
+button {
+  i {
+    transition: 0.25s;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
   }
 }
 
