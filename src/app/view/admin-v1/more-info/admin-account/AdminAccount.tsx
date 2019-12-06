@@ -1,21 +1,14 @@
 import React from 'react'
-import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result } from 'antd';
+import { Button, Result } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../common/const/actions';
 import { TYPE } from '../../../../../common/const/type';
-import { _requestToServer } from '../../../../../services/exec';
-import { POST, PUT, DELETE } from '../../../../../common/const/method';
 import { IAppState } from '../../../../../redux/store/reducer';
 import { IMapState } from '../../../../../redux/models/mutil-box';
-import { EMPLOYER_HOST } from '../../../../../environment/dev';
-import { VerifiedProfile } from '../../../layout/verified-profile/VerifiedProfile';
 // import './AdminAccount.scss';
-import { routeLink, routePath } from '../../../../../common/const/break-cumb';
 import Loading from '../../../layout/loading/Loading';
 import { IAdminAccount } from '../../../../../redux/models/admin-account';
 import AdminProfile from '../../../layout/admin-profile/AdminProfile';
-const { TabPane } = Tabs;
-const { Step } = Steps;
 
 interface IAdminAccountState {
     title?: string;
@@ -57,13 +50,16 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
 
     static getDerivedStateFromProps(nextProps: IAdminAccountProps, prevState: IAdminAccountState) {
         if (nextProps.admin_account && nextProps.admin_account !== prevState.admin_account) {
-            nextProps.handleMap({
-                location: nextProps.admin_account.address,
-                marker: {
-                    lat: nextProps.admin_account.lat,
-                    lng: nextProps.admin_account.lon,
-                }
-            })
+            if (nextProps.admin_account.lat && nextProps.admin_account.lon) {
+                nextProps.handleMap({
+                    location: nextProps.admin_account.address,
+                    marker: {
+                        lat: nextProps.admin_account.lat,
+                        lng: nextProps.admin_account.lon,
+                    }
+                })
+            }
+
             return {
                 admin_account: nextProps.admin_account,
                 body: nextProps.admin_account

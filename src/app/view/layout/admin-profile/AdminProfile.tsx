@@ -1,14 +1,11 @@
 import React from 'react'
-import { Icon, Avatar, Row, Col, Progress, Tag, Rate, Button, Tooltip, Input } from 'antd';
+import { Icon, Avatar, Row, Col, Input } from 'antd';
 import './AdminProfile.scss';
 // @ts-ignore
 import backGround from '../../../../assets/image/rodan.png';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
-import { TYPE } from '../../../../common/const/type';
-import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
-import { timeConverter } from '../../../../common/utils/convertTime';
-import { NotUpdate, IptLetter, IptLetterP } from '../common/Common';
+import { NotUpdate, IptLetterP } from '../common/Common';
 import { IAdminAccount } from '../../../../redux/models/admin-account';
 import { connect } from 'react-redux';
 import TextArea from 'antd/lib/input/TextArea';
@@ -20,6 +17,8 @@ import { _requestToServer } from '../../../../services/exec';
 import { PUT } from '../../../../common/const/method';
 import { ADMIN_ACCOUNT } from '../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../environment/dev';
+import { sendFileHeader } from '../../../../services/auth';
+import randomID from '../../../../common/utils/randomID';
 
 interface IAdminProfileProps extends StateProps, DispatchProps {
     data?: IAdminAccount,
@@ -38,23 +37,18 @@ function AdminProfile(props: IAdminProfileProps) {
     let [fixDescription, setFixDescription] = React.useState(false);
     let [fixInfo, setFixInfo] = React.useState(false);
     let [fixMap, setFixMap] = React.useState(false);
-    let [fixIFCard, setFixIFCard] = React.useState(false);
-    let [fixIBCard, setFixIBCard] = React.useState(false);
-    let [fixName, setFixName] = React.useState(false);
 
     // Change Image
     let [coverUrl, setCoverUrl] = React.useState(null);
     let [logoUrl, setLogoUrl] = React.useState(null);
     let [identityCardFrontImageUrl, setIdentityCardFrontImageUrl] = React.useState(null);
-    let [identityCardBackImageUrl, setIdentityCardABackImageUrl] = React.useState(null);
+    let [identityCardBackImageUrl, setIdentityCardBackImageUrl] = React.useState(null);
 
     // Change Profile
     let [employerName, setEmployerName] = React.useState(null);
     let [email, setEmail] = React.useState(null);
     let [phone, setPhone] = React.useState(null);
     let [taxCode, setTaxCode] = React.useState(null);
-    let [lat, setLat] = React.useState(null);
-    let [lon, setLon] = React.useState(null);
 
     // Change Description
     let [description, setDescription] = React.useState(null);
@@ -65,15 +59,23 @@ function AdminProfile(props: IAdminProfileProps) {
     // SetRegion
     let [region, setRegion] = React.useState(null);
 
-    if (props.data && props.data.id !== id || hotUpdate) {
+    // File Blod
+    let [front, setFront] = React.useState(null);
+    let [back, setBack] = React.useState(null);
+    let [cover, setCover] = React.useState(null);
+    let [logo, setLogo] = React.useState(null);
+
+    if ((props.data && props.data.id !== id) || hotUpdate) {
         // Set id
         setId(props.data.id);
 
         // Set Logo and CoverUrl, Indentity Card;
         setLogoUrl(props.data.logoUrl);
         setCoverUrl(props.data.coverUrl);
-        setIdentityCardFrontImageUrl(props.data.identityCardFrontImageUrl);
-        setIdentityCardABackImageUrl(props.data.identityCardBackImageUrl);
+
+        //
+        setIdentityCardFrontImageUrl(props.data.identityCardFrontImageUrl + `?rd=${randomID(16)}`);
+        setIdentityCardBackImageUrl(props.data.identityCardBackImageUrl + `?rd=${randomID(16)}`);
 
         // Set Region
         setRegion(props.data.region && props.data.region.name);
@@ -87,13 +89,18 @@ function AdminProfile(props: IAdminProfileProps) {
 
         // Map
         setAddress(props.data.address);
-        setLat(props.data.lon);
-        setLon(props.data.lon);
+
+        // Set Image Blob
+        setFront(null);
+        setBack(null);
+        setCover(null);
+        setLogo(null);
 
         if (hotUpdate) {
             setHotUpdate(false);
         }
 
+        // Set loading
         setLoading(false);
     }
 
@@ -148,13 +155,101 @@ function AdminProfile(props: IAdminProfileProps) {
         )
     }
 
-    function _onUpdateCoverUrl() {
+    // Upload image to see 
+    function uploadImgToSee(file?: Blob, param?: string) {
+        switch (param) {
+            case "logoUrl":
+                setLogo(file);
+                break;
+            case "coverUrl":
+                setCover(file);
+                break;
+            case "identityCardFrontImageUrl":
+                setFront(file);
+                break;
+            case "identityCardBackImageUrl":
+                setBack(file);
+                break;
+            default:
+                break;
+        }
 
+        readFileAsUrl(file, param);
     }
 
-    function _onUpdateLogoUrl() {
+    // ReaderFile As url
+    function readFileAsUrl(file?: Blob, param?: string) {
+        let reader = new FileReader();
+        reader.onload = function (e: any) {
+            switch (param) {
+                case "logoUrl":
+                    setLogoUrl(e.target.result);
+                    break;
+                case "coverUrl":
+                    setCoverUrl(e.target.result);
+                    break;
+                case "identityCardFrontImageUrl":
+                    setIdentityCardFrontImageUrl(e.target.result);
 
+                    break;
+                case "identityCardBackImageUrl":
+                    setIdentityCardBackImageUrl(e.target.result);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
     }
+
+    // UploadData
+    async function _onUpdateImgUrl(param?: string, type_path?: string, file?: Blob) {
+        let formData = new FormData();
+        await setLoading(true);
+
+        if (file) {
+            formData.append(param, file)
+        }
+
+        switch (param) {
+            case "cover":
+                formData.append("cover", cover)
+                break;
+            case "logo":
+                formData.append("back", logo)
+                break;
+            case "front":
+                formData.append("front", front)
+                break;
+            case "back":
+                formData.append("back", back)
+                break;
+
+            default:
+                break;
+        };
+
+        await _requestToServer(
+            PUT,
+            ADMIN_ACCOUNT + `/${type_path}`,
+            formData,
+            undefined,
+            sendFileHeader,
+            EMPLOYER_HOST,
+            false,
+            true
+        ).then(
+            (res: any) => {
+                if (res) {
+                    recallApi();
+                }
+            }
+        );
+    }
+
 
     // Reback update
     async function recallApi() {
@@ -164,21 +259,32 @@ function AdminProfile(props: IAdminProfileProps) {
         }, 500);
     }
 
-
     return (
         <div className="account-profile">
             <div className="account-profile-header">
-                <Button
-                    icon={"camera"}
-                    type={"dashed"}
-                    style={{
-                        right: "5%",
-                        top: "5%",
-                        position: "absolute",
-                        zIndex: 1,
-                    }}
+                {/* LogoUrl */}
+                <label
+                    className="upload-cover"
+                    htmlFor="coverUrl"
                     children={
-                        "Cập nhập ảnh bìa"
+                        <>
+                            <Icon type="upload" />
+                            Cập nhập ảnh bìa
+                            <input
+                                id="coverUrl"
+                                type="file"
+                                style={{ display: "none" }}
+                                onChange={
+                                    (event: any) =>
+                                        _onUpdateImgUrl(
+                                            "cover",
+                                            "coverUrl",
+                                            event.target.files[0]
+
+                                        )
+                                }
+                            />
+                        </>
                     }
                 />
                 <img
@@ -187,29 +293,45 @@ function AdminProfile(props: IAdminProfileProps) {
                     alt={"rodan"}
                     onError={() => setErrCover(true)}
                 />
-
             </div>
             <div className="block-image">
                 <div
                     className="content-avatar"
                 >
-                    <div
+                    <label
+                        htmlFor="logoUrl"
                         className="upload-image"
                         children={
                             <>
                                 <Icon type="camera" theme={"filled"} />
+                                <input
+                                    id="logoUrl"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={
+                                        (event: any) =>
+                                            _onUpdateImgUrl(
+                                                "logo",
+                                                "logoUrl",
+                                                event.target.files[0]
+
+                                            )
+                                    }
+                                />
                             </>
                         }
                     />
+
                     <Avatar
                         // @ts-ignore
                         src={!onErrLogo && data && data.logoUrl ? logoUrl : avatar}
                         style={{
                             height: "8vw",
                             width: "8vw",
-                            border: "solid white 2px",
+                            position: "absolute",
+                            left: "0px ",
+                            top: "0px",
                             fontSize: 60,
-
                         }}
                         // @ts-ignore
                         onError={() => setErrLogo(true)}
@@ -267,13 +389,13 @@ function AdminProfile(props: IAdminProfileProps) {
                                     {
                                         fixInfo ?
                                             <Input
-                                                prefix={<Icon type="user" />}
+                                                prefix={<Icon type="bank" />}
                                                 value={employerName}
                                                 onChange={(event: any) => setEmployerName(event.target.value)}
                                             />
                                             :
                                             <>
-                                                <Icon type="user" />
+                                                <Icon type="bank" />
                                                 <div
                                                     className="info"
                                                 >
@@ -430,6 +552,7 @@ function AdminProfile(props: IAdminProfileProps) {
                             }
                         </div>
                     </Col>
+                    {/* Front */}
                     <Col md={24} lg={10} xl={10} xxl={8}>
                         <div className="description-info">
                             <IptLetterP value={"Mặt trước giấy phép kinh doanh"} />
@@ -440,79 +563,114 @@ function AdminProfile(props: IAdminProfileProps) {
                                         <Icon type="camera" theme={"filled"} />
                                     }
                                 />
-                                {identityCardFrontImageUrl ?
-                                    <img className="ic" src={identityCardFrontImageUrl} alt="Ảnh trước" /> :
-                                    <NotUpdate msg={"Chưa có ảnh mặt trước"} />
+                                {
+                                    identityCardFrontImageUrl ?
+                                        <img className="ic" src={identityCardFrontImageUrl} alt="Ảnh trước" /> :
+                                        <NotUpdate msg={"Chưa có ảnh mặt trước"} />
                                 }
                             </div>
                             {
-                                fixIFCard ?
+                                front ?
                                     <>
-                                        <button className="exit" onClick={() => {
-                                            setFixIFCard(!fixIFCard);
-                                            setHotUpdate(true);
-                                        }}>
+                                        <button
+                                            className="exit"
+                                            onClick={() => {
+                                                setFront(null);
+                                                setHotUpdate(true);
+                                            }}
+                                        >
                                             <Icon type="close" />
                                             Hủy
                                         </button>
-                                        <button className="accepted" onClick={() => {
-                                            setFixIFCard(!fixIFCard);
-                                        }}>
+                                        <button
+                                            className="accepted"
+                                            onClick={() => _onUpdateImgUrl("front", "cardImages")}
+                                        >
                                             <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
-                                    </> :
-                                    <button
-                                        className="fix"
-                                        onClick={() => {
-                                            setFixIFCard(!fixIFCard);
-                                        }}>
-                                        <Icon type="edit" />
-                                        Chỉnh sửa
-                                    </button>
+                                    </>
+                                    :
+                                    <>
+                                        <label
+                                            className="fix"
+                                            htmlFor="identityCardFrontImageUrl"
+                                        >
+                                            <Icon type="upload" />
+                                            Upload
+                                        </label>
+                                        <input
+                                            id="identityCardFrontImageUrl"
+                                            type="file"
+                                            style={{ display: "none" }}
+                                            onChange={
+                                                (event: any) => uploadImgToSee(
+                                                    event.target.files[0],
+                                                    "identityCardFrontImageUrl"
+                                                )
+                                            }
+                                        />
+                                    </>
                             }
                         </div>
+                        {/* Back Image */}
                         <div className="description-info">
                             <IptLetterP value={"Mặt sau giấy phép kinh doanh"} />
                             <div className="image-f-d" >
                                 <div
                                     className="upload-image"
                                     children={
-                                        <>
-                                            <Icon type="camera" theme={"filled"} />
-                                        </>
+                                        <Icon type="eye" theme={"filled"} />
                                     }
                                 />
-                                {identityCardBackImageUrl ?
-                                    <img className="ic" src={identityCardBackImageUrl} alt="Ảnh sau" /> :
-                                    <NotUpdate msg={"Chưa có ảnh mặt sau"} />
+                                {
+                                    identityCardBackImageUrl ?
+                                        <img className="ic" src={identityCardBackImageUrl} alt="Ảnh sau" /> :
+                                        <NotUpdate msg={"Chưa có ảnh mặt sau"} />
                                 }
                             </div>
                             {
-                                fixIBCard ?
+                                back ?
                                     <>
-                                        <button className="exit" onClick={() => {
-                                            setFixIBCard(!fixIBCard);
-                                            setHotUpdate(true);
-                                        }}>
+                                        <button
+                                            className="exit"
+                                            onClick={() => {
+                                                setBack(null);
+                                                setHotUpdate(true);
+                                            }}
+                                        >
                                             <Icon type="close" />
                                             Hủy
                                         </button>
-                                        <button className="accepted" onClick={() => {
-                                            setFixIBCard(!fixIBCard);
-                                        }}>
+                                        <button
+                                            className="accepted"
+                                            onClick={() => _onUpdateImgUrl("back", "cardImages")}
+                                        >
                                             <Icon type={loading ? "loading" : "check"} />
                                             Chấp nhận
                                         </button>
-                                    </> :
-                                    <button
-                                        className="fix"
-                                        onClick={() => {
-                                            setFixIBCard(!fixIBCard);
-                                        }}>
-                                        <Icon type="edit" />
-                                        Chỉnh sửa
-                                    </button>
+                                    </>
+                                    :
+                                    <>
+                                        <label
+                                            className="fix"
+                                            htmlFor="identityCardBackImageUrl"
+                                        >
+                                            <Icon type="upload" />
+                                            Upload
+                                        </label>
+                                        <input
+                                            id="identityCardBackImageUrl"
+                                            type="file"
+                                            style={{ display: "none" }}
+                                            onChange={
+                                                (event: any) => uploadImgToSee(
+                                                    event.target.files[0],
+                                                    "identityCardBackImageUrl",
+                                                )
+                                            }
+                                        />
+                                    </>
                             }
                         </div>
                     </Col>

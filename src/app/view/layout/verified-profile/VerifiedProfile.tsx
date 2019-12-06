@@ -1,6 +1,5 @@
 import React from "react";
 import './VerifiedProfile.scss';
-import {  Row, Col } from "antd";
 import { IFindCandidateDetail } from "../../../../redux/models/find-candidates-detail";
 import { NotUpdate } from "../common/Common";
 
@@ -15,9 +14,6 @@ export const VerifiedProfile = (props: any) => {
                     {data && data.identityCard ? data.identityCard : <NotUpdate />}
                 </p>
             </div>
-            <Row>
-              
-            </Row>
         </div>
     )
 }

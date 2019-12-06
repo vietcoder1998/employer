@@ -35,12 +35,12 @@ export const deleteLoginState = () => {
 export const sendStringHeader = {
     "Access-Control-Allow-Headers": "*",
     "Content-Type": "text/plain",
-    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+    "Authorization": `Bearer ${localStorage.getItem("token")}`,
 }
 
 export const sendFileHeader = {
     "Access-Control-Allow-Headers": "*",
-    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+    "Authorization": `Bearer ${localStorage.getItem("token")}`,
 }
 
 // Set State of authenticate
