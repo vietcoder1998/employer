@@ -1,5 +1,6 @@
 export const PENDING_JOBS_API = "/api/employers/announcements";
 export const JOB_ANNOUNCEMENTS = '/api/employers/jobs';
+export const PENDING_JOBS = "/api/employers/jobs/pending";
 
 export const ANNOUNCEMENT_DETAIL = '/api/employers/announcements';
 export const ANNOUNCEMENTS = '/api/employers/announcements';

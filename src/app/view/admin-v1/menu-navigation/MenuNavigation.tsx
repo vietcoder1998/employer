@@ -61,7 +61,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 >
                     <Menu.Item key="0">
                         <Link to={'/v1/admin/jobs/job-announcements/create'}>
-                            <Icon type="file" />
+                            <Icon type="file-add" />
                             <span>Đăng bài</span>
                         </Link>
                     </Menu.Item>
@@ -87,6 +87,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         <Link to={'/v1/admin/jobs/saved-candidate/list'}>
                             <Icon type="idcard" />
                             <span>Hồ sơ đã lưu</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="12">
+                        <Link to={'/v1/admin/jobs/pending-jobs/list'}>
+                            <Icon type="loading" />
+                            <span>Bài đăng đang chờ</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

@@ -18,6 +18,8 @@ import { ConnectSchoolDetailWatcher } from '../sagas/connect-school-detail';
 import { ConnectSchoolsWatcher } from '../sagas/connect-schools';
 import { ApplyJobsWatcher } from '../sagas/apply-job';
 import { AdminAccountWatcher } from '../sagas/admin-account';
+import { PendingJobsWatcher } from '../sagas/pending-jobs';
+import { PendingJobDetailWatcher } from '../sagas/pending-job-detail';
 
 export default function* rootSaga() {
     try {
@@ -40,7 +42,9 @@ export default function* rootSaga() {
             ConnectSchoolDetailWatcher(),
             ConnectSchoolsWatcher(),
             ApplyJobsWatcher(),
-            AdminAccountWatcher()
+            AdminAccountWatcher(),
+            PendingJobsWatcher(),
+            PendingJobDetailWatcher()
         ])
     } catch (err) {
         throw err;

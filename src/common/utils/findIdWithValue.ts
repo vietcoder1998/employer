@@ -6,7 +6,7 @@
  * @param typeReturn type param of arr_ex to return
  */
 
-export const findIdWithValue = (arr_ex?: Array<any>, value?: any, param?: string, typeReturn?: string): any => {
+export default function findIdWithValue (arr_ex?: Array<any>, value?: any, param?: string, typeReturn?: string): any {
     let result: any;
     if (typeof value === "string" || typeof value === "number") {
         arr_ex.forEach((item: any, index: number) => {

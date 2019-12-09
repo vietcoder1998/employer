@@ -1,3 +1,5 @@
+import { PendingJobDetail } from './../reducers/pending-job-detail';
+import { PendingJobs } from './../reducers/pending-jobs';
 import { AdminAccount } from './../reducers/admin-account';
 import { ConnectSchoolsDetail } from './../reducers/connect-school-detail';
 import { ConnectSchools } from './../reducers/connect-schools';
@@ -41,7 +43,9 @@ const rootReducer = combineReducers({
     ConnectSchools,
     ConnectSchoolsDetail,
     ApplyJobs,
-    AdminAccount
+    AdminAccount,
+    PendingJobs,
+    PendingJobDetail
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

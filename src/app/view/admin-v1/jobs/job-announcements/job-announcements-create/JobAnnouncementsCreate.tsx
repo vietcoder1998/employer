@@ -10,7 +10,7 @@ import { IJobName } from '../../../../../../redux/models/job-names';
 import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
 import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
-import { findIdWithValue } from '../../../../../../common/utils/findIdWithValue';
+import findIdWithValue  from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST, PUT } from '../../../../../../common/const/method';
 import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
@@ -291,7 +291,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         if (
-            type_cpn === TYPE.EDIT &&( !job_announcement_detail || !job_announcement_detail.id)
+            type_cpn === TYPE.EDIT && (!job_announcement_detail || !job_announcement_detail.id)
         ) {
             return <Result
                 status="404"
@@ -304,7 +304,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                   {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)": "Tạo bài viết mới"}  
+                    {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)" : "Tạo bài viết mới"}
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
@@ -421,7 +421,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 </Select>
                             </InputTitle>
                         </div>
-                        <Divider orientation="left" >Thời gian làm việc</Divider>
+                        <Divider orientation="left" >Chọn loại công việc</Divider>
                         <div className="announcements-create-content">
                             <Tabs
                                 activeKey={body.jobType}
