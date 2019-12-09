@@ -1,22 +1,29 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col } from 'antd';
+import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col, Badge, Popover } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
-import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
 import { breakCumb, routeLink } from '../../../common/const/break-cumb';
+
 import Jobs from './jobs/Jobs';
 import ConnectSchools from './connect-schools/ConnectSchools';
 import ConvernientService from './convernient-service/ConvernientService';
+import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
+import Profile from './profile/Profile';
+import MoreInfo from './more-info/MoreInfo ';
+
+import Loading from '../layout/loading/Loading';
+import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
+import NotiItem from '../layout/notification-item/NotiItem';
+
 import { IAppState } from '../../../redux/store/reducer';
 import { REDUX_SAGA } from '../../../common/const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
-import Loading from '../layout/loading/Loading';
 import { TYPE } from '../../../common/const/type';
-import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
 import { Link } from 'react-router-dom';
-import MoreInfo from './more-info/MoreInfo ';
+import { INoti } from '../../../redux/models/notis';
+import { NotUpdate } from '../layout/common/Common';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -28,6 +35,9 @@ interface IAdminState {
     data_breakcumb?: Array<string>,
     loading?: boolean,
     pathname?: string,
+    list_noti?: Array<INoti>,
+    pageSize?: number,
+    loading_noti?: boolean;
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
@@ -39,9 +49,14 @@ interface IAdminProps extends StateProps, DispatchProps {
     getListSkills: Function;
     getListJobService: Function;
     getListLanguages: Function;
+    getListNoti: Function;
 }
 
+interface IListNotiProps {
+    list_noti: Array<INoti>
+};
 
+ 
 class Admin extends PureComponent<IAdminProps, IAdminState> {
     constructor(props) {
         super(props);
@@ -51,15 +66,19 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             location: "/",
             data_breakcumb: [],
             loading: true,
-        }
-    }
+            pageSize: 10,
+            loading_noti: false,
+        };
+    };
 
     async componentDidMount() {
-        this.props.getListRegions();
-        this.props.getListJobNames();
-        this.props.getListSkills();
-        this.props.getListJobService();
-        this.props.getListLanguages();
+        let { pageSize } = this.state;
+        await this.props.getListRegions();
+        await this.props.getListJobNames();
+        await this.props.getListSkills();
+        await this.props.getListJobService();
+        await this.props.getListLanguages();
+        await this.props.getListNoti(0, pageSize)
     }
 
     static getDerivedStateFromProps(nextProps: IAdminProps, prevState: IAdminState) {
@@ -85,11 +104,30 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         window.removeEventListener("scroll", () => { });
     }
 
-    render() {
-        let { show_menu, data_breakcumb } = this.state;
-        let { path } = this.props.match;
-        let { loading } = this.props;
+    handleLoadMoreData = async () => {
+        let { pageSize } = this.state;
+        await this.setState({ loading_noti: true })
+        await this.props.getListNoti(0, (pageSize + 10));
+        await this.setState({ loading_noti: false, pageSize: pageSize + 10 })
+    }
 
+    ListNoti = (props: any) => {
+        let { list_noti } = props;
+        let { pageSize } = this.state;
+
+        let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
+            list_noti.map((item: INoti) => <NotiItem key={item.id} item={item} getListNoti={() => this.props.getListNoti(0, pageSize)} />) : <NotUpdate msg="Không có thông báo" />
+    
+        return <div className="list-noti">
+            {list_noti_view}
+        </div>
+    };
+    
+
+    render() {
+        let { show_menu, data_breakcumb, loading_noti } = this.state;
+        let { path } = this.props.match;
+        let { loading, totalNoti, list_noti } = this.props;
         return (
             <Layout>
                 <MenuNavigation
@@ -108,6 +146,38 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             onClick={() => this.setState({ show_menu: !show_menu })}
                         />
                         <div className="avatar-header" >
+                            <Popover
+                                content={
+                                    < >
+                                        {this.ListNoti({list_noti})}
+                                        <div
+                                            className="a_c"
+                                            style={{ padding: 10 }}
+                                            onClick={() => this.handleLoadMoreData()}
+                                        >
+                                            <Icon type={!loading_noti ? "search" : "loading"} />
+                                            {!loading_noti ? " Xem thêm" : "Loading"}
+                                        </div>
+                                    </>
+                                }
+                                placement="bottomRight"
+                                title="Thông báo"
+                                trigger="click"
+                                style={{
+                                    padding: 0
+                                }}
+                            >
+                                <Badge count={totalNoti && totalNoti > 0 ? totalNoti : 0} style={{ fontSize: 10 }} dot>
+                                    <Icon
+                                        type="notification"
+                                        style={{
+                                            fontSize: 20,
+                                            marginTop: -8,
+                                            color: "whitesmoke"
+                                        }}
+                                    />
+                                </Badge>
+                            </Popover>
                             <DropdownConfig
                                 param={
                                     <Avatar
@@ -116,13 +186,13 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                             width: "30px",
                                             height: "30px",
                                             border: "solid #fff 2px",
-                                            margin: "0px 5px"
+                                            margin: "0px 5px 0px 25px"
                                         }}
                                     />
                                 }
                             >
                                 <Link to={routeLink.ADMIN_ACCOUNTS}>
-                                    <OptionConfig icon="user" key="2" value="" label="Tài khoản"  />
+                                    <OptionConfig icon="user" key="2" value="" label="Tài khoản" />
                                 </Link>
                                 <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
                             </DropdownConfig>
@@ -165,6 +235,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
                                         <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
                                         <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
+                                        <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
                                     </Switch>
                                 </Col>
@@ -187,11 +258,14 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
+    getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI , pageIndex, pageSize}),
     handleLoading: (loading: boolean) => dispatch({ type: TYPE.HANDLE, loading })
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    loading: state.MutilBox.loading
+    loading: state.MutilBox.loading,
+    list_noti: state.Notis.items,
+    totalNoti: state.Notis.totalItems
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

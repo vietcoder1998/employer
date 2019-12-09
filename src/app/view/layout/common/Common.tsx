@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import moment from 'moment';
 import { Icon } from 'antd';
 
-export const Titlelabel = (props: any) => {
+interface IIptLetterProps {
+    style?: CSSProperties,
+    value?: any,
+    children?: any,
+}
+
+export const Titlelabel = (props?: IIptLetterProps) => {
     return <label className="title-label">{" " + props.value + " "}</label>
 };
 
-export const IptLetter = (props: any) => {
-    return <div style={{padding: "5px 2px"}} > <span className="important-letter">{" " + props.value + "  "}</span>{props.children ? props.children : ""}</div>
+export const IptLetter = (props?: any) => {
+    return <label style={props.style ? props.style : { padding: "2px 5px" }} > <span className="important-letter">{" " + props.value + "  "}</span>{props.children ? props.children : ""}</label>
 };
 
-export const IptLetterP = (props: any) => {
+export const IptLetterP = (props?: any) => {
     return (
         <div style={props.style ? { ...props.style } : null}>
             <div style={{ marginTop: 10 }}>
@@ -37,7 +43,7 @@ export function Timer(props: any) {
     )
 };
 
-export const NotUpdate = (props?: {msg?: string}) => (
+export const NotUpdate = (props?: { msg?: string }) => (
     <label style={{ fontStyle: "italic" }}>
         {props.msg ? props.msg : "Chưa cập nhật"}
     </label>

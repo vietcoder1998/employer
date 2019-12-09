@@ -2,20 +2,25 @@ export const routePath = {
     ADMIN: `/v1/admin`,
     LIST: '/list',
     JOBS: '/jobs',
+    ACCOUNT: '/account',
     CREATE: '/create',
     COPY: '/copy',
     FIX: '/fix',
     DETAIL: '/detail',
     APPLY: '/apply',
+    PROFILE: '/profile',
 
     EM_BRANCHES: '/em-branches',
-    SAVE_CANDIDATE: '/save-candidate-profiles/',
+    SAVE_CANDIDATE: '/saved-candidate',
     FIND_CANDIDATES: '/find-candidates',
     JOB_ANNOUNCEMENTS: '/job-announcements',
     ANNOUNCEMENT: '/announcements',
     CONNECT_SCHOOLS: '/connect-schools',
     MORE_INFO: '/more-info',
-    ADMIN_ACCOUNT: '/admin-account'
+    ADMIN_ACCOUNT: '/admin-account',
+    NOTI: '/noti',
+    USER_CONTROLLER: '/user-controller',
+    PENDING_JOBS: '/pending-jobs'
 };
 
 export const routeLink = {
@@ -25,7 +30,10 @@ export const routeLink = {
     JOB_ANNOUNCEMENTS: routePath.ADMIN + routePath.JOBS + routePath.JOB_ANNOUNCEMENTS,
     ANNOUNCEMENT: routePath.ADMIN + routePath.MORE_INFO + routePath.ANNOUNCEMENT,
     CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
-    ADMIN_ACCOUNTS: routePath.ADMIN + routePath.MORE_INFO + routePath.ADMIN_ACCOUNT
+    ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
+    NOTI: routePath.ADMIN + routePath.NOTI,
+    USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER ,
+    PENDING_JOBS: routePath.ADMIN + routePath.PROFILE + routePath.PENDING_JOBS 
 };
 
 export const breakCumb = [
@@ -42,5 +50,8 @@ export const breakCumb = [
     { label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: routeLink.FIND_CANDIDATES + routePath.LIST },
     { label: "saved-candidate", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.SAVE_CANDIDATE + routePath.LIST },
     { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
-    { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST }
+    { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
+    { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
+    { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
+    { label: "user-controller", name: "Thông báo", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
 ]

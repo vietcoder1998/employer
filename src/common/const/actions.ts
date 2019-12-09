@@ -11,7 +11,7 @@ export const REDUX = {
     PENDING_JOB_DETAIL: {
         GET_PENDING_JOB_DETAIL: "GET_PENDING_JOB_DETAIL",
     },
-    ADMIN_ACCOUNT:  {
+    ADMIN_ACCOUNT: {
         GET_ADMIN_ACCOUNT: "GET_ADMIN_ACCOUNT"
     },
     JOB_NAMES: {
@@ -87,11 +87,18 @@ export const REDUX = {
     },
     APPLY_JOB: {
         GET_APPLY_JOB: "GET_APPLY_JOB"
+    },
+    NOTI: {
+        GET_NOTI: "GET_NOTI",
+        GET_NOTI_DETAIL: "GET_NOTI_DETAIL"
+    },
+    LIST_RATE: {
+        GET_LIST_RATE: "GET_LIST_RATE"
     }
 };
 
 export const REDUX_SAGA = {
-    ADMIN_ACCOUNT:  {
+    ADMIN_ACCOUNT: {
         GET_ADMIN_ACCOUNT: "GET_ADMIN_ACCOUNT_DATA"
     },
     PENDING_JOBS: {
@@ -171,5 +178,12 @@ export const REDUX_SAGA = {
     },
     APPLY_JOB: {
         GET_APPLY_JOB: "GET_APPLY_JOB_DATA"
+    },
+    NOTI: {
+        GET_NOTI: "GET_NOTI_DATA",
+        GET_NOTI_DETAIL: "GET_NOTI_DETAIL_DATA"
+    },
+    LIST_RATE: {
+        GET_LIST_RATE: "GET_LIST_RATE_DATA"
     }
 }

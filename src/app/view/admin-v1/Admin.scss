@@ -8,3 +8,21 @@
 .ant-col {
     padding: 20px 10px
 }
+
+.ant-popover-inner-content {
+    padding: 10px 0px;
+}
+
+.list-noti {
+    display: block;
+    width: 40vw;
+    min-width: 300px;
+    max-width: 400px;
+    height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    label{
+        line-height: 15px;
+        padding: 0 10px;
+    }
+}

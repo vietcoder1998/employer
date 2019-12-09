@@ -125,4 +125,6 @@ type DispatchProps = ReturnType<typeof mapStateTopProps>;
 
 export default connect(mapStateTopProps, mapDispatchToProps)(GoogleApiWrapper({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY
+        ? process.env.REACT_APP_GOOGLE_API_KEY :
+        'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28'
 })(MapContainer))

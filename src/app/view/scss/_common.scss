@@ -46,7 +46,7 @@ code {
 }
 
 .ant-modal-body {
-  max-height: 75vh;
+  max-height: 60vh;
   overflow: auto;
   background-color: #f1f1f1a7;
 }
@@ -251,7 +251,7 @@ ul {
 .ant-layout-sider-children {
   position: fixed;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scor;
 
   /* width */
   &::-webkit-scrollbar {
@@ -378,10 +378,6 @@ ul {
   }
 }
 
-svg {
-  margin-bottom: 5px !important;
-}
-
 .ant-pagination-item-link {
   svg {
     margin-bottom: 5px;
@@ -503,7 +499,7 @@ h5 {
   font-family: $font_base !important;
   color: black !important;
   font-weight: 600 !important;
-  margin: 1.1em 0em !important;
+  margin: 1.2em 0em !important;
 }
 
 // For Border

@@ -1,7 +1,7 @@
-import { ISavedCandidateProfiles } from './../models/saved-candidate';
+import { ISavedCandidateProfiles } from './../models/saved-candidate-profiles';
 import { REDUX } from '../../common/const/actions';
 
-export const getAnnouncementDetail = (data: ISavedCandidateProfiles) => ({
+export const getAnnouncementDetail = (data?: ISavedCandidateProfiles) => ({
     type: REDUX.SAVED_CANDIDATE_PROFILES.GET_SAVED_CANDIDATE_PROFILES, 
     data
 });

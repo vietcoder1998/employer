@@ -20,6 +20,8 @@ import { ApplyJobsWatcher } from '../sagas/apply-job';
 import { AdminAccountWatcher } from '../sagas/admin-account';
 import { PendingJobsWatcher } from '../sagas/pending-jobs';
 import { PendingJobDetailWatcher } from '../sagas/pending-job-detail';
+import { NotisWatcher } from '../sagas/notis';
+import { RatingsWatcher } from '../sagas/ratings';
 
 export default function* rootSaga() {
     try {
@@ -44,7 +46,9 @@ export default function* rootSaga() {
             ApplyJobsWatcher(),
             AdminAccountWatcher(),
             PendingJobsWatcher(),
-            PendingJobDetailWatcher()
+            PendingJobDetailWatcher(),
+            NotisWatcher(),
+            RatingsWatcher()
         ])
     } catch (err) {
         throw err;

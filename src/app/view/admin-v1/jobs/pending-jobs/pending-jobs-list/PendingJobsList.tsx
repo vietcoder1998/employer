@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import './PendingJobsList.scss';
 
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, Input } from 'antd';
+import { Button, Table, Icon, Select, Modal, Input, Tooltip } from 'antd';
 import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../common/const/method';
 import { PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { TYPE } from '../../../../../../common/const/type';
-import { IptLetter } from '../../../../layout/common/Common';
+// import { IptLetter } from '../../../../layout/common/Common';
 import { IPendingJob } from '../../../../../../redux/models/pending-jobs';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
@@ -197,12 +197,12 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     jobTitle: item.jobTitle,
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     jobType: <Label type={item.jobType} value={item.jobType} />,
-                    operation: <Icon type="file-search" onClick={
+                    operation: <Tooltip title="Xem chi tiết"><Icon type="search" onClick={
                         async () => {
                             nextProps.handleModal({ open_modal: true });
                             nextProps.getPendingJobDetail(item.id);
                         }
-                    } />
+                    } /></Tooltip>
                 });
             });
             return {
@@ -248,7 +248,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             body,
             null, null, undefined, true, false
         );
-        await this.props.handleModal({open_modal: false})
+        await this.props.handleModal({ open_modal: false })
         await this.queryPendingJob();
     };
 
@@ -263,7 +263,8 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     title="CHI TIẾT CÔNG VIỆC"
                     onCancel={() => this.props.handleModal({ open_modal: false })}
                     destroyOnClose={true}
-                    style={{ top: "5vh" }}
+                    width="55vw"
+                    style={{ top: "5vh", height: "80vh" }}
                     footer={[
                         <TextArea
                             key="reason-msg"
@@ -305,16 +306,21 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 <div className="common-content">
                     <h5>
                         Danh sách bài đăng đang chờ
-                        <Button
-                            icon="filter"
-                            onClick={() => this.queryPendingJob()}
-                            type="primary"
-                            style={{
-                                float: "right",
-                            }}
-                        >
-                            Tìm kiếm
-                        </Button>
+                        {/* <Tooltip title="Tạo chi nhánh mới" >
+                            <Button
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "5px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height: "45px",
+                                    width: "45px"
+                                }}
+                                icon={"search"}
+                                onClick={() => this.queryPendingJob()}
+                            />
+                        </Tooltip> */}
                     </h5>
                     <div>
                         <Table

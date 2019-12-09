@@ -60,38 +60,38 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="0">
-                        <Link to={'/v1/admin/jobs/job-announcements/create'}>
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE}>
                             <Icon type="file-add" />
                             <span>Đăng bài</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="1">
-                        <Link to={'/v1/admin/jobs/job-announcements/list'}>
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.LIST}>
                             <Icon type="carry-out" />
                             <span>Quản lí bài đăng</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="2">
-                        <Link to={'/v1/admin/jobs/em-branches/list'}>
+                        <Link to={routeLink.EM_BRANCHES + routePath.LIST}>
                             <Icon type="environment" />
                             <span>Quản lí chi nhánh</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="3">
-                        <Link to={'/v1/admin/jobs/find-candidates/list'}>
+                        <Link to={routeLink.FIND_CANDIDATES + routePath.LIST}>
                             <Icon type="user-add" />
                             <span>Tìm kiếm ứng viên</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="4">
-                        <Link to={'/v1/admin/jobs/saved-candidate/list'}>
+                        <Link to={routeLink.SAVE_CANDIDATE + routePath.LIST}>
                             <Icon type="idcard" />
                             <span>Hồ sơ đã lưu</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="12">
-                        <Link to={'/v1/admin/jobs/pending-jobs/list'}>
-                            <Icon type="loading" />
+                        <Link to={routeLink.PENDING_JOBS + routePath.LIST}>
+                            <Icon type="highlight" />
                             <span>Bài đăng đang chờ</span>
                         </Link>
                     </Menu.Item>
@@ -106,7 +106,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="5">
-                        <Link to={'/v1/admin/connect-schools/list'}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
                             <Icon type="search" />
                             <span>Tìm kiếm </span>
                         </Link>
@@ -123,15 +123,48 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     disabled={true}
                 >
                     <Menu.Item key="7">
-                        <Link to={'/v1/admin/connect-schools/list'}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
                             <Icon type="shopping" />
                             <span>Mua gói</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="8">
+                    <Menu.Item key="8" disabled={true}>
                         <Link to={'/v1/admin/data/majors/list'}>
                             <Icon type="percentage" />
                             <span>Khuyến mãi</span>
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+
+                <SubMenu
+                    key="sub5"
+                    title={
+                        <span>
+                            <Icon type="notification" />
+                            <span>Thông báo</span>
+                        </span>
+                    }
+                >
+                    <Menu.Item key="13">
+                        <Link to={routeLink.NOTI + routePath.LIST}>
+                            <Icon type="file-search" />
+                            <span>Quản lí thông báo</span>
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+                <SubMenu
+                    key="sub6"
+                    title={
+                        <span>
+                            <Icon type="profile" />
+                            <span>Hồ sơ</span>
+                        </span>
+                    }
+                >
+                    <Menu.Item key="14">
+                        <Link to={routeLink.ADMIN_ACCOUNTS}>
+                            <Icon type="user" />
+                            <span>Thông tin</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

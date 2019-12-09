@@ -4,6 +4,7 @@ import { PENDING_JOBS } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListPendingJobDetailData(action: any) {
     let res = yield call(callPendingJobDetail, action);
@@ -50,7 +51,7 @@ function callPendingJobDetail(action: any) {
     return _requestToServer(
         GET, PENDING_JOBS + `/${id}`,
         undefined,
-        undefined, undefined, undefined, false, false
+        undefined, undefined, EMPLOYER_HOST, false, false
     )
 }
 
