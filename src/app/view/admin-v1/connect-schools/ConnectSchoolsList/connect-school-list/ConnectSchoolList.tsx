@@ -2,7 +2,7 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon } from 'antd';
+import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input } from 'antd';
 // import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { TYPE } from '../../../../../../common/const/type';
 import { IptLetter, IptLetterP, NotUpdate } from '../../../../layout/common/Common';
@@ -371,7 +371,8 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             candidate_msg,
             school_msg,
             dataSchool,
-            loading
+            loading,
+            body
         } = this.state;
 
         let {
@@ -521,29 +522,30 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                     <div className="table-operations">
                         <Row >
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái tìm việc"} />
+                                <IptLetterP value={"Trạng thái kết nối"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.lookingForJob)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.state)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đang tìm việc</Option>
-                                    <Option value={TYPE.FALSE}>Đã có việc</Option>
+                                    <Option value={TYPE.PENDING}>Đang gửi yêu cầu</Option>
+                                    <Option value={TYPE.ACCEPTED}>Đã chấp nhận</Option>
+                                    <Option value={TYPE.REJECTED}>Đã từ chối</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Giới tính"} />
+                                <IptLetterP value={"Bên gửi"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.gender)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.owner)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.MALE}>Nam </Option>
-                                    <Option value={TYPE.FEMALE}>Nữ</Option>
+                                    <Option value={TYPE.EMPLOYER}>Nhà tuyển dụng </Option>
+                                    <Option value={TYPE.SCHOOL}>Nhà trường</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
@@ -552,7 +554,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.regionID)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.regionID)}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -564,17 +566,39 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái tìm việc"} />
+                                <IptLetterP value={"Yêu cầu kết nối"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.lookingForJob)}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.hasRequest)}
                                 >
                                     <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.MALE}>Nam </Option>
-                                    <Option value={TYPE.FEMALE}>Nữ</Option>
+                                    <Option value={TYPE.TRUE}>Đã gửi </Option>
+                                    <Option value={TYPE.FALSE}>Chưa gửi</Option>
                                 </Select>
+                            </Col>
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Tên rút gọn"} />
+                                <Input
+                                    placeholder="Tất cả"
+                                    style={{ width: "100%" }}
+                                    value={body.shortName}
+                                    onChange={(event: any) => this.onChangeType(event.target.value, TYPE.CONNECT_SCHOOL.shortName)}
+                                    onPressEnter={(event: any) => this.searchConnectSchools()}
+                                    suffix={
+                                        body.shortName &&
+                                            body.shortName.length > 0 ?
+                                            <Icon
+                                                type={"close-circle"}
+                                                theme={"filled"}
+                                                onClick={
+                                                    () => this.onChangeType(null, TYPE.CONNECT_SCHOOL.shortName)
+                                                }
+                                            /> : <Icon type={"search"} />
+                                    }
+                                />
+
                             </Col>
                         </Row>
                         <div className="school-content">

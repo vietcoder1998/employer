@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result } from 'antd';
+import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result, Rate } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
@@ -7,7 +7,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { FIND_CANDIDATE_DETAIL, SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
 import { POST, PUT, DELETE } from '../../../../../../common/const/method';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IMapState } from '../../../../../../redux/models/mutil-box';
+import { IMapState, IDrawerState } from '../../../../../../redux/models/mutil-box';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IFindCandidateDetail } from '../../../../../../redux/models/find-candidates-detail';
 import CandidateProfile from '../../../../layout/candidate-profile/CandidateProfile';
@@ -15,6 +15,9 @@ import { VerifiedProfile } from '../../../../layout/verified-profile/VerifiedPro
 import './FindCandidatesDetail.scss';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import Loading from '../../../../layout/loading/Loading';
+import DrawerConfig from '../../../../layout/config/DrawerConfig';
+import { IptLetterP } from '../../../../layout/common/Common';
+import TextArea from 'antd/lib/input/TextArea';
 const { TabPane } = Tabs;
 const { Step } = Steps;
 
@@ -27,6 +30,12 @@ interface IFindCandidatesDetailState {
     process?: boolean;
     loading?: boolean;
     fail?: boolean;
+    rating_user?: {
+        attitudeRating?: number,
+        skillRating?: number,
+        jobAccomplishmentRating?: number,
+        comment: string,
+    }
 }
 
 interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
@@ -35,6 +44,7 @@ interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
     getFindCandidateDetail: Function;
     getJobService: Function;
     handleModal: Function;
+    handleDrawer: (drawerState?: IDrawerState) => any;
 }
 
 class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, IFindCandidatesDetailState> {
@@ -48,6 +58,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             process: false,
             loading: true,
             fail: false,
+            rating_user: {
+                attitudeRating: 0,
+                skillRating: 0,
+                jobAccomplishmentRating: 0,
+                comment: null,
+            }
         }
     }
 
@@ -109,8 +125,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     null,
                     undefined,
                     EMPLOYER_HOST,
-                    true,
                     false,
+                    true,
                 ).then((res: any) => {
                     if (res) {
                         this.props.getFindCandidateDetail(id);
@@ -129,8 +145,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     undefined,
                     undefined,
                     EMPLOYER_HOST,
-                    true,
                     false,
+                    true,
                 ).then((res: any) => {
                     if (res) {
                         this.props.getFindCandidateDetail(id);
@@ -161,8 +177,27 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         })
     }
 
+    getRating = async () => {
+        let { id } = this.state;
+        setTimeout(() => {
+            _requestToServer(
+                FIND_CANDIDATE_DETAIL + `/${id}/rating`,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                EMPLOYER_HOST
+            ).then((res: any) => {
+                if (res) {
+                    this.setState({ rating_user: res.data })
+                }
+            })
+        }, 250);
+
+    };
+
     render() {
-        let { body, visible, loading, fail } = this.state;
+        let { body, visible, loading, fail, rating_user } = this.state;
         let { unlock_turn, modalState } = this.props;
 
         if (fail) {
@@ -172,10 +207,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 subTitle="Sorry, the page you visited does not exist."
                 extra={<Button type="primary">Back Home</Button>}
             />
-        }
-
-        if (loading && !fail) {
-            return <Loading />
         }
 
         return (
@@ -224,8 +255,17 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     onCancel={() => this.props.handleModal()}
                     destroyOnClose={true}
                     footer={[
-                        <Button key="exit" icon="close" children="Hủy" onClick={() => this.props.handleModal()} />,
-                        <Button key="confirm" type="primary" icon={loading ? "loading" : "check"} children="Chấp nhận" onClick={() => this.createRequest(TYPE.UNLOCK)} />
+                        <Button
+                            key="exit"
+                            icon="close"
+                            children="Hủy"
+                            onClick={() => this.props.handleModal()} />,
+                        <Button
+                            key="confirm"
+                            type="primary"
+                            icon={loading ? "loading" : "check"}
+                            children="Chấp nhận"
+                            onClick={() => this.createRequest(TYPE.UNLOCK)} />
                     ]}
                 >
                     Bạn muốn mở khóa cho ứng viên :
@@ -236,27 +276,72 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         <Step status={body && body.unlocked ? "finish" : "wait"} title="Thành công" icon={<Icon type="smile-o" />} />
                     </Steps>
                 </Modal>
+                <DrawerConfig
+                    width={500}
+                    title={"Đánh giá"}
+                >
+                    <IptLetterP
+                        value="Thái độ với công việc"
+                    >
+                        <Rate value={rating_user.skillRating} />
+                    </IptLetterP>
+                    <IptLetterP
+                        value="Kĩ năng công việc"
+                    >
+                        <Rate value={rating_user.skillRating} />
+                    </IptLetterP>
+                    <IptLetterP
+                        value="Trách nghiệm với công việc"
+                    >
+                        <Rate value={rating_user.skillRating} />
+                    </IptLetterP>
+                    <IptLetterP
+                        value="Nhận xét"
+                    >
+                        <TextArea placeholder={"ex: Ứng viên rất có tiềm năng..."} rows={4} />
+                    </IptLetterP>
+                </DrawerConfig>
                 <div className='common-content'>
                     <h5>
                         Tình trạng hồ sơ
                         <Tooltip
+                            title={"Đánh giá ứng viên"}
+                            children={
+                                <Icon
+                                    type={"edit"}
+                                    style={{ marginLeft: 15 }}
+                                    onClick={() => {
+                                        this.getRating()
+                                        this.props.handleDrawer({ open_drawer: true });
+                                    }}
+                                />
+                            }
+                        />
+                        <Tooltip
                             placement="topRight"
                             title={body && body.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}
                             children={
-                                <Icon type={body && body.unlocked ? "unlock" : "lock"} style={{ float: "right", padding: 5 }} />
+                                <Icon
+                                    type={body &&
+                                        body.unlocked ? "unlock" : "lock"
+                                    }
+                                    style={{ float: "right", padding: 5 }}
+                                />
                             }
                         />
                         <Tooltip
                             placement="top"
                             title={body && body.saved ? "Đã lưu" : "Chưa lưu"}
                             children={
-                                <Icon type="save" style={{ color: body && body.saved ? "green" : "red", float: "right", padding: 5 }} />
+                                <Icon
+                                    type="save"
+                                    style={{ color: body && body.saved ? "green" : "red", float: "right", padding: 5 }}
+                                    onClick={() => this.createRequest(TYPE.SAVE)}
+                                />
                             }
                         />
                     </h5>
-                    <div>
-                        <Progress status="active" percent={body && body.completePercent ? body.completePercent : 0} size="small" />
-                    </div>
+                    <Progress status="active" percent={body && body.completePercent ? body.completePercent : 0} size="small" />
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Hồ sơ cá nhân" key="1">
                             <CandidateProfile data={body} />
@@ -308,15 +393,20 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getFindCandidateDetail: (id: string) =>
         dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id }),
-    handleMap: (mapState: IMapState) =>
+    handleMap: (mapState?: IMapState) =>
         dispatch({
             type: REDUX.MAP.SET_MAP_STATE,
             mapState
         }),
+    handleDrawer: (drawerState?: IDrawerState) =>
+        dispatch({
+            type: REDUX.HANDLE_DRAWER,
+            drawerState
+        }),
     getJobService: () => dispatch({
         type: REDUX.JOB_SERVICE,
     }),
-    handleModal: (modalState) =>
+    handleModal: (modalState?: IMapState) =>
         dispatch({
             type: REDUX.HANDLE_MODAL,
             modalState,

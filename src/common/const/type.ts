@@ -24,6 +24,7 @@ export const TYPE = {
     COPY: 'COPY',
     SELECT: 'SELECT',
     DELETE: 'DELETE',
+    BAN: 'BAN',
     ACTIVE: 'ACTIVE',
     UN_ACTIVE: 'UN_ACTIVE',
     LIST: 'LIST',
@@ -105,9 +106,20 @@ export const TYPE = {
     BOTH: 'BOTH',
 
     NOTI: {
-        REPLY_JOB_OFFER_REQUEST: "REPLY_JOB_OFFER_REQUEST",
-        REPLY_JOB_APPLY_REQUEST: "REPLY_JOB_APPLY_REQUEST",
-        REPLY_PENDING_JOB: "REPLY_PENDING_JOB",
-        REPLY_CONNECT_REQUEST: "REPLY_CONNECT_REQUEST"
+        REPLY_JOB_OFFER_REQUEST: 'REPLY_JOB_OFFER_REQUEST',
+        REPLY_JOB_APPLY_REQUEST: 'REPLY_JOB_APPLY_REQUEST',
+        REPLY_PENDING_JOB: 'REPLY_PENDING_JOB',
+        REPLY_CONNECT_REQUEST: 'REPLY_CONNECT_REQUEST'
+    },
+
+    CONNECT_SCHOOL: {
+        name: 'name',
+        shortName: 'shortName',
+        regionID: 'regionID',
+        schoolTypeID: 'schoolTypeID',
+        jobNameIDs:'jobNameIDs',
+        hasRequest: 'hasRequest',
+        owner: 'owner',
+        state: 'state'
     }
 }

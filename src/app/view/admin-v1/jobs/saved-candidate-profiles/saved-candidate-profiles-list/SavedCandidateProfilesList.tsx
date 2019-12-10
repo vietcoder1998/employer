@@ -10,6 +10,8 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { Link } from 'react-router-dom';
+import { TYPE } from '../../../../../../common/const/type';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -79,15 +81,18 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     }
 
     editToolAction = () => {
-        let id = localStorage.getItem("id_candidate")
+        let { id } = this.state;
         return <>
-            <Icon
-                style={{ padding: "5px 10px", color: "" }}
-                type="search"
-                onClick={() => this.props.history.push(
-                    routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`
-                )}
-            />
+            <Tooltip
+                title={"Xem chi tiết"}
+            >
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
+                    <Icon
+                        style={{ padding: "5px 10px", color: "" }}
+                        type="search"
+                    />
+                </Link>
+            </Tooltip>
             <Popconfirm
                 placement="topRight"
                 title={"Xóa khỏi danh sách"}
@@ -97,6 +102,15 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             >
                 <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" />
             </Popconfirm>
+            {/* <Popconfirm
+                placement="topRight"
+                title={"Chặn người dùng này"}
+                onConfirm={(event: any) => this.createRequest()}
+                okText="Chặn"
+                cancelText="Hủy"
+            >
+                <Icon style={{ padding: "5px 10px" }} type="stop" theme="twoTone" twoToneColor="red" />
+            </Popconfirm> */}
         </>
     };
 
@@ -147,7 +161,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             title: 'Đại chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 250,
+            width: 270,
         },
         {
             title: 'Tỉnh thành',
@@ -169,7 +183,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 100,
+            width: 120,
             render: () => this.editToolAction()
         },
     ];
@@ -236,8 +250,20 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
         await this.props.getListSavedCandidateProfiles(pageIndex, pageSize);
     };
 
-    createRequest = async () => {
-        let id = localStorage.getItem("id_candidate");
+    createRequest = async (type?: string) => {
+        let { id } = this.state;
+        // let method = null;
+        // switch (type) {
+        //     case TYPE.DELETE:
+
+        //         break;
+        //     case TYPE.BAN:
+
+        //         break;
+
+        //     default:
+        //         break;
+        // }
         await _requestToServer(
             DELETE,
             SAVED_CANDIDATE_PROFILES + '/saved',
@@ -299,10 +325,10 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {
-                                    onClick: (event: any)=> {
+                                    onClick: (event: any) => {
                                     }, // click row
-                                    onMouseEnter: (event) => {
-                                        localStorage.setItem('id_candidate', record.key)
+                                    onMouseEnter: () => {
+                                        this.setState({ id: record.key })
                                     }, // mouse enter row
                                 };
                             }}

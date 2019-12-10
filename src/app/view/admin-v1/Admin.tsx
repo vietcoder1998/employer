@@ -164,7 +164,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 title="Thông báo"
                                 trigger="click"
                                 style={{
-                                    padding: 0
+                                    padding: 0,
                                 }}
                             >
                                 <Badge count={totalNoti && totalNoti > 0 ? totalNoti : 0} style={{ fontSize: 10 }} dot>

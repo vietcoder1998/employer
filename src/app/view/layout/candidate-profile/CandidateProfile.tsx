@@ -45,7 +45,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     className="cover-image-profile"
                     src={!onErrCover && coverUrl ? coverUrl : backGround}
                     alt={"rodan"}
-                    onError={()=> setErrCover(true)}
+                    onError={() => setErrCover(true)}
                 />
                 <Row>
                     <Col sm={1} md={1} lg={2}></Col>
@@ -254,7 +254,8 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 <hr />
                             </div>
                             <div >
-                                <label className="block-span">Số lượt đánh giá</label>{data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}<label></label>
+                                <label className="block-span">Số lượt đánh giá</label>
+                                <label style={{marginLeft: 10}}> {data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}</label>
                                 <div>
                                     <label className="block-span">Thái độ </label>
                                     <Rate disabled value={data ? data.rating.jobAccomplishmentRating : 1} />
