@@ -31,6 +31,7 @@ export const TYPE = {
     VIEW: 'VIEW',
     SAVE: 'SAVE',
     UNLOCK: 'UNLOCK',
+    RATING: 'RATING',
 
     HIDDEN: 'HIDDEN',
     SHOW: 'SHOW',

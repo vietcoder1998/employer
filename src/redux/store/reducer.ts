@@ -1,3 +1,4 @@
+import { RatingUser } from './../reducers/rating-user';
 import { Ratings } from './../reducers/ratings';
 import { Notis } from './../reducers/notis';
 import { PendingJobDetail } from './../reducers/pending-job-detail';
@@ -49,7 +50,8 @@ const rootReducer = combineReducers({
     PendingJobs,
     PendingJobDetail,
     Notis,
-    Ratings
+    Ratings,
+    RatingUser
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

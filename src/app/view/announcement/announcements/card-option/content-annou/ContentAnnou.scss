@@ -1,0 +1,16 @@
+.content-annou {
+  width: 100%;
+  min-height: 200vh;
+  margin: 20px 0px;
+  padding: 0px 15px 20px;
+
+  .writor {
+    width: 100%;
+    display: inline-flex;
+    padding: 20px;
+  }
+
+  img {
+    border: solid rgba(75, 75, 75, 0.333) 1px;
+  }
+}

@@ -30,13 +30,7 @@ function callAnnouComments(action: any) {
 
     return _requestToServer(
         POST, ANNOU_COMMENTS + `/${id}/comments/query`,
-        {
-            rating: body.body ? body.rating : null,
-            userID: body.userId ? body.userID : null,
-            userType: body.userType ? body.userType : null,
-            createdDate: body.createdDate ? body.createdDate : null,
-            lastModified: body.lastModified ? body.lastModified : null,
-        },
+        body,
         {
 
             pageIndex: action.pageIndex ? action.pageIndex : 0,

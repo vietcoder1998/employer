@@ -94,6 +94,9 @@ export const REDUX = {
     },
     LIST_RATE: {
         GET_LIST_RATE: "GET_LIST_RATE"
+    },
+    RATING_USER: {
+        GET_RATING_USER: "GET_RATING_USER"
     }
 };
 
@@ -185,5 +188,8 @@ export const REDUX_SAGA = {
     },
     LIST_RATE: {
         GET_LIST_RATE: "GET_LIST_RATE_DATA"
+    },
+    RATING_USER: {
+        GET_RATING_USER: "GET_RATING_USER_DATA"
     }
 }

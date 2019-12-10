@@ -1,4 +1,5 @@
 export interface IAnnouncement {
+    id?: string,
     imageUrl?: string;
     announcementType?: {
         id?: number;

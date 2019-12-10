@@ -20,7 +20,7 @@ export const routePath = {
     ADMIN_ACCOUNT: '/admin-account',
     NOTI: '/noti',
     USER_CONTROLLER: '/user-controller',
-    PENDING_JOBS: '/pending-jobs'
+    PENDING_JOBS: '/pending-jobs',
 };
 
 export const routeLink = {
@@ -28,12 +28,12 @@ export const routeLink = {
     FIND_CANDIDATES: routePath.ADMIN + routePath.JOBS + routePath.FIND_CANDIDATES,
     SAVE_CANDIDATE: routePath.ADMIN + routePath.JOBS + routePath.SAVE_CANDIDATE,
     JOB_ANNOUNCEMENTS: routePath.ADMIN + routePath.JOBS + routePath.JOB_ANNOUNCEMENTS,
-    ANNOUNCEMENT: routePath.ADMIN + routePath.MORE_INFO + routePath.ANNOUNCEMENT,
+    ANNOUNCEMENT: routePath.ANNOUNCEMENT,
     CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
     ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
     NOTI: routePath.ADMIN + routePath.NOTI,
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER ,
-    PENDING_JOBS: routePath.ADMIN + routePath.PROFILE + routePath.PENDING_JOBS 
+    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS 
 };
 
 export const breakCumb = [

@@ -24,6 +24,7 @@ import { TYPE } from '../../../common/const/type';
 import { Link } from 'react-router-dom';
 import { INoti } from '../../../redux/models/notis';
 import { NotUpdate } from '../layout/common/Common';
+import Notitication from './notification/Notification';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -236,6 +237,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
                                         <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
                                         <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />
+                                        <ErrorBoundaryRoute path={`${path}/noti`} component={Notitication} />
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
                                     </Switch>
                                 </Col>

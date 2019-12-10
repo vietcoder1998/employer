@@ -16,16 +16,14 @@ function* getListAnnouncementsData(action: any) {
         totalItems: 0,
     };
 
-    if (res.code === 200) {
-        data.items = res.data.items;
-        data.pageIndex = res.data.pageIndex;
-        data.pageSize = res.data.pageSize;
-        data.totalItems = res.data.totalItems;
-        yield put({
-            type: REDUX.ANNOUNCEMENTS.GET_ANNOUNCEMENTS,
-            data
-        });
-    }
+    if (res) {
+        data = res.data
+    };
+
+    yield put({
+        type: REDUX.ANNOUNCEMENTS.GET_ANNOUNCEMENTS,
+        data
+    });
 }
 
 function callAnnouncements(action: any) {
@@ -46,8 +44,8 @@ function callAnnouncements(action: any) {
                 pageSize: action.pageSize ? action.pageSize : 10
             },
             undefined,
-            EMPLOYER_HOST, 
-            false, 
+            EMPLOYER_HOST,
+            false,
             false
         )
     }

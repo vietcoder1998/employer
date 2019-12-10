@@ -1,0 +1,41 @@
+.first-card {
+  margin: 10px;
+  display: grid;
+  grid-column: auto;
+  grid-row: auto;
+  position: relative;
+  overflow: hidden;
+  h5 {
+    margin: 0 !important;
+  }
+
+  .first-card-content {
+    height: 37.5vw;
+    width: 100%;
+  }
+
+  .info-card {
+    position: absolute;
+    z-index: 1;
+    bottom: 0px;
+    width: 100%;
+    height: calc(50% - 10px);
+    padding: 15px 10px;
+    background-color: white;
+
+    .info-writor {
+      position: absolute;
+      bottom: 15px;
+      .writor {
+        display: inline-flex;
+      }
+    }
+  }
+
+  .img-card-background {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 0;
+  }
+}

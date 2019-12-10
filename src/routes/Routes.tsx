@@ -5,6 +5,7 @@ import FallBack from './FallBack';
 const Admin = lazy(() => import('./../app/view/admin-v1/Admin'));
 const Login = lazy(() => import('./../app/view/login/Login'));
 const NotFound = lazy(() => import('./../app/view/not-found/NotFound'));
+const Announcements = lazy(() => import('./../app/view/announcement/Announcement'));
 
 export default function Routes(props) {
   return (
@@ -27,6 +28,9 @@ export default function Routes(props) {
         </Suspense>
         <Suspense fallback={<FallBack />} >
           <Route exact path='/register' component={Login} />
+        </Suspense>
+        <Suspense fallback={<FallBack />} >
+          <Route path='/announcements' component={Announcements} />
         </Suspense>
       </Router>
     </>

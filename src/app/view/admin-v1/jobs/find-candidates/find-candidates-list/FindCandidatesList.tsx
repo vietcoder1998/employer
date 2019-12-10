@@ -508,21 +508,6 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Đã xác minh hồ sơ"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={
-                                        (event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileVerified)
-                                    }
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đã xác minh</Option>
-                                    <Option value={TYPE.FALSE}>Chưa xác minh</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Giới tính"} />
                                 <Select
                                     showSearch

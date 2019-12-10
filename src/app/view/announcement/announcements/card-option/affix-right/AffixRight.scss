@@ -1,0 +1,13 @@
+.affix-right-card {
+    margin: 10px;
+    display: grid;
+    grid-column: auto;
+    grid-row: auto;
+  
+    .affix-right-card-content {
+      height: calc(100vh - 90px);
+      width: 100%;
+      padding: 10px 20px;
+    }
+  }
+  

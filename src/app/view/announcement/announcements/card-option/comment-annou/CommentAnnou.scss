@@ -1,0 +1,20 @@
+.comment-annou {
+  width: 100%;
+  min-height: 10vh;
+  margin: 20px 0px;
+  padding: 20px 15px 20px;
+  letter-spacing: 1.5px;
+  .ant-list-item-meta {
+    margin-bottom: 5px !important;
+  }
+
+  .ant-list-item-meta-title {
+    margin-bottom: 5px !important;
+  }
+  .content-list {
+    margin-left: 50px;
+    text-align: justify;
+  }
+
+  font-size: 0.8rem;
+}

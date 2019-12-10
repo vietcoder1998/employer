@@ -178,7 +178,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="pendings-jobs">
-                        <Link to={routeLink.ANNOUNCEMENT + routePath.LIST}>
+                        <Link to={routeLink.ANNOUNCEMENT + routePath.LIST} target='_blank'>
                             <Icon type="loading-3-quarters" />
                             <span>Bài viết</span>
                         </Link>

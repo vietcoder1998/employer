@@ -1,0 +1,30 @@
+.read-card {
+  margin: 10px;
+  display: grid;
+  grid-column: auto;
+  grid-row: auto;
+  position: relative;
+  overflow: hidden;
+  h5 {
+    margin: 0 !important;
+  }
+
+  .read-card-content {
+    width: 100%;
+    height: 12vw;
+
+    .info-card {
+      width: 100%;
+      height: 100%;
+      display: inline-flex;
+      .left-box {
+        width: calc(100% - 12vw);
+        padding: 10px;
+      }
+
+      .right-box {
+        width: 12vw;
+      }
+    }
+  }
+}

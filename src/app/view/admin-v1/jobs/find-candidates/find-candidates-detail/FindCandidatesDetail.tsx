@@ -5,7 +5,7 @@ import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
 import { _requestToServer } from '../../../../../../services/exec';
 import { FIND_CANDIDATE_DETAIL, SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
-import { POST, PUT, DELETE } from '../../../../../../common/const/method';
+import { POST, PUT, DELETE, GET } from '../../../../../../common/const/method';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IMapState, IDrawerState } from '../../../../../../redux/models/mutil-box';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
@@ -45,6 +45,7 @@ interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
     getJobService: Function;
     handleModal: Function;
     handleDrawer: (drawerState?: IDrawerState) => any;
+    getRatingUser: (id?: string) => any;
 }
 
 class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, IFindCandidatesDetailState> {
@@ -95,13 +96,22 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             }
         }
 
+        if (
+            nextProps.rating_user &&
+            nextProps.rating_user !== prevState.rating_user
+        ) {
+
+            return {
+                rating_user: nextProps.rating_user,
+            }
+        }
+
         return null
     }
 
 
     async componentDidMount() {
         let { id } = this.props.match.params
-        await this.props.getFindCandidateDetail(id);
         this.move = true;
         // @ts-ignore
         document.addEventListener("scroll", ((event: any) => {
@@ -114,7 +124,13 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     };
 
     createRequest = async (type: string) => {
-        let { id, body } = this.state;
+        let { id, body, rating_user } = this.state;
+        let rating = {
+            attitudeRating: rating_user.attitudeRating,
+            skillRating: rating_user.attitudeRating,
+            jobAccomplishmentRating: rating_user.attitudeRating,
+            comment: rating_user.attitudeRating,
+        }
         await this.setState({ loading: true })
         switch (type) {
             case TYPE.UNLOCK:
@@ -152,19 +168,29 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         this.props.getFindCandidateDetail(id);
                         this.setState({ loading: false });
                     }
-                }).catch(
-                    () => this.catchErr()
-                )
+                })
+                break;
+            case TYPE.RATING:
+                await _requestToServer(
+                    POST,
+                    FIND_CANDIDATE_DETAIL + `/${id}/rating`,
+                    rating,
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    false,
+                    true,
+                ).then((res: any) => {
+                    if (res) {
+                        this.props.getRatingUser(id);
+                        this.setState({ loading: false });
+                    }
+                })
                 break;
             default:
                 break;
         }
     }
-
-    catchErr() {
-        return this.setState({ fail: true })
-    }
-
     turnBack = () => {
         setTimeout(() => {
             this.props.history.push(routeLink.FIND_CANDIDATES + routePath.LIST);
@@ -179,20 +205,19 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 
     getRating = async () => {
         let { id } = this.state;
-        setTimeout(() => {
-            _requestToServer(
-                FIND_CANDIDATE_DETAIL + `/${id}/rating`,
-                undefined,
-                undefined,
-                undefined,
-                undefined,
-                EMPLOYER_HOST
-            ).then((res: any) => {
-                if (res) {
-                    this.setState({ rating_user: res.data })
-                }
-            })
-        }, 250);
+        await _requestToServer(
+            GET,
+            FIND_CANDIDATE_DETAIL + `/${id}/rating`,
+            undefined,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false, false
+        ).then((res: any) => {
+            if (res) {
+                this.setState({ rating_user: res.data })
+            }
+        })
 
     };
 
@@ -283,23 +308,60 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     <IptLetterP
                         value="Thái độ với công việc"
                     >
-                        <Rate value={rating_user.skillRating} />
+                        <Rate
+                            value={rating_user.attitudeRating}
+                            onChange={
+                                (event: number) => { rating_user.attitudeRating = event; this.setState({ rating_user }) }
+                            }
+                        />
                     </IptLetterP>
                     <IptLetterP
                         value="Kĩ năng công việc"
                     >
-                        <Rate value={rating_user.skillRating} />
+                        <Rate
+                            value={rating_user.skillRating}
+                            onChange={
+                                (event: number) => { rating_user.skillRating = event; this.setState({ rating_user }) }
+                            }
+                        />
                     </IptLetterP>
                     <IptLetterP
                         value="Trách nghiệm với công việc"
                     >
-                        <Rate value={rating_user.skillRating} />
+                        <Rate
+                            value={rating_user.jobAccomplishmentRating}
+                            onChange={
+                                (event: number) => { rating_user.jobAccomplishmentRating = event; this.setState({ rating_user }) }
+                            }
+                        />
                     </IptLetterP>
                     <IptLetterP
                         value="Nhận xét"
                     >
-                        <TextArea placeholder={"ex: Ứng viên rất có tiềm năng..."} rows={4} />
+                        <TextArea
+                            placeholder={"ex: Ứng viên rất có tiềm năng..."}
+                            value={rating_user.comment}
+                            onChange={(event: any) => { rating_user.comment = event.target.value; this.setState({ rating_user }) }}
+                            rows={4}
+                        />
                     </IptLetterP>
+                    <hr />
+                    <Button
+                        icon="close"
+                        onClick={() =>{
+                            this.props.handleDrawer({open_drawer: false})
+                        }}
+                    >
+                        Thoát
+                        </Button>
+                    <Button
+                        type="primary"
+                        icon="check"
+                        style={{ float: "right" }}
+                        onClick={() => this.createRequest(TYPE.RATING)}
+                    >
+                        Đánh giá
+                    </Button>
                 </DrawerConfig>
                 <div className='common-content'>
                     <h5>
@@ -311,7 +373,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                                     type={"edit"}
                                     style={{ marginLeft: 15 }}
                                     onClick={() => {
-                                        this.getRating()
+                                        this.getRating();
                                         this.props.handleDrawer({ open_drawer: true });
                                     }}
                                 />
@@ -393,6 +455,13 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getFindCandidateDetail: (id: string) =>
         dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id }),
+    getJobService: () => dispatch({
+        type: REDUX.JOB_SERVICE,
+    }),
+    getRatingUser: (id?: string) => dispatch({
+        type: REDUX_SAGA.RATING_USER.GET_RATING_USER,
+        id
+    }),
     handleMap: (mapState?: IMapState) =>
         dispatch({
             type: REDUX.MAP.SET_MAP_STATE,
@@ -403,9 +472,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
             type: REDUX.HANDLE_DRAWER,
             drawerState
         }),
-    getJobService: () => dispatch({
-        type: REDUX.JOB_SERVICE,
-    }),
     handleModal: (modalState?: IMapState) =>
         dispatch({
             type: REDUX.HANDLE_MODAL,
@@ -417,6 +483,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     mapState: state.MutilBox.mapState,
     find_candidates_detail: state.FindCandidateDetail,
     unlock_turn: state.JobService.unlockProfileQuantity,
+    rating_user: state.RatingUser,
     modalState: state.MutilBox.modalState
 })
 

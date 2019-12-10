@@ -30,7 +30,7 @@ interface AnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     getListAnnouTypes: Function;
-    getAnnouncements: Function;
+    getListAnnouncements: Function;
     getAnnouncementDetail: Function;
     getListAnnouComment: Function;
 }
@@ -289,7 +289,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             target,
         } = this.state;
 
-        await this.props.getAnnouncements(
+        await this.props.getListAnnouncements(
             pageIndex,
             pageSize,
             {
@@ -619,7 +619,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListAnnouTypes: (data: any) => dispatch({ type: REDUX_SAGA.ANNOU_TYPES.GET_ANNOU_TYPES, data }),
-    getAnnouncements: (pageIndex: number, pageSize: number, body: any) => dispatch({
+    getListAnnouncements: (pageIndex: number, pageSize: number, body: any) => dispatch({
         type: REDUX_SAGA.ANNOUNCEMENTS.GET_ANNOUNCEMENTS,
         pageIndex,
         pageSize,
