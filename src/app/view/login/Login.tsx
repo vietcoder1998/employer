@@ -177,10 +177,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             onChange={
                                                                 (event: any) => this.setState({ username: event.target.value })
                                                             }
-                                                            onPressEnter={
-                                                                (event) => { if (exactly) { this.handleSubmit(event, "LOGIN") } }
-                                                            }
-                                                        />,
+
+                                                        />
                                                     )}
                                                 </Form.Item>
                                                 <p>Mật khẩu </p>
@@ -195,7 +193,10 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             type="password"
                                                             maxLength={160}
                                                             onChange={(event: any) => this.setState({ password: event.target.value })}
-                                                        />,
+                                                            onPressEnter={
+                                                                (event) => { if (exactly) { this.handleSubmit(event, "LOGIN") } }
+                                                            }
+                                                        />
                                                     )}
                                                 </Form.Item>
                                                 <p>
@@ -213,6 +214,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 className="login-form-button"
                                                 style={{ width: "100%" }}
                                                 onClick={(event: any) => this.handleSubmit(event, "LOGIN")}
+                                                onKeyDown={(event) => {
+                                                    if (event.keyCode === 13) {
+                                                        this.createRequest("LOGIN")
+                                                    }
+                                                }}
                                             >
                                                 Đăng nhập
                                             </Button>
@@ -277,6 +283,16 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
+                                                <p>Địa chỉ trên bản đồ</p>
+                                                <Input
+                                                    prefix={<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                    size="large"
+                                                    placeholder="Định vị bản đồ"
+                                                    type="text"
+                                                    maxLength={240}
+                                                    value={localStorage.getItem("location")}
+                                                    onClick={() => { this.setState({ open_drawer: true }) }}
+                                                />
                                                 <p>Mật khẩu</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('password', {
@@ -307,19 +323,15 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             type="password"
                                                             maxLength={160}
                                                             onChange={(event: any) => this.setState({ repassword: event.target.value })}
+                                                            onKeyDown={(event) => {
+                                                                if (event.keyCode === 13) {
+                                                                    this.createRequest("REGISTER")
+                                                                }
+                                                            }}
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Địa chỉ trên bản đồ</p>
-                                                <Input
-                                                    prefix={<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                    size="large"
-                                                    placeholder="Định vị bản đồ"
-                                                    type="text"
-                                                    maxLength={240}
-                                                    value={localStorage.getItem("location")}
-                                                    onClick={() => { this.setState({ open_drawer: true }) }}
-                                                />
+
                                                 <p style={{ marginTop: 20 }}>
                                                     <Checkbox onChange={() => { }} >Đồng ý với điều khoản của chúng tôi</Checkbox>
                                                 </p>

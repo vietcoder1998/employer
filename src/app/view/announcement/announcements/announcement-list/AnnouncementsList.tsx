@@ -183,7 +183,6 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
             list_announcements
         } = this.props;
 
-        console.log(this.props)
         return (
             <div>
                 <Row>

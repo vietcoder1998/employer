@@ -1,9 +1,11 @@
 .login {
-    height: calc(100vh - 120px);
+    margin-top: 60px;
+    min-height: calc(100vh - 120px);
     background-color: whitesmoke;
     .r-p-content {
         background-color: white;
-        padding: 20px 10px;
+        padding: 20px 20px 50px;
+        margin-bottom: 30px;
         p{
             font-weight: 500;
             font-size: 1rem;

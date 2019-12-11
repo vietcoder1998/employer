@@ -12,11 +12,7 @@ export const Announcements = (state: IAnnouncements = initState, action: any): I
     switch (action.type) {
         case REDUX.ANNOUNCEMENTS.GET_ANNOUNCEMENTS:
             return {
-                ...state,
-                items: action.data.items,
-                pageIndex: action.data.pageIndex,
-                pageSize: action.data.pageSize,
-                totalItems: action.data.totalItems
+                ...action.data,
             };
 
         default:

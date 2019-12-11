@@ -1,3 +1,4 @@
+import { authHeaders, noInfoHeader } from './../../services/auth';
 import { IJobAnnouncementsFilter } from './../models/job-announcements';
 import { IAnnouCommentsBody } from './../models/annou-comments';
 import { IAnnouncements } from '../models/announcements';
@@ -6,7 +7,7 @@ import { ANNOUNCEMENTS } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../common/const/actions'
-import { EMPLOYER_HOST } from '../../environment/dev';
+import { EMPLOYER_HOST, PUBLIC_HOST } from '../../environment/dev';
 
 function* getListAnnouncementsData(action: any) {
     let res = yield call(callAnnouncements, action);
@@ -42,6 +43,7 @@ function callAnnouncements(action: any) {
     }
 
     try {
+        let token = localStorage.getItem("token");
         let res = _requestToServer(
             POST, ANNOUNCEMENTS,
             body,
@@ -49,8 +51,8 @@ function callAnnouncements(action: any) {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,
                 pageSize: action.pageSize ? action.pageSize : 10
             },
-            undefined,
-            EMPLOYER_HOST,
+            token ? authHeaders : noInfoHeader,
+            token ? EMPLOYER_HOST : PUBLIC_HOST,
             false,
             false
         )

@@ -2,7 +2,7 @@ import React from 'react';
 import './CommentAnnou.scss';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/rodan.png';
-import { List, Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
+import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
 import { TYPE } from '../../../../../../common/const/type';
 import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
@@ -60,14 +60,14 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                 </div>
                 {
                     props && props.commentDetail.id ?
-                        <div className='rm-cmt' onClick={()=>props.onRemoveComment()}>
+                        <div className='rm-cmt' onClick={() => props.onRemoveComment()}>
                             <Icon type='delete' />  Xóa bình luận
                 </div> : ""
                 }
 
                 <Divider />
                 {
-                    list_annou_comment.map((item: IAnnouComment, index: number) => {
+                    list_annou_comment && list_annou_comment.map((item: IAnnouComment, index: number) => {
                         let sub_title = "";
                         switch (item.userType) {
                             case TYPE.CANDIDATE:
@@ -103,7 +103,6 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                                             icon={"user"}
                                         />
                                     </div>
-
                                     <div>
                                         <div>
                                             {item.name}

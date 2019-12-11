@@ -36,7 +36,7 @@ function Annoucements(props?: IAnnoucementsProps) {
                     props.history.push(routeLink.ANNOUNCEMENT + `/list?type=${event}`)
                 }}  >
                     <TabPane key={TYPE.ALL} tab={`Tất cả`} />
-                    {props && props.list_annou_type.map((item?: IAnnouType, index?: number) => (
+                    {props && props.list_annou_type && props.list_annou_type.map((item?: IAnnouType, index?: number) => (
                         // @ts-ignore
                         <TabPane key={item.id} tab={`${item.name}`} />
                     ))}

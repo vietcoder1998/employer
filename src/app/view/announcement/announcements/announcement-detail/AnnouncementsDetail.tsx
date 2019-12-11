@@ -14,7 +14,7 @@ import HeaderAnnou from '../card-option/header-annou/HeaderAnnou';
 import ContentAnnou from '../card-option/content-annou/ContentAnnou';
 import CommentAnnou from '../card-option/comment-annou/CommentAnnou';
 import { IAppState } from '../../../../../redux/store/reducer';
-import { GET, DELETE } from '../../../../../common/const/method';
+import { GET, DELETE, POST } from '../../../../../common/const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
 
@@ -25,7 +25,6 @@ interface IAnnouncementsDetailProps extends StateProps, DispatchProps {
     getAnnouncementDetail: Function;
     getAnnouCommentDetail: Function;
     getListAnnouComment: Function;
-    getListComment: Function;
 }
 
 interface IAnnouncementsDetailState {
@@ -58,7 +57,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
             let id = nextProps.match.params.id;
             nextProps.getAnnouncementDetail(id);
             nextProps.getListAnnouComment(0, 0, id, undefined);
-            nextProps.getAnnouCommentDetail(id);
+            // nextProps.getAnnouCommentDetail(id);
 
             return {
                 id,
@@ -66,19 +65,38 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
             }
         }
 
-        return null;
+        return {
+            loading: false
+        };
     };
 
-    getMoreCm = () => {
-        let { pageIndex } = this.state;
+    getMoreCm = async () => {
+        let { pageSize, id , pageIndex} = this.state;
+        await this.setState({pageSize: pageSize + 5});
+        await this.props.getListAnnouComment(pageIndex, pageSize , id);
     }
 
-    onComment = (event) => {
+    onComment = async (body) => {
+        let { id, pageIndex, pageSize } = this.state;
 
+        await _requestToServer(
+            POST,
+            ANNOUNCEMENT_DETAIL + `/${id}/comments`,
+            body,
+            undefined,
+            undefined,
+            EMPLOYER_HOST
+        ).then(
+            (res?: any) => {
+                if (res) {
+                    this.props.getListAnnouComment(pageIndex, pageSize, id);
+                }
+            }
+        )
     }
 
     onRemoveComment = async () => {
-        let { id } = this.state;
+        let { id, pageIndex, pageSize } = this.state;
         let { comment } = this.props;
         await _requestToServer(
             DELETE,
@@ -90,8 +108,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
         ).then(
             (res?: any) => {
                 if (res) {
-                    this.props.getListAnnouComment(id);
-                    this.props.getListComment(id);
+                    this.props.getListAnnouComment(pageIndex, pageSize, id);
                 }
             }
         )
@@ -171,7 +188,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                                         commentDetail={comment}
                                     />
                                     <div className='a_c'>
-                                        <Button style={{ width: "100%" }}>
+                                        <Button style={{ width: "100%" }} onClick={this.getMoreCm}>
                                             Tải thêm ...
                                         </Button>
                                     </div>
@@ -221,8 +238,6 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         body?: IAnnouCommentsBody
     ) =>
         dispatch({ type: REDUX_SAGA.ANNOU_COMMENTS.GET_ANNOU_COMMENTS, pageIndex, pageSize, id, body }),
-    getListComment: (comment?: IAnnouComment) =>
-        dispatch({ type: REDUX.ANNOU_COMMENTS.GET_ANNOU_COMMENTS, comment }),
 
 });
 

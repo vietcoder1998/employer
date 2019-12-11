@@ -8,6 +8,13 @@ const NotFound = lazy(() => import('./../app/view/not-found/NotFound'));
 const Announcements = lazy(() => import('./../app/view/announcement/Announcement'));
 
 export default function Routes(props) {
+  let [asyncBr, setAsync] = React.useState(0);
+  setTimeout(() => {
+    if (asyncBr === 10) {
+      setAsync(0)
+    } else
+      setAsync(asyncBr + 2);
+  }, 4000);
   return (
     <>
       <Router>
