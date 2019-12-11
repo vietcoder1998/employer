@@ -28,16 +28,22 @@ function callAnnouComments(action: any) {
         body = action.body;
     }
 
-    return _requestToServer(
-        POST, ANNOU_COMMENTS + `/${id}/comments/query`,
-        body,
-        {
+    try {
+        let res = _requestToServer(
+            POST, ANNOU_COMMENTS + `/${id}/comments/query`,
+            body,
+            {
 
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 0,
-        },
-        undefined, EMPLOYER_HOST, false, false
-    )
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0,
+            },
+            undefined, EMPLOYER_HOST, false
+        )
+
+        return res
+    } catch (error) {
+        throw error
+    }
 }
 
 export function* AnnouCommentsWatcher() {

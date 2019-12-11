@@ -17,32 +17,40 @@ function* getListJobAnnouncementsData(action: any) {
 
     if (res.code === 200) {
         data = res.data;
-        yield put({
-            type: REDUX.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS,
-            data
-        });
     };
+
+    yield put({
+        type: REDUX.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS,
+        data
+    });
 };
 
 function callJobAnnouncements(action: any) {
-    let body = {};
-    if (action.body) {
-        body = action.body
-    };
+    try {
+        let body = {};
 
-    return _requestToServer(
-        POST,
-        JOB_ANNOUNCEMENTS+'/query',
-        body,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 10
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false
-    );
+        if (action.body) {
+            body = action.body
+        };
+
+        let res = _requestToServer(
+            POST,
+            JOB_ANNOUNCEMENTS + '/query',
+            body,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 10
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false
+        );
+        return res
+    } catch (error) {
+        throw error;
+    }
+
 };
 
 export function* JobAnnouncementsWatcher() {

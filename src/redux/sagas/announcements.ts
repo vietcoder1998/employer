@@ -1,3 +1,5 @@
+import { IJobAnnouncementsFilter } from './../models/job-announcements';
+import { IAnnouCommentsBody } from './../models/annou-comments';
 import { IAnnouncements } from '../models/announcements';
 import { POST } from '../../common/const/method';
 import { ANNOUNCEMENTS } from '../../services/api/private.api';
@@ -28,17 +30,21 @@ function* getListAnnouncementsData(action: any) {
 
 function callAnnouncements(action: any) {
 
+    let body = {
+        adminID: null,
+        hidden: null,
+        createdDate: null,
+        announcementTypeID: null
+    }
 
     if (action.body) {
-        return _requestToServer(
+        body = action.body;
+    }
+
+    try {
+        let res = _requestToServer(
             POST, ANNOUNCEMENTS,
-            {
-                adminID: action.body.adminID,
-                hidden: action.body.hidden,
-                createdDate: action.body.createdDate,
-                target: action.body.target,
-                announcementTypeID: action.body.announcementTypeID,
-            },
+            body,
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,
                 pageSize: action.pageSize ? action.pageSize : 10
@@ -48,6 +54,10 @@ function callAnnouncements(action: any) {
             false,
             false
         )
+
+        return res
+    } catch (e) {
+        throw e
     }
 }
 

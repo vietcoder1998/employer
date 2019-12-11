@@ -932,7 +932,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
     handleModal: (modalState: IModalState) =>
         dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
-    getJobAnnouncementDetail: (id: string | number) =>
+    getJobAnnouncementDetail: (id?: string | number) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
 });

@@ -18,27 +18,34 @@ function* getListJobNameData(action: any) {
 
     if (res) {
         data = res.data;
-        yield put({
-            type: REDUX.JOB_NAMES.GET_JOB_NAMES,
-            data
-        });
     }
+
+    yield put({
+        type: REDUX.JOB_NAMES.GET_JOB_NAMES,
+        data
+    });
 }
 
 function callJobName(action: any) {
-    return _requestToServer(
-        GET,
-        JOB_NAMES,
-        null,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 0,
-        },
-        noInfoHeader,
-        PUBLIC_HOST,
-        false,
-        false
-    )
+    try {
+        let res = _requestToServer(
+            GET,
+            JOB_NAMES,
+            null,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0,
+            },
+            noInfoHeader,
+            PUBLIC_HOST,
+            false,
+            false
+        )
+        return res
+
+    } catch (error) {
+        throw error;
+    }
 }
 
 export function* JobNameWatcher() {

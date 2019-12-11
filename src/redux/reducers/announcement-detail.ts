@@ -10,6 +10,7 @@ let initState: IAnnouncementDetail = {
     hidden: false,
     imageUrl: "",
     content: "",
+    averageRating: 0,
 };
 
 export const AnnouncementDetail = (state: IAnnouncementDetail = initState, action: any): IAnnouncementDetail => {

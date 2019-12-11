@@ -1,34 +1,55 @@
 import React from 'react';
 import './ReadCard.scss';
-import { Avatar } from 'antd';
-import { Timer } from '../../../../layout/common/Common';
+import { Avatar, Icon } from 'antd';
+import { Timer, NotUpdate } from '../../../../layout/common/Common';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/rodan.png';
+import { IAnnouncement } from '../../../../../../redux/models/announcements';
+import limitString from '../../../../../../common/utils/limitString';
+import { Link } from 'react-router-dom';
+import { routeLink } from '../../../../../../common/const/break-cumb';
 
 interface IReadCard {
-
+    item?: IAnnouncement
 }
 
 export default function ReadCard(props: IReadCard) {
-
     return (
-        <div className='read-card test'  >
-            <div className='read-card-content ' >
-                <div className='info-card'>
-                    <div className="left-box">
-                        <h6>
-                            ent of a page when looking
-                             at its layout. The point of using L
-                        </h6>
-                        y dummy text
-                        of the printing and types been
-                         the industry'sdummy
-                    </div>
-                    <div className='right-box' >
-                        <Avatar src={testImg} shape={"square"} style={{ width: '100%', height: '100%' }} />
+        <Link to={routeLink.ANNOUNCEMENT + `/detail/${props && props.item && props.item.id}`} target='_blank' >
+            <div className='read-card'  >
+                <div className='read-card-content ' >
+                    <div className='info-card'>
+                        <div className="left-box">
+                            <h5>
+                                {limitString(props && props.item && props.item.title, 80)}
+                            </h5>
+                            <div className='descrtiption'>
+                                {props && props.item ? props.item.description : ""}
+                            </div>
+                            <div className='info-author'>
+                                <div>
+                                    {props && props.item ? props.item.admin.lastName + " " + props.item.admin.firstName : <NotUpdate />}
+                                </div>
+                                <div>
+                                    <Timer
+                                        style={{ padding: 0, margin: 0 }}
+                                        value={props && props.item && props.item.createdDate}
+                                    />
+                                </div>
+                                <div>
+                                    <Icon type={"eye"} /> {props && props.item && props.item.viewNumber}
+                                </div>
+                            </div>
+                        </div>
+                        <div className='right-box' >
+                            <img
+                                className='image-right-box'
+                                src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }

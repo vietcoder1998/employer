@@ -16,36 +16,41 @@ function* getListApplyJobsData(action: any) {
         totalItems: 0,
     };
 
-    if (res.code === 200) {
-        data.items = res.data.items;
-        data.pageIndex = res.data.pageIndex;
-        data.pageSize = res.data.pageSize;
-        data.totalItems = res.data.totalItems;
-        yield put({
-            type: REDUX.APPLY_JOB.GET_APPLY_JOB,
-            data
-        });
+    if (res) {
+        data = res.data;
     }
+
+    yield put({
+        type: REDUX.APPLY_JOB.GET_APPLY_JOB,
+        data
+    });
 }
 
 function callApplyJobs(action: any) {
     if (action.id) {
-        return _requestToServer(
-            GET,
-            APPLY_JOB + (action.id ? `/${action.id}/apply/candidates` : undefined),
-            {
-                state: action.body ? action.body : null,
-            },
-            {
-                pageIndex: action.pageIndex ? action.pageIndex : 0,
-                pageSize: action.pageSize ? action.pageSize : 10
-            },
-            undefined,
-            EMPLOYER_HOST,
-            false,
-            false,
-        )
+        try {
+            let res = _requestToServer(
+                GET,
+                APPLY_JOB + (action.id ? `/${action.id}/apply/candidates` : undefined),
+                {
+                    state: action.body ? action.body : null,
+                },
+                {
+                    pageIndex: action.pageIndex ? action.pageIndex : 0,
+                    pageSize: action.pageSize ? action.pageSize : 10
+                },
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            )
+
+            return res
+        } catch (e) {
+            throw e
+        }
     }
+
 }
 
 export function* ApplyJobsWatcher() {

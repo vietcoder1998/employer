@@ -381,7 +381,7 @@ class AnnouncementsList extends PureComponent<AnnouncementsListProps, Announceme
             </div >)
     };
 
-    onClickCheckBox = (event: boolean, id: string | number) => {
+    onClickCheckBox = (event: boolean, id?: string | number) => {
         let { list_remove } = this.state;
         if (event) {
             list_remove.push(id);
@@ -625,13 +625,13 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         pageSize,
         body
     }),
-    getAnnouncementDetail: (id: string) =>
+    getAnnouncementDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL, id }),
     getListAnnouComment: (
         pageIndex: number,
         pageSize: number,
-        id: string | number,
-        body: IAnnouCommentsBody
+        id?: string | number,
+        body?: IAnnouCommentsBody
     ) =>
         dispatch({ type: REDUX_SAGA.ANNOU_COMMENTS.GET_ANNOU_COMMENTS, pageIndex, pageSize, id, body })
 });

@@ -453,7 +453,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 }
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getFindCandidateDetail: (id: string) =>
+    getFindCandidateDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id }),
     getJobService: () => dispatch({
         type: REDUX.JOB_SERVICE,

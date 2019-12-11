@@ -1,4 +1,4 @@
-export const limitString = (content, limit) => {
+export default function limitString(content?: string, limit?: number): string {
     let length = content && content.length;
     let result = '';
     let maxLength = 20;

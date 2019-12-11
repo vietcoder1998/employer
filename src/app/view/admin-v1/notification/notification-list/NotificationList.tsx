@@ -3,22 +3,11 @@ import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../common/const/actions';
 import { Icon } from 'antd';
 import { NotUpdate } from '../../../layout/common/Common';
-import { _requestToServer } from '../../../../../services/exec';
 import { IAppState } from '../../../../../redux/store/reducer';
 import Loading from '../../../layout/loading/Loading';
 import NotiItem from '../../../layout/notification-item/NotiItem';
 import { INoti } from '../../../../../redux/models/notis';
 import randomID from '../../../../../common/utils/randomID';
-
-let ImageRender = (props: any) => {
-    if (props.src && props.src !== "") {
-        return <img src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} />
-    } else {
-        return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
-            <Icon type="area-chart" />
-        </div>
-    }
-};
 
 function containsObject(obj?: INoti, list?: Array<INoti>) {
     var i;
@@ -149,7 +138,6 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
             list_noti,
             loadingMore,
             loading,
-            pageSize
         } = this.state;
 
         let { totalItems } = this.props;

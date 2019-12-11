@@ -16,7 +16,7 @@ function* getListRatingUserData(action: any) {
         lastModified: -1
     }
 
-    if (res && res.data) {
+    if (res) {
         data = res.data;
     };
 
@@ -27,21 +27,24 @@ function* getListRatingUserData(action: any) {
 }
 
 function callRatingUser(action: any) {
-
     if (action.id) {
-        return _requestToServer(
-            GET,
-            FIND_CANDIDATE_DETAIL + `/${action.id}/rating`,
-            undefined,
-            undefined,
-            undefined,
-            EMPLOYER_HOST,
-            false,
-            false,
-        )
-    }
+        try {
+            let res = _requestToServer(
+                GET,
+                FIND_CANDIDATE_DETAIL + `/${action.id}/rating`,
+                undefined,
+                undefined,
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            )
 
-    return
+            return res
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export function* RatingUserWatcher() {

@@ -12,11 +12,7 @@ export const EmBranches = (state: IEmBranches = initState, action: any): IEmBran
     switch (action.type) {
         case REDUX.EM_BRANCHES.GET_EM_BRANCHES:
             return {
-                ...state,
-                items: action.data.items,
-                pageIndex: action.data.pageIndex,
-                pageSize: action.data.pageSize,
-                totalItems: action.data.totalItems
+                ...action.data
             }
 
         default:

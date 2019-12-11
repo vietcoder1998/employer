@@ -23,6 +23,7 @@ import { PendingJobDetailWatcher } from '../sagas/pending-job-detail';
 import { NotisWatcher } from '../sagas/notis';
 import { RatingsWatcher } from '../sagas/ratings';
 import { RatingUserWatcher } from '../sagas/rating-user';
+import { AnnouCommentDetailWatcher } from '../sagas/annou-comment-detail';
 
 export default function* rootSaga() {
     try {
@@ -51,6 +52,7 @@ export default function* rootSaga() {
             NotisWatcher(),
             RatingsWatcher(),
             RatingUserWatcher(),
+            AnnouCommentDetailWatcher(),
         ])
     } catch (err) {
         throw err;

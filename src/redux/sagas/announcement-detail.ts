@@ -18,7 +18,7 @@ function* getListAnnouncementDetailData(action: any) {
         lastModified: undefined,
         createdDate: 0
     };
-    if (res.code === 200) {
+    if (res) {
         data = res.data;
         yield put({
             type: REDUX.ANNOUNCEMENT_DETAIL.GET_ANNOUNCEMENT_DETAIL,
@@ -32,16 +32,22 @@ function callAnnouncementDetail(action: any) {
     if (action.id) {
         id = action.id;
     }
-    return _requestToServer(
-        GET, 
-        ANNOUNCEMENT_DETAIL + `/${id}`,
-        undefined,
-        undefined,
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+
+    try {
+        let res = _requestToServer(
+            GET,
+            ANNOUNCEMENT_DETAIL + `/${id}`,
+            undefined,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+        )
+
+        return res
+    } catch (e) {
+        throw e 
+    }
 }
 
 export function* AnnouncementDetailWatcher() {

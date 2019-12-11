@@ -5,6 +5,8 @@
   grid-row: auto;
   position: relative;
   overflow: hidden;
+  color: rgba(128, 128, 128, 1);
+
   h5 {
     margin: 0 !important;
   }
@@ -25,9 +27,30 @@
 
     .info-writor {
       position: absolute;
-      bottom: 15px;
+      bottom: 0px;
+      left: 0px;
+      padding-bottom: 5px;
+      width: 100%;
+      padding: 10px;
+      
       .writor {
         display: inline-flex;
+        width: 100%;
+      }
+
+      .ant-skeleton-header {
+        padding-top: 30%;
+      }
+
+      .ant-skeleton-content {
+        vertical-align: bottom;
+      }
+      .ant-skeleton-paragraph {
+        margin: 0;
+      }
+
+      li {
+        margin-top: 5px;
       }
     }
   }

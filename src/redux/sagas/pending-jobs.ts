@@ -9,7 +9,6 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListPendingJobsData(action: any) {
     let res = yield call(callPendingJobs, action);
-
     let data: IPendingJobs = {
         items: [],
         pageIndex: 0,
@@ -17,7 +16,7 @@ function* getListPendingJobsData(action: any) {
         totalItems: 0,
     };
 
-    if (res.code === 200) {
+    if (res) {
         data = res.data;
     }
 
@@ -28,15 +27,21 @@ function* getListPendingJobsData(action: any) {
 }
 
 function callPendingJobs(action: any) {
-    return _requestToServer(
-    GET, PENDING_JOBS,
-        undefined,
-        {
-            pageIndex: action.body.pageIndex,
-            pageSize: action.body.pageSize
-        },
-        undefined, EMPLOYER_HOST, false, false
-    )
+    try {
+        let res = _requestToServer(
+            GET, PENDING_JOBS,
+            undefined,
+            {
+                pageIndex: action.body.pageIndex,
+                pageSize: action.body.pageSize
+            },
+            undefined, EMPLOYER_HOST, false, false
+        );
+
+        return res;
+    } catch (error) {
+        throw error
+    }
 }
 
 export function* PendingJobsWatcher() {

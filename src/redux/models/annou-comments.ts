@@ -1,5 +1,5 @@
 export interface IAnnouComment {
-    id?: 23,
+    id?: number,
     userID?: string,
     userType?: string,
     name?: string,

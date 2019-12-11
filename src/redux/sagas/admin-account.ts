@@ -9,13 +9,13 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 function* getListAdminAccountData(action: any) {
     let res = yield call(callAdminAccount, action);
     let data: IAdminAccount = {
-    
+
     };
 
     if (res.code === 200) {
         data = res.data;
     }
-    
+
     yield put({
         type: REDUX.ADMIN_ACCOUNT.GET_ADMIN_ACCOUNT,
         data
@@ -23,16 +23,24 @@ function* getListAdminAccountData(action: any) {
 }
 
 function callAdminAccount(action: any) {
-    return _requestToServer(
-        GET,
-        ADMIN_ACCOUNT + `/profile`,
-        action.body ? action.body : null,
-        undefined,
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+    try {
+
+        let res =
+            _requestToServer(
+                GET,
+                ADMIN_ACCOUNT + `/profile`,
+                action.body ? action.body : null,
+                undefined,
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            )
+        return res
+    } catch (error) {
+        throw error;
+
+    }
 }
 
 export function* AdminAccountWatcher() {

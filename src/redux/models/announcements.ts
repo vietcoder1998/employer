@@ -1,6 +1,7 @@
 export interface IAnnouncement {
     id?: string,
     imageUrl?: string;
+    description?: string;
     announcementType?: {
         id?: number;
         name?: string;

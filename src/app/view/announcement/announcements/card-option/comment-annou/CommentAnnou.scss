@@ -3,7 +3,8 @@
   min-height: 10vh;
   margin: 20px 0px;
   padding: 20px 15px 20px;
-  letter-spacing: 1.5px;
+  font-size: 1.2rem;
+
   .ant-list-item-meta {
     margin-bottom: 5px !important;
   }
@@ -11,9 +12,71 @@
   .ant-list-item-meta-title {
     margin-bottom: 5px !important;
   }
-  .content-list {
-    margin-left: 50px;
-    text-align: justify;
+  .rating-cmt {
+    margin: 10px 0px;
+    padding: 0px 10px;
+  }
+
+  .rm-cmt {
+    font-style: italic;
+    color: red;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  .cr-cmt {
+    display: flex;
+    margin: 10px 0px;
+    padding: 2px;
+
+    .cmt-ct {
+      width: calc(100% - 80px);
+
+      .text-comment {
+        margin-right: 10px;
+        border: none;
+      }
+    }
+
+    .btn-cmt {
+      width: 60px;
+      border: none;
+      background: #168ecd;
+      color: white;
+      margin: 0px 10px;
+      height: 50px;
+      border-radius: 3px;
+
+      &:hover {
+        background: rgb(16, 108, 158);
+      }
+    }
+  }
+
+  .comment {
+    display: inline-flex;
+    position: relative;
+    width: 100%;
+    padding: 20px 10px;
+    margin: 10px 0px;
+    border-left: solid rgb(158, 209, 236) 2px;
+
+    &:hover {
+      border-left: solid #168ecd 2px;
+    }
+    vertical-align: bottom;
+
+    .img-cmt {
+      width: 40px;
+      margin: 0 10px;
+    }
+
+    .comment-msg {
+      padding: 10px;
+      font-size: 0.9rem;
+    }
   }
 
   font-size: 0.8rem;

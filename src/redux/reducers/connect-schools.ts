@@ -12,11 +12,7 @@ export const ConnectSchools = (state: IConnectSchools = initState, action: any):
     switch (action.type) {
         case REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL:
             return {
-                ...state,
-                items: action.data.items,
-                pageIndex: action.data.pageIndex,
-                pageSize: action.data.pageSize,
-                totalItems: action.data.totalItems
+                ...action.data
             };
 
         default:

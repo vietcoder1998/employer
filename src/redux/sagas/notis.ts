@@ -9,32 +9,41 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 function* getListNotisData(action: any) {
     let res = yield call(callNotis, action);
     let data: INotis = {
+        pageIndex: 0,
+        pageSize: 0,
+        items: [],
+        totalItems: 0,
     }
 
-    if (res.code === 200) {
+    if (res) {
         data = res.data;
-        yield put({
-            type: REDUX.NOTI.GET_NOTI,
-            data
-        });
     }
+    yield put({
+        type: REDUX.NOTI.GET_NOTI,
+        data
+    });
 }
 
 function callNotis(action: any) {
-    return _requestToServer(
-        GET,
-        NOTI,
-        action.body ? action.body : null,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 10
+    try {
+        let res = _requestToServer(
+            GET,
+            NOTI,
+            action.body ? action.body : null,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 10
 
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false,
+        )
+        return res
+    } catch (error) {
+        throw error;
+    }
 }
 
 export function* NotisWatcher() {

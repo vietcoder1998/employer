@@ -5,25 +5,54 @@
   grid-row: auto;
   position: relative;
   overflow: hidden;
+  border: solid rgba(128, 128, 128, 0) 1px;
+  color: rgba(128, 128, 128, 1);
+
+  &:hover {
+    border-bottom: solid rgba(128, 128, 128, 0.428) 1px;
+  }
+
   h5 {
     margin: 0 !important;
+    font-size: 1.2rem;
   }
 
   .read-card-content {
     width: 100%;
-    height: 12vw;
+    height: 10vw;
+    min-height: 150px;
+    margin: 1vw 0;
 
     .info-card {
       width: 100%;
       height: 100%;
       display: inline-flex;
       .left-box {
-        width: calc(100% - 12vw);
-        padding: 10px;
+        width: calc(100% - 10vw);
+        padding: 10px 20px 10px 0px;
+
+        .descrtiption {
+          padding: 25px;
+        }
+
+        .info-author {
+          position: absolute;
+          bottom: 5px;
+          z-index: 1;
+        }
       }
 
       .right-box {
-        width: 12vw;
+        width: 10vw;
+        min-height: 150px;
+        min-width: 150px;
+        overflow: hidden;
+
+        .image-right-box {
+          width: 100%;
+          height: 100%;
+          border: solid rgba(128, 128, 128, 0.428) 1px;
+        }
       }
     }
   }

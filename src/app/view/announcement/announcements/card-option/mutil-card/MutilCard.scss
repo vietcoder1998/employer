@@ -1,45 +1,62 @@
 .mutil-card {
-    margin: 10px;
-    display: grid;
-    grid-column: auto;
-    grid-row: auto;
-    position: relative;
-    overflow: hidden;
-    h5 {
-      margin: 0 !important;
-    }
-  
-    .mutil-card-content {
-      width: 100%;
-    }
-  
-    .info-card {
+  margin: 10px;
+  display: grid;
+  grid-column: auto;
+  grid-row: auto;
+  position: relative;
+  overflow: hidden;
+  color: rgba(128, 128, 128, 1);
+
+  h5 {
+    margin: 0 !important;
+  }
+
+  .mutil-card-content {
+    width: 100%;
+  }
+
+  .info-card {
+    position: absolute;
+    z-index: 1;
+    bottom: 0px;
+    width: 100%;
+    height: calc(50% - 15px);
+    padding: 15px 10px;
+    background-color: white;
+
+    .info-writor {
       position: absolute;
-      z-index: 1;
+      left: 0px;
       bottom: 0px;
-      width: 100%;
-      height: calc(50% - 15px);
-      padding: 15px 10px;
       background-color: white;
-  
-      .info-writor {
-        position: absolute;
-        left: 0px;
-        bottom: 10px;
-        background-color: white;
+      width: 100%;
+      padding: 5px;
+      .writor {
+        display: inline-flex;
         width: 100%;
-        padding: 5px;
-        .writor {
-          display: inline-flex;
-        }
+      }
+
+      .ant-skeleton-header {
+        padding-top: 30%;
+      }
+
+      .ant-skeleton-content {
+        vertical-align: bottom;
+      }
+      .ant-skeleton-paragraph {
+        margin: 0;
+      }
+
+      li {
+        margin-top: 5px;
       }
     }
-  
-    .img-card-background {
-      position: absolute;
-      width: 100%;
-      height: auto;
-      z-index: 0;
-    }
   }
-  
+
+  .img-card-background {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 0;
+  }
+}

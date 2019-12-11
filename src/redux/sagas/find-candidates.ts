@@ -17,32 +17,36 @@ function* getListFindCandidatesData(action: any) {
     };
 
     if (res.code === 200) {
-        data.items = res.data.items;
-        data.pageIndex = res.data.pageIndex;
-        data.pageSize = res.data.pageSize;
-        data.totalItems = res.data.totalItems;
-        yield put({
-            type: REDUX.FIND_CANDIDATES.GET_FIND_CANDIDATES,
-            data
-        });
+        data = res.data
     }
+
+    yield put({
+        type: REDUX.FIND_CANDIDATES.GET_FIND_CANDIDATES,
+        data
+    });
 }
 
 function callFindCandidates(action: any) {
     if (action.body) {
-        return _requestToServer(
-            POST,
-            FIND_CANDIDATES,
-            action.body ? action.body : null,
-            {
-                pageIndex: action.pageIndex ? action.pageIndex : 0,
-                pageSize: action.pageSize ? action.pageSize : 10
-            },
-            undefined,
-            EMPLOYER_HOST,
-            false,
-            false
-        )
+        try {
+            let res = _requestToServer(
+                POST,
+                FIND_CANDIDATES,
+                action.body ? action.body : null,
+                {
+                    pageIndex: action.pageIndex ? action.pageIndex : 0,
+                    pageSize: action.pageSize ? action.pageSize : 10
+                },
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false
+            )
+            return res
+
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

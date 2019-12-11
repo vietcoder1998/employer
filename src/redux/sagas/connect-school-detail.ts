@@ -20,16 +20,25 @@ function* getListConnectSchoolDetailData(action: any) {
 }
 
 function callConnectSchoolDetail(action: any) {
-    return _requestToServer(
-        GET,
-        CONNECT_SCHOOL + `/${action.id}/request`,
-        action.body ? action.body : null,
-        undefined,
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+
+    if (action.id) {
+        try {
+            let res = _requestToServer(
+                GET,
+                CONNECT_SCHOOL + `/${action.id}/request`,
+                action.body ? action.body : null,
+                undefined,
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            ) 
+
+            return res;
+        } catch (e) {
+            throw e
+        }
+    }
 }
 
 export function* ConnectSchoolDetailWatcher() {

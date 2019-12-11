@@ -9,30 +9,37 @@ import { PUBLIC_HOST } from '../../environment/dev';
 
 function* getListSkillsData(action) {
     let res = yield call(callSkills, action);
+    let data: ISkills = res.data;
 
-    if (res.code === 200) {
-        let data: ISkills = res.data;
-        yield put({
-            type: REDUX.SKILLS.GET_SKILLS,
-            data
-        });
+    if (res) {
+        data = res.data
     }
+
+    yield put({
+        type: REDUX.SKILLS.GET_SKILLS,
+        data
+    });
 }
 
 function callSkills(action) {
-    return _requestToServer(
-        GET,
-        SKILLS,
-        undefined,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize:  action.pageSize ? action.pageSize : 0
-        },
-        noInfoHeader,
-        PUBLIC_HOST,
-        false,
-        false
-    )
+    try {
+        let res = _requestToServer(
+            GET,
+            SKILLS,
+            undefined,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0
+            },
+            noInfoHeader,
+            PUBLIC_HOST,
+            false,
+            false
+        )
+        return res
+    } catch (error) {
+        throw error;
+    }
 }
 
 export function* SkillsWatcher() {

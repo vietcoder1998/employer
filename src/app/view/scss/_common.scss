@@ -506,6 +506,12 @@ h5 {
   margin: 1.2em 0em !important;
 }
 
+.link-to {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 // For Border
 .b_b {
   border-bottom: solid $color_border 1px;

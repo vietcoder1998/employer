@@ -294,7 +294,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ body });
     };
 
-    onSetDataSchool = async (id: string) => {
+    onSetDataSchool = async (id?: string) => {
         let { list_connect_schools } = this.props;
         let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];

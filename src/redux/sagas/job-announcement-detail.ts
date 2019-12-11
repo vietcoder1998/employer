@@ -65,28 +65,33 @@ function* getListJobAnnouncementDetailData(action: any) {
 
     if (res.code === 200) {
         data = res.data;
-        yield put({
-            type: REDUX.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL,
-            data
-        });
     }
+
+    yield put({
+        type: REDUX.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL,
+        data
+    });
 }
 
 function callJobAnnouncementDetail(action: any) {
-    let id = "";
     if (action.id) {
-        id = action.id;
+        try {
+            let res = _requestToServer(
+                GET,
+                JOB_ANNOUNCEMENTS + `/${action.id}`,
+                undefined,
+                undefined,
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            )
+
+            return res
+        } catch (e) {
+            throw e;
+        }
     }
-    return _requestToServer(
-        GET,
-        JOB_ANNOUNCEMENTS + `/${id}`,
-        undefined,
-        undefined,
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
 }
 
 export function* JobAnnouncementDetailWatcher() {

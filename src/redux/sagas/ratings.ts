@@ -17,9 +17,8 @@ function* getListRatingsData(action: any) {
 
     if (res) {
         data = res.data;
-      
     };
-    
+
     yield put({
         type: REDUX.LIST_RATE.GET_LIST_RATE,
         data
@@ -27,20 +26,26 @@ function* getListRatingsData(action: any) {
 }
 
 function callRatings(action: any) {
-    return _requestToServer(
-        GET,
-        LIST_RATE,
-        action.body ? action.body : null,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 0
+    try {
+        let res = _requestToServer(
+            GET,
+            LIST_RATE,
+            action.body ? action.body : null,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0
 
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false,
+        );
+        return res;
+    } catch (error) {
+        throw error
+    }
+    return
 }
 
 export function* RatingsWatcher() {

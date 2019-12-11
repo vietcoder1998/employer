@@ -11,6 +11,7 @@ export default function NotFound (props: any) {
                         status="404"
                         title="404"
                         subTitle="Sorry, the page you visited does not exist."
+                        style={{padding: 60}}
                     />
                 </Col>
                 <Col xs={0} sm={0} md={2} lg={3} xxl={5}></Col>

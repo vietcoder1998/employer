@@ -1,10 +1,10 @@
 export interface IJobAnnouncement {
-    id: string;
+    id?: string;
     jobName?: {
         id: number;
         name?: string;
         jobGroup?: {
-            id: string;
+            id?: string;
             name: string;
             priority?: string;
         }

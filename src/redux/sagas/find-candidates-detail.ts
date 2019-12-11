@@ -69,24 +69,32 @@ function* getListFindCandidateDetailData(action: any) {
 
     if (res.code === 200) {
         data = res.data;
-        yield put({
-            type: REDUX.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL,
-            data
-        });
     }
+
+    yield put({
+        type: REDUX.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL,
+        data
+    });
 }
 
 function callFindCandidateDetail(action: any) {
-    return _requestToServer(
-        GET,
-        FIND_CANDIDATE_DETAIL + `/${action.id}/profile`,
-        action.body ? action.body : null,
-        undefined,
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+    if (action.id) {
+        try {
+            let res = _requestToServer(
+                GET,
+                FIND_CANDIDATE_DETAIL + `/${action.id}/profile`,
+                action.body ? action.body : null,
+                undefined,
+                undefined,
+                EMPLOYER_HOST,
+                false,
+                false,
+            )
+            return res;
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 export function* FindCandidateDetailWatcher() {

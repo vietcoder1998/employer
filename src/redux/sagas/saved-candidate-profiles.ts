@@ -8,7 +8,6 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListSavedCandidateProfilesData(action: any) {
     let res = yield call(callSavedCandidateProfiles, action);
-
     let data: ISavedCandidateProfiles = {
         items: [],
         pageIndex: 0,
@@ -18,26 +17,32 @@ function* getListSavedCandidateProfilesData(action: any) {
 
     if (res.code === 200) {
         data = res.data;
-        yield put({
-            type: REDUX.SAVED_CANDIDATE_PROFILES.GET_SAVED_CANDIDATE_PROFILES,
-            data
-        });
     }
+
+    yield put({
+        type: REDUX.SAVED_CANDIDATE_PROFILES.GET_SAVED_CANDIDATE_PROFILES,
+        data
+    });
 }
 
 function callSavedCandidateProfiles(action: any) {
-    return _requestToServer(
-        GET,
-        SAVED_CANDIDATE_PROFILES + '/saved',
-        null,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 10
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-    )
+    try {
+        let res = _requestToServer(
+            GET,
+            SAVED_CANDIDATE_PROFILES + '/saved',
+            null,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 10
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+        );
+        return res
+    } catch (error) {
+        throw error;
+    }
 }
 
 export function* SavedCandidateProfilesWatcher() {

@@ -1,9 +1,10 @@
 @import "../../scss/variable";
 .header {
-  position: relative;
+  position: absolute;
+  top: 0px;
   z-index: 1;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.578);
+  background-color: rgb(255, 255, 255);
   height: 60px;
   padding: 0 20px;
   display: flex;

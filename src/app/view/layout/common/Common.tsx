@@ -8,6 +8,11 @@ interface IIptLetterProps {
     children?: any,
 }
 
+interface ITimer {
+    value?: number;
+    style?: CSSProperties;
+}
+
 export const Titlelabel = (props?: IIptLetterProps) => {
     return <label className="title-label">{" " + props.value + " "}</label>
 };
@@ -35,9 +40,9 @@ export const IconLabel = (props: any) => {
     return <div className="icon_label">{props.icon}</div>
 };
 
-export function Timer(props: any) {
+export function Timer(props?: ITimer) {
     return (
-        <label className='timer'>
+        <label className='timer' style={props.style ? props.style : undefined}>
             {props.value && moment(props.value).format('DD/MM/YYYY')}
         </label>
     )

@@ -16,13 +16,14 @@ function* getListEmBranchesData(action: any) {
         totalItems: 0,
     };
 
-    if (res.code === 200) {
+    if (res) {
         data = res.data;
-        yield put({
-            type: REDUX.EM_BRANCHES.GET_EM_BRANCHES,
-            data
-        });
     };
+
+    yield put({
+        type: REDUX.EM_BRANCHES.GET_EM_BRANCHES,
+        data
+    });
 };
 
 function callEmBranches(action: any) {
@@ -30,23 +31,32 @@ function callEmBranches(action: any) {
         headquarters: null,
         regionID: null
     };
+
     if (action.body) {
         body = action.body
     };
 
-    return _requestToServer(
-        POST,
-        EM_BRANCHES_API +'/query',
-        body,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 0
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false
-    );
+    try {
+        let res = _requestToServer(
+            POST,
+            EM_BRANCHES_API + '/query',
+            body,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false
+        );
+
+        return res;
+    } catch (error) {
+        return
+    }
+
+    return 
 };
 
 export function* EmBranchesWatcher() {

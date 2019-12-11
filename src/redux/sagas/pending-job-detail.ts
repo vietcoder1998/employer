@@ -44,15 +44,19 @@ function* getListPendingJobDetailData(action: any) {
 }
 
 function callPendingJobDetail(action: any) {
-    let id;
     if (action.id) {
-        id = action.id;
+        try {
+            let res =
+                _requestToServer(
+                    GET, PENDING_JOBS + `/${action.id}`,
+                    undefined,
+                    undefined, undefined, EMPLOYER_HOST, false, false
+                );
+            return res;
+        } catch (error) {
+            throw error;
+        }
     }
-    return _requestToServer(
-        GET, PENDING_JOBS + `/${id}`,
-        undefined,
-        undefined, undefined, EMPLOYER_HOST, false, false
-    )
 }
 
 export function* PendingJobDetailWatcher() {

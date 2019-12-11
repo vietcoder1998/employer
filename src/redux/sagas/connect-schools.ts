@@ -13,28 +13,34 @@ function* getListConnectSchoolsData(action: any) {
 
     if (res.code === 200) {
         data = res.data;
-        yield put({
-            type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL,
-            data
-        });
     }
+
+    yield put({
+        type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL,
+        data
+    });
 }
 
 function callConnectSchools(action: any) {
-    return _requestToServer(
-        POST,
-        CONNECT_SCHOOL + `/request/query`,
-        action.body ? action.body : null,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize: action.pageSize ? action.pageSize : 6
+    try {
+        let res = _requestToServer(
+            POST,
+            CONNECT_SCHOOL + `/request/query`,
+            action.body,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 6
 
-        },
-        undefined,
-        EMPLOYER_HOST,
-        false,
-        false,
-    )
+            },
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false,
+        )
+        return res;
+    } catch (err) {
+        throw err;
+    }
 }
 
 export function* ConnectSchoolsWatcher() {

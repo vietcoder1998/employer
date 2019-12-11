@@ -9,30 +9,44 @@ import { REGIONS } from '../../services/api/public.api';
 
 function* getListRegionsData(action) {
     let res = yield call(callRegions, action);
+    let data: IRegions = {
+        items: [],
+        pageIndex: 0,
+        pageSize: 0,
+        totalItems: 0,
+    };
 
-    if (res.code === 200) {
-        let data: IRegions = res.data;
-        yield put({
-            type: REDUX.REGIONS.GET_REGIONS,
-            data
-        });
+
+    if (res) {
+        data = res.data;
     }
+
+    yield put({
+        type: REDUX.REGIONS.GET_REGIONS,
+        data
+    });
 }
 
 function callRegions(action) {
-    return _requestToServer(
-        GET,
-        REGIONS,
-        undefined,
-        {
-            pageIndex: action.pageIndex ? action.pageIndex : 0,
-            pageSize:  action.pageSize ? action.pageSize : 0
-        },
-        noInfoHeader,
-        PUBLIC_HOST,
-        false,
-        false
-    )
+    try {
+        let res = _requestToServer(
+            GET,
+            REGIONS,
+            undefined,
+            {
+                pageIndex: action.pageIndex ? action.pageIndex : 0,
+                pageSize: action.pageSize ? action.pageSize : 0
+            },
+            noInfoHeader,
+            PUBLIC_HOST,
+            false,
+            false
+        )
+
+        return res;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export function* RegionsWatcher() {
