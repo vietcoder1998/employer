@@ -197,7 +197,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>
+                                                <p style={{ margin: "20px 0px" }}>
                                                     <Checkbox onChange={() => { }} >Tự động đăng nhập</Checkbox>
                                                 </p>
                                             </Form>
@@ -330,7 +330,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     )}
                                                 </Form.Item>
 
-                                                <p style={{ marginTop: 20 }}>
+                                                <p style={{ margin: "20px 0px" }}>
                                                     <Checkbox onChange={() => { }} >Đồng ý với điều khoản của chúng tôi</Checkbox>
                                                 </p>
                                             </Form>

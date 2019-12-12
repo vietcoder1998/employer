@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
 import './JobAnnouncementsList.scss';
 import { TYPE } from '../../../../../../common/const/type';
@@ -14,7 +14,7 @@ import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST, DELETE } from '../../../../../../common/const/method';
+import { POST, DELETE, PUT } from '../../../../../../common/const/method';
 import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
@@ -30,7 +30,7 @@ interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     getListJobAnnouncements: Function;
     getListEmBranches: Function;
     getTypeManagement: Function;
-    getJobAnnouncementDetail: Function;
+    getJobAnnouncementDetail: (id?: string) => any;
     getListJobService: Function;
     handleDrawer: Function;
     handleModal: Function;
@@ -247,8 +247,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.list_job_announcements &&
+    static getDerivedStateFromProps(nextProps: IJobAnnouncementsListProps, prevState: IJobAnnouncementsListState) {
+        if (
+            nextProps.list_job_announcements &&
             nextProps.list_job_announcements !== prevState.list_job_announcements
         ) {
             let { pageIndex, pageSize } = prevState;
@@ -270,7 +271,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             </div>
                         </Link>
                     </Tooltip>
-
                 </div>
             );
 
@@ -280,6 +280,23 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         <Icon
                             type={hidden ? "eye-invisible" : "eye"}
                             style={{ padding: "5px 5px", color: hidden ? "black" : "gray" }}
+                            onClick={async () => await _requestToServer(
+                                PUT,
+                                JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
+                                undefined,
+                                undefined,
+                                undefined,
+                                EMPLOYER_HOST,
+                                false,
+                                false
+                            ).then((res: any) => {
+                                if (res) {
+                                    setTimeout(() => {
+                                        nextProps.getListJobAnnouncements(prevState.body, prevState.pageIndex, prevState.pageSize);
+                                    }, 250);
+                                    message.success("Thành công", 2);
+                                }
+                            })}
                         />
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
@@ -288,7 +305,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             style={{ padding: "5px 8px", color: "orange" }}
                             onClick={async () => {
                                 await nextProps.handleDrawer();
-                                await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
+                                await setTimeout(() => { nextProps.getJobAnnouncementDetail(id) }, 250)
                             }} />
                     </Tooltip>
                     <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
@@ -333,7 +350,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED),
                     pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority: `${item.priority.homePriority ? item.priority.homePriority : ""}${item.priority.searchPriority}`,
+                    priority: `${item.priority.homePriority ? item.priority.homePriority + ',' : ""}${item.priority.searchPriority}`,
                     operation: EditToolTip(item.hidden, item.id)
                 });
             })
@@ -483,14 +500,14 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
     };
 
     createRequest = async () => {
-        let { homePriority, searchPriority } = this.state;
+        let { homePriority, searchPriority, id } = this.state;
         let { modalState } = this.props;
         await this.setState({ loading: true });
         switch (modalState.type_modal) {
             case TYPE.JOB_FILTER.homePriority:
                 await _requestToServer(
                     POST,
-                    JOB_PRIORITY_HOME + `/${localStorage.getItem('id_job_announcement')}/priority/home`,
+                    JOB_PRIORITY_HOME + `/${id}/priority/home`,
                     { homePriority },
                     undefined,
                     undefined,
@@ -501,17 +518,17 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     if (res) {
                         this.requeryData()
                     }
-                });
-
-                await this.setState({
-                    loading: false
-                });
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
                 break;
 
             case TYPE.JOB_FILTER.searchPriority:
                 await _requestToServer(
                     POST,
-                    JOB_PRIORITY_HOME + `/${localStorage.getItem('id_job_announcement')}/priority/search`,
+                    JOB_PRIORITY_HOME + `/${id}/priority/search`,
                     { searchPriority },
                     undefined,
                     undefined,
@@ -522,16 +539,17 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     if (res) {
                         this.requeryData()
                     }
-                });
-                await this.setState({
-                    loading: false
-                });
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
                 break;
 
             case TYPE.DELETE:
                 await _requestToServer(
                     DELETE,
-                    JOB_ANNOUNCEMENTS + `/${localStorage.getItem('id_job_announcement')}`,
+                    JOB_ANNOUNCEMENTS + `/${id}`,
                     undefined,
                     undefined,
                     undefined,
@@ -543,10 +561,11 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         this.searchJobAnnouncement();
                         this.props.handleModal();
                     }
-                })
-                await this.setState({
-                    loading: false
-                });
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                )
                 break;
             default:
                 break;
@@ -554,9 +573,10 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
     }
 
     requeryData = async () => {
+        let { id } = this.state;
         await this.searchJobAnnouncement();
         await this.props.getListJobService();
-        await this.props.getJobAnnouncementDetail(localStorage.getItem('id_job_announcement'));
+        await this.props.getJobAnnouncementDetail(id);
         await this.props.handleModal();
     }
 
@@ -658,7 +678,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     }}
                                     disabled={un_active_home}
                                     onClick={() => {
-                                        this.props.handleModal(modalState = {
+                                        this.props.handleModal({
                                             msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
                                             type_modal: TYPE.JOB_FILTER.homePriority
                                         });
@@ -686,7 +706,10 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     }}
                                     disabled={un_active_search}
                                     onClick={() => {
-                                        this.props.handleModal("Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?", TYPE.JOB_FILTER.searchPriority);
+                                        this.props.handleModal({
+                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                            type_modal: TYPE.JOB_FILTER.searchPriority
+                                        });
                                     }}
                                 >
                                     Kích hoạt
@@ -908,9 +931,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 onRow={(record: any, rowIndex: any) => {
                                     return {
                                         onClick: (event: any) => {
-                                        }, // click row
-                                        onMouseEnter: (event: any) => {
-                                            localStorage.setItem('id_job_announcement', record.key)
+                                            this.setState({ id: record.key })
                                         }, // mouse enter row
                                     };
                                 }}
@@ -928,11 +949,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENTS.GET_JOB_ANNOUNCEMENTS, body, pageIndex, pageSize }),
     getListEmBranches: () =>
         dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
-    handleDrawer: (drawerState: IDrawerState) =>
+    handleDrawer: (drawerState?: IDrawerState) =>
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
-    handleModal: (modalState: IModalState) =>
+    handleModal: (modalState?: IModalState) =>
         dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
-    getJobAnnouncementDetail: (id?: string | number) =>
+    getJobAnnouncementDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
 });

@@ -17,6 +17,7 @@ import { IAppState } from '../../../../../redux/store/reducer';
 import { DELETE, POST } from '../../../../../common/const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
+// import { NotUpdate } from '../../../layout/common/Common';
 
 interface IAnnouncementsDetailProps extends StateProps, DispatchProps {
     match?: any;
@@ -36,6 +37,7 @@ interface IAnnouncementsDetailState {
     id?: string;
     loading?: boolean;
     my_cmt?: IAnnouComment;
+    list_comment?: Array<IAnnouComment>;
 };
 
 class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnnouncementsDetailState> {
@@ -43,6 +45,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
         super(props);
         this.state = {
             list_announcements: [],
+            list_comment: [],
             id: "",
             loading: true,
             pageIndex: 0,
@@ -142,9 +145,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                                                         style={{ fontSize: 22, marginTop: 15 }}
                                                         onClick={() => {
                                                             let elmnt = document.getElementById("comment");
-                                                            let text = document.getElementById("text-msg");
                                                             elmnt.scrollIntoView({ block: "center" });
-                                                            text.focus()
                                                         }}
                                                     />
                                                 </div>
@@ -186,12 +187,14 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                                         onRemoveComment={this.onRemoveComment}
                                         commentDetail={comment}
                                     />
-                                    <div className='a_c'>
-                                        <Button style={{ width: "100%" }} onClick={this.getMoreCm}>
-                                            Tải thêm ...
-                                        </Button>
-                                    </div>
-
+                                    {
+                                        totalCmt > 0 && totalCmt < list_annou_comment.length ?
+                                            <div className='a_c'>
+                                                <Button style={{ width: "100%" }} onClick={this.getMoreCm}>
+                                                    Tải thêm ...
+                                                </Button>
+                                            </div> : ''
+                                    }
                                 </Col>
                                 <Col xs={0} sm={1} md={6} lg={5} xl={5} xxl={4}>
 

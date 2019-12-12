@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../common/const/actions';
-import { Row, Col, Divider, Affix } from 'antd';
+import { Row, Col, Divider, Affix, Icon } from 'antd';
 // import { timeConverter, momentToUnix } from '../../../../../common/utils/convertTime';
 // import { TYPE } from '../../../../../common/const/type';
 // import { IptLetter } from '../../../layout/common/Common';
@@ -15,6 +15,7 @@ import MutilCard from '../card-option/mutil-card/MutilCard';
 import AffixRight from '../card-option/affix-right/AffixRight';
 import ReadCard from '../card-option/read-card/ReadCard';
 import { IAnnouncement } from '../../../../../redux/models/announcements';
+import { IAppState } from '../../../../../redux/store/reducer';
 
 interface IAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
@@ -114,6 +115,7 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
         ) {
             return {
                 list_announcements: nextProps.list_annou_types,
+                loadingMore: false,
                 loading: false
             };
         }
@@ -124,25 +126,27 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
         await this.props.getListAnnouTypes();
         await this.searchAnnouncement();
         window.addEventListener("scroll", (event: any) => {
-            if (window.innerHeight + window.scrollY >= document.querySelector("div.announcements-list").clientHeight) {
-                if (this.load_more) {
-                    this.setState({ loadingMore: true });
-                    let { pageSize, pageIndex } = this.state;
-                    pageSize = pageSize + 5;
+            let element = document.querySelector("div.announcements-list");
+            if (element) {
+                if (window.innerHeight + window.scrollY >= document.querySelector("div.announcements-list").clientHeight) {
+                    if (this.load_more) {
+                        this.setState({ loadingMore: true });
+                        let { pageSize, pageIndex } = this.state;
+                        pageSize = pageSize + 5;
 
-                    if (pageSize < 30) {
-                        this.setState({ pageSize, pageIndex });
-                        this.searchAnnouncement();
+                        if (pageSize < 51) {
+                            this.setState({ pageSize, pageIndex });
+                            this.searchAnnouncement();
+                        }
                     }
                 }
             }
         })
-
     };
 
     componentWillUnmount() {
         this.load_more = false;
-        document.removeEventListener("scroll", () => {
+        window.removeEventListener("scroll", () => {
         })
     }
 
@@ -172,7 +176,8 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
 
     render() {
         let {
-            loading
+            loading,
+            loadingMore
         } = this.state;
 
         let {
@@ -211,7 +216,7 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                                 <Divider children={"Danh sách"} orientation="left" />
                                 <Col md={16} lg={16} xl={16} xxl={18}>
                                     {list_announcements && list_announcements.length > 5 && list_announcements.map((item: IAnnouncement, index: number) => {
-                                        if (index >= 0 && index <= 30) {
+                                        if (index >= 0 && index <= 50) {
                                             return <ReadCard key={index} item={item} />
                                         }
                                         return ""
@@ -228,6 +233,9 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                                 </Col>
                             </Row>
                         </div>
+                        {
+                            loadingMore ? <div className='a_c'><Icon type='loading' /></div> : ''
+                        }
                     </Col>
                     <Col md={1} lg={3} xl={3} xxl={4}></Col>
                 </Row>
@@ -255,12 +263,13 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.ANNOU_COMMENTS.GET_ANNOU_COMMENTS, pageIndex, pageSize, id, body })
 });
 
-const mapStateToProps = (state: any, ownProps: any) => ({
+const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_annou_types: state.AnnouTypes.items,
     list_announcements: state.Announcements.items,
     annoucement_detail: state.AnnouncementDetail,
     totalItems: state.Announcements.totalItems,
     list_annou_comment: state.AnnouComments.items,
+    loading_data: state.MutilBox.loading
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

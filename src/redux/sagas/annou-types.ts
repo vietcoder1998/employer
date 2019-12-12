@@ -1,3 +1,4 @@
+import { ANNOU_TYPES_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
 import { IAnnouTypes } from '../models/annou-types';
 import { GET } from '../../common/const/method';
@@ -33,7 +34,7 @@ function callAnnouTypes(action: any) {
         let token = localStorage.getItem("token");
         let res = _requestToServer(
             GET, 
-            ANNOU_TYPES,
+            token ? ANNOU_TYPES : ANNOU_TYPES_PUBLIC,
             null,
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,

@@ -16,7 +16,7 @@ interface IReadCard {
 export default function ReadCard(props: IReadCard) {
     return (
         <Link to={routeLink.ANNOUNCEMENT + `/detail/${props && props.item && props.item.id}`} target='_blank' >
-            <div className='read-card'  >
+            <div className='read-card'>
                 <div className='read-card-content ' >
                     <div className='info-card'>
                         <div className="left-box">

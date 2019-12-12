@@ -9,6 +9,7 @@ export const routePath = {
     DETAIL: '/detail',
     APPLY: '/apply',
     PROFILE: '/profile',
+    CONVERNIENT: '/convernient',
 
     EM_BRANCHES: '/em-branches',
     SAVE_CANDIDATE: '/saved-candidate',
@@ -21,6 +22,7 @@ export const routePath = {
     NOTI: '/noti',
     USER_CONTROLLER: '/user-controller',
     PENDING_JOBS: '/pending-jobs',
+    JOB_SERVICE: '/job-service',
 };
 
 export const routeLink = {
@@ -33,7 +35,8 @@ export const routeLink = {
     ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
     NOTI: routePath.ADMIN + routePath.NOTI,
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER ,
-    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS 
+    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS ,
+    JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT  + routePath.JOB_SERVICE 
 };
 
 export const breakCumb = [
@@ -43,6 +46,7 @@ export const breakCumb = [
     { label: "list", name: "Danh sách", icon: null, url: "/list", disable: true },
     { label: "fix", name: "Chỉnh sửa", icon: null, url: "/fix", disable: true },
     { label: "apply", name: "Ứng tuyển", icon: null, url: "/apply", disable: true },
+    { label: "convernient", name: "Tiện ích", icon: null, url: "/convernient", disable: true },
 
     { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
     { label: "job-announcements", name: "Quản lí bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
@@ -54,4 +58,6 @@ export const breakCumb = [
     { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
     { label: "user-controller", name: "Thông báo", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
+    { label: "job-service", name: "Gói dịch vụ", icon: null, url: routeLink.JOB_SERVICE },
+
 ]

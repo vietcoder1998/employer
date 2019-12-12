@@ -5,7 +5,8 @@ import testImg from '../../../../../../assets/image/rodan.png';
 import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
 import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
-import { Timer } from '../../../../layout/common/Common';
+import { Timer, NotUpdate } from '../../../../layout/common/Common';
+import { TYPE } from '../../../../../../common/const/type';
 
 interface ICommentAnnou {
     list_annou_comment?: Array<IAnnouComment>;
@@ -15,6 +16,8 @@ interface ICommentAnnou {
     onComment: Function;
     onRemoveComment: Function;
 }
+
+let token = localStorage.getItem("token");
 
 export default function CommentAnnou(props?: ICommentAnnou) {
     let { list_annou_comment, commentDetail } = props;
@@ -34,29 +37,34 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                 {`${props && props.totalCmt} Bình luận  `}
             </h6>
             <Skeleton active loading={props.loading} >
-                <div className='rating-cmt'>
-                    <div>Đánh giá</div>
-                    <Rate value={rating} onChange={(event: number) => setRating(event)} />
-                </div>
-                <div className='cr-cmt'>
+                {
+                    token ? <>
+                        <div className='rating-cmt'>
+                            <div>Đánh giá</div>
+                            <Rate value={rating} onChange={(event: number) => setRating(event)} />
+                        </div>
+                        <div className='cr-cmt'>
+                            <div className='cmt-ct'>
+                                <TextArea
+                                    id="text-msg"
+                                    className="text-comment"
+                                    placeholder={"Hãy viết nhận xét của bạn"}
+                                    value={comment}
+                                    onChange={(event) => setComment(event.target.value)}
+                                    maxLength={1000}
+                                />
+                            </div>
+                            <button
+                                className='btn-cmt'
+                                onClick={() => props.onComment({ comment, rating })}
+                                disabled={!comment && rating === 0}
+                            >
+                                GỬI
+                             </button>
+                        </div>
+                    </> : <NotUpdate msg="Đăng nhập hoặc tạo tài khoản để bình luận" />
+                }
 
-                    <div className='cmt-ct'>
-                        <TextArea
-                            id="text-msg"
-                            className="text-comment"
-                            placeholder={"Hãy viết nhận xét của bạn"}
-                            value={comment}
-                            onChange={(event) => setComment(event.target.value)}
-                        />
-                    </div>
-                    <button
-                        className='btn-cmt'
-                        onClick={() => props.onComment({ comment, rating })}
-                        disabled={!comment && rating === 0}
-                    >
-                        GỬI
-                    </button>
-                </div>
                 {
                     props && props.commentDetail.id ?
                         <div className='rm-cmt' onClick={() => props.onRemoveComment()}>
@@ -67,26 +75,26 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                 <Divider />
                 {
                     list_annou_comment && list_annou_comment.map((item: IAnnouComment, index: number) => {
-                        // let sub_title = "";
-                        // switch (item.userType) {
-                        //     case TYPE.CANDIDATE:
-                        //         sub_title = "Ứng viên"
-                        //         break;
-                        //     case TYPE.EMPLOYER:
-                        //         sub_title = "Nhà tuyển dụng"
-                        //         break;
-                        //     case TYPE.STUDENT:
-                        //         sub_title = "Sinh viên"
-                        //         break;
-                        //     case TYPE.SCHOOL:
-                        //         sub_title = "Nhà trường"
-                        //         break;
-                        //     case TYPE.PUBLIC:
-                        //         sub_title = "Khách"
-                        //         break;
-                        //     default:
-                        //         break;
-                        // }
+                        let sub_title = "";
+                        switch (item.userType) {
+                            case TYPE.CANDIDATE:
+                                sub_title = "Ứng viên"
+                                break;
+                            case TYPE.EMPLOYER:
+                                sub_title = "Nhà tuyển dụng"
+                                break;
+                            case TYPE.STUDENT:
+                                sub_title = "Sinh viên"
+                                break;
+                            case TYPE.SCHOOL:
+                                sub_title = "Nhà trường"
+                                break;
+                            case TYPE.PUBLIC:
+                                sub_title = "Khách"
+                                break;
+                            default:
+                                break;
+                        }
 
                         return (
                             <div className='comment' key={index}>
@@ -104,10 +112,13 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                                     </div>
                                     <div>
                                         <div>
-                                            {item.name}
+                                            {item.name + ` (${sub_title})`}
                                         </div>
                                         <div>
                                             <Timer style={{ margin: 0, padding: 0 }} value={item.createdDate} />
+                                        </div>
+                                        <div>
+                                            <Rate value={item && item.rating} disabled style={{ fontSize: "0.9rem" }} />
                                         </div>
                                         <div className="comment-msg">
                                             {item.comment}

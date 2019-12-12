@@ -196,7 +196,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 <Divider orientation="left" >Danh sách yêu cầu</Divider>
                 <div className="announcements-Apply-content">
                     <Row>
-                        <Col xs={24} md={10} lg={12} xl={12} xxl={12}>
+                        <Col xs={24} md={10} lg={12} xl={10} xxl={12}>
                             {<Tabs
                                 activeKey={state}
                                 style={{ width: "100%" }}
@@ -270,7 +270,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 </TabPane>
                             </Tabs>}
                         </Col>
-                        <Col xs={24} md={14} lg={12} xl={12} xxl={12}>
+                        <Col xs={24} md={14} lg={12} xl={14} xxl={12}>
                             <p
                                 style={{
                                     margin: "10px 20px -10px",

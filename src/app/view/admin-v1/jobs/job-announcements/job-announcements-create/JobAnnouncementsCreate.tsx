@@ -10,7 +10,7 @@ import { IJobName } from '../../../../../../redux/models/job-names';
 import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
 import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
-import findIdWithValue  from '../../../../../../common/utils/findIdWithValue';
+import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST, PUT } from '../../../../../../common/const/method';
 import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
@@ -262,7 +262,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             list_job_names,
             list_em_branches,
             list_skills,
-            job_announcement_detail
+            job_announcement_detail,
+            normal_quantity
         } = this.props;
 
         let ct_btn_ex = "Huỷ";
@@ -304,7 +305,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)" : "Tạo bài viết mới"}
+                    {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)" : `Tạo bài viết mới(${normal_quantity ? normal_quantity : 0})`}
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
@@ -339,8 +340,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 <TextArea
                                     rows={5}
                                     style={{ width: 550 }}
-                                    maxLength={260}
-                                    placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt"
+                                    maxLength={500}
+                                    placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 5000 từ)"
                                     value={body.description}
                                     onChange={
                                         (event: any) => {
@@ -531,6 +532,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     job_announcement_detail: state.JobAnnouncementDetail,
     list_skills: state.Skills.items,
     list_em_branches: state.EmBranches.items,
+    normal_quantity: state.JobService.nomalQuantity
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

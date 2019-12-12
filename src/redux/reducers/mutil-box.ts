@@ -44,7 +44,6 @@ export const MutilBox = (state: typeof initState = initState, action: any) => {
             return {
                 ...state,
                 modalState: {
-                    ...action.modalState,
                     open_modal:
                         action.modalState &&
                             action.modalState.open_modal ?
@@ -56,6 +55,7 @@ export const MutilBox = (state: typeof initState = initState, action: any) => {
                             action.modalState.msg ?
                             action.modalState.msg :
                             "",
+                    type_modal: action.modalState && action.modalState.type_modal
                 },
             };
 
@@ -78,7 +78,7 @@ export const MutilBox = (state: typeof initState = initState, action: any) => {
         case TYPE.HANDLE:
             return {
                 ...state,
-                loading: action.loading 
+                loading: action.loading
             }
 
         default:

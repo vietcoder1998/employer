@@ -1,3 +1,4 @@
+import { ANNOU_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
 import { IAnnouncements } from '../models/announcements';
 import { POST } from '../../common/const/method';
@@ -13,7 +14,7 @@ function* getListAnnouncementsData(action: any) {
     let data: IAnnouncements = {
         items: [],
         pageIndex: 0,
-        pageSize: 0,
+        pageSize: 10,
         totalItems: 0,
     };
 
@@ -43,7 +44,8 @@ function callAnnouncements(action: any) {
     try {
         let token = localStorage.getItem("token");
         let res = _requestToServer(
-            POST, ANNOUNCEMENTS,
+            POST,
+            token ? ANNOUNCEMENTS : ANNOU_PUBLIC,
             body,
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,

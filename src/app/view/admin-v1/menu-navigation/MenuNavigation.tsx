@@ -120,12 +120,11 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Tiện ích dịch vụ</span>
                         </span>
                     }
-                    disabled={true}
                 >
                     <Menu.Item key="7">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
+                        <Link to={routeLink.JOB_SERVICE}>
                             <Icon type="shopping" />
-                            <span>Mua gói</span>
+                            <span>Chi tiết gói</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="8" disabled={true}>

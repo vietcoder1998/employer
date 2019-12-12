@@ -12,7 +12,7 @@ interface IAffixRight {
 export default function AffixRight(props?: IAffixRight) {
 
     return (
-        <div className='affix-right-card hidden-only-phone' >
+        <div className='affix-right-card hidden-mobile' >
             <div className='affix-right-card-content'>
                 <h5>
                     Danh sách nổi bật

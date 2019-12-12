@@ -4,3 +4,6 @@ export const REGIONS = "/api/regions";
 export const LANGUAGES = "/api/languages";
 export const JOB_NAMES = "/api/jobNames";
 export const RE_PASSWORD = "/api/users/admins/password/new";
+export const ANNOU_TYPES_PUBLIC = "/api/announcementTypes";
+export const ANNOU_PUBLIC = "/api/announcements";
+

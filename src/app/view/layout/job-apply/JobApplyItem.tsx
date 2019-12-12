@@ -1,6 +1,6 @@
 import React from 'react';
-import {  Row, Col,Button, Avatar, Icon, Tooltip, Rate } from 'antd';
-import {  NotUpdate } from '../common/Common';
+import { Row, Col, Button, Avatar, Icon, Tooltip, Rate } from 'antd';
+import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../common/const/type';
 import { IApplyJob } from '../../../../redux/models/apply-job';
 import { Link } from 'react-router-dom';
@@ -85,7 +85,6 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 </span>
                             </div>
                         </div>
-
                     </Col>
                     <Col md={24} lg={12} xl={8}>
                         <ul >
@@ -101,53 +100,59 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         </ul>
                     </Col>
                 </Row>
-
             </div>
             <div>
-                <Button
-                    type={"primary"}
-                    icon="check"
-                    style={{
-                        borderRadius: "50%",
-                        padding: "6px 8px",
-                        margin: 5,
-                        height: "auto",
-                        float: "right",
-                        display: props.type !== TYPE.ACCEPTED ? "block" : "none"
-                    }}
-                    loading={props.l_btn}
-                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.ACCEPTED) : undefined}
-                />
-                <Button
-                    type={"danger"}
-                    icon="stop"
-                    style={{
-                        borderRadius: "50%",
-                        padding: "6px 8px",
-                        margin: 5,
-                        height: "auto",
-                        float: "right",
-                        display: props.type !== TYPE.REJECTED ? "block" : "none"
-                    }}
-                    loading={props.l_btn}
-                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.REJECTED) : undefined}
-                />
-                <Button
-                    icon="pause"
-                    style={{
-                        borderRadius: "50%",
-                        padding: "6px 8px",
-                        margin: 5,
-                        height: "auto",
-                        float: "right",
-                        background: "orange",
-                        color: "white",
-                        boxShadow: "orange",
-                        display: props.type !== TYPE.PENDING ? "block" : "none"
-                    }}
-                    loading={props.l_btn}
-                    onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.PENDING) : undefined}
-                />
+                <Tooltip title='Chấp nhận'>
+                    <Button
+                        type={"primary"}
+                        icon="check"
+                        style={{
+                            borderRadius: "50%",
+                            padding: "6px 8px",
+                            margin: 5,
+                            height: "auto",
+                            float: "right",
+                            display: props.type !== TYPE.ACCEPTED ? "block" : "none"
+                        }}
+                        loading={props.l_btn}
+                        onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.ACCEPTED) : undefined}
+                    />
+                </Tooltip>
+                <Tooltip title='Từ chối'>
+                    <Button
+                        type={"danger"}
+                        icon="stop"
+                        style={{
+                            borderRadius: "50%",
+                            padding: "6px 8px",
+                            margin: 5,
+                            height: "auto",
+                            float: "right",
+                            display: props.type !== TYPE.REJECTED ? "block" : "none"
+                        }}
+                        loading={props.l_btn}
+                        onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.REJECTED) : undefined}
+                    />
+                </Tooltip>
+                <Tooltip title='Chuyển thành đang chờ'>
+                    <Button
+                        icon="clock-circle"
+                        style={{
+                            borderRadius: "50%",
+                            padding: "6px 8px",
+                            margin: 5,
+                            height: "auto",
+                            float: "right",
+                            background: "orange",
+                            color: "white",
+                            boxShadow: "orange",
+                            display: props.type !== TYPE.PENDING ? "block" : "none"
+                        }}
+                        loading={props.l_btn}
+                        onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.PENDING) : undefined}
+                    />
+                </Tooltip>
+
             </div>
         </div >
     )

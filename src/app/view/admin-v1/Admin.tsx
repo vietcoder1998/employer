@@ -4,7 +4,7 @@ import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
-import { breakCumb, routeLink } from '../../../common/const/break-cumb';
+import { breakCumb, routeLink, routePath } from '../../../common/const/break-cumb';
 
 import Jobs from './jobs/Jobs';
 import ConnectSchools from './connect-schools/ConnectSchools';
@@ -79,18 +79,19 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.getListSkills();
         await this.props.getListJobService();
         await this.props.getListLanguages();
-        await this.props.getListNoti(0, pageSize)
+        await this.props.getListNoti(0, pageSize);
+        await this.props.handleLoading(false);
     }
 
     static getDerivedStateFromProps(nextProps: IAdminProps, prevState: IAdminState) {
         if (nextProps.location.pathname !== prevState.pathname) {
+            setTimeout(() => {
+                nextProps.handleLoading(false);
+            }, 250);
             let list_breakcumb = nextProps.location.pathname.split("/");
             let data_breakcumb = [];
             list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
             window.scrollTo(0, 0);
-            setTimeout(() => {
-                nextProps.handleLoading(false);
-            }, 250);
 
             return {
                 pathname: nextProps.location.pathname,
@@ -116,7 +117,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         let { list_noti } = props;
         let { pageSize } = this.state;
 
-        let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
+        let list_noti_view = list_noti && list_noti.length > 0 ?
             list_noti.map((item: INoti) => <NotiItem key={item.id} item={item} getListNoti={() => this.props.getListNoti(0, pageSize)} />) : <NotUpdate msg="Không có thông báo" />
 
         return <div className="list-noti">
@@ -163,15 +164,15 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     </>
                                 }
                                 placement="bottomRight"
-                                title="Thông báo"
+                                title={<Link className="link-to" to={routeLink.NOTI + routePath.LIST} children={"Thông báo"} />}
                                 trigger="click"
                                 style={{
                                     padding: 0,
                                 }}
                             >
                                 <Badge
-                                    count={totalNoti && totalNoti > 0 ? totalNoti : 0} 
-                                    style={{ fontSize: 10 , right: 12, top: 12 }} dot
+                                    count={totalNoti && totalNoti > 0 ? totalNoti : 0}
+                                    style={{ fontSize: 10, right: 12, top: 12 }} dot
                                 >
                                     <Icon
                                         type="notification"
@@ -239,10 +240,11 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <Switch>
                                         <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
                                         <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
-                                        <ErrorBoundaryRoute path={`${path}/convenient-service`} component={ConvernientService} />
+                                        <ErrorBoundaryRoute path={`${path}/convernient`} component={ConvernientService} />
                                         <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
                                         <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />
                                         <ErrorBoundaryRoute path={`${path}/noti`} component={Notitication} />
+
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
                                     </Switch>
                                 </Col>

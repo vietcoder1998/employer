@@ -1,3 +1,4 @@
+import { ANNOU_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
 import { POST } from './../../common/const/method';
 import { IAnnouComments } from '../models/annou-comments';
@@ -26,7 +27,8 @@ function callAnnouComments(action: any) {
         let token = localStorage.getItem("token");
         try {
             let res = _requestToServer(
-                POST, ANNOU_COMMENTS + `/${action.id}/comments/query`,
+                POST,
+                (token ? ANNOU_COMMENTS : ANNOU_PUBLIC) + `/${action.id}/comments/query`,
                 action.body,
                 {
 
