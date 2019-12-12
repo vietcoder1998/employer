@@ -45,7 +45,6 @@ function callRatings(action: any) {
     } catch (error) {
         throw error
     }
-    return
 }
 
 export function* RatingsWatcher() {

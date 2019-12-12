@@ -1,5 +1,5 @@
 import { noInfoHeader, authHeaders } from './../../services/auth';
-import { GET, DELETE } from './../../common/const/method';
+import { GET } from './../../common/const/method';
 import { IAnnouComment } from './../models/annou-comments';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
@@ -40,25 +40,6 @@ function callAnnouCommentDetail(action: any) {
         }
     }
 
-}
-
-function deleteSaga(action) {
-    try {
-        let token = localStorage.getItem("token");
-
-        let id = action.id;
-        let res = _requestToServer(
-            DELETE, ANNOU_COMMENTS + `/${id}/comments`,
-            undefined,
-            undefined,
-            token ? authHeaders : noInfoHeader,
-            token ? EMPLOYER_HOST : PUBLIC_HOST,
-             false
-        )
-        return res;
-    } catch (e) {
-        throw e;
-    }
 }
 
 export function* AnnouCommentDetailWatcher() {

@@ -282,14 +282,14 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             style={{ padding: "5px 5px", color: hidden ? "black" : "gray" }}
                         />
                     </Tooltip>
-                    <Tooltip placement="topRight" title={"Xóa bài đăng"}>
+                    <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                         <Icon
-                            style={{ padding: "5px 5px" }}
-                            type="delete"
-                            theme="twoTone"
-                            twoToneColor="red"
-                            onClick={() => nextProps.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
-                        />
+                            type="dollar"
+                            style={{ padding: "5px 8px", color: "orange" }}
+                            onClick={async () => {
+                                await nextProps.handleDrawer();
+                                await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
+                            }} />
                     </Tooltip>
                     <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
@@ -306,14 +306,15 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
                         </Link>
                     </Tooltip>
-                    <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
+
+                    <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                         <Icon
-                            type="dollar"
-                            style={{ padding: "5px 8px", color: "orange" }}
-                            onClick={async () => {
-                                await nextProps.handleDrawer();
-                                await setTimeout(() => nextProps.getJobAnnouncementDetail(localStorage.getItem("id_job_announcement")), 250);
-                            }} />
+                            style={{ padding: "5px 5px" }}
+                            type="delete"
+                            theme="twoTone"
+                            twoToneColor="red"
+                            onClick={() => nextProps.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
+                        />
                     </Tooltip>
                 </>
             )
@@ -909,7 +910,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         onClick: (event: any) => {
                                         }, // click row
                                         onMouseEnter: (event: any) => {
-                                            console.log(record)
                                             localStorage.setItem('id_job_announcement', record.key)
                                         }, // mouse enter row
                                     };

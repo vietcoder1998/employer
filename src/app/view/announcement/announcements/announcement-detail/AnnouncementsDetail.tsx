@@ -1,20 +1,20 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA, REDUX } from '../../../../../common/const/actions';
-import { Button, Table, Icon, Row, Col, Affix, BackTop } from 'antd';
-import { TYPE } from '../../../../../common/const/type';
-import { IptLetter } from '../../../layout/common/Common';
+import { REDUX_SAGA, } from '../../../../../common/const/actions';
+import { Button, Icon, Row, Col, Affix, BackTop } from 'antd';
+// import { TYPE } from '../../../../../common/const/type';
+// import { IptLetter } from '../../../layout/common/Common';
 import { _requestToServer } from '../../../../../services/exec';
 // import { DELETE } from '../../../../../common/const/method';
 // import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
 import { IAnnouCommentsBody, IAnnouComment } from '../../../../../redux/models/annou-comments';
-import { routeLink, routePath } from '../../../../../common/const/break-cumb';
+// import { routeLink, routePath } from '../../../../../common/const/break-cumb';
 import './AnnouncementsDetail.scss';
 import HeaderAnnou from '../card-option/header-annou/HeaderAnnou';
 import ContentAnnou from '../card-option/content-annou/ContentAnnou';
 import CommentAnnou from '../card-option/comment-annou/CommentAnnou';
 import { IAppState } from '../../../../../redux/store/reducer';
-import { GET, DELETE, POST } from '../../../../../common/const/method';
+import { DELETE, POST } from '../../../../../common/const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
 
@@ -71,9 +71,9 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
     };
 
     getMoreCm = async () => {
-        let { pageSize, id , pageIndex} = this.state;
-        await this.setState({pageSize: pageSize + 5});
-        await this.props.getListAnnouComment(pageIndex, pageSize , id);
+        let { pageSize, id, pageIndex } = this.state;
+        await this.setState({ pageSize: pageSize + 5 });
+        await this.props.getListAnnouComment(pageIndex, pageSize, id);
     }
 
     onComment = async (body) => {
@@ -117,7 +117,6 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
     render() {
         let {
             loading,
-            id
         } = this.state;
 
         let {

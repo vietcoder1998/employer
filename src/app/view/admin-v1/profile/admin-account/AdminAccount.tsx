@@ -121,7 +121,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
     }
 
     render() {
-        let { body, loading, fail, loading_rate, show_pw, show_rpw, show_npw, pw, rpw, npw } = this.state;
+        let { body, loading, fail, show_pw, show_rpw, show_npw, pw, rpw, npw } = this.state;
         let { modalState, list_ratings, total_rating } = this.props;
         if (fail) {
             return <Result

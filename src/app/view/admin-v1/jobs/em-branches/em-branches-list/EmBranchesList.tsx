@@ -87,19 +87,6 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     editToolAction = () => (
         <>
             <Tooltip
-                title="Xóa chi nhánh"
-            >
-                <Icon
-                    style={{ padding: "5px 10px" }}
-                    type="delete"
-                    theme="twoTone"
-                    twoToneColor="red"
-                    onClick={
-                        () => this.deleteAnnoun()
-                    }
-                />
-            </Tooltip>
-            <Tooltip
                 title="Xem chi tiết (sửa)"
             >
                 <Icon
@@ -110,6 +97,19 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                         this.props.history.push(
                             routeLink.EM_BRANCHES + routePath.FIX + `/${localStorage.getItem("id_em_branches")}`
                         )
+                    }
+                />
+            </Tooltip>
+            <Tooltip
+                title="Xóa chi nhánh"
+            >
+                <Icon
+                    style={{ padding: "5px 10px" }}
+                    type="delete"
+                    theme="twoTone"
+                    twoToneColor="red"
+                    onClick={
+                        () => this.deleteAnnoun()
                     }
                 />
             </Tooltip>
@@ -189,7 +189,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 160,
+            width: 120,
             render: () => this.editToolAction()
         },
     ];
@@ -408,7 +408,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     margin: "5px 10px",
                                     padding: "10px",
                                     borderRadius: "50%",
-                                    height:  "45px",
+                                    height: "45px",
                                     width: "45px"
                                 }}
                                 icon={loading_table ? "loading" : "search"}
@@ -423,7 +423,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                         margin: "5px 10px",
                                         padding: "10px",
                                         borderRadius: "50%",
-                                        height:  "45px",
+                                        height: "45px",
                                         width: "45px"
                                     }}
                                     icon={"plus"}

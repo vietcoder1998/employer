@@ -1,16 +1,14 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Row, Col, Modal, Rate, Tabs, List, Avatar, Skeleton, Checkbox, Input, Divider, Affix } from 'antd';
-import { timeConverter, momentToUnix } from '../../../../../common/utils/convertTime';
-import { TYPE } from '../../../../../common/const/type';
-import { IptLetter } from '../../../layout/common/Common';
-import { ModalConfig } from '../../../layout/modal-config/ModalConfig';
-import { _requestToServer } from '../../../../../services/exec';
-import { DELETE } from '../../../../../common/const/method';
-import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
-import { IAnnouCommentsBody, IAnnouComment } from '../../../../../redux/models/annou-comments';
-import { routeLink, routePath } from '../../../../../common/const/break-cumb';
+import { Row, Col, Divider, Affix } from 'antd';
+// import { timeConverter, momentToUnix } from '../../../../../common/utils/convertTime';
+// import { TYPE } from '../../../../../common/const/type';
+// import { IptLetter } from '../../../layout/common/Common';
+// import { _requestToServer } from '../../../../../services/exec';
+// import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
+import { IAnnouCommentsBody } from '../../../../../redux/models/annou-comments';
+// import { routeLink, routePath } from '../../../../../common/const/break-cumb';
 import './AnnouncementsList.scss';
 import FirstCard from '../card-option/first-card/FirstCard';
 import MutilCard from '../card-option/mutil-card/MutilCard';
@@ -82,7 +80,6 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
             let {
                 createdDate,
                 adminID,
-                announcementTypeID,
                 hidden,
                 target
             } = prevState;
@@ -146,7 +143,6 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
     componentWillUnmount() {
         this.load_more = false;
         document.removeEventListener("scroll", () => {
-            console.log("goout")
         })
     }
 
@@ -217,9 +213,9 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                                     {list_announcements && list_announcements.length > 5 && list_announcements.map((item: IAnnouncement, index: number) => {
                                         if (index >= 0 && index <= 30) {
                                             return <ReadCard key={index} item={item} />
-                                        } else return
-                                    }
-                                    )}
+                                        }
+                                        return ""
+                                    })}
                                 </Col>
                                 <Col md={8} lg={8} xl={8} xxl={6}>
                                     <Affix offsetTop={35}>

@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React from 'react'
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
 import NotificationList from './notification-list/NotificationList';
 const Switch = require("react-router-dom").Switch;

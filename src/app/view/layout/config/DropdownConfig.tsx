@@ -37,7 +37,7 @@ export class OptionConfig extends React.PureComponent<IOp, IDropdownConfigState>
             <div className="children-dropdown " onClick={() => this.toggle()}>
                 <li>
                     {icon ? <Icon type={icon} /> : null}
-                    <span>{label}</span>
+                    <span id='df-op'>{label}</span>
                 </li>
             </div>
         )
@@ -46,6 +46,22 @@ export class OptionConfig extends React.PureComponent<IOp, IDropdownConfigState>
 
 export class DropdownConfig extends React.PureComponent<IDropdownConfigProps, IDropdownConfigState> {
     state: IDropdownConfigState = { toggleTo: true, isOpen: false };
+    is_lauch = true;
+    componentDidMount() {
+        window.addEventListener("click", (event: any) => {
+            if (this.is_lauch) {
+                if (event.target && event.target.className !== "d-tg" ) {
+                    this.setState({isOpen: false})
+                }
+            }
+        })
+    }
+
+    componentWillUnmount() {
+        this.is_lauch = false;
+        window.removeEventListener("click", () => { });
+    }
+
     closeDropdown = () => { let { isOpen } = this.state; if (isOpen) { this.setState({ isOpen: false }) } };
     toggleDropdown = () => {
         let { isOpen } = this.state;
@@ -59,19 +75,21 @@ export class DropdownConfig extends React.PureComponent<IDropdownConfigProps, ID
 
         let { isOpen } = this.state;
         return (
-            <React.Fragment>
-                <span style={{ padding: "5px" }} onClick={this.toggleDropdown}>
+            <div className='tg-dr-cf-main'>
+                <span className='tg-dr-cf' id='tg-dr-cf' style={{}} onClick={this.toggleDropdown}>
+                    <span className="d-tg" style={{zIndex: 1}} />
                     {param}
                     <Icon type={isOpen ? "up" : "down"} style={{ color: "white" }} />
                 </span>
                 <div
+                    id={'dr-cf'}
                     className={`dropdown-config${isOpen ? " visible" : " hidden"}`}
                     onClick={this.toggleDropdown}
                     onInvalidCapture={() => { console.log("uninvalid") }}
                 >
                     {children ? children : null}
                 </div>
-            </React.Fragment>
+            </div>
         )
     };
 }

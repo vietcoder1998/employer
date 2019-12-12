@@ -17,7 +17,11 @@ export default function MutilCard(props?: IMutilCard) {
     return (
         <Link to={routeLink.ANNOUNCEMENT + `/detail/${props && props.item && props.item.id}`} target='_blank' >
             <div className='mutil-card test'  >
-                <img className='img-card-background' src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg} />
+                <img
+                    className='img-card-background'
+                    src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg}
+                    alt="cardimg"
+                />
                 <div className='mutil-card-content ' />
                 <div className='info-card'>
                     <div> {props && props.item && props.item.title}</div>

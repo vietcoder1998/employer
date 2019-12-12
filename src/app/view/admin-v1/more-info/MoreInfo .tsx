@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react'
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
-import AdminAccount from '../profile/admin-account/AdminAccount';
+// import AdminAccount from '../profile/admin-account/AdminAccount';
 import AnnouncementsList from './announcements/AnnouncementsList';
 const Switch = require("react-router-dom").Switch;
 

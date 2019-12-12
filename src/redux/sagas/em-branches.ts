@@ -53,10 +53,9 @@ function callEmBranches(action: any) {
 
         return res;
     } catch (error) {
-        return
+        throw error;
     }
 
-    return 
 };
 
 export function* EmBranchesWatcher() {

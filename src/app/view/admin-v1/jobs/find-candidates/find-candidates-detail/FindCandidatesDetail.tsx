@@ -14,7 +14,7 @@ import CandidateProfile from '../../../../layout/candidate-profile/CandidateProf
 import { VerifiedProfile } from '../../../../layout/verified-profile/VerifiedProfile';
 import './FindCandidatesDetail.scss';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
-import Loading from '../../../../layout/loading/Loading';
+// import Loading from '../../../../layout/loading/Loading';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IptLetterP } from '../../../../layout/common/Common';
 import TextArea from 'antd/lib/input/TextArea';
@@ -111,7 +111,9 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 
 
     async componentDidMount() {
-        let { id } = this.props.match.params
+        // let { 
+        //     id 
+        // } = this.props.match.params
         this.move = true;
         // @ts-ignore
         document.addEventListener("scroll", ((event: any) => {

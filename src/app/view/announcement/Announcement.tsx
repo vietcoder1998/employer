@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React from 'react'
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 import AnnouncementsList from './announcements/announcement-list/AnnouncementsList';
 import Header from '../layout/header/Header';

@@ -113,9 +113,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
 
     handleSubmit = (e: any, type?: "LOGIN" | "REGISTER") => {
         e.preventDefault();
-        console.log(e, type)
         this.props.form.validateFields((err, values) => {
-            console.log(err)
             if (!err) {
                 this.createRequest(type)
             }

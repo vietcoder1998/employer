@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './PendingJobsList.scss';
 
 import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { Button, Table, Icon, Select, Modal, Input, Tooltip } from 'antd';
+import { Button, Table, Icon, Modal, Input, Tooltip } from 'antd';
 import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../common/const/method';
@@ -15,7 +15,7 @@ import { IAppState } from '../../../../../../redux/store/reducer';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 
-let { Option } = Select;
+// let { Option } = Select;
 const { TextArea } = Input;
 
 const Label = (props: any) => {

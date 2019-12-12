@@ -7,6 +7,10 @@ import { REDUX } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../redux/models/mutil-box';
 
+const dfStyle: CSSProperties = {
+    width: 300,
+    height: 300,
+}
 interface IMapContainerState {
     showingInfoWindow: boolean,
     activeMarker: any,
@@ -86,7 +90,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         let { marker } = mapState;
         let { location } = mapState;
         return (
-            <div className='map-wraper' style={style} >
+            <div className='map-wraper' style={style ? style : dfStyle} >
                 <Map
                     google={window["google"]}
                     initialCenter={mapState.marker}

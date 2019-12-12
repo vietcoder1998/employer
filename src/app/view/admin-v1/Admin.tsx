@@ -57,7 +57,7 @@ interface IListNotiProps {
     list_noti: Array<INoti>
 };
 
- 
+
 class Admin extends PureComponent<IAdminProps, IAdminState> {
     constructor(props) {
         super(props);
@@ -118,12 +118,12 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
 
         let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
             list_noti.map((item: INoti) => <NotiItem key={item.id} item={item} getListNoti={() => this.props.getListNoti(0, pageSize)} />) : <NotUpdate msg="Không có thông báo" />
-    
+
         return <div className="list-noti">
             {list_noti_view}
         </div>
     };
-    
+
 
     render() {
         let { show_menu, data_breakcumb, loading_noti } = this.state;
@@ -141,8 +141,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             className="trigger"
                             type={show_menu ? 'menu-unfold' : 'menu-fold'}
                             style={{
-                                marginTop: "20px",
-                                color: "white"
+                                marginTop: 15,
+                                color: "white",
+                                fontSize: 20
                             }}
                             onClick={() => this.setState({ show_menu: !show_menu })}
                         />
@@ -150,7 +151,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             <Popover
                                 content={
                                     < >
-                                        {this.ListNoti({list_noti})}
+                                        {this.ListNoti({ list_noti })}
                                         <div
                                             className="a_c"
                                             style={{ padding: 10 }}
@@ -168,13 +169,17 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     padding: 0,
                                 }}
                             >
-                                <Badge count={totalNoti && totalNoti > 0 ? totalNoti : 0} style={{ fontSize: 10 }} dot>
+                                <Badge
+                                    count={totalNoti && totalNoti > 0 ? totalNoti : 0} 
+                                    style={{ fontSize: 10 , right: 12, top: 12 }} dot
+                                >
                                     <Icon
                                         type="notification"
                                         style={{
                                             fontSize: 20,
-                                            marginTop: -8,
-                                            color: "whitesmoke"
+                                            color: "whitesmoke",
+                                            float: "right",
+                                            margin: 15
                                         }}
                                     />
                                 </Badge>
@@ -260,7 +265,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
-    getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI , pageIndex, pageSize}),
+    getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI, pageIndex, pageSize }),
     handleLoading: (loading: boolean) => dispatch({ type: TYPE.HANDLE, loading })
 })
 

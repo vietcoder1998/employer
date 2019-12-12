@@ -1,6 +1,4 @@
 import { authHeaders, noInfoHeader } from './../../services/auth';
-import { IJobAnnouncementsFilter } from './../models/job-announcements';
-import { IAnnouCommentsBody } from './../models/annou-comments';
 import { IAnnouncements } from '../models/announcements';
 import { POST } from '../../common/const/method';
 import { ANNOUNCEMENTS } from '../../services/api/private.api';

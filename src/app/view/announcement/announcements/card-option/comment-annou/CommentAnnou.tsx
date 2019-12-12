@@ -3,7 +3,6 @@ import './CommentAnnou.scss';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/rodan.png';
 import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
-import { TYPE } from '../../../../../../common/const/type';
 import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
 import { Timer } from '../../../../layout/common/Common';
@@ -68,26 +67,26 @@ export default function CommentAnnou(props?: ICommentAnnou) {
                 <Divider />
                 {
                     list_annou_comment && list_annou_comment.map((item: IAnnouComment, index: number) => {
-                        let sub_title = "";
-                        switch (item.userType) {
-                            case TYPE.CANDIDATE:
-                                sub_title = "Ứng viên"
-                                break;
-                            case TYPE.EMPLOYER:
-                                sub_title = "Nhà tuyển dụng"
-                                break;
-                            case TYPE.STUDENT:
-                                sub_title = "Sinh viên"
-                                break;
-                            case TYPE.SCHOOL:
-                                sub_title = "Nhà trường"
-                                break;
-                            case TYPE.PUBLIC:
-                                sub_title = "Khách"
-                                break;
-                            default:
-                                break;
-                        }
+                        // let sub_title = "";
+                        // switch (item.userType) {
+                        //     case TYPE.CANDIDATE:
+                        //         sub_title = "Ứng viên"
+                        //         break;
+                        //     case TYPE.EMPLOYER:
+                        //         sub_title = "Nhà tuyển dụng"
+                        //         break;
+                        //     case TYPE.STUDENT:
+                        //         sub_title = "Sinh viên"
+                        //         break;
+                        //     case TYPE.SCHOOL:
+                        //         sub_title = "Nhà trường"
+                        //         break;
+                        //     case TYPE.PUBLIC:
+                        //         sub_title = "Khách"
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
 
                         return (
                             <div className='comment' key={index}>

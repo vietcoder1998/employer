@@ -1,6 +1,6 @@
 import React from 'react';
 import './ReadCard.scss';
-import { Avatar, Icon } from 'antd';
+import { Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/rodan.png';
@@ -45,6 +45,7 @@ export default function ReadCard(props: IReadCard) {
                             <img
                                 className='image-right-box'
                                 src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg}
+                                alt="info"
                             />
                         </div>
                     </div>

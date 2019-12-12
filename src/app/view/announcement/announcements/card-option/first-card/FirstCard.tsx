@@ -24,7 +24,9 @@ export default function FirstCard(props: IFirstCard) {
                         props &&
                             props.item &&
                             props.item.imageUrl ? props.item.imageUrl : testImg
-                    } />
+                    }
+                    alt='info '
+                />
                 <div className='first-card-content ' />
                 <div className='info-card'>
                     <h5>{props && props.item && props.item.title}</h5>

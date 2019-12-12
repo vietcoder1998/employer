@@ -11,7 +11,7 @@ import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import { Link } from 'react-router-dom';
-import { TYPE } from '../../../../../../common/const/type';
+// import { TYPE } from '../../../../../../common/const/type';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -183,7 +183,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 120,
+            width: 100,
             render: () => this.editToolAction()
         },
     ];
@@ -318,7 +318,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1000 }}
+                            scroll={{ x: 1050 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
