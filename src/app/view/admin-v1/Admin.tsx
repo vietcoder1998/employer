@@ -80,7 +80,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.getListJobService();
         await this.props.getListLanguages();
         await this.props.getListNoti(0, pageSize);
-        await this.props.handleLoading(false);
+        await this.setState({loading: false});
     }
 
     static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
@@ -89,15 +89,12 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             let data_breakcumb = [];
             list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
             window.scrollTo(0, 0);
+            nextProps.handleLoading(false);
 
             return {
                 pathname: nextProps.location.pathname,
                 data_breakcumb,
             }
-        }
-
-        if (nextProps) {
-            nextProps.handleLoading(false);
         }
 
         return null
@@ -133,16 +130,23 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         </div>
     };
 
+    handleLoading = () => {
+        this.setState({loading: true});
+        setTimeout(() => {
+            this.setState({loading: false});
+        }, 250);
+    }
+
 
     render() {
-        let { show_menu, data_breakcumb, loading_noti } = this.state;
+        let { show_menu, data_breakcumb, loading_noti , loading} = this.state;
         let { path } = this.props.match;
-        let { loading, totalNoti, list_noti } = this.props;
+        let {  totalNoti, list_noti } = this.props;
         return (
             <Layout>
                 <MenuNavigation
                     show_menu={show_menu}
-                    onCallLoading={() => this.props.handleLoading(true)}
+                    onCallLoading={() => this.handleLoading()}
                 />
                 <Layout>
                     <Header style={{ padding: 0, zIndex: 900 }}>

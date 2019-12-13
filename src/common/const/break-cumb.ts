@@ -8,6 +8,7 @@ export const routePath = {
     FIX: '/fix',
     DETAIL: '/detail',
     APPLY: '/apply',
+    PENDING: '/pending',
     PROFILE: '/profile',
     CONVERNIENT: '/convernient',
 

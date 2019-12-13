@@ -13,7 +13,7 @@ import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST, PUT } from '../../../../../../common/const/method';
-import { JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
+import { JOB_ANNOUNCEMENTS, PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { NotUpdate } from '../../../../layout/common/Common';
@@ -43,6 +43,7 @@ interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
     history: any;
     getJobAnnouncementDetail: Function;
     getListEmBranches: Function;
+    getPendingJobDetail: (id?: string) => any;
 };
 
 const getBody = () => {
@@ -104,38 +105,59 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     async componentDidMount() {
         if (this.props.match.params.id) {
             let id = this.props.match.params.id;
-            await this.props.getJobAnnouncementDetail(id);
+            if (
+                this.props.match.url.includes("fix") ||
+                this.props.match.url.includes("copy")
+
+            ) {
+                await this.props.getJobAnnouncementDetail(id);
+            }
+
+            if (
+                this.props.match.url.includes("pending")
+            ) {
+                await this.props.getPendingJobDetail(id);
+            }
         };
 
         this.props.getListEmBranches();
     };
 
-    static getDerivedStateFromProps(props: any, state: IJobAnnouncementsCreateState) {
+    static getDerivedStateFromProps(props: IJobAnnouncementsCreateProps, state: IJobAnnouncementsCreateState) {
         if (
-            props.job_announcement_detail &&
+            (
+                props.job_announcement_detail ||
+                props.pending_job_detail
+            ) &&
             props.match.params.id &&
             props.match.params.id !== state.body.id
         ) {
             let type_cpn = TYPE.CREATE;
-            if (props.match.url.includes("fix")) {
+            let job_announcement_detail = null;
+            let body = getBody();
+
+            if (props.match.url.includes("fix") || props.match.url.includes("copy")) {
                 type_cpn = TYPE.EDIT;
-            };
-            if (props.match.url.includes("copy")) {
-                type_cpn = TYPE.COPY;
+                job_announcement_detail = props.job_announcement_detail;
+                if (job_announcement_detail) {
+                    body.id = job_announcement_detail.id
+                    body.description = job_announcement_detail.description;
+                    body.jobTitle = job_announcement_detail.jobTitle;
+                    body.jobNameID = job_announcement_detail.jobName.id;
+                    body.jobType = job_announcement_detail.jobType;
+                    body.employerBranchID = job_announcement_detail.employerBranchID;
+                    body.description = job_announcement_detail.description;
+                    body.expirationDate = job_announcement_detail.expirationDate;
+                    body.shifts = job_announcement_detail.shifts;
+                    body.requiredSkillIDs = job_announcement_detail.requiredSkills.length && job_announcement_detail.requiredSkills.map((item: any) => { return item.id })
+                };
             };
 
-            let job_announcement_detail = props.job_announcement_detail;
-            let body = getBody();
-            body.id = job_announcement_detail.id
-            body.description = job_announcement_detail.description;
-            body.jobTitle = job_announcement_detail.jobTitle;
-            body.jobNameID = job_announcement_detail.jobName.id;
-            body.jobType = job_announcement_detail.jobType;
-            body.employerBranchID = job_announcement_detail.employerBranchID;
-            body.description = job_announcement_detail.description;
-            body.expirationDate = job_announcement_detail.expirationDate;
-            body.shifts = job_announcement_detail.shifts;
-            body.requiredSkillIDs = job_announcement_detail.requiredSkills.length && job_announcement_detail.requiredSkills.map((item: any) => { return item.id })
+            if (props.match.url.includes("pending")) {
+                type_cpn = TYPE.PENDING;
+                body = props.pending_job_detail
+            };
+
             return {
                 body,
                 type_cpn,
@@ -193,12 +215,13 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     createRequest = async () => {
         let { body, type_cpn, id } = this.state;
         let newBody = this.pretreatmentBody(body, type_cpn);
-        let matching = type_cpn === TYPE.EDIT ? `/${id}` : ``;
-        let METHOD = type_cpn === TYPE.EDIT ? PUT : POST;
+        let matching = type_cpn === TYPE.CREATE ? `` : `/${id}`;
+        let METHOD = type_cpn === TYPE.CREATE ? POST : PUT;
+        let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
 
         await _requestToServer(
             METHOD,
-            JOB_ANNOUNCEMENTS + matching,
+            API + matching,
             newBody,
             null,
             undefined,
@@ -214,7 +237,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let newBody = body;
         newBody.shifts.forEach((element: any, index: number) => {
             element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
-                if (item.id && type_cpn === TYPE.EDIT) {
+                if (item.id && type_cpn !== TYPE.CREATE) {
                     return {
                         id: item.id,
                         quantity: item.quantity,
@@ -293,7 +316,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         if (
-            type_cpn === TYPE.EDIT && (!job_announcement_detail || !job_announcement_detail.id)
+            !job_announcement_detail && job_announcement_detail.id
         ) {
             return <Result
                 status="404"
@@ -543,12 +566,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getJobAnnouncementDetail: (id) => dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
+    getPendingJobDetail: (id) => dispatch({ type: REDUX_SAGA.PENDING_JOB_DETAIL.GET_PENDING_JOB_DETAIL, id }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_names: state.JobNames.items,
     job_announcement_detail: state.JobAnnouncementDetail,
+    pending_job_detail: state.PendingJobDetail.data,
     list_skills: state.Skills.items,
     list_em_branches: state.EmBranches.items,
     normal_quantity: state.JobService.nomalQuantity

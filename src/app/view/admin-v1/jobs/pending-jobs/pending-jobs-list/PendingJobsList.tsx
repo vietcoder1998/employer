@@ -7,6 +7,8 @@ import { Button, Table, Icon, Modal, Input, Tooltip } from 'antd';
 import { timeConverter } from '../../../../../../common/utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../common/const/method';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+
 import { PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { TYPE } from '../../../../../../common/const/type';
 // import { IptLetter } from '../../../../layout/common/Common';
@@ -14,10 +16,9 @@ import { IPendingJob } from '../../../../../../redux/models/pending-jobs';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { Link } from 'react-router-dom';
 
 // let { Option } = Select;
-const { TextArea } = Input;
-
 const Label = (props: any) => {
     let value = "";
     switch (props.type) {
@@ -266,34 +267,29 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     width="55vw"
                     style={{ top: "5vh", height: "80vh" }}
                     footer={[
-                        <TextArea
-                            key="reason-msg"
-                            value={message}
-                            placeholder="Lý do từ chối"
-                            onChange={event => this.setState({ message: event.target.value })}
-                            rows={3}
-                            style={{ margin: "10px 0px", }}
-                        />,
                         <Button
                             key="back"
                             type="danger"
                             icon="close"
                             loading={loading}
-                            onClick={async () => await this.handlePendingJob("rejected")}
+                            onClick={async () => this.props.handleModal({ open_modal: false })}
                             disabled={state === TYPE.REJECTED || !message}
                         >
-                            Từ chối
+                            Thoát
                         </Button>,
-                        <Button
-                            key="submit"
-                            type="primary"
-                            icon="check"
-                            loading={loading}
-                            onClick={async () => await this.handlePendingJob("accepted")}
-                            disabled={state === TYPE.ACCEPTED}
-                        >
-                            Chấp nhận
-                        </Button>
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${job_id}`} target='_blank' >
+                            <Button
+                                key="submit"
+                                type="primary"
+                                icon="edit"
+                                style={{marginLeft: 20}}
+                                loading={loading}
+                                onClick={async () => this.props.handleModal({ open_modal: false })}
+                                disabled={state === TYPE.ACCEPTED}
+                            >
+                                Sửa
+                            </Button>
+                        </Link>
                     ]}
                 >
                     <JobDetail
@@ -335,7 +331,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                             onChange={this.setPageIndex}
                             onRow={
                                 (event: any) => ({
-                                    onMouseEnter: () => this.setState({ job_id: event.key })
+                                    onClick: () => this.setState({ job_id: event.key })
                                 })
                             }
                         />

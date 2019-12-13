@@ -25,6 +25,7 @@ export default class JobAnnouncements extends PureComponent<IJobAnnouncementsPro
                     <ErrorBoundaryRoute path={`${path}/create`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/copy/:id`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/fix/:id`} component={JobAnnouncementsCreate} />
+                    <ErrorBoundaryRoute path={`${path}/pending/:id`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/apply/:id`} component={JobAnnouncementsApply} />
                 </Switch>
             </Fragment>

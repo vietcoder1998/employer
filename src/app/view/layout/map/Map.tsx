@@ -6,7 +6,6 @@ import GeoCode from 'react-geocode';
 import { REDUX } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../redux/models/mutil-box';
-import { Input } from 'antd';
 import mapConvert from '../../../../common/utils/map-convert';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
@@ -58,7 +57,6 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         }
     }
 
-
     _setMapState = (t, map, coord) => {
         if (!this.props.disabled) {
             const { latLng } = coord;
@@ -96,7 +94,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         let { location } = mapState;
         return (
             <>
-                <Input onChange={(event: any) => this.getData(event.target.value)} />
+                {/* <Input onChange={(event: any) => this.getData(event.target.value)} /> */}
                 <div className='map-wraper' style={style ? style : dfStyle} >
                     <Map
                         google={window["google"]}
