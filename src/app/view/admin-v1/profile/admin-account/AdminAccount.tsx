@@ -111,7 +111,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             true
         ).finally(() => {
             this.props.handleModal({ open_modal: false });
-            this.setState({ loading: false })
+            this.setState({ loading: false, pw: null, npw: null, rpw: null })
         })
     }
 
