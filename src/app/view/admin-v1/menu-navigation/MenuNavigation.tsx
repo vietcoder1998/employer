@@ -33,7 +33,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
             <div className="logo" >
                 <img
                     src={!showMenu ? logo : logoIcon}
-                    style={{ height: "30px", marginLeft: 12, marginTop: 8 }}
+                    style={{
+                        height: "30px",
+                        marginLeft: 12,
+                        marginTop: 8,
+
+                    }}
                     alt="worksvnlogo"
                 />
             </div>
