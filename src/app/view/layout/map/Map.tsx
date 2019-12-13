@@ -7,6 +7,8 @@ import { REDUX } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../redux/models/mutil-box';
 import mapConvert from '../../../../common/utils/map-convert';
+import Autocomplete from 'react-google-autocomplete';
+import IApiMap from '../../../../redux/models/google-map-api';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
@@ -28,8 +30,10 @@ interface IMapContainerState {
 interface IMapContainerProps extends StateProps, DispatchProps {
     style?: CSSProperties;
     disabled?: boolean;
-    setMapState: Function;
-    onChange: Function;
+    opensearch?: string;
+    setMapState: (mapState?: IMapState) => any;
+    disableMarker?: boolean;
+    onChange: () => any;
 }
 
 class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainerState> {
@@ -89,21 +93,42 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
 
     render() {
         let { showingInfoWindow, activeMarker } = this.state;
-        let { mapState, style } = this.props;
+        let { mapState, style, opensearch, disableMarker } = this.props;
         let { marker } = mapState;
         let { location } = mapState;
         return (
             <>
-                {/* <Input onChange={(event: any) => this.getData(event.target.value)} /> */}
+                <Autocomplete
+                    style={{
+                        width: '100%',
+                        margin: '10px 0px',
+                        display: opensearch ? 'block' : 'none',
+                        padding: '5px 10px',
+                        borderRadius: '5px'
+                    }}
+                    placeholder={'Nhập địa chỉ tìm kiếm'}
+                    onPlaceSelected={(place?: IApiMap) => {
+                        this.props.setMapState({
+                            location: place.formatted_address,
+                            marker: {
+                                lat: place.geometry.location.lat(),
+                                lng: place.geometry.location.lng(),
+                            }
+                        });
+                    }}
+                    types={['address']}
+                    componentRestrictions={{ country: "vn" }}
+                />
                 <div className='map-wraper' style={style ? style : dfStyle} >
                     <Map
                         google={window["google"]}
                         initialCenter={mapState.marker}
+                        center={mapState.marker}
                         zoom={15}
-                        onClick={this._setMapState}
+                        onClick={disableMarker ? null : this._setMapState}
                     >
                         <Marker
-                            onClick={this._onMarkerClick}
+                            onClick={disableMarker ? null : this._onMarkerClick}
                             name={location}
                             position={{ lat: marker.lat, lng: marker.lng }}
                         />

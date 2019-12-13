@@ -47,7 +47,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             username: null,
             employerName: null,
             open_drawer: false,
-            location: localStorage.getItem("location"),
+            location: null,
             state: "LOGIN"
         }
     }
@@ -142,10 +142,18 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     visible={open_drawer}
                     onClose={() => { this.setState({ open_drawer: false }) }}
                     destroyOnClose={true}
-                    width={"50vw"}
+                    width={"450px"}
                     title={"Chọn vị trí trên bản đồ"}
                 >
-                    <MapContainer />
+                    <MapContainer
+                        style={{
+                            width: 400,
+                            height: 500,
+                            textAlign: "center"
+                        }}
+                        opensearch={true}
+                        disableMarker={true}
+                    />
                 </Drawer>
                 <div
                     className="login"
