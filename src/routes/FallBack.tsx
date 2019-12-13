@@ -1,5 +1,6 @@
 import React from 'react'
-import { Icon } from 'antd'
+//@ ts-ignore
+import BarLoading from './../assets/image/new-bar-loading.gif';
 
 export default function FallBack(props) {
     return (
@@ -9,24 +10,14 @@ export default function FallBack(props) {
                 width: "100vw",
                 height: "100vh",
                 position: "fixed",
+                textAlign: "center",
+                padding: "40vh 0",
                 top: 0,
                 left: 0,
                 backgroundColor: "#fff"
             }}
         >
-            <h4 className=' a_c'>
-                Trang wed đang được tải , vui lòng chờ
-                                </h4>
-            <div className='msg-noti a_c'>
-                <p className=' a_c'>
-                    Đang tải thông tin
-                    </p>
-                <p className="icon-noti">
-                    <Icon
-                        type="loading"
-                    />
-                </p>
-            </div>
+            <img src={BarLoading} alt='Bar' style={{width: 'auto', height: '10vh'}}/>
         </div>
     )
 }
