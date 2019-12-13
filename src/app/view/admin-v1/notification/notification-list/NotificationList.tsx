@@ -123,7 +123,7 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
         return (
             <div draggable={true}>
                 <h5>
-                    Quản lí thông báo
+                    Danh sách
                 </h5>
                 <div>
                     {

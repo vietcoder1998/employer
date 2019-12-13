@@ -13,37 +13,53 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 interface IMenuNavigationProps {
-    show_menu: boolean;
     onCallLoading?: Function
 }
 
 export default function MenuNavigation(props: IMenuNavigationProps) {
-    let { show_menu } = props;
+    let [showMenu, setShowMenu] = React.useState(false);
     let state_bar = '0';
     if (localStorage.getItem("state_bar")) {
         state_bar = localStorage.getItem("state_bar")
     }
+
     return (
         <Sider
             trigger={null}
             collapsible
-            collapsed={show_menu}
+            collapsed={showMenu}
             theme="light"
         >
             <div className="logo" >
                 <img
-                    src={!show_menu ? logo : logoIcon}
-                    style={{ height: "30px", marginLeft: 12, marginTop: 10 }}
+                    src={!showMenu ? logo : logoIcon}
+                    style={{ height: "30px", marginLeft: 12, marginTop: 8 }}
                     alt="worksvnlogo"
                 />
             </div>
+            <Icon
+                className="trigger"
+                type={showMenu ? 'menu-unfold' : 'menu-fold'}
+                style={{
+                    color: "white",
+                    fontSize: 20,
+                    position: "absolute",
+                    right: -45,
+                    top: 15,
+                    zIndex: 999
+                }}
+                onClick={() => setShowMenu(!showMenu)}
+            />
             <Menu
                 mode="inline"
                 defaultSelectedKeys={[state_bar]}
                 style={{
                     borderRight: "none",
                     width: "100%",
-                    padding: "50px 0px"
+                    margin: "50px 0px",
+                    paddingBottom: 100,
+                    height: "100vh",
+                    overflowY: "auto"
                 }}
                 onClick={(event: any) => {
                     localStorage.setItem("state_bar", event.key);
@@ -147,7 +163,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     <Menu.Item key="13">
                         <Link to={routeLink.NOTI + routePath.LIST}>
                             <Icon type="file-search" />
-                            <span>Quản lí thông báo</span>
+                            <span>Danh sách</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

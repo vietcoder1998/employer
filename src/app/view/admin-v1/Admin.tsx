@@ -30,7 +30,6 @@ const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
 
 interface IAdminState {
-    show_menu: boolean;
     to_logout: boolean;
     location?: string;
     data_breakcumb?: Array<string>,
@@ -62,7 +61,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     constructor(props) {
         super(props);
         this.state = {
-            show_menu: false,
             to_logout: false,
             location: "/",
             data_breakcumb: [],
@@ -139,27 +137,18 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
 
 
     render() {
-        let { show_menu, data_breakcumb, loading_noti , loading} = this.state;
+        let { data_breakcumb, loading_noti , loading} = this.state;
         let { path } = this.props.match;
         let {  totalNoti, list_noti } = this.props;
+
         return (
             <Layout>
                 <MenuNavigation
-                    show_menu={show_menu}
                     onCallLoading={() => this.handleLoading()}
                 />
                 <Layout>
                     <Header style={{ padding: 0, zIndex: 900 }}>
-                        <Icon
-                            className="trigger"
-                            type={show_menu ? 'menu-unfold' : 'menu-fold'}
-                            style={{
-                                marginTop: 15,
-                                color: "white",
-                                fontSize: 20
-                            }}
-                            onClick={() => this.setState({ show_menu: !show_menu })}
-                        />
+                       
                         <div className="avatar-header" >
                             <Popover
                                 content={
