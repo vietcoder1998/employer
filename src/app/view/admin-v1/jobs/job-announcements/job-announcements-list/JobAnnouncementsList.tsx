@@ -25,6 +25,59 @@ let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
+const viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, ) => (
+    <div
+        style={{
+            pointerEvents: count === 0 ? 'none' : undefined
+        }}
+    >
+        <Tooltip title="Xem chi tiết">
+            <Link
+                to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
+                disabled={count === 0 ? true : false}
+                target="_blank"
+            >
+                <div style={{ color }}>
+                    {count} <Icon type="team" />
+                </div>
+            </Link>
+        </Tooltip>
+    </div>
+);
+
+const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
+    let { priority } = props;
+    switch (priority) {
+        case TYPE.TOP:
+            return (
+                <Tooltip title={"Gói tuyển dụng gấp"} placement="left">
+                    <div className='top f-sm'>
+                        ({props.timeLeft})
+                    </div>
+                </Tooltip>
+            );
+        case TYPE.HIGHLIGHT:
+            return (
+                <Tooltip title={"Gói tìm kiếm nổi bật"} placement="left">
+                    <div className='high_light f-sm'>
+                        ({props.timeLeft})
+                    </div>
+                </Tooltip>
+            );
+        case TYPE.IN_DAY:
+            return (
+                <Tooltip title={"Gói tuyển dụng nổi bật"} placement="left">
+                    <div className='in_day f-sm'>
+                        ({props.timeLeft})
+                    </div>
+                </Tooltip>
+            );
+        default:
+            return <label></label>
+    }
+
+}
+
 interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
     getListJobAnnouncements: Function;
@@ -203,7 +256,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
-            width: 160,
+            width: 190,
         },
         {
             title: 'Thao tác',
@@ -211,7 +264,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 180,
+            width: 200,
         }
     ];
 
@@ -254,25 +307,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-            let viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, ) => (
-                <div
-                    style={{
-                        pointerEvents: count === 0 ? 'none' : undefined
-                    }}
-                >
-                    <Tooltip title="Xem chi tiết">
-                        <Link
-                            to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
-                            disabled={count === 0 ? true : false}
-                            target="_blank"
-                        >
-                            <div style={{ color }}>
-                                {count} <Icon type="team" />
-                            </div>
-                        </Link>
-                    </Tooltip>
-                </div>
-            );
+
 
             let EditToolTip = (hidden?: boolean, id?: string) => (
                 <>
@@ -350,7 +385,11 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED),
                     pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority: `${item.priority.homePriority ? item.priority.homePriority + ',' : ""}${item.priority.searchPriority}`,
+                    priority:
+                        <>
+                            <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
+                            <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
+                        </>,
                     operation: EditToolTip(item.hidden, item.id)
                 });
             })
@@ -923,7 +962,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 columns={this.columns}
                                 loading={loading_table}
                                 dataSource={data_table}
-                                scroll={{ x: 1700 }}
+                                scroll={{ x: 1900 }}
                                 bordered
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"

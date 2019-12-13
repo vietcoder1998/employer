@@ -11,6 +11,7 @@ interface IIptLetterProps {
 interface ITimer {
     value?: number;
     style?: CSSProperties;
+    msg?: string;
 }
 
 export const Titlelabel = (props?: IIptLetterProps) => {
@@ -43,6 +44,7 @@ export const IconLabel = (props: any) => {
 export function Timer(props?: ITimer) {
     return (
         <label className='timer' style={props.style ? props.style : undefined}>
+            {props.msg ? props.msg : ''}
             {props.value && moment(props.value).format('DD/MM/YYYY')}
         </label>
     )
@@ -50,6 +52,6 @@ export function Timer(props?: ITimer) {
 
 export const NotUpdate = (props?: { msg?: any, children?: any }) => (
     <label style={{ fontStyle: "italic" }}>
-        {props.children ? props.children: (props.msg ? props.msg : "Chưa cập nhật")}
+        {props.children ? props.children : (props.msg ? props.msg : "Chưa cập nhật")}
     </label>
 );

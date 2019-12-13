@@ -555,14 +555,14 @@ function AdminProfile(props: IAdminProfileProps) {
                     {/* Front */}
                     <Col md={24} lg={10} xl={10} xxl={8}>
                         <div className="description-info">
-                            <IptLetterP value={"Mặt trước giấy phép kinh doanh"} />
+                            <IptLetterP value={"Mặt trước giấy phép kinh doanh"} style={{marginBottom: 10}} />
                             <div className="image-f-d">
-                                <div
+                                {/* <div
                                     className="upload-image"
                                     children={
                                         <Icon type="camera" theme={"filled"} />
                                     }
-                                />
+                                /> */}
                                 {
                                     identityCardFrontImageUrl ?
                                         <img className="ic" src={identityCardFrontImageUrl} alt="Ảnh trước" /> :
@@ -617,12 +617,12 @@ function AdminProfile(props: IAdminProfileProps) {
                         <div className="description-info">
                             <IptLetterP value={"Mặt sau giấy phép kinh doanh"} />
                             <div className="image-f-d" >
-                                <div
+                                {/* <div
                                     className="upload-image"
                                     children={
                                         <Icon type="eye" theme={"filled"} />
                                     }
-                                />
+                                /> */}
                                 {
                                     identityCardBackImageUrl ?
                                         <img className="ic" src={identityCardBackImageUrl} alt="Ảnh sau" /> :

@@ -23,14 +23,14 @@
     position: absolute;
     top: 5%;
     z-index: 2;
-    padding: 3px 10px 0px 10px;
+    padding: 3px 10px 5px 10px;
     border-radius: 20px 0px 0px 20px;
-    right: -100%;
+    right: 0;
     width: auto;
     height: auto;
     color: white;
     font-size: 0.7rem;
-    background-color: rgba(226, 226, 226, 0.707);
+    background-color: rgba(68, 68, 68, 0.707);
     transition: 0.25s;
   }
 
@@ -40,7 +40,7 @@
 
   &:hover {
     cursor: pointer;
-    transform: scale(1.2);
+    transform: scale(1.1);
     z-index: 1;
 
     .school-action {
@@ -50,9 +50,6 @@
       .action-school {
         height: 85px;
       }
-    }
-    .placement-school {
-      right: 0px;
     }
   }
 
