@@ -48,8 +48,8 @@ export function Timer(props?: ITimer) {
     )
 };
 
-export const NotUpdate = (props?: { msg?: string }) => (
+export const NotUpdate = (props?: { msg?: any, children?: any }) => (
     <label style={{ fontStyle: "italic" }}>
-        {props.msg ? props.msg : "Chưa cập nhật"}
+        {props.children ? props.children: (props.msg ? props.msg : "Chưa cập nhật")}
     </label>
 );
