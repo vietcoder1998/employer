@@ -11,8 +11,9 @@ export const _requestToServer = async (
     params?: any,
     headers?: any,
     host?: string,
-    show_noti = true,
-    show_alert = false
+    show_noti?: boolean,
+    show_alert?: boolean,
+    not_err?: boolean,
 ) => {
     if (!host) {
         host = process.env.REACT_APP_API_HOST;
@@ -74,8 +75,9 @@ export const _requestToServer = async (
             )
 
         } else
+        if (!not_err) {
             exceptionShowNoti(err);
-
+        }
         throw err;
     }
 };

@@ -24,32 +24,33 @@ export default function NotiItem(props: INotiItemProps) {
     let avatar_to = "/";
     let icon_state = "exclamation-circle";
     let color_icon_state = "#168ECD";
+    let state = item.data.state;
 
     switch (item.type) {
         case TYPE.NOTI.REPLY_JOB_APPLY_REQUEST:
             avatar = item.data.avatarUrl;
             type_icon = "user";
-            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.LIST;
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
             avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`;
             break;
         case TYPE.NOTI.REPLY_JOB_OFFER_REQUEST:
             avatar = item.data.avatarUrl
             type_icon = "user";
-            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${item.data.jobID}`;
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
             avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`
             break;
         case TYPE.NOTI.REPLY_CONNECT_REQUEST:
             avatar = item.data.logoUrl;
             type_icon = "schedule";
-            link_to = routeLink.CONNECT_SCHOOLS + routePath.LIST + item.data.schoolID;
+            link_to = routeLink.CONNECT_SCHOOLS + routePath.LIST + `/${item.data.schoolID}`;
             avatar_to = routeLink.CONNECT_SCHOOLS + routePath.DETAIL + `/${item.data.userID}`;
             break;
 
         case TYPE.NOTI.REPLY_PENDING_JOB:
             avatar = item.data.logoUrl;
             type_icon = "shop";
-            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${item.data.pendingJobID}`;
-            avatar_to = routeLink.FIND_CANDIDATES + `/${item.data.userID}`
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
+            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`
             break;
 
         default:

@@ -11,7 +11,6 @@ import Footer from '../layout/footer/Footer';
 import Cookies from 'universal-cookie';
 import { routeLink, routePath } from '../../../common/const/break-cumb';
 import MapContainer from '../layout/map/Map';
-
 const { TabPane } = Tabs;
 
 interface LoginState {
@@ -107,9 +106,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                 break;
             default:
                 break;
-        }
-
-    }
+        };
+    };
 
     handleSubmit = (e: any, type?: "LOGIN" | "REGISTER") => {
         e.preventDefault();
@@ -126,14 +124,15 @@ class Login extends PureComponent<LoginProps, LoginState> {
         let icon = {
             color: "red",
             type: "close"
-        }
+        };
+
         let exactly = false;
 
         if (username && password && username.length > 1 && password.length >= 6) {
             icon.color = "greenyellow";
             icon.type = "check";
             exactly = true;
-        }
+        };
 
         return (
 

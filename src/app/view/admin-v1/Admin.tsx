@@ -83,11 +83,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.handleLoading(false);
     }
 
-    static getDerivedStateFromProps(nextProps: IAdminProps, prevState: IAdminState) {
+    static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
         if (nextProps.location.pathname !== prevState.pathname) {
-            setTimeout(() => {
-                nextProps.handleLoading(false);
-            }, 250);
             let list_breakcumb = nextProps.location.pathname.split("/");
             let data_breakcumb = [];
             list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
@@ -97,6 +94,10 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                 pathname: nextProps.location.pathname,
                 data_breakcumb,
             }
+        }
+
+        if (nextProps) {
+            nextProps.handleLoading(false);
         }
 
         return null
@@ -118,7 +119,14 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         let { pageSize } = this.state;
 
         let list_noti_view = list_noti && list_noti.length > 0 ?
-            list_noti.map((item: INoti) => <NotiItem key={item.id} item={item} getListNoti={() => this.props.getListNoti(0, pageSize)} />) : <NotUpdate msg="Không có thông báo" />
+            list_noti.map(
+                (item: INoti) =>
+                    <NotiItem
+                        key={item.id}
+                        item={item}
+                        getListNoti={
+                            () => this.props.getListNoti(0, pageSize)
+                        } />) : <NotUpdate msg="Không có thông báo" />
 
         return <div className="list-noti">
             {list_noti_view}
@@ -244,7 +252,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
                                         <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />
                                         <ErrorBoundaryRoute path={`${path}/noti`} component={Notitication} />
-
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
                                     </Switch>
                                 </Col>

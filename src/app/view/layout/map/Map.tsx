@@ -6,11 +6,16 @@ import GeoCode from 'react-geocode';
 import { REDUX } from '../../../../common/const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../redux/models/mutil-box';
+import { Input } from 'antd';
+import mapConvert from '../../../../common/utils/map-convert';
+
+GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
 const dfStyle: CSSProperties = {
     width: 300,
     height: 300,
 }
+
 interface IMapContainerState {
     showingInfoWindow: boolean,
     activeMarker: any,
@@ -41,10 +46,6 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
             location: ''
         };
 
-    }
-
-    componentDidMount() {
-        GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28")
     }
 
     _onMarkerClick = (props, marker, e) => {
@@ -84,33 +85,40 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         }
     }
 
+    getData = (event: string) => {
+        mapConvert(event, 'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28');
+    }
+
     render() {
         let { showingInfoWindow, activeMarker } = this.state;
         let { mapState, style } = this.props;
         let { marker } = mapState;
         let { location } = mapState;
         return (
-            <div className='map-wraper' style={style ? style : dfStyle} >
-                <Map
-                    google={window["google"]}
-                    initialCenter={mapState.marker}
-                    zoom={15}
-                    onClick={this._setMapState}
-                >
-                    <Marker
-                        onClick={this._onMarkerClick}
-                        name={location}
-                        position={{ lat: marker.lat, lng: marker.lng }}
-                    />
-                    <InfoWindow
-                        marker={activeMarker}
-                        visible={showingInfoWindow}>
-                        <div>
-                            <h5>{this.state.selectedPlace.name}</h5>
-                        </div>
-                    </InfoWindow>
-                </Map>
-            </div >
+            <>
+                <Input onChange={(event: any) => this.getData(event.target.value)} />
+                <div className='map-wraper' style={style ? style : dfStyle} >
+                    <Map
+                        google={window["google"]}
+                        initialCenter={mapState.marker}
+                        zoom={15}
+                        onClick={this._setMapState}
+                    >
+                        <Marker
+                            onClick={this._onMarkerClick}
+                            name={location}
+                            position={{ lat: marker.lat, lng: marker.lng }}
+                        />
+                        <InfoWindow
+                            marker={activeMarker}
+                            visible={showingInfoWindow}>
+                            <div>
+                                <h5>{this.state.selectedPlace.name}</h5>
+                            </div>
+                        </InfoWindow>
+                    </Map>
+                </div >
+            </>
 
         );
     }
@@ -130,5 +138,5 @@ type DispatchProps = ReturnType<typeof mapStateTopProps>;
 export default connect(mapStateTopProps, mapDispatchToProps)(GoogleApiWrapper({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY
         ? process.env.REACT_APP_GOOGLE_API_KEY :
-        'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28'
+        'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28',
 })(MapContainer))

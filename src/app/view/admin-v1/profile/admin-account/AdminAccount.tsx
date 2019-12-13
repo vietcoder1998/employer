@@ -6,7 +6,7 @@ import { TYPE } from '../../../../../common/const/type';
 import { IAppState } from '../../../../../redux/store/reducer';
 import { IMapState, IModalState, IDrawerState } from '../../../../../redux/models/mutil-box';
 // import './AdminAccount.scss';
-import Loading from '../../../layout/loading/Loading';
+// import Loading from '../../../layout/loading/Loading';
 import { IAdminAccount } from '../../../../../redux/models/admin-account';
 import AdminProfile from '../../../layout/admin-profile/AdminProfile';
 import { InputTitle } from '../../../layout/input-tittle/InputTitle';
@@ -109,7 +109,10 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             OAUTH2_HOST,
             false,
             true
-        ).finally(() => this.setState({ loading: false }))
+        ).finally(() => {
+            this.props.handleModal({ open_modal: false });
+            this.setState({ loading: false })
+        })
     }
 
     openDrawer = async () => {
@@ -132,13 +135,9 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             />
         }
 
-        if (loading && !fail) {
-            return <Loading />
-        }
-
         let exact_pw = pw && pw.length >= 6;
-        let exact_rpw = pw && pw.length >= 6 && pw === rpw;
-        let exact_npw = pw && pw.length >= 6 && pw === rpw && npw && npw.length >= 6;
+        let exact_npw = npw && npw.length >= 6;
+        let exact_rpw = npw && npw.length >= 6 && npw === rpw;
 
         return (
             <>
@@ -146,7 +145,6 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     visible={modalState.open_modal}
                     title={"Đổi mật khẩu"}
                     destroyOnClose={true}
-                    onOk={() => this.createRequest()}
                     onCancel={() => {
                         this.setState({ loading: false, pw: null, rpw: null });
                         this.props.handleModal({ open_modal: false });
@@ -191,9 +189,24 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                             }
                         />
                         <InputTitle
+                            style={{ textAlign: "center", marginTop: 20 }}
+                            type={TYPE.INPUT}
+                            title="Mật khẩu mới"
+                            children={
+                                <Input
+                                    placeholder="Chứa ít nhất 6 kí tự và khác mật khẩu cũ"
+                                    style={{ marginRight: 20, width: "80%" }}
+                                    prefix={<Icon type={exact_npw ? "check" : "lock"} style={{ color: exact_npw ? "greenyellow" : "gray" }} />}
+                                    suffix={<Icon type={show_npw ? "eye-invisible" : "eye"} onClick={() => this.setState({ show_npw: !show_npw })} />}
+                                    onChange={(event: any) => this.setState({ npw: event.target.value })}
+                                    type={show_npw ? "text" : "password"}
+                                />
+                            }
+                        />
+                        <InputTitle
                             style={{ textAlign: "center", marginTop: 10 }}
                             type={TYPE.INPUT}
-                            title="Nhập lại mật khẩu"
+                            title="Nhập lại mật khẩu "
                             children={
                                 <Input
                                     placeholder="Chứa ít nhất 6 kí tự"
@@ -205,26 +218,10 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                 />
                             }
                         />
-
-                        <InputTitle
-                            style={{ textAlign: "center", marginTop: 20 }}
-                            type={TYPE.INPUT}
-                            title="Mật khẩu mới"
-                            children={
-                                <Input
-                                    placeholder="Chứa ít nhất 6 kí tự và khác mật khẩu cũ"
-                                    style={{ marginRight: 20, width: "80%" }}
-                                    prefix={<Icon type={exact_npw ? "check" : "lock"} style={{ color: exact_npw ? "greenyellow" : "gray" }} />}
-                                    suffix={<Icon type={show_npw ? "eye-invisible" : "eye"} onClick={() => this.setState({ show_npw: !show_npw })} />}
-                                    onChange={(event: any) => this.setState({ npw: event.target.value })}
-                                    type={show_rpw ? "text" : "password"}
-                                />
-                            }
-                        />
                     </div>}
                 />
                 <DrawerConfig
-                    title={"Đánh giá " + (total_rating && total_rating > 0 ? `(${total_rating})` : "" ) }
+                    title={"Đánh giá " + (total_rating && total_rating > 0 ? `(${total_rating})` : "")}
                     width={500}
                 >
                     {list_ratings && list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />)}

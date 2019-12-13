@@ -340,7 +340,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 <TextArea
                                     rows={5}
                                     style={{ width: 550 }}
-                                    maxLength={500}
+                                    maxLength={5000}
                                     placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 5000 từ)"
                                     value={body.description}
                                     onChange={

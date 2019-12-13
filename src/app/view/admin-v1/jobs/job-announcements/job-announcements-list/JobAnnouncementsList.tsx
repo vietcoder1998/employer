@@ -111,7 +111,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             },
 
             un_checkbox: false,
-            list_check: ["Đang chờ"],
+            list_check: [],
             homePriority: null,
             searchPriority: null,
             homeExpired: false,
