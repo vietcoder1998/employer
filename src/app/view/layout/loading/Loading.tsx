@@ -15,7 +15,7 @@ export default function Loading(props: any) {
             style={{
                 width: "100%",
                 height: "100%",
-                padding: "30% 0%",
+                padding: "20% 0%",
                 textAlign: "center",
             }}
         >
@@ -30,7 +30,7 @@ export default function Loading(props: any) {
                     </p> */}
                 <img src={Barloading}
                     style={{
-                        width: "8%",
+                        width: "5%",
                         height: "10%",
                     }}
                     alt="gif"

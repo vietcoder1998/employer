@@ -196,6 +196,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                             border: "solid #fff 2px",
                                             margin: "0px 5px 0px 25px"
                                         }}
+                                        src={localStorage.getItem('logoUrl')}
                                     />
                                 }
                             >

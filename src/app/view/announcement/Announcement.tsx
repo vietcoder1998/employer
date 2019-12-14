@@ -9,7 +9,7 @@ import { IAppState } from '../../../redux/store/reducer';
 import { connect } from 'react-redux';
 import './Announcement.scss';
 import { IAnnouType } from '../../../redux/models/annou-types';
-import { routeLink } from '../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../common/const/break-cumb';
 import { TYPE } from '../../../common/const/type';
 import { REDUX_SAGA } from '../../../common/const/actions';
 
@@ -43,7 +43,7 @@ function Annoucements(props?: IAnnoucementsProps) {
                 </Tabs>
             </Affix>
             <Switch>
-                <ErrorBoundaryRoute path={`${path}/list`} component={AnnouncementsList} />
+                <ErrorBoundaryRoute path={`${path + routePath.LIST}`} component={AnnouncementsList} />
                 <ErrorBoundaryRoute path={`${path}/detail/:id`} component={AnnouncementsDetail} />
             </Switch>
             <Footer />

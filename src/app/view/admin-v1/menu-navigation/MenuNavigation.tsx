@@ -198,21 +198,33 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="pendings-jobs">
-                        <Link to={routeLink.ANNOUNCEMENT + routePath.LIST} target='_blank'>
-                            <Icon type="loading-3-quarters" />
+                        <Link to={routeLink.ANNOU_DEFAULT} >
+                            <Icon type="coffee" />
                             <span>Bài viết</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="9">
-                        <Link to={'/v1/admin/data/languages/list'}>
-                            <Icon type="team" />
-                            <span>Cộng đồng</span>
+                        <Link to={routeLink.COMMUNITY}>
+                            <Icon type="mobile" />
+                            <span>App Mobile</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="10">
-                        <Link to={'/v1/admin/data/majors/list'}>
+                        <Link to={routeLink.GUIDE}>
                             <Icon type="read" />
                             <span>Hướng dẫn</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="25">
+                        <Link to={routeLink.PRIVACY}>
+                            <Icon type="book" />
+                            <span>Điều khoản</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="26">
+                        <Link to={routeLink.FEED_BACK}>
+                            <Icon type="mail" />
+                            <span>Phản hồi</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

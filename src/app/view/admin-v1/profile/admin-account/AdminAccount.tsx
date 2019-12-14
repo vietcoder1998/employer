@@ -85,6 +85,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                 })
             }
 
+            localStorage.setItem('logoUrl', nextProps.admin_account.logoUrl);
             return {
                 admin_account: nextProps.admin_account,
                 body: nextProps.admin_account

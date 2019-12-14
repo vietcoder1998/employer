@@ -496,10 +496,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                 <li>
                                     {
                                         fixMap ?
-                                            <Input
-                                                prefix={<Icon type="mail" />}
-                                                value={address}
-                                            />
+                                            ''
                                             :
                                             <>
                                                 <Icon type="mail" />
@@ -522,7 +519,7 @@ function AdminProfile(props: IAdminProfileProps) {
                             </ul>
 
                             <MapContainter
-                                style={{ width: "100%", height: "200px" }} disabled={!fixMap} />
+                                style={{ width: "100%", height: "200px" }} opensearch={fixMap} disabledMarker={true} />
                             {
                                 fixMap ?
                                     <>

@@ -79,7 +79,6 @@ export class DropdownConfig extends React.PureComponent<IDropdownConfigProps, ID
                 <span className='tg-dr-cf' id='tg-dr-cf' style={{}} onClick={this.toggleDropdown}>
                     <span className="d-tg" style={{zIndex: 1}} />
                     {param}
-                    <Icon type={isOpen ? "up" : "down"} style={{ color: "white" }} />
                 </span>
                 <div
                     id={'dr-cf'}

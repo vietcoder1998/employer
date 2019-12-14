@@ -24,23 +24,41 @@ export const routePath = {
     USER_CONTROLLER: '/user-controller',
     PENDING_JOBS: '/pending-jobs',
     JOB_SERVICE: '/job-service',
+    COMMUNITY: '/community',
+    GUIDE: '/guide',
+    ANNOU_DEFAULT: '/annou-default',
+    PRIVACY: '/privacy',
+    FEED_BACK: '/feed-back'
 };
 
 export const routeLink = {
+    // Job
+    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS ,
     EM_BRANCHES: routePath.ADMIN + routePath.JOBS + routePath.EM_BRANCHES,
     FIND_CANDIDATES: routePath.ADMIN + routePath.JOBS + routePath.FIND_CANDIDATES,
     SAVE_CANDIDATE: routePath.ADMIN + routePath.JOBS + routePath.SAVE_CANDIDATE,
     JOB_ANNOUNCEMENTS: routePath.ADMIN + routePath.JOBS + routePath.JOB_ANNOUNCEMENTS,
-    ANNOUNCEMENT: routePath.ANNOUNCEMENT,
-    CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
     ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
-    NOTI: routePath.ADMIN + routePath.NOTI,
+    // Connect School
+    CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
+    // User controller
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER ,
-    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS ,
-    JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT  + routePath.JOB_SERVICE 
+    // Notification
+    NOTI: routePath.ADMIN + routePath.NOTI,
+    // Convernient
+    JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT  + routePath.JOB_SERVICE,
+    // More info
+    COMMUNITY: routePath.ADMIN + routePath.MORE_INFO + routePath.COMMUNITY,
+    GUIDE: routePath.ADMIN + routePath.MORE_INFO + routePath.GUIDE,
+    ANNOU_DEFAULT: routePath.ADMIN + routePath.MORE_INFO + routePath.ANNOU_DEFAULT,
+    PRIVACY: routePath.ADMIN + routePath.MORE_INFO + routePath.PRIVACY,
+    FEED_BACK: routePath.ADMIN + routePath.MORE_INFO + routePath.FEED_BACK,
+    // Announcement
+    ANNOUNCEMENT: routePath.ANNOUNCEMENT,
 };
 
 export const breakCumb = [
+    // Dèault
     { label: "jobs", name: "Tuyển dụng", icon: null, url: "/jobs", disable: true },
     { label: "create", name: "Tạo mới", icon: null, url: "/create", disable: true },
     { label: "detail", name: "Chi tiết", icon: null, url: "/detail", disable: true },
@@ -48,17 +66,27 @@ export const breakCumb = [
     { label: "fix", name: "Chỉnh sửa", icon: null, url: "/fix", disable: true },
     { label: "apply", name: "Ứng tuyển", icon: null, url: "/apply", disable: true },
     { label: "convernient", name: "Tiện ích", icon: null, url: "/convernient", disable: true },
-
+    { label: "more-info", name: "Thông tin khác", icon: null, url: "/more-info", disable: true },
+    // Jobs
     { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
     { label: "job-announcements", name: "Quản lí bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
     { label: "em-branches", name: "Quản lí chi nhánh", icon: "loading", url: routeLink.EM_BRANCHES + routePath.LIST },
     { label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: routeLink.FIND_CANDIDATES + routePath.LIST },
     { label: "saved-candidate", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.SAVE_CANDIDATE + routePath.LIST },
-    { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
-    { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
-    { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
-    { label: "user-controller", name: "Thông báo", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
+    // Connect School
+    { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
+    // School 
+    { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
+    { label: "user-controller", name: "Quản lí tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
+    // Notification
+    { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
+    // Convernient service
     { label: "job-service", name: "Gói dịch vụ", icon: null, url: routeLink.JOB_SERVICE },
-
+    { label: "community", name: "App Mobile", icon: null, url: routeLink.COMMUNITY },
+    { label: "guide", name: "Hướng dẫn", icon: null, url: routeLink.GUIDE },
+    { label: "guide", name: "Hướng dẫn", icon: null, url: routeLink.GUIDE },
+    { label: "feed-back", name: "Phản hồi", icon: null, url: routeLink.FEED_BACK },
+    { label: "privacy", name: "Điều khoản", icon: null, url: routeLink.PRIVACY },
+    { label: "annou-default", name: "Bài viết", icon: null, url: routeLink.ANNOU_DEFAULT },
 ]

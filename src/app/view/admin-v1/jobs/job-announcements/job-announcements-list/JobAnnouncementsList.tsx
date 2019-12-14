@@ -66,7 +66,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             );
         case TYPE.IN_DAY:
             return (
-                <Tooltip title={"Gói tuyển dụng nổi bật"} placement="left">
+                <Tooltip title={"Gói tuyển dụng trong ngày"} placement="left">
                     <div className='in_day f-sm'>
                         ({props.timeLeft})
                     </div>
@@ -156,7 +156,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 excludedJobIDs: null,
                 jobNameIDs: null,
                 jobGroupIDs: null,
-                hasPendingApplied: true,
+                hasPendingApplied: null,
                 hasAcceptedApplied: null,
                 hasRejectedApplied: null,
                 jobShiftFilter: null,

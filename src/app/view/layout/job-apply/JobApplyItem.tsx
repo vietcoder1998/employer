@@ -6,6 +6,7 @@ import { IApplyJob } from '../../../../redux/models/apply-job';
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../common/const/break-cumb';
 import { timeConverter } from '../../../../common/utils/convertTime';
+import './JobApplyItem.scss';
 
 interface IApplyJobItem {
     key?: any;
@@ -55,7 +56,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 onClick={() => props.onClick ? props.onClick(props.id) : null}
             >
                 <Row>
-                    <Col md={24} lg={12} xl={16}>
+                    <Col md={24} lg={24} xl={24}>
                         <div
                             style={{
                                 display: "inline-flex",
@@ -69,7 +70,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                             </div>
                             <div style={{ margin: "0px 15px" }}>
                                 <h6>
-                                    {data ? data.candidate.lastName + " " + data.candidate.lastName : <NotUpdate />}
+                                    {data ? data.candidate.lastName + " " + data.candidate.firstName : <NotUpdate />}
                                     {data && data.candidate.gender && data.candidate.gender === TYPE.MALE ? " (Nam)" : " (Nữ)"}
                                 </h6>
                                 <p style={{ fontStyle: "italic" }}>
@@ -86,7 +87,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                             </div>
                         </div>
                     </Col>
-                    <Col md={24} lg={12} xl={8}>
+                    <Col md={24} lg={24} xl={24}>
                         <ul >
                             <li>
                                 <span>Thái độ</span>   <Rate disabled defaultValue={2} style={{ fontSize: 12, float: "right" }} />
@@ -109,7 +110,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         style={{
                             borderRadius: "50%",
                             padding: "6px 8px",
-                            margin: 5,
+                            margin: "10px 10px",
                             height: "auto",
                             float: "right",
                             display: props.type !== TYPE.ACCEPTED ? "block" : "none"
@@ -125,7 +126,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         style={{
                             borderRadius: "50%",
                             padding: "6px 8px",
-                            margin: 5,
+                            margin: "10px 10px",
                             height: "auto",
                             float: "right",
                             display: props.type !== TYPE.REJECTED ? "block" : "none"
@@ -140,7 +141,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                         style={{
                             borderRadius: "50%",
                             padding: "6px 8px",
-                            margin: 5,
+                            margin: "10px 10px",
                             height: "auto",
                             float: "right",
                             background: "orange",

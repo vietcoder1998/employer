@@ -17,6 +17,7 @@ import { JOB_ANNOUNCEMENTS, PENDING_JOBS } from '../../../../../../services/api/
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { NotUpdate } from '../../../../layout/common/Common';
+import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -229,7 +230,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             true,
             false,
         ).then((res: any) => {
-            this.props.history.push('/v1/admin/jobs/job-announcements/list');
+            if (res) {
+                setTimeout(() => {
+                    this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST);
+                }, 250);
+            }
         })
     }
 
@@ -346,39 +351,36 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.EDIT ? "Thông tin bài viết(sửa)" : `Tạo bài viết mới(${normal_quantity ? normal_quantity : 0})`}
+                    {type_cpn === TYPE.EDIT ? "Thông tin bài đăng(sửa)" : `Tạo bài đăng mới(${normal_quantity ? normal_quantity : 0})`}
                 </h5>
-                <Divider orientation="left" >Nội dung bài viết</Divider>
+                <Divider orientation="left" >Nội dung bài đăng</Divider>
                 <div className="announcements-create-content">
                     <InputTitle
                         type={TYPE.INPUT}
                         title="Tiêu đề"
-                        widthLabel="200px"
-                        children={
-                            <Input
-                                style={{ width: 550 }}
-                                type="text"
-                                maxLength={260}
-                                placeholder="ex: Tuyển nhân viên bán hàng"
-                                value={body.jobTitle}
-                                onChange={
-                                    (event: any) => {
-                                        body.jobTitle = event.target.value;
-                                        this.setState({ body });
-                                    }
+                        widthLabel="150px"
+                    >
+                        <TextArea
+                            style={{ width: '100%' }}
+                            maxLength={400}
+                            placeholder="ex: Tuyển nhân viên bán hàng (tối đa 400 kí tự)"
+                            value={body.jobTitle}
+                            onChange={
+                                (event: any) => {
+                                    body.jobTitle = event.target.value;
+                                    this.setState({ body });
                                 }
-                            />
-                        }
-                    />
-
+                            }
+                        />
+                    </InputTitle>
                     <InputTitle
                         title="Nội dung bài đăng"
-                        widthLabel="200px"
+                        widthLabel="150px"
                         widthComponent="400px"
                     >
                         <TextArea
                             rows={5}
-                            style={{ width: 550 }}
+                            style={{ width: '100%' }}
                             maxLength={10000}
                             placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 10000 kí tự)"
                             value={body.description}
@@ -397,21 +399,25 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     </p>
 
                     <InputTitle
-                        title="Chọn thời gian hết hạn"
+                        title="Thời gian hết hạn"
                         type="SWITCH"
-                        widthLabel="200px"
+                        widthLabel="150px"
                     >
                         <DatePicker
                             format={"DD/MM/YYYY"}
-                            style={{ width: 550 }}
-                            placeholder="ex: 07/12/2019"
+                            style={{ width: '100%' }}
+                            placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
+                            defaultPickerValue={null}
                             value={body.expirationDate ? moment(body.expirationDate) : null}
                             onChange={
                                 (event?: any) => {
-                                    event ? body.expirationDate = event.unix() * 1000 : body.expirationDate = null;
+                                    event ?
+                                        body.expirationDate = event.unix() * 1000 :
+                                        body.expirationDate = null;
                                     this.setState({ body });
                                 }
                             }
+                            disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment().add(-1, 'days'))}
                         />
                     </InputTitle>
                     <InputTitle
@@ -425,12 +431,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 this.setState({ body });
                             }
                         }
-                        widthLabel="200px"
-                        widthSelect="550px"
+                        widthLabel="150px"
+                        widthSelect="100%"
                         placeholder="ex: Nhân viên văn phòng"
                     />
                     <InputTitle
-                        title="Chọn địa chỉ đăng tuyển"
+                        title="Chọn chi nhánh "
                         type={TYPE.SELECT}
                         list_value={list_em_branches_options}
                         value={findIdWithValue(list_em_branches, body.employerBranchID, "id", "branchName")}
@@ -440,14 +446,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 this.setState({ body });
                             }
                         }
-                        widthLabel="200px"
-                        widthSelect="550px"
+                        widthLabel="150px"
+                        widthSelect="100%"
                         placeholder="ex: Công ti abc"
                     />
 
                     <InputTitle
-                        title="Chọn loại kĩ năng"
-                        widthLabel="200px"
+                        title="Yêu cầu khác"
+                        widthLabel="150px"
                     >
                         <Select
                             mode="multiple"
@@ -461,7 +467,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     this.setState({ body })
                                 }
                             }
-                            style={{ width: 550 }}
+                            style={{ width: '100%' }}
                         >
                             {list_skill_options}
                         </Select>

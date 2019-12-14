@@ -1,6 +1,6 @@
 import React from 'react'
-//@ ts-ignore
-import BarLoading from './../assets/image/new-bar-loading.gif';
+// @ts-ignore
+import BarLoading from '../assets/image/new-bar-loading.gif';
 
 export default function FallBack(props) {
     return (

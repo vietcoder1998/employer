@@ -16,10 +16,17 @@ interface IReadCard {
 export default function ReadCard(props: IReadCard) {
     return (
         <Link to={routeLink.ANNOUNCEMENT + `/detail/${props && props.item && props.item.id}`} target='_blank' >
-            <div className='read-card'>
+            <div className='read-card test'>
                 <div className='read-card-content ' >
-                    <div className='info-card'>
-                        <div className="left-box">
+                    <div className='info-card-read'>
+                        <div className='left-box' >
+                            <img
+                                className='image-left-box'
+                                src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg}
+                                alt="info"
+                            />
+                        </div>
+                        <div className="right-box">
                             <h5>
                                 {limitString(props && props.item && props.item.title, 80)}
                             </h5>
@@ -41,13 +48,7 @@ export default function ReadCard(props: IReadCard) {
                                 </div>
                             </div>
                         </div>
-                        <div className='right-box' >
-                            <img
-                                className='image-right-box'
-                                src={props && props.item && props.item.imageUrl ? props.item.imageUrl : testImg}
-                                alt="info"
-                            />
-                        </div>
+
                     </div>
                 </div>
             </div>
