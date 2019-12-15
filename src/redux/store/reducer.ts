@@ -1,3 +1,4 @@
+import { SchoolsDetail } from './../reducers/school-detail';
 import { AnnouCommentDetail } from './../reducers/annou-comment-detail';
 import { RatingUser } from './../reducers/rating-user';
 import { Ratings } from './../reducers/ratings';
@@ -53,7 +54,8 @@ const rootReducer = combineReducers({
     Notis,
     Ratings,
     RatingUser,
-    AnnouCommentDetail
+    AnnouCommentDetail,
+    SchoolsDetail
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

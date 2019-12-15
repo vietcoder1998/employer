@@ -28,16 +28,19 @@ function Community(props?: ICommunityProps) {
     return (
         < >
             <h5>App Mobile</h5>
-            <div className='job-service' >
+            <div className='community' >
                 <p>
-                    Sử dụng app <a
+                    <label>
+                        Sử dụng app
+                    </label>
+                    <a
                         href='https://apps.apple.com/us/app/works-vn-tuy%E1%BB%83n-d%E1%BB%A5ng/id1486080602'
                         target='_blank'
                         rel="noopener noreferrer"
                     >
                         Employer
                     </a>
-                    trên chợ để tận hưởng toàn bộ tiện ích của works.vn
+                    <label>trên chợ để tận hưởng toàn bộ tiện ích của works.vn</label>
                 </p>
                 <div>
                     <Carousel
@@ -49,10 +52,6 @@ function Community(props?: ICommunityProps) {
                                     src={NTD1}
                                     alt="anh1"
                                 />
-                            </div>
-                        </div>
-                        <div>
-                            <div className='img-inside'>
                                 <img
                                     src={NTD2}
                                     alt="anh1"
@@ -65,10 +64,6 @@ function Community(props?: ICommunityProps) {
                                     src={NTD3}
                                     alt="anh1"
                                 />
-                            </div>
-                        </div>
-                        <div>
-                            <div className='img-inside'>
                                 <img
                                     src={NTD3}
                                     alt="anh1"
@@ -81,10 +76,6 @@ function Community(props?: ICommunityProps) {
                                     src={NTD4}
                                     alt="anh1"
                                 />
-                            </div>
-                        </div>
-                        <div>
-                            <div className='img-inside'>
                                 <img
                                     src={NTD5}
                                     alt="anh1"
@@ -98,11 +89,6 @@ function Community(props?: ICommunityProps) {
                                     src={NTD6}
                                     alt="anh1"
                                 />
-                            </div>
-                        </div>
-
-                        <div >
-                            <div className='img-inside'>
                                 <img
                                     src={NTD7}
                                     alt="anh1"

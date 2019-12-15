@@ -9,6 +9,7 @@ import logo from '../../../../assets/image/logo-white.png'
 import logoIcon from '../../../../assets/image/logo-icon-white.png'
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../common/const/break-cumb';
+import { LinkTo } from '../../layout/common/Common';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -31,16 +32,22 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
             theme="light"
         >
             <div className="logo" >
-                <img
-                    src={!showMenu ? logo : logoIcon}
-                    style={{
-                        height: "30px",
-                        marginLeft: 12,
-                        marginTop: 8,
+                <LinkTo
+                    href={'https://works.vn'}
+                    target='_blank'
+                >
+                    <img
+                        src={!showMenu ? logo : logoIcon}
+                        style={{
+                            height: "30px",
+                            marginLeft: 12,
+                            marginTop: 8,
 
-                    }}
-                    alt="worksvnlogo"
-                />
+                        }}
+                        alt="worksvnlogo"
+                    />
+                </LinkTo>
+
             </div>
             <Icon
                 className="trigger"
@@ -192,7 +199,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     key="sub4"
                     title={
                         <span>
-                            <Icon type="ellipsis" />
+                            <Icon type="more" />
                             <span>Thông tin khác</span>
                         </span>
                     }

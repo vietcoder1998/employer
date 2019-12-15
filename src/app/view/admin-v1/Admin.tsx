@@ -148,7 +148,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                 />
                 <Layout>
                     <Header style={{ padding: 0, zIndex: 900 }}>
-                       
                         <div className="avatar-header" >
                             <Popover
                                 content={

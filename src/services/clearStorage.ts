@@ -5,6 +5,8 @@ export default async function clearStorage() {
     localStorage.clear();
     let cookies = new Cookies();
     await cookies.remove("actk", { path: "/" });
+    await cookies.remove("rftk", { path: "/" });
+
     Swal.fire(
         "Workvns thông báo",
         "Bạn đã đăng xuất khỏi Worksvn",

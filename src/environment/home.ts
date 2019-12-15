@@ -1,0 +1,1 @@
+export const Home = () => 'https://works.vn'

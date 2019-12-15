@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer } from 'antd';
+import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
 import { POST } from '../../../common/const/method';
@@ -8,10 +8,13 @@ import { OAUTH2_LOGIN, EMPLOYER_REGISTER } from '../../../services/api/public.ap
 import { loginHeaders, noInfoHeader } from '../../../services/auth';
 import Header from '../layout/header/Header';
 import Footer from '../layout/footer/Footer';
-import Cookies from 'universal-cookie';
 import { routeLink, routePath } from '../../../common/const/break-cumb';
 import MapContainer from '../layout/map/Map';
+import { LinkTo } from '../layout/common/Common';
+import setupLogin from '../../../config/setup-login';
+import Cookies from 'universal-cookie';
 const { TabPane } = Tabs;
+const cookies = new Cookies();
 
 interface LoginState {
     email?: string;
@@ -26,6 +29,7 @@ interface LoginState {
     location?: string;
     open_drawer?: boolean;
     state?: "LOGIN" | "REGISTER";
+    confirm?: boolean;
 }
 
 interface LoginProps {
@@ -48,14 +52,15 @@ class Login extends PureComponent<LoginProps, LoginState> {
             employerName: null,
             open_drawer: false,
             location: null,
-            state: "LOGIN"
+            state: "LOGIN",
+            confirm: false
         }
     }
 
-    componentDidMount() {
+    UNSAFE_componentWillMount() {
         let is_authen = localStorage.getItem("token") ? true : false;
         if (is_authen) {
-            window.location.href = routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE;
+            window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {
             let state = this.props.match.path.replace("/", "");
             if (state) {
@@ -80,15 +85,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     loginHeaders("worksvn-employer-web", "worksvn-employer-web@works.vn"),
                     OAUTH2_HOST,
                     null,
-                    true,
                 ).then((res: any) => {
                     if (res) {
-                        let exp = new Date((new Date().getTime() + res.data.accessTokenExpSecstoDate) / 1000)
-                        let cookie = new Cookies()
-                        cookie.set("actk", res.data.accessToken, { expires: exp, path: "/" });
-                        localStorage.setItem("token", res.data.accessToken);
-                        localStorage.setItem("userID", res.data.userID);
-                        window.location.href = routeLink.JOB_ANNOUNCEMENTS + routePath.LIST
+                        message.success("Đăng nhập thành công");
+                        setupLogin(res.data);
+                        window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST)
                     }
                 })
                 break;
@@ -101,7 +102,6 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     noInfoHeader,
                     EMPLOYER_HOST,
                     null,
-                    true,
                 )
                 break;
             default:
@@ -119,7 +119,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { err_msg, password, username, open_drawer, state, repassword } = this.state;
+        let { err_msg, password, username, open_drawer, state, repassword, confirm } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -205,7 +205,14 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     )}
                                                 </Form.Item>
                                                 <p style={{ margin: "20px 0px" }}>
-                                                    <Checkbox onChange={() => { }} >Tự động đăng nhập</Checkbox>
+                                                    <Checkbox
+                                                        defaultChecked={cookies.get('atlg') === 'true'}
+                                                        onChange={
+                                                            (e: any) => cookies.set('atlg', e.target.checked)
+                                                        }
+                                                    >
+                                                        Tự động đăng nhập
+                                                        </Checkbox>
                                                 </p>
                                             </Form>
                                             {exactly ? "" : <p>{err_msg}</p>}
@@ -230,11 +237,12 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                         </p>
                                         <p className='a_c'
                                         >
-                                            <a href='/'
-                                                style={{ textDecoration: "underline" }}
+                                            <LinkTo
+                                                target='_blank'
+                                                href='https://works.vn'
                                             >
-                                                Trợ giúp ?
-                                             </a>
+                                                Trợ giúp
+                                            </LinkTo>
                                         </p>
                                     </div>
                                 </TabPane>
@@ -338,7 +346,22 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 </Form.Item>
 
                                                 <p style={{ margin: "20px 0px" }}>
-                                                    <Checkbox onChange={() => { }} >Đồng ý với điều khoản của chúng tôi</Checkbox>
+                                                    <Checkbox
+                                                        onChange={
+                                                            (event: any) => this.setState({ confirm: event.target.checked })
+                                                        }
+                                                    >
+                                                        Đồng ý với
+                                                        <a
+                                                            className='underline'
+                                                            href='https://works.vn/privacy'
+                                                            target='_blank'
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            điều khoản
+                                                        </a>
+                                                        của chúng tôi
+                                                    </Checkbox>
                                                 </p>
                                             </Form>
                                             {exactly ? "" : <p>{err_msg}</p>}
@@ -352,6 +375,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 className="login-form-button"
                                                 style={{ width: "100%" }}
                                                 onClick={(event: any) => this.handleSubmit(event, "REGISTER")}
+                                                disabled={!confirm}
                                             >
                                                 Đăng kí
                                              </Button>

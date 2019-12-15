@@ -1,28 +1,28 @@
 import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
-import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
+import { REDUX_SAGA, REDUX } from '../../../../../common/const/actions';
 import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input } from 'antd';
 // import { timeConverter } from '../../../../../../common/utils/convertTime';
-import { TYPE } from '../../../../../../common/const/type';
-import { IptLetter, IptLetterP, NotUpdate } from '../../../../layout/common/Common';
-import { IAppState } from '../../../../../../redux/store/reducer';
-import { IRegion } from '../../../../../../redux/models/regions';
-import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../../redux/models/connect-schools';
-import { IModalState, IMapState } from '../../../../../../redux/models/mutil-box';
+import { TYPE } from '../../../../../common/const/type';
+import { IptLetter, IptLetterP, NotUpdate } from '../../../layout/common/Common';
+import { IAppState } from '../../../../../redux/store/reducer';
+import { IRegion } from '../../../../../redux/models/regions';
+import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../redux/models/connect-schools';
+import { IModalState, IMapState } from '../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 // import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
-import CardSchool from '../../../../layout/card-schools/CardSchool';
-import Loading from '../../../../layout/loading/Loading';
-import DrawerConfig from '../../../../layout/config/DrawerConfig';
-import MapContainter from '../../../../layout/map/Map';
-import { IConnectSchoolDetail } from '../../../../../../redux/models/connect-school-detail';
+import CardSchool from '../../../layout/card-schools/CardSchool';
+import Loading from '../../../layout/loading/Loading';
+import DrawerConfig from '../../../layout/config/DrawerConfig';
+import MapContainter from '../../../layout/map/Map';
+import { IConnectSchoolDetail } from '../../../../../redux/models/connect-school-detail';
 import TextArea from 'antd/lib/input/TextArea';
-import { timeConverter } from '../../../../../../common/utils/convertTime';
-import { _requestToServer } from '../../../../../../services/exec';
-import { POST, PUT } from '../../../../../../common/const/method';
-import { CONNECT_SCHOOL } from '../../../../../../services/api/private.api';
-import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { timeConverter } from '../../../../../common/utils/convertTime';
+import { _requestToServer } from '../../../../../services/exec';
+import { POST, PUT } from '../../../../../common/const/method';
+import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../environment/dev';
 let { Option } = Select;
 const { Panel } = Collapse;
 const typeReturn = (type?: string) => {
@@ -301,12 +301,12 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ dataSchool });
         this.props.handleMapState({ marker: { lat: dataSchool.lat, lng: dataSchool.lon } })
         await this.props.handleDrawer();
-        await this.props.setConnectSchoolDetail();
+        // await this.props.setConnectSchoolDetail();
         setTimeout(() => {
             if (dataSchool.state) {
                 this.props.getConnectSchoolDetail(id)
             }
-        }, 500);
+        }, 1200);
     }
 
     createRequest = async (type?: string) => {
@@ -354,7 +354,6 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                     this.props.handleDrawer();
                 setTimeout(() => {
                     this.searchConnectSchools();
-
                 }, 250);
             }
         )
@@ -386,119 +385,122 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                     title="Thông tin nhà trường"
                     width={"60vw"}
                 >
-                    <Collapse
-                        defaultActiveKey={['1', '2', '3']}
-                        bordered={false}
-                        style={{ marginBottom: 40 }}
-                    >
-                        <Panel header="Thông tin nhà trường" key="1">
-                            <Row>
-                                <Col md={24} lg={12} xl={12} xxl={12}>
-                                    <ul>
-                                        <li>
-                                            <IptLetter value="Tên trường: " children={dataSchool && dataSchool.name} />
-                                        </li>
-                                        <li>
-                                            <IptLetter value="Tên rút gọn: " children={dataSchool && dataSchool.shortName} />
-                                        </li>
-                                        <li>
-                                            <IptLetter value="Địa chỉ: " children={dataSchool && dataSchool.address} />
-                                        </li>
-                                        <li>
-                                            <IptLetter value="Trạng thái: " children={dataSchool && typeReturn(dataSchool.state)} />
-                                        </li>
-                                        <li>
-                                            <IptLetter
-                                                value="Ngày tạo lời mời: "
-                                                children={
-                                                    dataSchool &&
-                                                        dataSchool.createdDate !== -1 ?
-                                                        timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
-                                                } />
-                                        </li>
-                                        <li>
-                                            <IptLetter
-                                                value="Ngày phản hồi: "
-                                                children={
-                                                    dataSchool &&
-                                                        dataSchool.createdDate !== -1 ?
-                                                        timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
-                                                } />
-                                        </li>
-                                        <li>
-                                            <IptLetter
-                                                value="Phản hồi cuối: "
-                                                children={
-                                                    dataSchool &&
-                                                        dataSchool.lastModified !== -1 ?
-                                                        timeConverter(dataSchool.lastModified, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
-                                                } />
-                                        </li>
-                                        <li>
-                                            <IptLetter
-                                                value="Người gửi yêu cầu : "
-                                                children={
-                                                    dataSchool && dataSchool.owner ?
-                                                        (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
-                                                } />
-                                        </li>
-                                    </ul>
-                                </Col>
-                                <Col md={24} lg={12} xl={12} xxl={12}>
-                                    <MapContainter style={{ pointerEvent: "none", height: 300, minWidth: 300 }} disabled={true} />
-                                </Col>
-                            </Row>
+                    {
+                        dataSchool ? (
+                            <Collapse
+                                defaultActiveKey={['1', '2', '3']}
+                                bordered={false}
+                                style={{ marginBottom: 40 }}
+                            >
+                                < Panel header="Thông tin nhà trường" key="1">
+                                    <Row>
+                                        <Col md={24} lg={12} xl={12} xxl={12}>
+                                            <ul>
+                                                <li>
+                                                    <IptLetter value="Tên trường: " children={dataSchool && dataSchool.name} />
+                                                </li>
+                                                <li>
+                                                    <IptLetter value="Tên rút gọn: " children={dataSchool && dataSchool.shortName} />
+                                                </li>
+                                                <li>
+                                                    <IptLetter value="Địa chỉ: " children={dataSchool && dataSchool.address} />
+                                                </li>
+                                                <li>
+                                                    <IptLetter value="Trạng thái: " children={dataSchool && typeReturn(dataSchool.state)} />
+                                                </li>
+                                                <li>
+                                                    <IptLetter
+                                                        value="Ngày tạo lời mời: "
+                                                        children={
+                                                            dataSchool &&
+                                                                dataSchool.createdDate !== -1 ?
+                                                                timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                        } />
+                                                </li>
+                                                <li>
+                                                    <IptLetter
+                                                        value="Ngày phản hồi: "
+                                                        children={
+                                                            dataSchool &&
+                                                                dataSchool.createdDate !== -1 ?
+                                                                timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                        } />
+                                                </li>
+                                                <li>
+                                                    <IptLetter
+                                                        value="Phản hồi cuối: "
+                                                        children={
+                                                            dataSchool &&
+                                                                dataSchool.lastModified !== -1 ?
+                                                                timeConverter(dataSchool.lastModified, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                        } />
+                                                </li>
+                                                <li>
+                                                    <IptLetter
+                                                        value="Người gửi yêu cầu : "
+                                                        children={
+                                                            dataSchool && dataSchool.owner ?
+                                                                (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
+                                                        } />
+                                                </li>
+                                            </ul>
+                                        </Col>
+                                        <Col md={24} lg={12} xl={12} xxl={12}>
+                                            <MapContainter style={{ pointerEvent: "none", height: 300, minWidth: 300 }} disabled={true} />
+                                        </Col>
+                                    </Row>
+                                </Panel>
+                                <Panel header={"Phản hồi nhà trường"} key="2" >
+                                    <TextArea
+                                        value={school_msg}
+                                        placeholder="Chưa có yêu cầu"
+                                        rows={3}
+                                        disabled={true}
+                                    />
+                                </Panel>
+                                <Panel header="Phản hồi từ phía bạn" key="3" >
+                                    <TextArea
+                                        value={candidate_msg}
+                                        placeholder="Chưa có yêu cầu"
+                                        rows={3}
 
-                        </Panel>
-                        <Panel header={"Phản hồi nhà trường"} key="2" >
-                            <TextArea
-                                value={school_msg}
-                                placeholder="Chưa có yêu cầu"
-                                rows={3}
-                                disabled={true}
-                            />
-                        </Panel>
-                        <Panel header="Phản hồi từ phía bạn" key="3" >
-                            <TextArea
-                                value={candidate_msg}
-                                placeholder="Chưa có yêu cầu"
-                                rows={3}
+                                        onChange={(event: any) => {
+                                            this.setState({ candidate_msg: event.target.value })
+                                        }}
+                                    />
+                                </Panel>
+                            </Collapse>) : <Loading />
+                    }
 
-                                onChange={(event: any) => {
-                                    this.setState({ candidate_msg: event.target.value })
-                                }}
-                            />
-                        </Panel>
-                        <div style={{ marginTop: 20, width: "100%" }}>
-                            <Button
-                                icon="left"
-                                children={"Thoát"}
-                                style={{ float: "left" }}
-                            />
-                            <Button
-                                icon={loading ? "loading" : "check"}
-                                type={"primary"}
-                                children={dataSchool.owner === TYPE.EMPLOYER ? "Cập nhật" : "Tạo phản hồi"}
-                                style={{
-                                    marginRight: "10px",
-                                    float: "right",
-                                    display: dataSchool.state === TYPE.REJECTED ? "none" : "block"
-                                }}
-                                onClick={() => this.createRequest(TYPE.ACCEPTED)}
-                            />
-                            <Button
-                                icon={loading ? "loading" : "stop"}
-                                children={"Hủy phản hồi"}
-                                type={"danger"}
-                                style={{
-                                    marginRight: "10px",
-                                    float: "right",
-                                    display: dataSchool.state === TYPE.ACCEPTED ? "block" : "none"
-                                }}
-                                onClick={() => this.createRequest(TYPE.REJECTED)}
-                            />
-                        </div>
-                    </Collapse>
+                    <div style={{ marginTop: 20, width: "100%" }}>
+                        <Button
+                            icon="left"
+                            children={"Thoát"}
+                            style={{ float: "left" }}
+                        />
+                        <Button
+                            icon={loading ? "loading" : "check"}
+                            type={"primary"}
+                            children={dataSchool.owner === TYPE.EMPLOYER ? "Cập nhật" : "Tạo phản hồi"}
+                            style={{
+                                marginRight: "10px",
+                                float: "right",
+                                display: dataSchool.state === TYPE.REJECTED ? "none" : "block"
+                            }}
+                            onClick={() => this.createRequest(TYPE.ACCEPTED)}
+                        />
+                        <Button
+                            icon={loading ? "loading" : "stop"}
+                            children={"Hủy phản hồi"}
+                            type={"danger"}
+                            style={{
+                                marginRight: "10px",
+                                float: "right",
+                                display: dataSchool.state === TYPE.ACCEPTED ? "block" : "none"
+                            }}
+                            onClick={() => this.createRequest(TYPE.REJECTED)}
+                        />
+                    </div>
                 </DrawerConfig>
                 <div className="common-content">
                     <h5>
@@ -606,11 +608,8 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                 (item: IConnectSchool, index: number) =>
                                     <div
                                         key={index}
-                                        onClick={
-                                            () => this.onSetDataSchool(item.id)
-                                        }
                                     >
-                                        <CardSchool key={index} {...item} />
+                                        <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
                                     </div>
                             ) : <Empty />) : <Loading />}
                         </div>

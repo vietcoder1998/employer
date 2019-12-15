@@ -10,9 +10,27 @@ export default function Header(props) {
     <>
       <div className="header">
         <div className="logo">
-          <Link to="/"><img width={120} height={40} src={logo} alt="itea-scan" /> </Link>
+          <a href="https://works.vn" target='_blank' rel="noopener noreferrer"><img width={120} height={40} src={logo} alt="itea-scan" /> </a>
         </div>
-        {token ? '' : <div style={{float: 'right'}}><Link to='/login'>Đăng nhập</Link> / <Link to='/register'>Đăng kí</Link></div>}
+        {
+          token ?
+            '' :
+            <div style={{ float: 'right' }}>
+              <Link
+                to='/login'
+                className='underline'
+              >
+                Đăng nhập
+              </Link>
+              /
+              <Link
+                to='/register'
+                className='underline'
+              >
+                Đăng kí
+              </Link>
+            </div>
+        }
       </div>
     </>
   );

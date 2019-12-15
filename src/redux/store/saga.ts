@@ -24,6 +24,7 @@ import { NotisWatcher } from '../sagas/notis';
 import { RatingsWatcher } from '../sagas/ratings';
 import { RatingUserWatcher } from '../sagas/rating-user';
 import { AnnouCommentDetailWatcher } from '../sagas/annou-comment-detail';
+import { SchoolDetailWatcher } from '../sagas/school-detail';
 
 export default function* rootSaga() {
     try {
@@ -53,6 +54,7 @@ export default function* rootSaga() {
             RatingsWatcher(),
             RatingUserWatcher(),
             AnnouCommentDetailWatcher(),
+            SchoolDetailWatcher()
         ])
     } catch (err) {
         throw err;

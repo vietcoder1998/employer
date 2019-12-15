@@ -1,7 +1,8 @@
 import React, { PureComponent, Fragment } from 'react'
 import './ConnectSchools.scss';
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
-import ConnectSchoolList from './ConnectSchoolsList/connect-school-list/ConnectSchoolList';
+import ConnectSchoolList from './connect-school-list/ConnectSchoolList';
+import SchoolDetail from './school-detail/SchoolDetail';
 const Switch = require("react-router-dom").Switch;
 
 interface ConnectSchoolsState {
@@ -21,7 +22,7 @@ export default class ConnectSchools extends PureComponent<ConnectSchoolsProps, C
         return (
             <Fragment >
                 <Switch>
-                    {/* <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} /> */}
+                    <ErrorBoundaryRoute path={`${path}/school/:id`} component={SchoolDetail} />
                     <ErrorBoundaryRoute path={`${path}/list`} component={ConnectSchoolList} />
                 </Switch>
             </Fragment>

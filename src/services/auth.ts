@@ -1,3 +1,5 @@
+import { decriptTk } from "../config/tk-en-de";
+
 // Create authozization header
 export const createAuthozization = (username, password) => {
     let data = username + ":" + password;
@@ -10,7 +12,7 @@ export const createAuthozization = (username, password) => {
 // Check invalid header
 export const authHeaders = {
     "Access-Control-Allow-Headers": "*",
-    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    "Authorization": `Bearer ${decriptTk(localStorage.getItem('erc'), 'TextMustBe16Byte')}`,
 }
 
 // Check Login User
@@ -35,20 +37,12 @@ export const deleteLoginState = () => {
 export const sendStringHeader = {
     "Access-Control-Allow-Headers": "*",
     "Content-Type": "text/plain",
-    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    "Authorization": `Bearer ${decriptTk(localStorage.getItem('erc'), 'TextMustBe16Byte')}`,
 }
 
 export const sendFileHeader = {
     "Access-Control-Allow-Headers": "*",
-    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-}
-
-// Set State of authenticate
-export const setAuthSate = async (response) => {
-    if (response.code === 200) {
-        localStorage.setItem("userID", response.data.userID);
-        localStorage.setItem("accessToken", response.data.accessToken);
-    }
+    "Authorization": `Bearer ${decriptTk(localStorage.getItem('erc'), 'TextMustBe16Byte')}`,
 }
 
 //Set Authorization

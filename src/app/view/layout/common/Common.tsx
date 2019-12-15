@@ -18,6 +18,10 @@ export const Titlelabel = (props?: IIptLetterProps) => {
     return <label className="title-label">{" " + props.value + " "}</label>
 };
 
+export const LinkTo = (props?: any) => {
+    return <a className='underline' {...props} rel="noopener noreferrer" children={props.children} />
+}
+
 export const IptLetter = (props?: any) => {
     return <label style={props.style ? props.style : { padding: "2px 5px" }} > <span className="important-letter">{" " + props.value + "  "}</span>{props.children ? props.children : ""}</label>
 };
