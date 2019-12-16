@@ -784,7 +784,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     </DrawerConfig>
                     <div className="common-content">
                         <h5>
-                            Quản lí bài đăng
+                            Quản lý bài đăng
                             <Tooltip title="Tìm kiếm" >
                                 <Button
                                     onClick={() => this.searchJobAnnouncement()}

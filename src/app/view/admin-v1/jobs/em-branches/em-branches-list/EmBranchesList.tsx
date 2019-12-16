@@ -398,7 +398,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     />
 
                     <h5>
-                        Quản lí chi nhánh
+                        Quản lý chi nhánh
                         <Tooltip title="Tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEmBranch()}

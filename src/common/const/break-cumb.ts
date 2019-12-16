@@ -69,8 +69,8 @@ export const breakCumb = [
     { label: "more-info", name: "Thông tin khác", icon: null, url: "/more-info", disable: true },
     // Jobs
     { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
-    { label: "job-announcements", name: "Quản lí bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
-    { label: "em-branches", name: "Quản lí chi nhánh", icon: "loading", url: routeLink.EM_BRANCHES + routePath.LIST },
+    { label: "job-announcements", name: "Quản lý bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
+    { label: "em-branches", name: "Quản lý chi nhánh", icon: "loading", url: routeLink.EM_BRANCHES + routePath.LIST },
     { label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: routeLink.FIND_CANDIDATES + routePath.LIST },
     { label: "saved-candidate", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.SAVE_CANDIDATE + routePath.LIST },
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
@@ -78,7 +78,7 @@ export const breakCumb = [
     { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
     // School 
     { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
-    { label: "user-controller", name: "Quản lí tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
+    { label: "user-controller", name: "Quản lý tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
     // Notification
     { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
     // Convernient service
