@@ -1,4 +1,4 @@
-import { IShift } from './pending-job';
+import { IShift } from './pending-jobs';
 export interface IPendingJobDetail {
     employer?: {
         employerName?: string,
