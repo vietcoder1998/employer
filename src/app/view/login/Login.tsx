@@ -13,6 +13,7 @@ import MapContainer from '../layout/map/Map';
 import { LinkTo } from '../layout/common/Common';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 const { TabPane } = Tabs;
 const cookies = new Cookies();
 
@@ -214,6 +215,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         Tự động đăng nhập
                                                         </Checkbox>
                                                 </p>
+
                                             </Form>
                                             {exactly ? "" : <p>{err_msg}</p>}
                                         </div>
@@ -234,6 +236,9 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                             >
                                                 Đăng nhập
                                             </Button>
+                                        </p>
+                                        <p className='a_c'>
+                                            <Link className={'underline'} to={'/forget-pw'} >Quên mật khẩu ? </Link>
                                         </p>
                                         <p className='a_c'
                                         >

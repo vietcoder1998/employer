@@ -8,3 +8,6 @@ export const ANNOU_TYPES_PUBLIC = "/api/announcementTypes";
 export const ANNOU_PUBLIC = "/api/announcements";
 export const SCHOOL = "/api/schools";
 export const RFGTK= "/api/authentication/refresh-token"
+export const RSPW= "/api/users/password/reset";
+export const SMRQ = '/api/users/password/new'
+export const M_S = '/api/users/password/reset/request';
