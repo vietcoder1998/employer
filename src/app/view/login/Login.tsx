@@ -58,7 +58,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     }
 
     UNSAFE_componentWillMount() {
-        let is_authen = localStorage.getItem("token") ? true : false;
+        let is_authen = localStorage.getItem("ecr") ? true : false;
         if (is_authen) {
             window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {

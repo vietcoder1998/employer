@@ -28,7 +28,7 @@ export interface IGenderData {
     applied?:number
 }
 
-export interface IShifts {
+export interface IShift {
     endTime?: string;
     startTime?: string;
     genderRequireds?: Array<IGenderData>
@@ -53,7 +53,7 @@ export interface IPendingJobs {
     totalItems?: number;
 }
 
-export interface IShifts {
+export interface IShift {
     id?: string,
     startTime?: string,
     endTime?: string,
@@ -79,5 +79,5 @@ export interface IAnnoucementBody {
     requiredSkillIDs?: Array<any>,
     jobType?: string,
     expirationDate?: number,
-    shifts?: Array<IShifts>
+    shifts?: Array<IShift>
 }

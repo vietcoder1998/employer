@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import {  IShifts } from '../../../../../../redux/models/announcements';
+import {  IShift } from '../../../../../../redux/models/announcements';
 import { ShiftContent} from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import { _requestToServer } from '../../../../../../services/exec';
@@ -285,9 +285,9 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                         list_shifts && 
                                         list_shifts.length > 0 ?
                                         list_shifts.map(
-                                            (item: IShifts, index: number) => {
+                                            (item: IShift, index: number) => {
                                                 if (item) {
-                                                    return <ShiftContent key={index} id={item.id} shifts={item} removeButton={false} disableChange={true} />
+                                                    return <ShiftContent key={index} id={item.id} shift={item} removeButton={false} disableChange={true} />
                                                 }
 
                                                 return null

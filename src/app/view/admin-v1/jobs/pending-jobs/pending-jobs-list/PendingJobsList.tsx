@@ -277,7 +277,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         >
                             Thoát
                         </Button>,
-                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${job_id}`} target='_blank' >
+                        <Link key="submit" to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${job_id}`} target='_blank' >
                             <Button
                                 key="submit"
                                 type="primary"
@@ -302,21 +302,6 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 <div className="common-content">
                     <h5>
                         Danh sách bài đăng đang chờ
-                        {/* <Tooltip title="Tạo chi nhánh mới" >
-                            <Button
-                                type="primary"
-                                style={{
-                                    float: "right",
-                                    margin: "5px 10px",
-                                    padding: "10px",
-                                    borderRadius: "50%",
-                                    height: "45px",
-                                    width: "45px"
-                                }}
-                                icon={"search"}
-                                onClick={() => this.queryPendingJob()}
-                            />
-                        </Tooltip> */}
                     </h5>
                     <div>
                         <Table

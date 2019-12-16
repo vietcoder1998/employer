@@ -9,6 +9,7 @@ import { IPendingJobDetail } from '../../../../redux/models/pending-job-detail';
 import { ISkill } from '../../../../redux/models/skills';
 import findIdWithValue from '../../../../common/utils/findIdWithValue';
 import { IJobName } from '../../../../redux/models/job-names';
+import randomID from '../../../../common/utils/randomID';
 
 interface IJobDetailProps {
     job_detail?: IPendingJobDetail,
@@ -93,10 +94,11 @@ export default function JobDetail(props: IJobDetailProps) {
                 {list_des &&
                     list_des !== [] ?
                     list_des.map(
-                        (item: any) => (<p key={item.index}>
-                            {item.value[0] === '+' || item.value[0] === '\n' ||
-                                item.value[0] === '-' || item.value[0] === '=' ? "" : '-'}
-                            {item.value}</p>)) :
+                        (item: any, index?: number) => (
+                            <p key={index}>
+                                {item.value[0] === '+' || item.value[0] === '\n' ||
+                                    item.value[0] === '-' || item.value[0] === '=' ? "" : '-'}
+                                {item.value}</p>)) :
                     <p>Vui lòng liên hệ chi tiết với nhà tuyển dụng</p>
                 }
             </div>
@@ -109,36 +111,37 @@ export default function JobDetail(props: IJobDetailProps) {
                         job_detail.data.shifts &&
                         job_detail.data.shifts.map((item: any, index: number) => {
                             let maxSalary = '' + item.maxSalary && item.maxSalary === 0 ? '' : ('-' + item.maxSalary);
-                            return (<div key={index} className='time-content b_b'>
-                                <p>
-                                    <label> Ca số {index + 1} </label>
-                                </p>
-                                <p>
-                                    <Icon type="clock-circle"
-                                        style={{ color: 'blue' }} />{' ' + item.startTime + '-' + item.endTime}
-                                </p>
-                                <p>
-                                    <Icon type="dollar" style={{ color: 'rgb(224, 224, 34)' }} />
-                                    {item.minSalary ? (
-                                        <span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : " Thỏa thuận"}
-                                </p>
-                                <div className='week-day'>
-                                    {weekDays.map((itemWeek, index) => {
-                                        if (item[itemWeek] === true) {
-                                            let day = 'T' + (index + 2);
-                                            if (index === 6) {
-                                                day = 'CN'
+                            return (
+                                <div key={index} className='time-content b_b'>
+                                    <p>
+                                        <label> Ca số {index + 1} </label>
+                                    </p>
+                                    <p>
+                                        <Icon type="clock-circle"
+                                            style={{ color: 'blue' }} />{' ' + item.startTime + '-' + item.endTime}
+                                    </p>
+                                    <p>
+                                        <Icon type="dollar" style={{ color: 'rgb(224, 224, 34)' }} />
+                                        {item.minSalary ? (
+                                            <span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : " Thỏa thuận"}
+                                    </p>
+                                    <div className='week-day'>
+                                        {weekDays.map((itemWeek: any, nextIndex?: number) => {
+                                            if (item[itemWeek] === true) {
+                                                let day = 'T' + (nextIndex + 2);
+                                                if (nextIndex === 6) {
+                                                    day = 'CN'
+                                                }
+                                                return (<label key={randomID(8)} className='time-span'>
+                                                    {day}
+                                                </label>)
                                             }
-                                            return (<label key={index} className='time-span'>
-                                                {day}
-                                            </label>)
-                                        }
-                                        else {
-                                            return null
-                                        }
-                                    })}
-                                </div>
-                            </div>)
+                                            else {
+                                                return undefined
+                                            }
+                                        })}
+                                    </div>
+                                </div>)
                         })
                     }
                 </div>

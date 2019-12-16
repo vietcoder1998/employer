@@ -7,7 +7,7 @@ import { REDUX_SAGA } from '../../../../../../common/const/actions';
 import { TYPE } from '../../../../../../common/const/type';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../redux/models/job-names';
-import { IAnnoucementBody, IShifts } from '../../../../../../redux/models/announcements';
+import { IAnnoucementBody, IShift } from '../../../../../../redux/models/announcements';
 import { ShiftContent, newShift } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
@@ -37,6 +37,7 @@ interface IJobAnnouncementsCreateState {
     jobName?: string;
     address?: string;
     skills?: Array<string>
+    not_complete?: boolean;
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
@@ -57,7 +58,8 @@ const getBody = () => {
         requiredSkillIDs: [],
         jobType: TYPE.FULLTIME,
         expirationDate: null,
-        shifts: []
+        shifts: [],
+        not_complete: true
     }
 }
 
@@ -182,6 +184,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
+        console.log(index);
         body.shifts[index] = event;
         this.setState({ body })
     };
@@ -199,48 +202,53 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         this.setState({ body });
     };
 
-    removeShift = (id: number | string) => {
+    removeShift = (index: number) => {
         let { body } = this.state;
-        if (body.shifts.length > 1) {
-            body.shifts.forEach((item: IShifts, index: number) => {
-                if (item.id === id) {
-                    body.shifts.splice(index, 1);
-                    message.info({ type: "info", message: `Đã xóa ca số :${index}` })
-                };
-            });
-        };
-
+        body.shifts.splice(index, 1);
+        message.info({ type: "info", message: `Đã xóa ca số :${index}` });
         this.setState({ body });
     };
 
     createRequest = async () => {
-        let { body, type_cpn, id } = this.state;
+        let { body, type_cpn, id, not_complete } = this.state;
         let newBody = this.pretreatmentBody(body, type_cpn);
         let matching = type_cpn === TYPE.CREATE ? `` : `/${id}`;
         let METHOD = type_cpn === TYPE.CREATE ? POST : PUT;
         let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
+        await this.setState({ loading: true })
 
-        await _requestToServer(
-            METHOD,
-            API + matching,
-            newBody,
-            null,
-            undefined,
-            EMPLOYER_HOST,
-            true,
-            false,
-        ).then((res: any) => {
-            if (res) {
-                setTimeout(() => {
-                    this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST);
-                }, 250);
-            }
-        })
+        if (!not_complete) {
+            await _requestToServer(
+                METHOD,
+                API + matching,
+                newBody,
+                null,
+                undefined,
+                EMPLOYER_HOST,
+                true,
+                false,
+            ).then((res: any) => {
+                if (res) {
+                    setTimeout(() => {
+                        this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
+                    }, 250);
+                }
+            }).finally(() => {
+                this.setState({ loading: false })
+            })
+        }
     }
 
     pretreatmentBody = (body: IAnnoucementBody, type_cpn: string) => {
         let newBody = body;
+        this.setState({ not_complete: false });
+
         newBody.shifts.forEach((element: any, index: number) => {
+            if (!element.genderRequireds || element.genderRequireds.length === 0) {
+                message.warning(`Ca số ${index} cần thêm số lượng tuyển`);
+                this.setState({ not_complete: true })
+            }
+
             element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
                 if (item.id && type_cpn !== TYPE.CREATE) {
                     return {
@@ -262,7 +270,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         });
 
         if (type_cpn !== TYPE.EDIT) {
-            newBody.shifts.forEach((element: IShifts, index: number) => {
+            newBody.shifts.forEach((element: IShift, index: number) => {
                 if (element.id) {
                     delete element["id"]
                 }
@@ -285,6 +293,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let {
             type_cpn,
             body,
+            loading
         } = this.state;
 
         let {
@@ -490,7 +499,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 body.shifts.map((item: any, index: number) => (
                                     <div key={index}>
                                         <ShiftContent
-                                            shifts={item}
+                                            shift={item}
                                             type={TYPE.FULLTIME}
                                             removeButton={false}
                                             id={item.id}
@@ -507,13 +516,13 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 body.shifts.map((item: any, index: number) => (
                                     <div key={index}>
                                         <ShiftContent
-                                            shifts={item}
+                                            shift={item}
                                             index={index}
                                             type={TYPE.PARTTIME}
                                             id={item.id}
                                             removeButton={true}
-                                            removeShift={(id: number | string) => this.removeShift(id)}
-                                            onChange={(event: IShifts) => this.handleBodyShift(event, index)}
+                                            removeShift={(index: number) => this.removeShift(index)}
+                                            onChange={(event: IShift) => this.handleBodyShift(event, index)}
                                         />
                                     </div>
                                 ))
@@ -524,9 +533,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             {body.shifts &&
                                 body.shifts.length > 0 &&
                                 body.shifts.map((item: any, index: number) => (
-                                    <div key={index}>
+                                    <div
+                                        key={index}
+                                    >
                                         < ShiftContent
-                                            shifts={item}
+                                            shift={item}
                                             type={TYPE.INTERNSHIP}
                                             removeButton={false}
                                             id={item.id}
@@ -542,7 +553,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 <div className="Announcements-create-content">
                     <Button
                         type="primary"
-                        prefix={"check"}
+                        icon={loading ? 'loading' : " check"}
                         style={{
                             margin: "10px 10px",
                             float: "right"
@@ -554,14 +565,13 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     </Button>
                     <Button
                         type="danger"
-                        prefix={"check"}
+                        icon={'close'}
                         style={{
                             margin: "10px 10px",
                             float: "right"
                         }}
                         onClick={() => { this.props.history.push('/v1/admin/jobs/job-announcements/list') }}
                     >
-                        <Icon type="close" />
                         {ct_btn_ex}
                     </Button>
                 </div>

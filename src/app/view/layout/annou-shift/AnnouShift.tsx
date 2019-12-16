@@ -3,7 +3,7 @@ import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Checkbox, Button, TimePicker, Radio } from 'antd';
 import { IptLetterP, IptLetter } from '../common/Common';
 import randomID from '../../../../common/utils/randomID';
-import { IShifts } from '../../../../redux/models/announcements';
+import { IShift } from '../../../../redux/models/announcements';
 import { TYPE } from '../../../../common/const/type';
 import moment from 'moment';
 const { Option } = Select;
@@ -17,10 +17,10 @@ interface IShiftContent {
     disableChange?: boolean;
     onChange?: Function;
     removeShift?: Function;
-    shifts?: IShifts;
+    shift?: IShift;
 }
 
-export function newShift(): IShifts {
+export function newShift(): IShift {
     return {
         id: randomID(8),
         startTime: null,
@@ -56,6 +56,7 @@ export function ShiftContent(props: IShiftContent) {
     const [sun, setSun] = React.useState(false);
     const [typeGender, setTypeGender] = React.useState(true);
     const [genderRequireds, setGenderRequireds] = React.useState([]);
+
     let [valueGender, setValueGender] = React.useState([
         { gender: TYPE.MALE, quantity: 0, id: null },
         { gender: TYPE.FEMALE, quantity: 0, id: null }
@@ -64,33 +65,34 @@ export function ShiftContent(props: IShiftContent) {
         { gender: TYPE.BOTH, quantity: 0, id: null },
     ]);
 
-    if (props.shifts && props.shifts.id !== id) {
+    if (props.shift && props.shift.id !== id) {
         if (
-            props.shifts.minSalary === 0 &&
-            props.shifts.maxSalary === 0) {
+            props.shift.minSalary === 0 &&
+            props.shift.maxSalary === 0) {
             setAgreement(false)
         }
-        setMaxSalary(props.shifts.maxSalary);
-        setMinsalary(props.shifts.minSalary);
-        setStartTime(props.shifts.startTime);
-        setEndTime(props.shifts.endTime);
-        setId(props.shifts.id);
-        setMon(props.shifts.mon);
-        setTue(props.shifts.tue);
-        setWed(props.shifts.wed);
-        setThu(props.shifts.thu);
-        setFri(props.shifts.fri);
-        setSat(props.shifts.sat);
-        setUnit(props.shifts.unit);
-        setSun(props.shifts.sun);
-        setGenderRequireds(props.shifts.genderRequireds)
+
+        setMaxSalary(props.shift.maxSalary);
+        setMinsalary(props.shift.minSalary);
+        setStartTime(props.shift.startTime);
+        setEndTime(props.shift.endTime);
+        setId(props.shift.id);
+        setMon(props.shift.mon);
+        setTue(props.shift.tue);
+        setWed(props.shift.wed);
+        setThu(props.shift.thu);
+        setFri(props.shift.fri);
+        setSat(props.shift.sat);
+        setUnit(props.shift.unit);
+        setSun(props.shift.sun);
+        setGenderRequireds(props.shift.genderRequireds)
 
         if (
-            props.shifts.genderRequireds &&
-            props.shifts.genderRequireds.length > 0
+            props.shift.genderRequireds &&
+            props.shift.genderRequireds.length > 0
         ) {
             let newValueGender = valueGender;
-            props.shifts.genderRequireds.forEach((item: { id: string, quantity: number, gender: any }) => {
+            props.shift.genderRequireds.forEach((item: { id: string, quantity: number, gender: any }) => {
                 if (item.gender === TYPE.BOTH) {
                     setTypeGender(false);
                     setValueBoth([item]);
@@ -133,7 +135,9 @@ export function ShiftContent(props: IShiftContent) {
                         <Checkbox
                             checked={tue}
                             onChange={
-                                (event: any) => setTue(event.target.checked)
+                                (event: any) => {
+                                    setTue(event.target.checked)
+                                }
                             }
                         />
                     </IptLetterP>
@@ -193,7 +197,7 @@ export function ShiftContent(props: IShiftContent) {
     );
 
     const target = () => {
-        if (props.shifts.genderRequireds) {
+        if (props.shift.genderRequireds) {
             return (<div>
                 <Radio.Group
                     name="radiogroup"
@@ -212,6 +216,7 @@ export function ShiftContent(props: IShiftContent) {
                         <IptLetterP value="Nam" icon="man">
                             <InputNumber
                                 min={0}
+                                max={10000}
                                 defaultValue={0}
                                 value={valueGender[0].quantity}
                                 onChange={
@@ -229,6 +234,7 @@ export function ShiftContent(props: IShiftContent) {
                         <IptLetterP value="Nữ" icon="woman">
                             <InputNumber
                                 min={0}
+                                max={10000}
                                 defaultValue={0}
                                 value={valueGender[1].quantity}
                                 onChange={
@@ -248,7 +254,8 @@ export function ShiftContent(props: IShiftContent) {
                     <Col xs={12} sm={12} md={12} lg={10} xl={12}>
                         <IptLetterP value="Người" icon="team">
                             <InputNumber
-                                min={1}
+                                min={0}
+                                max={10000}
                                 defaultValue={0}
                                 value={valueBoth[0].quantity}
                                 onChange={
@@ -271,9 +278,8 @@ export function ShiftContent(props: IShiftContent) {
 
     React.useEffect(
         () => {
-            if (props.shifts && props.onChange && props.id !== null && !props.disableChange) {
+            if (props.shift && props.onChange && !props.disableChange) {
                 props.onChange({
-                    id,
                     startTime,
                     endTime,
                     minSalary: agreement ? minSalary : 0,
@@ -315,7 +321,7 @@ export function ShiftContent(props: IShiftContent) {
         ]
     );
 
-    if (!props.shifts) {
+    if (!props.shift) {
         return
     }
 
@@ -348,6 +354,7 @@ export function ShiftContent(props: IShiftContent) {
                     <Col sm={24} md={12} lg={8} xl={8} xxl={8}>
 
                         <TimePicker
+                            key={randomID(8)}
                             placeholder="Bắt đầu"
                             format={"HH:mm"}
                             style={{ width: "90%" }}
@@ -357,6 +364,7 @@ export function ShiftContent(props: IShiftContent) {
                     </Col>
                     <Col sm={24} md={12} lg={8} xl={8} xxl={8}>
                         <TimePicker
+                            key={randomID(8)}
                             placeholder="Kết thúc"
                             format={"HH:mm"}
                             style={{ width: "90%" }}
@@ -427,7 +435,7 @@ export function ShiftContent(props: IShiftContent) {
                 <InputTitle title="Ngày làm" children={timeSetup} />
             </div>
             <>
-                {props.shifts.genderRequireds ? <InputTitle title="Đối tượng" children={target()} /> : undefined}
+                {props.shift.genderRequireds ? <InputTitle title="Đối tượng" children={target()} /> : undefined}
             </>
             <>
                 <Button
@@ -437,7 +445,7 @@ export function ShiftContent(props: IShiftContent) {
                         marginRight: "10px",
                         display: props.removeButton ? "block" : "none"
                     }}
-                    onClick={() => props.removeShift ? props.removeShift(props.id) : undefined}
+                    onClick={() => props.removeShift ? props.removeShift(props.index) : undefined}
                 >
                     Xóa ca
                 </Button>

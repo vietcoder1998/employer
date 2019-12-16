@@ -26,7 +26,7 @@ export interface IAnnouncement {
     }
 }
 
-export interface IShifts {
+export interface IShift {
     id?: string,
     startTime?: string,
     endTime?: string,
@@ -57,7 +57,7 @@ export interface IAnnoucementBody {
     requiredSkillIDs?: Array<any>,
     jobType?: string,
     expirationDate?: number,
-    shifts?: Array<IShifts>
+    shifts?: Array<IShift>
 }
 
 export interface IAnnouncements {
