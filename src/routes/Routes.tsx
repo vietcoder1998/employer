@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+// @ts-ignore
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import FallBack from './FallBack';
 
@@ -7,6 +8,8 @@ const Login = lazy(() => import('./../app/view/login/Login'));
 const NotFound = lazy(() => import('./../app/view/not-found/NotFound'));
 const ForgetPw = lazy(() => import('./../app/view/forget-pw/ForgetPw'));
 const Announcements = lazy(() => import('./../app/view/announcement/Announcement'));
+const Convernient = lazy(() => import('./../app/view/convernient/Convernient'));
+
 const is_authen = localStorage.getItem('ecr');
 export default function Routes(props) {
   return (
@@ -35,6 +38,9 @@ export default function Routes(props) {
         </Suspense>
         <Suspense fallback={<FallBack />} >
           <Route path='/announcements' component={Announcements} />
+        </Suspense>
+        <Suspense fallback={<FallBack />} >
+          <Route path='/convernient' component={Convernient} />
         </Suspense>
       </Router>
     </>
