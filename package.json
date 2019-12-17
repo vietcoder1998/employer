@@ -28,6 +28,7 @@
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.8.6",
+    "react-easy-crop": "^1.17.0",
     "react-geocode": "^0.2.1",
     "react-google-autocomplete": "^1.1.2",
     "react-places-autocomplete": "^7.2.1",

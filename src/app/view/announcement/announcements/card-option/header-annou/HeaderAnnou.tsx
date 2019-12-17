@@ -6,7 +6,7 @@ import { Avatar, Icon, Skeleton, Rate } from 'antd';
 import { Timer } from '../../../../layout/common/Common';
 
 interface IHeaderAnnou {
-    name?: string;
+    name?: any;
     avatarUrl?: string;
     createdDate?: number;
     loading?: boolean;

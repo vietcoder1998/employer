@@ -17,6 +17,7 @@ import { IAppState } from '../../../../../redux/store/reducer';
 import { DELETE, POST } from '../../../../../common/const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
+import { NotUpdate } from '../../../layout/common/Common';
 // import { NotUpdate } from '../../../layout/common/Common';
 
 interface IAnnouncementsDetailProps extends StateProps, DispatchProps {
@@ -64,7 +65,6 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
 
             return {
                 id,
-                loading: false
             }
         }
 
@@ -128,11 +128,15 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
             comment,
             totalCmt
         } = this.props;
+
+        let firstName = annoucement_detail ? annoucement_detail.admin.firstName : null;
+        let lastName = annoucement_detail ? annoucement_detail.admin.lastName : null;
+
         return (
             <div>
                 <Row>
-                    <Col md={1} lg={2} xl={2} xxl={4}></Col>
-                    <Col md={22} lg={20} xl={20} xxl={16}>
+                    <Col xs={0} sm={0} md={1} lg={2} xl={2} xxl={4}></Col>
+                    <Col xs={24} sm={24} md={22} lg={20} xl={20} xxl={16}>
                         <div className="annou-list">
                             <Row>
                                 <Col xs={0} sm={1} md={1} lg={2} xl={3} xxl={4}>
@@ -166,7 +170,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                                         averageRating={annoucement_detail.averageRating}
                                         loading={loading}
                                         name={
-                                            annoucement_detail.admin.lastName + " " + annoucement_detail.admin.firstName
+                                           lastName ? lastName: <NotUpdate msg='loading...' /> + " " + firstName ? firstName : <NotUpdate msg='' />
                                         }
                                         avatarUrl={
                                             annoucement_detail.admin.avatarUrl
@@ -213,7 +217,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                             </Row>
                         </div>
                     </Col>
-                    <Col md={1} lg={2} xl={2} xxl={4}></Col>
+                    <Col xs={0} sm={0} md={1} lg={2} xl={2} xxl={4}></Col>
                 </Row>
                 <BackTop />
             </div>

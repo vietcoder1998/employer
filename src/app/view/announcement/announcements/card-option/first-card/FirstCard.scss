@@ -6,6 +6,8 @@
   position: relative;
   overflow: hidden;
   color: rgba(128, 128, 128, 1);
+  min-height: 250px;
+
   &:hover {
     transition: 0.15s;
   }
@@ -15,7 +17,7 @@
   }
 
   .first-card-content {
-    height: 37.5vw;
+    height: 37.8vw;
     width: 100%;
   }
 

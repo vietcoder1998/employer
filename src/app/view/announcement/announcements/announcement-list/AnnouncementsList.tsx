@@ -39,7 +39,6 @@ interface IAnnouncementsListState {
     createdDate?: number;
     adminID?: string;
     list_announcements?: Array<any>;
-    initLoading?: boolean;
     loading?: boolean;
     data?: Array<any>;
     loadingMore?: boolean;
@@ -59,7 +58,6 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
             createdDate: undefined,
             adminID: undefined,
             list_announcements: [],
-            initLoading: false,
             loading: true,
             pageIndex: 0,
             pageSize: 10,
@@ -106,9 +104,9 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                 hidden,
                 target,
                 search: nextProps.location.search,
-                loading: true,
             }
         }
+
         if (
             nextProps.list_announcements &&
             nextProps.list_announcements !== prevState.list_announcements
@@ -117,9 +115,12 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                 list_announcements: nextProps.list_annou_types,
                 loadingMore: false,
                 loading: false
+
             };
         }
-        return null;
+        return {
+            loading: false
+        };
     };
 
     async componentDidMount() {
