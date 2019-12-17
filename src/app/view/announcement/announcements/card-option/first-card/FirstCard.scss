@@ -6,6 +6,9 @@
   position: relative;
   overflow: hidden;
   color: rgba(128, 128, 128, 1);
+  &:hover {
+    transition: 0.15s;
+  }
 
   h5 {
     margin: 0 !important;
@@ -32,7 +35,7 @@
       padding-bottom: 5px;
       width: 100%;
       padding: 10px;
-      
+
       .writor {
         display: inline-flex;
         width: 100%;
