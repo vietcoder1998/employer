@@ -101,11 +101,11 @@ export default function NotiItem(props: INotiItemProps) {
                 </Link>
                 <div className='data-noti'>
                     <div><IptLetter value={item.title} style={{ padding: 0 }} /></div>
-                    <Link to={link_to} target="_blank" >
+                    {/* <Link to={link_to} target="_blank" > */}
                         <div className="content_li-info">
                             {item.body}
                         </div>
-                    </Link>
+                    {/* </Link> */}
                     <Icon type={icon_state} theme="filled" style={{ color: color_icon_state }} />
                     <Timer style={{ margin: 0, padding: 0 }} value={item.createdDate} />
                 </div>

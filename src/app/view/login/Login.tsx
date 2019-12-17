@@ -31,6 +31,7 @@ interface LoginState {
     open_drawer?: boolean;
     state?: "LOGIN" | "REGISTER";
     confirm?: boolean;
+    loading?: boolean;
 }
 
 interface LoginProps {
@@ -54,7 +55,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
             open_drawer: false,
             location: null,
             state: "LOGIN",
-            confirm: false
+            confirm: false,
+            loading: false,
         }
     }
 
@@ -75,6 +77,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
         let { password, username, employerName, email } = this.state;
         let lat = localStorage.getItem("lat");
         let lon = localStorage.getItem("lon");
+        this.setState({ loading: true })
 
         switch (type) {
             case "LOGIN":
@@ -92,7 +95,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                         setupLogin(res.data);
                         window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST)
                     }
-                })
+                }).finally(() => this.setState({ loading: false }))
                 break;
             case "REGISTER":
                 await _requestToServer(
@@ -102,8 +105,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     undefined,
                     noInfoHeader,
                     EMPLOYER_HOST,
-                    null,
-                )
+                    true,
+                ).finally(() => this.setState({ loading: false }))
                 break;
             default:
                 break;
@@ -120,7 +123,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { err_msg, password, username, open_drawer, state, repassword, confirm } = this.state;
+        let { err_msg, password, username, open_drawer, state, repassword, confirm, loading } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -234,7 +237,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     }
                                                 }}
                                             >
-                                                Đăng nhập
+                                                {loading ? <Icon type={'loading'} /> : 'Đăng nhập'}
                                             </Button>
                                         </p>
                                         <p className='a_c'>
@@ -382,8 +385,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 onClick={(event: any) => this.handleSubmit(event, "REGISTER")}
                                                 disabled={!confirm}
                                             >
-                                                Đăng kí
-                                             </Button>
+                                                {loading ? <Icon type={'loading'} /> : 'Đăng kí'}
+                                            </Button>
                                         </p>
                                     </div>
                                 </TabPane>
