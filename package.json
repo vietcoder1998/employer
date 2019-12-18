@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "employers-web-admin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -27,6 +27,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.14",
+    "react-clear-cache": "^1.0.26",
     "react-dom": "^16.8.6",
     "react-easy-crop": "^1.17.0",
     "react-geocode": "^0.2.1",
@@ -46,13 +47,16 @@
     "webpack-cli": "^3.3.8"
   },
   "scripts": {
-    "start": "set PORT=3008 && react-scripts start",
+    "start": "set PORT=3008 && react-scripts start && npm run generate-build-meta",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "postbuild": "npm run generate-build-meta",
+    "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
   },
+
   "eslintConfig": {
     "extends": "react-app"
   },

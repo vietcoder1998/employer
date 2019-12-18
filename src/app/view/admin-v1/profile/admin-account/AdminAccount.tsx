@@ -35,11 +35,13 @@ interface IAdminAccountState {
     pw?: string;
     rpw?: string;
     npw?: string;
+    search?: boolean;
 }
 
 interface IAdminAccountProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
+    location?: any;
     getAccountAdmin: Function;
     getJobService: Function;
     getListRating: (pageIndex?: number, pageSize?: number) => any,
@@ -64,7 +66,8 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             show_rpw: false,
             pw: null,
             rpw: null,
-            npw: null
+            npw: null,
+            search: null,
         }
     }
 
@@ -90,6 +93,21 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                 admin_account: nextProps.admin_account,
                 body: nextProps.admin_account
             }
+        }
+
+        if (nextProps.location.search && nextProps.location.search !== prevState.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const myParam = urlParams.get('cpw');
+
+            if (myParam === 'true') {
+                nextProps.handleModal({ open_modal: true })
+
+                return {
+                    search: nextProps.location.search
+                }
+            }
+
+            return null
         }
 
         return null

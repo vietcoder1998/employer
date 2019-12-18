@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col, Badge, Popover } from 'antd';
+import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col, Badge, Popover, Tooltip } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
@@ -25,6 +25,7 @@ import { Link } from 'react-router-dom';
 import { INoti } from '../../../redux/models/notis';
 import { NotUpdate } from '../layout/common/Common';
 import Notitication from './notification/Notification';
+import ClearCache from 'react-clear-cache';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -78,7 +79,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.getListJobService();
         await this.props.getListLanguages();
         await this.props.getListNoti(0, pageSize);
-        await this.setState({loading: false});
+        await this.setState({ loading: false });
     }
 
     static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
@@ -129,17 +130,17 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     };
 
     handleLoading = () => {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         setTimeout(() => {
-            this.setState({loading: false});
+            this.setState({ loading: false });
         }, 250);
     }
 
 
     render() {
-        let { data_breakcumb, loading_noti , loading} = this.state;
+        let { data_breakcumb, loading_noti, loading } = this.state;
         let { path } = this.props.match;
-        let {  totalNoti, list_noti } = this.props;
+        let { totalNoti, list_noti } = this.props;
 
         return (
             <Layout>
@@ -149,6 +150,32 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                 <Layout>
                     <Header style={{ padding: 0, zIndex: 900 }}>
                         <div className="avatar-header" >
+                            <Tooltip title={"Cập nhật phiên bản"}>
+                                <ClearCache>
+                                    {({ isLatestVersion, emptyCacheStorage }) =>
+                                        <div>
+                                            {!isLatestVersion && (
+                                                <Icon type={'sync'}
+                                                    style={{
+                                                        fontSize: 20,
+                                                        color: "whitesmoke",
+                                                        float: "right",
+                                                        margin: 15
+                                                    }}
+
+                                                    onClick={
+                                                        () => {
+                                                            this.setState({ loading: true });
+                                                            emptyCacheStorage();
+                                                        }
+                                                    }
+                                                    spin={loading}
+                                                />
+                                            )}
+                                        </div>
+                                    }
+                                </ClearCache>
+                            </Tooltip>
                             <Popover
                                 content={
                                     < >
@@ -203,6 +230,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <OptionConfig icon="user" key="2" value="" label="Tài khoản" />
                                 </Link>
                                 <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
+                                <Link to={routeLink.ADMIN_ACCOUNTS + '?cpw=true'}>
+                                    <OptionConfig icon="user" key="2" value="" label="Đổi mật khẩu" />
+                                </Link>
                             </DropdownConfig>
                         </div>
                     </Header>
