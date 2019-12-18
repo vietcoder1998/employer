@@ -1,7 +1,7 @@
 import React from 'react';
 import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Checkbox, Button, TimePicker, Radio } from 'antd';
-import { IptLetterP, IptLetter } from '../common/Common';
+import { IptLetterP, IptLetter, Required } from '../common/Common';
 import randomID from '../../../../common/utils/randomID';
 import { IShift } from '../../../../redux/models/announcements';
 import { TYPE } from '../../../../common/const/type';
@@ -163,7 +163,7 @@ export function ShiftContent(props: IShiftContent) {
                     </IptLetterP>
                 </Col>
                 <Col sm={8} md={8} lg={4} xl={3} >
-                    <IptLetterP value={"Thứ sáu"} style={{ textAlign: "center", marginRight: "25px" }}  >
+                    <IptLetterP value={"Thứ sáu"} style={{ textAlign: "center", marginRight: "25px" }} >
                         <Checkbox
                             checked={fri}
                             onChange={
@@ -348,11 +348,11 @@ export function ShiftContent(props: IShiftContent) {
                 <Row>
                     <Col sm={24} md={24} lg={8} xl={8} xxl={8}>
                         <p
-                            children="Chọn thời gian:"
-                        />
+                        >
+                            Chọn thời gian<Required />
+                        </p>
                     </Col>
                     <Col sm={24} md={12} lg={8} xl={8} xxl={8}>
-
                         <TimePicker
                             key={randomID(8)}
                             placeholder="Bắt đầu"
@@ -432,10 +432,10 @@ export function ShiftContent(props: IShiftContent) {
                 </Row>
             </>
             <div style={{ display: props.type === TYPE.INTERNSHIP ? 'none' : 'block' }}>
-                <InputTitle title="Ngày làm" children={timeSetup} />
+                <InputTitle title="Ngày làm" required={true} children={timeSetup} />
             </div>
             <>
-                {props.shift.genderRequireds ? <InputTitle title="Đối tượng" children={target()} /> : undefined}
+                {props.shift.genderRequireds ? <InputTitle title="Đối tượng" required={true} children={target()} /> : undefined}
             </>
             <>
                 <Button

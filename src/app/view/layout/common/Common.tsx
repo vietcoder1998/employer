@@ -26,11 +26,14 @@ export const IptLetter = (props?: any) => {
     return <label style={props.style ? props.style : { padding: "2px 5px" }} > <span className="important-letter">{" " + props.value + "  "}</span>{props.children ? props.children : ""}</label>
 };
 
+export const Required = () => <span style={{ color: "red", marginBottom: 5, marginLeft: 2 }}>*</span>
+
 export const IptLetterP = (props?: any) => {
     return (
         <div style={props.style ? { ...props.style } : null}>
             <div style={{ marginTop: 10 }}>
                 <span className="important-letter">{props.icon ? <Icon type={props.icon} /> : " "}{" " + (props.value ? props.value : " ") + " "}</span>
+                {props.required ? <Required /> : ''}
             </div>
             {props.children ? props.children : null}
         </div>

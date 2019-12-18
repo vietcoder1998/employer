@@ -197,6 +197,27 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             width: 200,
         },
         {
+            title: 'Đang chờ',
+            dataIndex: 'pendingApplied',
+            className: 'action',
+            key: 'pendingApplied',
+            width: 100,
+        },
+        {
+            title: 'Đã chấp nhận',
+            dataIndex: 'acceptedApplied',
+            className: 'action',
+            key: 'acceptedApplied',
+            width: 100,
+        },
+        {
+            title: 'Từ chối',
+            dataIndex: 'rejectedApplied',
+            className: 'action',
+            key: 'rejectedApplied',
+            width: 100,
+        },
+        {
             title: 'Chi nhánh',
             dataIndex: 'employerBranchName',
             key: 'employerBranchName',
@@ -230,27 +251,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             key: 'expirationDate',
             width: 100,
         },
-        {
-            title: 'Đang chờ',
-            dataIndex: 'pendingApplied',
-            className: 'action',
-            key: 'pendingApplied',
-            width: 100,
-        },
-        {
-            title: 'Đã chấp nhận',
-            dataIndex: 'acceptedApplied',
-            className: 'action',
-            key: 'acceptedApplied',
-            width: 100,
-        },
-        {
-            title: 'Từ chối',
-            dataIndex: 'rejectedApplied',
-            className: 'action',
-            key: 'rejectedApplied',
-            width: 100,
-        },
+
         {
             title: 'Độ ưu tiên',
             dataIndex: 'priority',

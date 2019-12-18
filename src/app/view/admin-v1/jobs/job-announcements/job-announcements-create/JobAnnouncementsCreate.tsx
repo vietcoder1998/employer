@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon, Divider, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
+import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
 import { connect } from 'react-redux';
 import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -16,7 +16,7 @@ import { POST, PUT } from '../../../../../../common/const/method';
 import { JOB_ANNOUNCEMENTS, PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
-import { NotUpdate } from '../../../../layout/common/Common';
+import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 
 const { TextArea } = Input;
@@ -210,33 +210,31 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     };
 
     createRequest = async () => {
-        let { body, type_cpn, id, not_complete } = this.state;
+        let { body, type_cpn, id } = this.state;
         let newBody = this.pretreatmentBody(body, type_cpn);
         let matching = type_cpn === TYPE.CREATE ? `` : `/${id}`;
         let METHOD = type_cpn === TYPE.CREATE ? POST : PUT;
         let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
 
-        if (!not_complete) {
-            await _requestToServer(
-                METHOD,
-                API + matching,
-                newBody,
-                null,
-                undefined,
-                EMPLOYER_HOST,
-                true,
-                false,
-            ).then((res: any) => {
-                if (res) {
-                    setTimeout(() => {
-                        this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
-                    }, 250);
-                }
-            }).finally(() => {
-                this.setState({ loading: false })
-            })
-        }
+        await _requestToServer(
+            METHOD,
+            API + matching,
+            newBody,
+            null,
+            undefined,
+            EMPLOYER_HOST,
+            true,
+            false,
+        ).then((res: any) => {
+            if (res) {
+                setTimeout(() => {
+                    this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
+                }, 250);
+            }
+        }).finally(() => {
+            this.setState({ loading: false })
+        })
     }
 
     pretreatmentBody = (body: IAnnoucementBody, type_cpn: string) => {
@@ -245,7 +243,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
         newBody.shifts.forEach((element: any, index: number) => {
             if (!element.genderRequireds || element.genderRequireds.length === 0) {
-                message.warning(`Ca số ${index} cần thêm số lượng tuyển`);
+                message.warning(`Ca cần thêm số lượng tuyển`);
                 this.setState({ not_complete: true })
             }
 
@@ -366,7 +364,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 <div className="announcements-create-content">
                     <InputTitle
                         type={TYPE.INPUT}
-                        title="Tiêu đề"
+                        title={"Tiêu đề"}
+                        required={true}
                         widthLabel="150px"
                     >
                         <TextArea
@@ -385,6 +384,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     <InputTitle
                         title="Nội dung bài đăng"
                         widthLabel="150px"
+                        required={true}
                         widthComponent="400px"
                     >
                         <TextArea
@@ -409,6 +409,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
                     <InputTitle
                         title="Thời gian hết hạn"
+                        required={true}
                         type="SWITCH"
                         widthLabel="150px"
                     >
@@ -426,11 +427,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     this.setState({ body });
                                 }
                             }
-                            disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment().add(-1, 'days'))}
+                            disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
                         />
                     </InputTitle>
                     <InputTitle
                         title="Chọn công việc"
+                        required={true}
                         type={TYPE.SELECT}
                         list_value={list_job_name_options}
                         value={findIdWithValue(list_job_names, body.jobNameID, "id", "name")}
@@ -446,6 +448,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     />
                     <InputTitle
                         title="Chọn chi nhánh "
+                        required={true}
                         type={TYPE.SELECT}
                         list_value={list_em_branches_options}
                         value={findIdWithValue(list_em_branches, body.employerBranchID, "id", "branchName")}
@@ -482,7 +485,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         </Select>
                     </InputTitle>
                 </div>
-                <Divider orientation="left" >Chọn loại công việc</Divider>
+                <Divider orientation="left" >Chọn loại công việc<Required /></Divider>
                 <div className="announcements-create-content">
                     <Tabs
                         activeKey={body.jobType}
@@ -549,11 +552,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             }
                         </TabPane>
                     </Tabs>
+                    <div>
+                        <NotUpdate msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
+                    </div>
                 </div>
                 <div className="Announcements-create-content">
                     <Button
                         type="primary"
-                        icon={loading ? 'loading' : " check"}
+                        icon={loading ? 'loading' : "check"}
                         style={{
                             margin: "10px 10px",
                             float: "right"
@@ -561,7 +567,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         onClick={() => this.createRequest()}
                     >
                         {ct_btn_nt}
-                        <Icon type="right" />
                     </Button>
                     <Button
                         type="danger"

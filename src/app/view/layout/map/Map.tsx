@@ -116,7 +116,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                             }
                         });
                     }}
-                    types={['address']}
+                    types={['geocode']}
                     componentRestrictions={{ country: "vn" }}
                 />
                 <div className='map-wraper' style={style ? style : dfStyle} >

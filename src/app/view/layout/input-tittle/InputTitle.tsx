@@ -1,11 +1,12 @@
 import { Input, Select, } from "antd";
 import React from 'react';
 import { TYPE } from "../../../../common/const/type";
+import { Required } from "../common/Common";
 
 let { Option } = Select;
 
 interface IInputitleProps {
-    title?: string;
+    title?: any;
     widthLabel?: string;
     widthComponent?: string;
     value?: string;
@@ -19,6 +20,7 @@ interface IInputitleProps {
     widthSelect?: string;
     disabled?: boolean;
     onChange?: Function;
+    required?: boolean;
 }
 
 interface INewSelect {
@@ -48,7 +50,7 @@ export const NewInput = (props: INewInput) => {
             placeholder={placeholder}
             defaultValue={defaultValue}
             style={{ width: widthInput ? widthInput : "auto" }}
-            onChange={(event: any)=> onChange(event.target.value)}
+            onChange={(event: any) => onChange(event.target.value)}
             value={value}
             maxLength={220}
             disabled={disabled ? disabled : false}
@@ -64,7 +66,7 @@ export const NewSelect = (props: INewSelect) => {
             optionFilterProp="children"
             style={{ width: widthSelect ? widthSelect : "200px" }}
             value={value}
-            onChange={(event: any)=> onChange(event)}
+            onChange={(event: any) => onChange(event)}
             disabled={disabled ? disabled : false}
         >
             {
@@ -89,6 +91,7 @@ export const InputTitle = (props: IInputitleProps) => {
         style,
         widthInput,
         widthSelect,
+        required,
     } = props;
     let ComponentReturn;
     const defaultStyle = {
@@ -114,7 +117,7 @@ export const InputTitle = (props: IInputitleProps) => {
                     list_value={list_value}
                     value={value}
                     placeholder={placeholder}
-                    onChange={(event: any)=> onChange ? onChange(event) : () => { }}
+                    onChange={(event: any) => onChange ? onChange(event) : () => { }}
                     widthSelect={widthSelect}
                 />
             );
@@ -140,7 +143,7 @@ export const InputTitle = (props: IInputitleProps) => {
                         width: !props.widthLabel ? undefined : props.widthLabel
                     }}
                 >
-                    {props.title}
+                    {props.title} {required ? <Required /> : ''}
                 </div>
                 {children ? children : ComponentReturn}
             </div>)

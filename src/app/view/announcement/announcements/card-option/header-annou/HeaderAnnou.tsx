@@ -15,7 +15,6 @@ interface IHeaderAnnou {
 }
 
 export default function HeaderAnnou(props?: IHeaderAnnou) {
-
     return (
         <div className='header-annou test'  >
             <Skeleton avatar active loading={props.loading}>
@@ -34,10 +33,8 @@ export default function HeaderAnnou(props?: IHeaderAnnou) {
                         </div>
                     </div>
                 </div>
-
                 <Rate value={props.averageRating} style={{ fontSize: 12, position: "absolute", right: 10, top: 15 }} disabled />
             </Skeleton>
-
         </div >
     )
 }
