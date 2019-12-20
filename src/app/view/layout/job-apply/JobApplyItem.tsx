@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button, Avatar, Icon, Tooltip, Rate } from 'antd';
+import { Row, Col, Button, Avatar, Tooltip, Rate } from 'antd';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../common/const/type';
 import { IApplyJob } from '../../../../redux/models/apply-job';
@@ -40,11 +40,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 cursor: "pointed",
             }}
         >
-            <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}`} target="_blank">
-                <Tooltip title="Xem hồ sơ">
-                    <Icon type="search" style={{ float: "right" }} />
-                </Tooltip>
-            </Link>
+
             <div
                 style={{
                     border: "dashed gray 1px",
@@ -103,6 +99,20 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 </Row>
             </div>
             <div>
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}`} target="_blank">
+                    <Tooltip title="Xem hồ sơ">
+                        <Button
+                            type={"primary"}
+                            icon={'eye'}
+                            style={{
+                                float: "left",
+                                padding: "6px 8px",
+                                margin: "10px 10px",
+                                height: "auto",
+                                borderRadius: "50%",
+                            }} />
+                    </Tooltip>
+                </Link>
                 <Tooltip title='Chấp nhận'>
                     <Button
                         type={"primary"}

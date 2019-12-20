@@ -5,7 +5,7 @@ import logo from '../../../../../src/logo-01.png';
 import './Header.scss';
 
 export default function Header(props) {
-  let token = localStorage.getItem("token");
+  let token = localStorage.getItem("ecr");
   return (
     <>
       <div className="header">

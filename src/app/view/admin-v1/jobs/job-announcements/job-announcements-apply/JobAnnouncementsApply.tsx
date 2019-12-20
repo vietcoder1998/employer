@@ -191,7 +191,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         return (
             <div className='common-content'>
                 <h5>
-                    Danh sách ứng viên Công việc
+                    Danh sách ứng viên công việc
                 </h5>
                 <Divider orientation="left" >Danh sách yêu cầu</Divider>
                 <div className="announcements-Apply-content">

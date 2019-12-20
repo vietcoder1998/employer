@@ -1,7 +1,7 @@
 import React from 'react';
 import './CommentAnnou.scss';
 //@ts-ignore
-import testImg from '../../../../../../assets/image/rodan.png';
+import testImg from '../../../../../../assets/image/base-image.jpg';
 import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
 import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
@@ -17,7 +17,7 @@ interface ICommentAnnou {
     onRemoveComment: Function;
 }
 
-let token = localStorage.getItem("token");
+let token = localStorage.getItem("ecr");
 
 export default function CommentAnnou(props?: ICommentAnnou) {
     let { list_annou_comment, commentDetail } = props;

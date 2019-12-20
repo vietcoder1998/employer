@@ -42,7 +42,7 @@ function callAnnouncements(action: any) {
     }
 
     try {
-        let token = localStorage.getItem("token");
+        let token = localStorage.getItem("ecr");
         let res = _requestToServer(
             POST,
             token ? ANNOUNCEMENTS : ANNOU_PUBLIC,

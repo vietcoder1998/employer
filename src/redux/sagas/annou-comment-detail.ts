@@ -24,7 +24,7 @@ function* getListAnnouCommentDetailData(action: any) {
 
 function callAnnouCommentDetail(action: any) {
     if (action.id) {
-        let token = localStorage.getItem("token");
+        let token = localStorage.getItem("ecr");
         try {
             let res = _requestToServer(
                 GET, ANNOU_COMMENTS + `/${action.id}/comments`,

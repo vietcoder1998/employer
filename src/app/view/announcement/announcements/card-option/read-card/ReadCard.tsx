@@ -3,7 +3,7 @@ import './ReadCard.scss';
 import { Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 //@ts-ignore
-import testImg from '../../../../../../assets/image/rodan.png';
+import testImg from '../../../../../../assets/image/base-image.jpg';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';
 import limitString from '../../../../../../common/utils/limitString';
 import { Link } from 'react-router-dom';

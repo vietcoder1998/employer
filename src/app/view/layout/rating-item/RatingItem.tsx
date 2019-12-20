@@ -6,7 +6,6 @@ import './RatingItem.scss';
 import { TYPE } from '../../../../common/const/type';
 import { routeLink } from '../../../../common/const/break-cumb';
 import { Link } from 'react-router-dom';
-import TextArea from 'antd/lib/input/TextArea';
 
 interface IRatingItemProps {
     item?: IRating
@@ -51,7 +50,7 @@ export default function RatingItem(props: IRatingItemProps) {
                     <div className="content_li-info">
                         <IptLetter value="Lương thưởng" />  <Rate disabled value={item.salaryRating} style={{ fontSize: 12, float: "right" }} />
                     </div>
-                    <div> {item.comment ? <TextArea value={item.comment} disabled={true} rows={2} /> : <NotUpdate msg="Chưa có đánh giá" />}</div>
+                    <div> {item.comment ? <div className='rating-comment' children={item.comment} /> : <NotUpdate msg="Chưa có đánh giá" />}</div>
                    <Timer style={{margin: 0, padding: 0}}  value={item.createdDate} />
                 </div>
             </div>

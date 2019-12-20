@@ -42,15 +42,16 @@ interface IAdminState {
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
-    match: Readonly<any>;
-    location: any;
-    handleLoading: Function;
-    getListRegions: Function;
-    getListJobNames: Function;
-    getListSkills: Function;
-    getListJobService: Function;
-    getListLanguages: Function;
-    getListNoti: Function;
+    match?: Readonly<any>;
+    location?: any;
+    history?: any
+    handleLoading?: Function;
+    getListRegions?: Function;
+    getListJobNames?: Function;
+    getListSkills?: Function;
+    getListJobService?: Function;
+    getListLanguages?: Function;
+    getListNoti?: Function;
 }
 
 interface IListNotiProps {
@@ -96,6 +97,12 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             }
         }
 
+        if (nextProps.list_noti && nextProps.list_noti !== prevState.list_noti) {
+            return {
+                list_noti: nextProps.list_noti
+            }
+        }
+
         return null
     }
 
@@ -110,9 +117,19 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.setState({ loading_noti: false, pageSize: pageSize + 10 })
     }
 
+    setSeen = (id?: string) => {
+        let { list_noti } = this.state;
+        list_noti.forEach((item?: INoti) => {
+            if (id === item.id) {
+                item.seen = !item.seen;
+            }
+        });
+
+        this.setState({ list_noti })
+    }
+
     ListNoti = (props: any) => {
-        let { list_noti } = props;
-        let { pageSize } = this.state;
+        let { pageSize, list_noti } = this.state;
 
         let list_noti_view = list_noti && list_noti.length > 0 ?
             list_noti.map(
@@ -122,7 +139,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                         item={item}
                         getListNoti={
                             () => this.props.getListNoti(0, pageSize)
-                        } />) : <NotUpdate msg="Không có thông báo" />
+                        }
+                        setSeen={this.setSeen}
+                    />) : <NotUpdate msg="Không có thông báo" />
 
         return <div className="list-noti">
             {list_noti_view}
@@ -133,12 +152,12 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         this.setState({ loading: true });
         setTimeout(() => {
             this.setState({ loading: false });
-        }, 250);
+        }, 400);
     }
 
 
     render() {
-        let { data_breakcumb, loading_noti, loading } = this.state;
+        let { data_breakcumb, loading } = this.state;
         let { path } = this.props.match;
         let { totalNoti, list_noti } = this.props;
 
@@ -181,17 +200,20 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     < >
                                         {this.ListNoti({ list_noti })}
                                         <div
-                                            className="a_c"
+                                            className="a_c link-to"
                                             style={{ padding: 10 }}
-                                            onClick={() => this.handleLoadMoreData()}
+                                            onClick={() => {
+                                                this.handleLoading();
+                                                this.props.history.push(routeLink.NOTI + routePath.LIST)
+                                            }}
                                         >
-                                            <Icon type={!loading_noti ? "search" : "loading"} />
-                                            {!loading_noti ? " Xem thêm" : "Loading"}
+                                            <Icon type={"search"}/>
+                                            <span>Xem thêm</span>
                                         </div>
                                     </>
                                 }
                                 placement="bottomRight"
-                                title={<Link className="link-to" to={routeLink.NOTI + routePath.LIST} children={"Thông báo"} />}
+                                title={"Thông báo"}
                                 trigger="click"
                                 style={{
                                     padding: 0,
@@ -229,10 +251,10 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 <Link to={routeLink.ADMIN_ACCOUNTS}>
                                     <OptionConfig icon="user" key="2" value="" label="Tài khoản" />
                                 </Link>
-                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
                                 <Link to={routeLink.ADMIN_ACCOUNTS + '?cpw=true'}>
-                                    <OptionConfig icon="user" key="2" value="" label="Đổi mật khẩu" />
+                                    <OptionConfig icon="key" key="2" value="" label="Đổi mật khẩu" />
                                 </Link>
+                                <OptionConfig icon="logout" key="1" value="" label="Đăng xuất" onClick={() => clearStorage()} />
                             </DropdownConfig>
                         </div>
                     </Header>
@@ -298,7 +320,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
     getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI, pageIndex, pageSize }),
-    handleLoading: (loading: boolean) => dispatch({ type: TYPE.HANDLE, loading })
+    handleLoading: (loading?: boolean) => dispatch({ type: TYPE.HANDLE, loading })
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

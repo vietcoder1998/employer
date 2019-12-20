@@ -24,7 +24,7 @@ function* getListAnnouCommentsData(action: any) {
 
 function callAnnouComments(action: any) {
     if (action.id) {
-        let token = localStorage.getItem("token");
+        let token = localStorage.getItem("erc");
         try {
             let res = _requestToServer(
                 POST,

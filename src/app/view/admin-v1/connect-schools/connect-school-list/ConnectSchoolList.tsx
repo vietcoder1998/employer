@@ -9,8 +9,7 @@ import { IptLetter, IptLetterP, NotUpdate } from '../../../layout/common/Common'
 import { IAppState } from '../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../redux/models/regions';
 import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../redux/models/connect-schools';
-import { IModalState, IMapState } from '../../../../../redux/models/mutil-box';
-import { IDrawerState } from 'antd/lib/drawer';
+import { IModalState, IMapState, IDrawerState } from '../../../../../redux/models/mutil-box';
 // import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
 import CardSchool from '../../../layout/card-schools/CardSchool';
 import Loading from '../../../layout/loading/Loading';
@@ -23,6 +22,7 @@ import { _requestToServer } from '../../../../../services/exec';
 import { POST, PUT } from '../../../../../common/const/method';
 import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
+import { routeLink, routePath } from '../../../../../common/const/break-cumb';
 let { Option } = Select;
 const { Panel } = Collapse;
 const typeReturn = (type?: string) => {
@@ -47,13 +47,11 @@ const typeReturn = (type?: string) => {
 interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
-    handleModal: Function;
-    handleDrawer: Function;
-    handleMapState: (mapState: IMapState) => any;
-    getListConnectSchools: Function;
-    getTypeManagement: Function;
-    getAnnoucements: Function;
-    getAnnoucementDetail: Function;
+    location?: any;
+    handleModal: (modalState?: IModalState) => any;
+    handleDrawer: (drawerState?: IDrawerState) => any;
+    handleMapState: (mapState?: IMapState) => any;
+    getListConnectSchools: (body?: IConnectSchoolsFilter, pageIndex?: number, pageSize?: number) => any;
     getConnectSchoolDetail: (id?: string) => any;
     setConnectSchoolDetail: () => any;
 };
@@ -80,7 +78,8 @@ interface IConnectSchoolsListState {
     connect_schools_detail?: IConnectSchoolDetail,
     candidate_msg?: string;
     school_msg?: string;
-    body?: IConnectSchoolsFilter
+    body?: IConnectSchoolsFilter;
+    search?: any;
 };
 
 class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConnectSchoolsListState> {
@@ -206,7 +205,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps: IConnectSchoolsListProps, prevState: IConnectSchoolsListState) {
+    static getDerivedStateFromProps(nextProps?: IConnectSchoolsListProps, prevState?: IConnectSchoolsListState) {
         if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
             let { list_connect_schools } = prevState;
             if (nextProps.list_connect_schools) {
@@ -222,6 +221,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             let { connect_schools_detail } = nextProps;
             let candidate_msg = null;
             let school_msg = null;
+
             if (connect_schools_detail.owner === "EMPLOYER") {
                 candidate_msg = connect_schools_detail.requestMessage;
                 school_msg = connect_schools_detail.replyMessage;
@@ -230,15 +230,38 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 school_msg = connect_schools_detail.requestMessage;
             }
 
+            setTimeout(() => {
+                nextProps.handleMapState({ marker: { lat: connect_schools_detail.lat, lng: connect_schools_detail.lon } })
+            }, 500);
+
             return {
                 connect_schools_detail: nextProps.connect_schools_detail,
                 loading_table: false,
                 candidate_msg,
-                school_msg
+                school_msg,
+                dataSchool: nextProps.connect_schools_detail
             }
         }
 
-        return null;
+        if (nextProps.location.search && nextProps.location.search !== prevState.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                nextProps.handleDrawer();
+                setTimeout(() => {
+                    nextProps.getConnectSchoolDetail(id);
+                }, 700);
+
+                return {
+                    search: nextProps.location.search
+                }
+            }
+
+            return null
+        }
+
+        return null
     };
 
     async componentDidMount() {
@@ -298,15 +321,10 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         let { list_connect_schools } = this.props;
         let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
-        this.setState({ dataSchool });
-        this.props.handleMapState({ marker: { lat: dataSchool.lat, lng: dataSchool.lon } })
-        await this.props.handleDrawer();
-        // await this.props.setConnectSchoolDetail();
         setTimeout(() => {
-            if (dataSchool.state) {
-                this.props.getConnectSchoolDetail(id)
-            }
-        }, 1200);
+
+        }, 500);
+        this.props.history.push(routeLink.CONNECT_SCHOOLS + routePath.LIST + `?id=${dataSchool.id}`)
     }
 
     createRequest = async (type?: string) => {
@@ -392,7 +410,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                 bordered={false}
                                 style={{ marginBottom: 40 }}
                             >
-                                < Panel header="Thông tin nhà trường" key="1">
+                                < Panel header="Thông tin kết nối" key="1">
                                     <Row>
                                         <Col md={24} lg={12} xl={12} xxl={12}>
                                             <ul>
@@ -472,7 +490,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                             </Collapse>) : <Loading />
                     }
 
-                    <div style={{ marginTop: 20, width: "100%" }}>
+                    <div style={{ margin: "20px 0px", width: "100%" }}>
                         <Button
                             icon="left"
                             children={"Thoát"}
@@ -483,7 +501,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                             type={"primary"}
                             children={dataSchool.owner === TYPE.EMPLOYER ? "Cập nhật" : "Tạo phản hồi"}
                             style={{
-                                marginRight: "10px",
+                                margin: "10px",
                                 float: "right",
                                 display: dataSchool.state === TYPE.REJECTED ? "none" : "block"
                             }}
@@ -632,15 +650,15 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListConnectSchools: (body: IConnectSchoolsFilter, pageIndex: number, pageSize: number) =>
+    getListConnectSchools: (body?: IConnectSchoolsFilter, pageIndex?: number, pageSize?: number) =>
         dispatch({ type: REDUX_SAGA.CONNECT_SCHOOL.GET_CONNECT_SCHOOL, body, pageIndex, pageSize }),
     getConnectSchoolDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL, id }),
-    handleModal: (modalState: IModalState) =>
+    handleModal: (modalState?: IModalState) =>
         dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
-    handleDrawer: (drawerState: IDrawerState) =>
+    handleDrawer: (drawerState?: IDrawerState) =>
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
-    handleMapState: (mapState: IMapState) =>
+    handleMapState: (mapState?: IMapState) =>
         dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState }),
     setConnectSchoolDetail: () =>
         dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL })

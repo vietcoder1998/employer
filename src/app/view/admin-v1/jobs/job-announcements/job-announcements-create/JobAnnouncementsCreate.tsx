@@ -18,6 +18,7 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { type } from 'os';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -38,6 +39,7 @@ interface IJobAnnouncementsCreateState {
     address?: string;
     skills?: Array<string>
     not_complete?: boolean;
+    job_announcement_detail?: any;
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
@@ -59,7 +61,8 @@ const getBody = () => {
         jobType: TYPE.FULLTIME,
         expirationDate: null,
         shifts: [],
-        not_complete: true
+        not_complete: true,
+        job_announcement_detail: null
     }
 }
 
@@ -107,64 +110,93 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     async componentDidMount() {
         if (this.props.match.params.id) {
-            let id = this.props.match.params.id;
-            if (
-                this.props.match.url.includes("fix") ||
-                this.props.match.url.includes("copy")
 
-            ) {
-                await this.props.getJobAnnouncementDetail(id);
-            }
-
-            if (
-                this.props.match.url.includes("pending")
-            ) {
-                await this.props.getPendingJobDetail(id);
-            }
         };
 
         this.props.getListEmBranches();
     };
 
-    static getDerivedStateFromProps(props: IJobAnnouncementsCreateProps, state: IJobAnnouncementsCreateState) {
+    static getDerivedStateFromProps(props?: IJobAnnouncementsCreateProps, state?: IJobAnnouncementsCreateState) {
+        if (props.match.params.id && props.match.params.id !== state.id) {
+            let id = props.match.params.id;
+            if (
+                props.match.url.includes("fix") ||
+                props.match.url.includes("copy")
+
+            ) {
+                props.getJobAnnouncementDetail(id);
+            }
+
+            if (
+                props.match.url.includes("pending")
+            ) {
+                props.getPendingJobDetail(id);
+            }
+
+            return {
+                id
+            }
+        }
+
+
         if (
-            (
-                props.job_announcement_detail ||
-                props.pending_job_detail
-            ) &&
-            props.match.params.id &&
-            props.match.params.id !== state.body.id
+            (props.job_announcement_detail ||
+                props.pending_job_detail) && props.match.params.id !== state.body.id
         ) {
             let type_cpn = TYPE.CREATE;
             let job_announcement_detail = null;
-            let body = getBody();
+            let jobID = null;
+            let body = state.body;
+            let id = state.body.id;
+            let requiredSkillIDs = [];
 
-            if (props.match.url.includes("fix") || props.match.url.includes("copy")) {
-                type_cpn = TYPE.EDIT;
+            if (props.match.url.includes("pending")) {
+                type_cpn = TYPE.PENDING;
+                id  = props.pending_job_detail.id;
+                job_announcement_detail = props.pending_job_detail.data;
+                jobID = job_announcement_detail.jobNameID;
+                requiredSkillIDs = job_announcement_detail.requiredSkillIDs
+            };
+
+            if (props.match.url.includes("fix")) {
+                type_cpn = TYPE.FIX;
+                id  = props.job_announcement_detail.id;
                 job_announcement_detail = props.job_announcement_detail;
+                jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
+                requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
+                    job_announcement_detail.requiredSkills.map((item: any) => item.id)
+            };
+
+            if (props.match.url.includes("copy")) {
+                type_cpn = TYPE.COPY;
+                id  = props.job_announcement_detail.id;
+                job_announcement_detail = props.job_announcement_detail;
+                jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
+                requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
+                    job_announcement_detail.requiredSkills.map((item: any) => item.id)
+            };
+
+            console.log(job_announcement_detail);
+
+            if (type_cpn !== TYPE.CREATE) {
                 if (job_announcement_detail) {
-                    body.id = job_announcement_detail.id
+                    body.id = id;
                     body.description = job_announcement_detail.description;
                     body.jobTitle = job_announcement_detail.jobTitle;
-                    body.jobNameID = job_announcement_detail.jobName.id;
+                    body.jobNameID = jobID;
                     body.jobType = job_announcement_detail.jobType;
                     body.employerBranchID = job_announcement_detail.employerBranchID;
                     body.description = job_announcement_detail.description;
                     body.expirationDate = job_announcement_detail.expirationDate;
                     body.shifts = job_announcement_detail.shifts;
-                    body.requiredSkillIDs = job_announcement_detail.requiredSkills.length && job_announcement_detail.requiredSkills.map((item: any) => { return item.id })
+                    body.requiredSkillIDs = requiredSkillIDs
                 };
-            };
-
-            if (props.match.url.includes("pending")) {
-                type_cpn = TYPE.PENDING;
-                body = props.pending_job_detail
             };
 
             return {
                 body,
                 type_cpn,
-                id: props.match.params.id
+                job_announcement_detail
             }
         }
         return null
@@ -212,8 +244,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     createRequest = async () => {
         let { body, type_cpn, id } = this.state;
         let newBody = this.pretreatmentBody(body, type_cpn);
-        let matching = type_cpn === TYPE.CREATE ? `` : `/${id}`;
-        let METHOD = type_cpn === TYPE.CREATE ? POST : PUT;
+        let matching = (type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY) ? `` : `/${id}`;
+        let METHOD = type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY ? POST : PUT;
         let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
 
@@ -230,7 +262,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             if (res) {
                 setTimeout(() => {
                     this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
-                }, 250);
+                }, 500);
             }
         }).finally(() => {
             this.setState({ loading: false })
@@ -267,7 +299,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             );
         });
 
-        if (type_cpn !== TYPE.EDIT) {
+        if (type_cpn !== TYPE.FIX) {
             newBody.shifts.forEach((element: IShift, index: number) => {
                 if (element.id) {
                     delete element["id"]
@@ -311,7 +343,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 ct_btn_nt = "Tạo mới(bản sao)";
                 break;
 
-            case TYPE.EDIT:
+            case TYPE.FIX:
                 ct_btn_ex = "Huỷ";
                 ct_btn_nt = "Lưu lại";
                 break;
@@ -358,7 +390,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.EDIT ? "Thông tin bài đăng(sửa)" : `Tạo bài đăng mới(${normal_quantity ? normal_quantity : 0})`}
+                    {type_cpn === TYPE.FIX || type_cpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Tạo bài đăng mới(${normal_quantity ? normal_quantity : 0})`}
                 </h5>
                 <Divider orientation="left" >Nội dung bài đăng</Divider>
                 <div className="announcements-create-content">
@@ -556,30 +588,37 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         <NotUpdate msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
                     </div>
                 </div>
-                <div className="Announcements-create-content">
-                    <Button
-                        type="primary"
-                        icon={loading ? 'loading' : "check"}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                        onClick={() => this.createRequest()}
-                    >
-                        {ct_btn_nt}
-                    </Button>
-                    <Button
-                        type="danger"
-                        icon={'close'}
-                        style={{
-                            margin: "10px 10px",
-                            float: "right"
-                        }}
-                        onClick={() => { this.props.history.push('/v1/admin/jobs/job-announcements/list') }}
-                    >
-                        {ct_btn_ex}
-                    </Button>
-                </div>
+                {
+
+                    (job_announcement_detail.acceptedApplied === 0 &&
+                        job_announcement_detail.pendingApplied === 0 &&
+                        job_announcement_detail.rejectedApplied === 0) ||
+                        (type_cpn !== TYPE.FIX) ?
+                        <div className="Announcements-create-content">
+                            <Button
+                                type="primary"
+                                icon={loading ? 'loading' : "check"}
+                                style={{
+                                    margin: "10px 10px",
+                                    float: "right"
+                                }}
+                                onClick={() => this.createRequest()}
+                            >
+                                {ct_btn_nt}
+                            </Button>
+                            <Button
+                                type="danger"
+                                icon={'close'}
+                                style={{
+                                    margin: "10px 10px",
+                                    float: "right"
+                                }}
+                                onClick={() => { this.props.history.push('/v1/admin/jobs/job-announcements/list') }}
+                            >
+                                {ct_btn_ex}
+                            </Button>
+                        </div> : ""
+                }
             </div >
         )
     };
@@ -594,7 +633,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_job_names: state.JobNames.items,
     job_announcement_detail: state.JobAnnouncementDetail,
-    pending_job_detail: state.PendingJobDetail.data,
+    pending_job_detail: state.PendingJobDetail,
     list_skills: state.Skills.items,
     list_em_branches: state.EmBranches.items,
     normal_quantity: state.JobService.nomalQuantity

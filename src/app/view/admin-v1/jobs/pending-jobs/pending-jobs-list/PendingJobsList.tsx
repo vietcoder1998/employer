@@ -17,6 +17,7 @@ import { IAppState } from '../../../../../../redux/store/reducer';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { Link } from 'react-router-dom';
+import { NotUpdate } from '../../../../layout/common/Common';
 
 // let { Option } = Select;
 const Label = (props: any) => {
@@ -46,9 +47,10 @@ const Label = (props: any) => {
 
 interface IPendingJobListProps extends StateProps, DispatchProps {
     match?: any,
-    getPendingJobs: Function,
+    location?: any,
     getPendingJobDetail: (id?: string) => any;
     handleModal: (modalState?: IModalState) => any;
+    getPendingJobs: Function,
 }
 
 interface IPendingJobListState {
@@ -65,6 +67,7 @@ interface IPendingJobListState {
     pendingJob?: any;
     message?: string;
     loading_table?: boolean;
+    search?: string;
     list_jobs?: Array<IPendingJob>
     job_id?: string;
 }
@@ -198,12 +201,19 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     jobTitle: item.jobTitle,
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     jobType: <Label type={item.jobType} value={item.jobType} />,
-                    operation: <Tooltip title="Xem chi tiết"><Icon type="search" onClick={
-                        async () => {
-                            nextProps.handleModal({ open_modal: true });
-                            nextProps.getPendingJobDetail(item.id);
-                        }
-                    } /></Tooltip>
+                    operation:
+                        <Tooltip title="Xem chi tiết">
+                            <Icon type="search"
+                                className={"test"}
+                                style={{padding: "5px"}}
+                                onClick={
+                                    async () => {
+                                        nextProps.handleModal({ open_modal: true });
+                                        nextProps.getPendingJobDetail(item.id);
+                                    }
+                                }
+                            />
+                        </Tooltip>
                 });
             });
             return {
@@ -212,6 +222,25 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 loading_table: false
             }
         }
+
+        if (nextProps.location.search && nextProps.location.search !== prevState.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                nextProps.handleModal();
+                setTimeout(() => {
+                    nextProps.getPendingJobDetail(id);
+                }, 700);
+
+                return {
+                    search: nextProps.location.search
+                }
+            }
+
+            return null
+        }
+
         return null;
     }
 
@@ -282,7 +311,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                                 key="submit"
                                 type="primary"
                                 icon="edit"
-                                style={{marginLeft: 20}}
+                                style={{ marginLeft: 20 }}
                                 loading={loading}
                                 onClick={async () => this.props.handleModal({ open_modal: false })}
                                 disabled={state === TYPE.ACCEPTED}
@@ -298,6 +327,11 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         job_id={job_id}
                         list_job_names={list_job_names}
                     />
+                    {
+                        job_detail && job_detail.message ? <div style={{ padding: "10px 25px" }}>
+                            LÍ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
+                        </div> : ''
+                    }
                 </Modal>
                 <div className="common-content">
                     <h5>

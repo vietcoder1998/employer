@@ -155,8 +155,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Chi tiết gói</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="8" disabled={true}>
-                        <Link to={'/v1/admin/data/majors/list'}>
+                    <Menu.Item key="8">
+                        <Link to={routeLink.PROMOTION}>
                             <Icon type="percentage" />
                             <span>Khuyến mãi</span>
                         </Link>
@@ -184,7 +184,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="profile" />
-                            <span>Hồ sơ</span>
+                            <span>Hồ sơ NTD</span>
                         </span>
                     }
                 >

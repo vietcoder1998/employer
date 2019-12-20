@@ -31,7 +31,7 @@ function callAnnouTypes(action: any) {
    
 
     try {
-        let token = localStorage.getItem("token");
+        let token = localStorage.getItem("ecr");
         let res = _requestToServer(
             GET, 
             token ? ANNOU_TYPES : ANNOU_TYPES_PUBLIC,

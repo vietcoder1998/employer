@@ -84,37 +84,42 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         };
     }
 
-    editToolAction = () => (
-        <>
-            <Tooltip
-                title="Xem chi tiết (sửa)"
-            >
-                <Icon
-                    style={{ padding: "5px 10px" }}
-                    type="edit"
-                    theme="twoTone"
-                    onClick={() =>
-                        this.props.history.push(
-                            routeLink.EM_BRANCHES + routePath.FIX + `/${localStorage.getItem("id_em_branches")}`
-                        )
-                    }
-                />
-            </Tooltip>
-            <Tooltip
-                title="Xóa chi nhánh"
-            >
-                <Icon
-                    style={{ padding: "5px 10px" }}
-                    type="delete"
-                    theme="twoTone"
-                    twoToneColor="red"
-                    onClick={
-                        () => this.deleteAnnoun()
-                    }
-                />
-            </Tooltip>
-        </>
-    );
+    editToolAction = () => {
+        let { id } = this.state;
+        return (
+            <>
+                <Tooltip
+                    title="Xem chi tiết (sửa)"
+                >
+                    <Icon
+                        className='test'
+                        style={{ padding: 5, margin: 2 }}
+                        type="edit"
+                        theme="twoTone"
+                        onClick={() =>
+                            this.props.history.push(
+                                routeLink.EM_BRANCHES + routePath.FIX + `/${id}`
+                            )
+                        }
+                    />
+                </Tooltip>
+                <Tooltip
+                    title="Xóa chi nhánh"
+                >
+                    <Icon
+                        className='test'
+                        style={{ padding: 5, margin: 2 }}
+                        type="delete"
+                        theme="twoTone"
+                        twoToneColor="red"
+                        onClick={
+                            () => this.deleteAnnoun()
+                        }
+                    />
+                </Tooltip>
+            </>
+        )
+    };
 
     deleteAnnoun = async () => {
         this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", type_modal: TYPE.DELETE });
@@ -476,10 +481,8 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {
-                                    onClick: (event: any) => {
-                                    }, // click row
-                                    onMouseEnter: (event) => {
-                                        localStorage.setItem('id_em_branches', record.key)
+                                    onMouseEnter: (event: any) => {
+                                        this.setState({ id: record.key })
                                     }, // mouse enter row
                                 };
                             }}

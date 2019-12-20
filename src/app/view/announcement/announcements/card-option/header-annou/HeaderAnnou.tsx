@@ -1,7 +1,7 @@
 import React from 'react';
 import './HeaderAnnou.scss';
 //@ts-ignore
-import testImg from '../../../../../../assets/image/rodan.png';
+import testImg from '../../../../../../assets/image/base-image.jpg';
 import { Avatar, Icon, Skeleton, Rate } from 'antd';
 import { Timer } from '../../../../layout/common/Common';
 

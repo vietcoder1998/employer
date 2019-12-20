@@ -3,7 +3,7 @@ import { Icon, Avatar, Row, Col, Progress, Tag, Rate } from 'antd';
 import './CandidateProfile.scss';
 import { IFindCandidateDetail } from '../../../../redux/models/find-candidates-detail';
 // @ts-ignore
-import backGround from '../../../../assets/image/rodan.png';
+import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
 import { TYPE } from '../../../../common/const/type';
@@ -44,7 +44,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                 <img
                     className="cover-image-profile"
                     src={!onErrCover && coverUrl ? coverUrl : backGround}
-                    alt={"rodan"}
+                    alt={"base"}
                     onError={() => setErrCover(true)}
                 />
                 <Row>

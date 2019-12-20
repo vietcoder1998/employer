@@ -2,7 +2,7 @@ import React from 'react'
 import { Icon, Avatar, Row, Col, Tabs, Card, Divider } from 'antd';
 import './SchoolInfo.scss';
 // @ts-ignore
-import backGround from '../../../../assets/image/rodan.png';
+import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
 import { NotUpdate, IptLetterP } from '../common/Common';
@@ -29,7 +29,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                 <img
                     className="cover-image-profile"
                     src={!onErrCover && data && data.coverUrl ? data.coverUrl : backGround}
-                    alt={"rodan"}
+                    alt={"base"}
                     onError={() => setErrCover(true)}
                 />
                 <div className="block-image">
@@ -193,7 +193,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                 </div>
                                 {/* Back Image */}
                                 <div className="description-info">
-                                    <IptLetterP value={"Mặt sau giấy phép kinh doanh"} />
+                                    <IptLetterP value={"Ảnh văn phòng làm việc"} />
                                 </div>
                             </Col>
                         </Row>

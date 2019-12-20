@@ -412,7 +412,7 @@ ul {
   color: rgb(255, 38, 0);
 }
 
-.underline{
+.underline {
   padding: 0 5px;
   &:hover {
     text-decoration: underline;
@@ -519,6 +519,7 @@ h5 {
 .link-to {
   &:hover {
     text-decoration: underline;
+    cursor: pointer;
   }
 }
 
@@ -623,4 +624,22 @@ thead {
   // [class*="col-"] {
   //   width: 100%;
   // }
+}
+
+.n-candidate {
+  font-size: 1rem;
+  text-align: center;
+
+  svg {
+    margin-top: -5px;
+  }
+}
+
+.ant-select-selection__choice {
+  color: white!important;
+  background-color: $color_worksvn!important;
+  border: solid rgba(0, 0, 255, 0.306) 1px!important;
+  i {
+    color: white !important
+  }
 }

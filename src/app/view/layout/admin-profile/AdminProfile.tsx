@@ -2,9 +2,10 @@ import React from 'react'
 import { Icon, Avatar, Row, Col, Input } from 'antd';
 import './AdminProfile.scss';
 // @ts-ignore
-import backGround from '../../../../assets/image/rodan.png';
 // @ts-ignore
-import avatar from '../../../../assets/image/test_avatar.jpg';
+import backGround from '../../../../assets/image/base-image.jpg';
+// @ts-ignore
+
 import { NotUpdate, IptLetterP } from '../common/Common';
 import { IAdminAccount } from '../../../../redux/models/admin-account';
 import { connect } from 'react-redux';
@@ -29,7 +30,6 @@ function AdminProfile(props: IAdminProfileProps) {
     let [id, setId] = React.useState(null);
     let [loading, setLoading] = React.useState(false)
     // Error loading 
-    let [onErrLogo, setErrLogo] = React.useState(false);
     let [onErrCover, setErrCover] = React.useState(false);
     let [hotUpdate, setHotUpdate] = React.useState(false);
 
@@ -290,7 +290,7 @@ function AdminProfile(props: IAdminProfileProps) {
                 <img
                     className="cover-image-profile"
                     src={!onErrCover && coverUrl ? coverUrl : backGround}
-                    alt={"rodan"}
+                    alt={"base"}
                     onError={() => setErrCover(true)}
                 />
             </div>
@@ -324,7 +324,7 @@ function AdminProfile(props: IAdminProfileProps) {
 
                     <Avatar
                         // @ts-ignore
-                        src={!onErrLogo && data && data.logoUrl ? logoUrl : avatar}
+                        src={data && data.logoUrl && logoUrl}
                         style={{
                             height: "8vw",
                             width: "8vw",
@@ -333,8 +333,6 @@ function AdminProfile(props: IAdminProfileProps) {
                             top: "0px",
                             fontSize: 60,
                         }}
-                        // @ts-ignore
-                        onError={() => setErrLogo(true)}
                     />
                 </div>
                 <div className="name-employer">
@@ -346,13 +344,16 @@ function AdminProfile(props: IAdminProfileProps) {
                     <Col md={24} lg={14} xl={14} xxl={16}>
                         <div className="description-info">
                             <IptLetterP value={"Mô tả"} />
-                            <TextArea
-                                placeholder="Sơ lược về nhà tuyển dụng"
-                                value={description}
-                                rows={7}
-                                disabled={!fixDescription}
-                                onChange={(event: any) => setDescription(event.target.value)}
-                            />
+                            {
+                                fixDescription ? <TextArea
+                                    placeholder="Sơ lược về nhà tuyển dụng"
+                                    value={description}
+                                    rows={7}
+                                    disabled={!fixDescription}
+                                    onChange={(event: any) => setDescription(event.target.value)}
+                                /> : <div style={{ textAlign: "justify", textJustify: "inter-word", padding: '10px 0' }}>{description}</div>
+                            }
+
                             {
                                 fixDescription ?
                                     <>
@@ -552,19 +553,9 @@ function AdminProfile(props: IAdminProfileProps) {
                     {/* Front */}
                     <Col md={24} lg={10} xl={10} xxl={8}>
                         <div className="description-info">
-                            <IptLetterP value={"Mặt trước giấy phép kinh doanh"} style={{marginBottom: 10}} />
+                            <IptLetterP value={"Mặt trước giấy phép kinh doanh"} style={{ marginBottom: 10 }} />
                             <div className="image-f-d">
-                                {/* <div
-                                    className="upload-image"
-                                    children={
-                                        <Icon type="camera" theme={"filled"} />
-                                    }
-                                /> */}
-                                {
-                                    identityCardFrontImageUrl ?
-                                        <img className="ic" src={identityCardFrontImageUrl} alt="Ảnh trước" /> :
-                                        <NotUpdate msg={"Chưa có ảnh mặt trước"} />
-                                }
+                                <img className="ic" src={identityCardFrontImageUrl ? identityCardFrontImageUrl : backGround} alt="Ảnh trước" /> :
                             </div>
                             {
                                 front ?
@@ -612,19 +603,9 @@ function AdminProfile(props: IAdminProfileProps) {
                         </div>
                         {/* Back Image */}
                         <div className="description-info">
-                            <IptLetterP value={"Mặt sau giấy phép kinh doanh"} />
+                            <IptLetterP value={"Ảnh văn phòng làm việc"} />
                             <div className="image-f-d" >
-                                {/* <div
-                                    className="upload-image"
-                                    children={
-                                        <Icon type="eye" theme={"filled"} />
-                                    }
-                                /> */}
-                                {
-                                    identityCardBackImageUrl ?
-                                        <img className="ic" src={identityCardBackImageUrl} alt="Ảnh sau" /> :
-                                        <NotUpdate msg={"Chưa có ảnh mặt sau"} />
-                                }
+                                <img className="ic" src={identityCardBackImageUrl ? identityCardBackImageUrl : backGround} alt="Ảnh sau" />
                             </div>
                             {
                                 back ?

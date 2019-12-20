@@ -10,52 +10,24 @@ import { _requestToServer } from '../../../../services/exec';
 import { PUT } from '../../../../common/const/method';
 import { NOTI } from '../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../environment/dev';
+//@ts-ignore
+import SystemAvatar from '../../../../assets/image/icon-app-uv.png';
 
 interface INotiItemProps {
     item?: INoti,
     getListNoti?: () => any;
+    setSeen?: (id?: string) => any;
 }
 
 export default function NotiItem(props: INotiItemProps) {
     let { item } = props;
-    let avatar = null;
+    let avatar = SystemAvatar;
     let type_icon = "user";
-    // let link_to = "/";
-    let avatar_to = "/";
+    let link_to = null;
+    let avatar_to = null;
     let icon_state = "exclamation-circle";
     let color_icon_state = "#168ECD";
-    // let state = item.data.state;
-
-    switch (item.type) {
-        case TYPE.NOTI.REPLY_JOB_APPLY_REQUEST:
-            avatar = item.data.avatarUrl;
-            type_icon = "user";
-            // link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
-            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`;
-            break;
-        case TYPE.NOTI.REPLY_JOB_OFFER_REQUEST:
-            avatar = item.data.avatarUrl
-            type_icon = "user";
-            // link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
-            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`
-            break;
-        case TYPE.NOTI.REPLY_CONNECT_REQUEST:
-            avatar = item.data.logoUrl;
-            type_icon = "schedule";
-            // link_to = routeLink.CONNECT_SCHOOLS + routePath.LIST + `/${item.data.schoolID}`;
-            avatar_to = routeLink.CONNECT_SCHOOLS + routePath.DETAIL + `/${item.data.userID}`;
-            break;
-
-        case TYPE.NOTI.REPLY_PENDING_JOB:
-            avatar = item.data.logoUrl;
-            type_icon = "shop";
-            // link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${state === TYPE.ACCEPTED ? item.data.jobID : item.data.pendingJobID}`;
-            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`
-            break;
-
-        default:
-            break;
-    }
+    let state = item.data.state;
 
     switch (item.data.state) {
         case TYPE.PENDING:
@@ -74,6 +46,59 @@ export default function NotiItem(props: INotiItemProps) {
             break;
     }
 
+    switch (item.type) {
+        case TYPE.NOTI.REPLY_JOB_APPLY_REQUEST:
+            avatar = item && item.data.avatarUrl;
+            type_icon = "user";
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.data.jobID}`;
+            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`;
+            break;
+
+        case TYPE.NOTI.REPLY_JOB_OFFER_REQUEST:
+            avatar = item && item.data.avatarUrl
+            type_icon = "user";
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item && item.data && item.data.jobID}`;
+            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item && item.data && item.data.userID}`;
+            break;
+
+        case TYPE.NOTI.REPLY_CONNECT_REQUEST:
+            avatar = item && item.data && item.data.logoUrl;
+            type_icon = "schedule";
+            link_to = routeLink.CONNECT_SCHOOLS + routePath.LIST + `?id=${item.data.schoolID}`;
+            avatar_to = routeLink.CONNECT_SCHOOLS + `/school/${item.data.schoolID}`;
+            break;
+
+        case TYPE.NOTI.REPLY_PENDING_JOB:
+            avatar = SystemAvatar;
+            type_icon = "shop";
+            link_to = state === TYPE.ACCEPTED ?
+                routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${item.data.jobID}` :
+                routeLink.PENDING_JOBS + routePath.LIST + `?id=${item.data.pendingJobID}`;
+            break;
+
+        case TYPE.NOTI.RATED:
+            avatar = item && item.data.avatarUrl;
+            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`;
+            link_to = routeLink.ADMIN_ACCOUNTS + `?viewrate=true`;
+            type_icon = "star";
+            break;
+
+        case TYPE.NOTI.JOB_APPLY_REQUEST:
+            avatar = item && item.data.avatarUrl;
+            avatar_to = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.data.userID}`;
+            link_to = routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.data.jobID}`;
+            type_icon = "star";
+            break;
+
+        case TYPE.NOTI.UPDATE_SYSTEM_ANNOUNCEMENT:
+            avatar = SystemAvatar;
+            type_icon = "user";
+            break;
+
+        default:
+            break;
+    }
+
     async function createRequest() {
         await _requestToServer(
             PUT,
@@ -85,7 +110,11 @@ export default function NotiItem(props: INotiItemProps) {
             false,
             true
         ).then(
-            (res: any) => props.getListNoti ? props.getListNoti() : undefined
+            (res: any) => {
+                if (res) {
+                    props.setSeen(item.id);
+                }
+            }
         )
     }
 
@@ -94,18 +123,30 @@ export default function NotiItem(props: INotiItemProps) {
             <div key={item.id}
                 className='li-info '
                 style={{ backgroundColor: item.seen ? 'white' : 'aliceblue' }}>
-                <Link to={avatar_to} target="_blank">
-                    <div className='img-logo-noti'>
-                        <Avatar src={avatar} alt='type noti' style={{ width: "50px", height: "50px" }} icon={type_icon} />
-                    </div>
-                </Link>
+                {
+                    avatar_to ? <Link to={avatar_to} target="_blank">
+                        <div className='img-logo-noti'>
+                            <Avatar src={avatar} alt='type noti' style={{ width: "50px", height: "50px" }} icon={type_icon} />
+                        </div>
+                    </Link> :
+                        <div className='img-logo-noti'>
+                            <Avatar src={avatar} alt='type noti' style={{ width: "50px", height: "50px" }} icon={type_icon} />
+                        </div>
+                }
+
                 <div className='data-noti'>
                     <div><IptLetter value={item.title} style={{ padding: 0 }} /></div>
-                    {/* <Link to={link_to} target="_blank" > */}
+                    {link_to ?
+                        <Link to={link_to} target="_blank">
+                            <div className="content_li-info link_to">
+                                {item.body}
+                            </div>
+                        </Link> :
                         <div className="content_li-info">
                             {item.body}
                         </div>
-                    {/* </Link> */}
+                    }
+
                     <Icon type={icon_state} theme="filled" style={{ color: color_icon_state }} />
                     <Timer style={{ margin: 0, padding: 0 }} value={item.createdDate} />
                 </div>
@@ -114,7 +155,10 @@ export default function NotiItem(props: INotiItemProps) {
                         !item.seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc'
                     }
                 >
-                    <Icon type={!item.seen ? 'eye' : 'eye-invisible'} onClick={() => createRequest()} />
+                    <Icon
+                        type={!item.seen ? 'eye' : 'eye-invisible'}
+                        onClick={() => createRequest()}
+                    />
                 </Tooltip>
             </div>
         </div>

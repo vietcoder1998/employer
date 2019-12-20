@@ -25,8 +25,9 @@ let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
-const viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, ) => (
+const viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, icon?: "user" | "user-delete" | "user-add") => (
     <div
+        className="n-candidate"
         style={{
             pointerEvents: count === 0 ? 'none' : undefined
         }}
@@ -38,7 +39,7 @@ const viewCount = (id?: string | number, count?: string | number, color?: "red" 
                 target="_blank"
             >
                 <div style={{ color }}>
-                    {count} <Icon type="team" />
+                    {count} <Icon type={icon} />
                 </div>
             </Link>
         </Tooltip>
@@ -73,7 +74,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
                 </Tooltip>
             );
         default:
-            return <label></label>
+            return <span></span>
     }
 
 }
@@ -314,8 +315,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 <>
                     <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
                         <Icon
+                            className='test'
                             type={hidden ? "eye-invisible" : "eye"}
-                            style={{ padding: "5px 5px", color: hidden ? "black" : "gray" }}
+                            style={{ padding: "5px 5px", color: hidden ? "black" : "gray", margin: 2 }}
                             onClick={async () => await _requestToServer(
                                 PUT,
                                 JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
@@ -337,8 +339,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     </Tooltip>
                     <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                         <Icon
+                            className='test'
                             type="dollar"
-                            style={{ padding: "5px 8px", color: "orange" }}
+                            style={{ padding: "5px 5px", color: "orange", margin: 2 }}
                             onClick={async () => {
                                 await nextProps.handleDrawer();
                                 await setTimeout(() => { nextProps.getJobAnnouncementDetail(id) }, 250)
@@ -347,7 +350,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
                             <Icon
-                                style={{ padding: "5px 5px" }}
+                                className='test'
+                                style={{ padding: "5px 5px", margin: 2 }}
                                 type="edit"
                                 theme="twoTone"
                                 twoToneColor="green"
@@ -355,14 +359,19 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         </Link>
                     </Tooltip>
                     <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} >
-                            <Icon style={{ padding: "5px 10px" }} type="copy" theme="twoTone" />
+                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
+                            <Icon
+                                className='test'
+                                style={{ padding: "5px 5px", margin: 2 }}
+                                type="copy"
+                                theme="twoTone"
+                            />
                         </Link>
                     </Tooltip>
-
                     <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                         <Icon
-                            style={{ padding: "5px 5px" }}
+                            className='test'
+                            style={{ padding: "5px 5px", margin: 2 }}
                             type="delete"
                             theme="twoTone"
                             twoToneColor="red"
@@ -382,9 +391,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.id, item.acceptedApplied, "#1687f2", TYPE.ACCEPTED),
-                    rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED),
-                    pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING),
+                    acceptedApplied: viewCount(item.id, item.acceptedApplied, "#1687f2", TYPE.ACCEPTED, "user-add"),
+                    rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED, "user-delete"),
+                    pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING, "user"),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority:
                         <>

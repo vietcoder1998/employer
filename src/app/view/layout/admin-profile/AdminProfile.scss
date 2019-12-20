@@ -126,6 +126,11 @@
       border: solid rgb(255, 255, 255) 1px;
       transition: 0.25s;
 
+      svg {
+        margin-top: -5px;
+        margin-right: 5px;
+      }
+
       &:hover {
         // background-color: rgba(162, 255, 246, 0.408);
         border: solid rgba(178, 178, 178, 0.639) 1px;

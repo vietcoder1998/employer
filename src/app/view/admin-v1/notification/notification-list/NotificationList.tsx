@@ -89,13 +89,32 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
         });
     };
 
+    setSeen= (id ?: string) => {
+        let {list_noti} = this.state;
+        list_noti.forEach((item?: INoti) => {
+            if (id === item.id ) {
+                item.seen = !item.seen;
+            }
+        });
+
+        this.setState({list_noti})
+    }
 
     ListNoti = (props: any) => {
         let { list_noti } = props;
         let { pageSize } = this.state;
 
         let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
-            list_noti.map((item: INoti) => <NotiItem key={randomID(16)} item={item} getListNoti={() => this.props.getListNoti(0, pageSize)} />) : <NotUpdate msg="Không có thông báo" />
+            list_noti.map(
+                (item: INoti) =>
+                    <NotiItem
+                        key={randomID(16)}
+                        item={item}
+                        getListNoti={
+                            () => this.props.getListNoti(0, pageSize)
+                        }
+                        setSeen = {this.setSeen}
+                    />) : <NotUpdate msg="Không có thông báo" />
         return <div className="list-noti-show">
             {list_noti_view}
         </div>
@@ -121,9 +140,9 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
         }
 
         return (
-            <div draggable={true}>
+            <div className={"notification-list"}>
                 <h5>
-                    Danh sách
+                    Danh sách thông báo
                 </h5>
                 <div>
                     {

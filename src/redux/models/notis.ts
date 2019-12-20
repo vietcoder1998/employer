@@ -4,7 +4,7 @@ export interface INoti {
   title?: string,
   body?: string,
   data?: any,
-  seen?: false,
+  seen?: boolean,
   createdDate?: number
 }
 

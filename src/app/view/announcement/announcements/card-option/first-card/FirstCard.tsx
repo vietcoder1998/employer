@@ -1,7 +1,7 @@
 import React from 'react';
 import './FirstCard.scss';
 //@ts-ignore
-import testImg from '../../../../../../assets/image/rodan.png';
+import testImg from '../../../../../../assets/image/base-image.jpg';
 import { Avatar, Skeleton, Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';

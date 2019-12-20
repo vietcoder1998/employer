@@ -97,10 +97,23 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
 
         if (nextProps.location.search && nextProps.location.search !== prevState.search) {
             const urlParams = new URLSearchParams(window.location.search);
-            const myParam = urlParams.get('cpw');
+            const respw = urlParams.get('cpw');
+            const viewrate = urlParams.get('viewrate');
 
-            if (myParam === 'true') {
+
+            if (respw === 'true') {
                 nextProps.handleModal({ open_modal: true })
+
+                return {
+                    search: nextProps.location.search
+                }
+            }
+
+            if (viewrate === 'true') {
+                nextProps.handleDrawer({ open_drawer: true });
+                setTimeout(() => {
+                    nextProps.getListRating();
+                }, 700);
 
                 return {
                     search: nextProps.location.search

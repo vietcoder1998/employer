@@ -1,7 +1,7 @@
 import React from 'react';
 import './CardSchool.scss';
 // @ts-ignore
-import backGround from './../../../../assets/image/rodan.png';
+import backGround from './../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
 import { Avatar, Icon, Badge } from 'antd';

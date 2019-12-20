@@ -3,7 +3,7 @@ import './MutilCard.scss';
 import { Avatar, Skeleton, Icon } from 'antd';
 import { Timer } from '../../../../layout/common/Common';
 //@ts-ignore
-import testImg from '../../../../../../assets/image/rodan.png';
+import testImg from '../../../../../../assets/image/base-image.jpg';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../common/const/break-cumb';

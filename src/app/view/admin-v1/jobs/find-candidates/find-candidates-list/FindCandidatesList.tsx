@@ -8,7 +8,7 @@ import { IptLetterP } from './../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../../redux/models/regions';
 import { IFindCandidate, IFindCandidateFilter } from '../../../../../../redux/models/find-candidates';
-import findIdWithValue  from '../../../../../../common/utils/findIdWithValue';
+import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
 import { ISkill } from '../../../../../../redux/models/find-candidates-detail';
 import { ILanguage } from '../../../../../../redux/models/languages';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
@@ -203,6 +203,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                                 rel="noopener noreferrer"
                             >
                                 <Icon
+                                    className='test'
                                     style={{ padding: "5px 5px", color: "blue" }}
                                     type="search"
                                 />

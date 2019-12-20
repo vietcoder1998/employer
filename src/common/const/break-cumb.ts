@@ -28,7 +28,8 @@ export const routePath = {
     GUIDE: '/guide',
     ANNOU_DEFAULT: '/annou-default',
     PRIVACY: '/privacy',
-    FEED_BACK: '/feed-back'
+    FEED_BACK: '/feed-back',
+    PROMOTION: '/promotion'
 };
 
 export const routeLink = {
@@ -47,6 +48,7 @@ export const routeLink = {
     NOTI: routePath.ADMIN + routePath.NOTI,
     // Convernient
     JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT  + routePath.JOB_SERVICE,
+    PROMOTION: routePath.ADMIN + routePath.CONVERNIENT  + routePath.PROMOTION,
     // More info
     COMMUNITY: routePath.ADMIN + routePath.MORE_INFO + routePath.COMMUNITY,
     GUIDE: routePath.ADMIN + routePath.MORE_INFO + routePath.GUIDE,
@@ -83,9 +85,10 @@ export const breakCumb = [
     { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
     // Convernient service
     { label: "job-service", name: "Gói dịch vụ", icon: null, url: routeLink.JOB_SERVICE },
+    { label: "promotion", name: "Khuyến mãi", icon: null, url: routeLink.PROMOTION },
+    //More-Info
     { label: "community", name: "App Mobile", icon: null, url: routeLink.COMMUNITY },
-    { label: "guide", name: "Hướng dẫn", icon: null, url: routeLink.GUIDE },
-    { label: "guide", name: "Hướng dẫn", icon: null, url: routeLink.GUIDE },
+    { label: "guide", name: "Hướng dẫn ", icon: null, url: routeLink.GUIDE },
     { label: "feed-back", name: "Phản hồi", icon: null, url: routeLink.FEED_BACK },
     { label: "privacy", name: "Điều khoản", icon: null, url: routeLink.PRIVACY },
     { label: "annou-default", name: "Bài viết", icon: null, url: routeLink.ANNOU_DEFAULT },

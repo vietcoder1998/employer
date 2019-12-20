@@ -32,7 +32,7 @@ function* getListAnnouncementDetailData(action: any) {
 function callAnnouncementDetail(action: any) {
     try {
         if (action.id) {
-            let token = localStorage.getItem("token");
+            let token = localStorage.getItem("ecr");
 
             let res = _requestToServer(
                 GET,

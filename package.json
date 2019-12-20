@@ -32,6 +32,7 @@
     "react-easy-crop": "^1.17.0",
     "react-geocode": "^0.2.1",
     "react-google-autocomplete": "^1.1.2",
+    "react-pdf": "^4.1.0",
     "react-places-autocomplete": "^7.2.1",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.1",
@@ -48,7 +49,7 @@
   },
   "scripts": {
     "start": "set PORT=3008 && react-scripts start && npm run generate-build-meta",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
@@ -56,7 +57,6 @@
     "postbuild": "npm run generate-build-meta",
     "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
   },
-
   "eslintConfig": {
     "extends": "react-app"
   },
