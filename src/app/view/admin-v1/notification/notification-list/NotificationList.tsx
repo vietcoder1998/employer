@@ -56,15 +56,15 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
                 nextProps.pageIndexNoti !== prevState.pageIndex)
         ) {
             let { list_noti } = prevState;
-
             list_noti = list_noti.concat(nextProps.list_noti);
 
             return {
                 list_noti,
-                loadingMore: false
             };
         }
-        return null;
+        return {
+            loadingMore: false
+        };
     };
 
     load_more = true;
@@ -89,20 +89,21 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
         });
     };
 
-    setSeen= (id ?: string) => {
-        let {list_noti} = this.state;
+    setSeen = (id?: string) => {
+        let { list_noti } = this.state;
+        console.log(id);
         list_noti.forEach((item?: INoti) => {
-            if (id === item.id ) {
+            if (id === item.id) {
+                console.log(item.seen);
                 item.seen = !item.seen;
             }
         });
 
-        this.setState({list_noti})
+        this.setState({ list_noti })
     }
 
-    ListNoti = (props: any) => {
-        let { list_noti } = props;
-        let { pageSize } = this.state;
+    ListNoti = () => {
+        let { pageSize, list_noti } = this.state;
 
         let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
             list_noti.map(
@@ -113,7 +114,7 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
                         getListNoti={
                             () => this.props.getListNoti(0, pageSize)
                         }
-                        setSeen = {this.setSeen}
+                        setSeen={this.setSeen}
                     />) : <NotUpdate msg="Không có thông báo" />
         return <div className="list-noti-show">
             {list_noti_view}
@@ -128,7 +129,6 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
 
     render() {
         let {
-            list_noti,
             loadingMore,
             loading,
         } = this.state;
@@ -146,7 +146,7 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
                 </h5>
                 <div>
                     {
-                        totalItems && totalItems > 0 ? this.ListNoti({ list_noti }) : <NotUpdate msg="Chưa có thông báo" />
+                        totalItems && totalItems > 0 ? this.ListNoti() : <NotUpdate msg="Chưa có thông báo" />
                     }
                 </div>
                 <div className="a_c" style={{ height: 25 }}>

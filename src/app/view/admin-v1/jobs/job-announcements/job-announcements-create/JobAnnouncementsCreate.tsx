@@ -18,7 +18,6 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
-import { type } from 'os';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -49,22 +48,6 @@ interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
     getListEmBranches: Function;
     getPendingJobDetail: (id?: string) => any;
 };
-
-const getBody = () => {
-    return {
-        id: null,
-        jobTitle: null,
-        jobNameID: null,
-        employerBranchID: null,
-        description: null,
-        requiredSkillIDs: [],
-        jobType: TYPE.FULLTIME,
-        expirationDate: null,
-        shifts: [],
-        not_complete: true,
-        job_announcement_detail: null
-    }
-}
 
 class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJobAnnouncementsCreateState> {
     constructor(props) {
@@ -152,7 +135,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
             if (props.match.url.includes("pending")) {
                 type_cpn = TYPE.PENDING;
-                id  = props.pending_job_detail.id;
+                id = props.pending_job_detail.id;
                 job_announcement_detail = props.pending_job_detail.data;
                 jobID = job_announcement_detail.jobNameID;
                 requiredSkillIDs = job_announcement_detail.requiredSkillIDs
@@ -160,7 +143,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
             if (props.match.url.includes("fix")) {
                 type_cpn = TYPE.FIX;
-                id  = props.job_announcement_detail.id;
+                id = props.job_announcement_detail.id;
                 job_announcement_detail = props.job_announcement_detail;
                 jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
                 requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
@@ -169,7 +152,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
             if (props.match.url.includes("copy")) {
                 type_cpn = TYPE.COPY;
-                id  = props.job_announcement_detail.id;
+                id = props.job_announcement_detail.id;
                 job_announcement_detail = props.job_announcement_detail;
                 jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
                 requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
@@ -243,7 +226,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     createRequest = async () => {
         let { body, type_cpn, id } = this.state;
-        let newBody = this.pretreatmentBody(body, type_cpn);
+        let newBody = await this.pretreatmentBody(body, type_cpn);
         let matching = (type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY) ? `` : `/${id}`;
         let METHOD = type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY ? POST : PUT;
         let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
@@ -299,7 +282,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             );
         });
 
-        if (type_cpn !== TYPE.FIX) {
+        if (type_cpn !== TYPE.FIX || type_cpn !== TYPE.PENDING) {
             newBody.shifts.forEach((element: IShift, index: number) => {
                 if (element.id) {
                     delete element["id"]
@@ -315,8 +298,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             })
         }
 
-        delete newBody["id"];
-        return newBody;
+        
+        return {...newBody, id: undefined};
     }
 
     render() {

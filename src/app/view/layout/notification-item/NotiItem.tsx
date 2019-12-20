@@ -29,6 +29,9 @@ export default function NotiItem(props: INotiItemProps) {
     let color_icon_state = "#168ECD";
     let state = item.data.state;
 
+    let [seen, setSeenHere] = React.useState(props && props.item && props.item.seen );
+  
+
     switch (item.data.state) {
         case TYPE.PENDING:
             icon_state = "clock-circle";
@@ -111,9 +114,7 @@ export default function NotiItem(props: INotiItemProps) {
             true
         ).then(
             (res: any) => {
-                if (res) {
-                    props.setSeen(item.id);
-                }
+                setSeenHere(!seen);
             }
         )
     }
@@ -122,7 +123,7 @@ export default function NotiItem(props: INotiItemProps) {
         <div className='noti-info test'>
             <div key={item.id}
                 className='li-info '
-                style={{ backgroundColor: item.seen ? 'white' : 'aliceblue' }}>
+                style={{ backgroundColor: seen ? 'white' : 'aliceblue' }}>
                 {
                     avatar_to ? <Link to={avatar_to} target="_blank">
                         <div className='img-logo-noti'>
@@ -152,11 +153,11 @@ export default function NotiItem(props: INotiItemProps) {
                 </div>
                 <Tooltip
                     title={
-                        !item.seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc'
+                        !seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc'
                     }
                 >
                     <Icon
-                        type={!item.seen ? 'eye' : 'eye-invisible'}
+                        type={!seen ? 'eye' : 'eye-invisible'}
                         onClick={() => createRequest()}
                     />
                 </Tooltip>

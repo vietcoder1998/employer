@@ -38,6 +38,7 @@ interface IAdminState {
     pathname?: string,
     list_noti?: Array<INoti>,
     pageSize?: number,
+    pageIndex?: number,
     loading_noti?: boolean;
 }
 
@@ -54,11 +55,6 @@ interface IAdminProps extends StateProps, DispatchProps {
     getListNoti?: Function;
 }
 
-interface IListNotiProps {
-    list_noti: Array<INoti>
-};
-
-
 class Admin extends PureComponent<IAdminProps, IAdminState> {
     constructor(props) {
         super(props);
@@ -68,18 +64,19 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             data_breakcumb: [],
             loading: true,
             pageSize: 10,
+            pageIndex: 0,
             loading_noti: false,
         };
     };
 
     async componentDidMount() {
-        let { pageSize } = this.state;
+        let { pageSize, pageIndex } = this.state;
         await this.props.getListRegions();
         await this.props.getListJobNames();
         await this.props.getListSkills();
         await this.props.getListJobService();
         await this.props.getListLanguages();
-        await this.props.getListNoti(0, pageSize);
+        await this.props.getListNoti(pageIndex, pageSize);
         await this.setState({ loading: false });
     }
 
@@ -96,57 +93,12 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                 data_breakcumb,
             }
         }
-
-        if (nextProps.list_noti && nextProps.list_noti !== prevState.list_noti) {
-            return {
-                list_noti: nextProps.list_noti
-            }
-        }
-
         return null
     }
 
     componentWillUnmount() {
         window.removeEventListener("scroll", () => { });
     }
-
-    handleLoadMoreData = async () => {
-        let { pageSize } = this.state;
-        await this.setState({ loading_noti: true })
-        await this.props.getListNoti(0, (pageSize + 10));
-        await this.setState({ loading_noti: false, pageSize: pageSize + 10 })
-    }
-
-    setSeen = (id?: string) => {
-        let { list_noti } = this.state;
-        list_noti.forEach((item?: INoti) => {
-            if (id === item.id) {
-                item.seen = !item.seen;
-            }
-        });
-
-        this.setState({ list_noti })
-    }
-
-    ListNoti = (props: any) => {
-        let { pageSize, list_noti } = this.state;
-
-        let list_noti_view = list_noti && list_noti.length > 0 ?
-            list_noti.map(
-                (item: INoti) =>
-                    <NotiItem
-                        key={item.id}
-                        item={item}
-                        getListNoti={
-                            () => this.props.getListNoti(0, pageSize)
-                        }
-                        setSeen={this.setSeen}
-                    />) : <NotUpdate msg="Không có thông báo" />
-
-        return <div className="list-noti">
-            {list_noti_view}
-        </div>
-    };
 
     handleLoading = () => {
         this.setState({ loading: true });
@@ -155,9 +107,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         }, 400);
     }
 
-
     render() {
-        let { data_breakcumb, loading } = this.state;
+        let { data_breakcumb, loading, pageSize, pageIndex } = this.state;
         let { path } = this.props.match;
         let { totalNoti, list_noti } = this.props;
 
@@ -198,7 +149,22 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             <Popover
                                 content={
                                     < >
-                                        {this.ListNoti({ list_noti })}
+                                        <div className='list-noti'>
+                                            {
+                                                list_noti && list_noti.length > 0 ?
+                                                    list_noti.map(
+                                                        (item: INoti) =>
+                                                            <NotiItem
+                                                                key={item.id}
+                                                                item={item}
+                                                                getListNoti={
+                                                                    () => undefined
+                                                                }
+                                                                setSeen={() => this.props.getListNoti(pageIndex, pageSize)}
+                                                            />) : <NotUpdate msg="Không có thông báo" />
+                                            }
+                                        </div>
+
                                         <div
                                             className="a_c link-to"
                                             style={{ padding: 10 }}
@@ -207,7 +173,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                 this.props.history.push(routeLink.NOTI + routePath.LIST)
                                             }}
                                         >
-                                            <Icon type={"search"}/>
+                                            <Icon type={"search"} />
                                             <span>Xem thêm</span>
                                         </div>
                                     </>

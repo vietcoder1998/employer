@@ -19,10 +19,6 @@ interface IMenuNavigationProps {
 
 export default function MenuNavigation(props: IMenuNavigationProps) {
     let [showMenu, setShowMenu] = React.useState(false);
-    let state_bar = '0';
-    if (localStorage.getItem("state_bar")) {
-        state_bar = localStorage.getItem("state_bar")
-    }
 
     return (
         <Sider
@@ -64,7 +60,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
             />
             <Menu
                 mode="inline"
-                defaultSelectedKeys={[state_bar]}
                 style={{
                     borderRight: "none",
                     width: "100%",
@@ -74,7 +69,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     overflowY: "auto"
                 }}
                 onClick={(event: any) => {
-                    localStorage.setItem("state_bar", event.key);
                     props.onCallLoading()
                 }}
             >
