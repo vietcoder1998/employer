@@ -206,6 +206,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                                 className='test'
                                 type={item.candidate.unlocked ? "unlock" : "lock"}
                                 style={{ padding: "5px 5px", color: item.candidate.unlocked ? "green" : "red" }}
+                                theme={"filled"}
                             />
                         </Tooltip>
                     </>
