@@ -88,7 +88,8 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             >
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
                     <Icon
-                        style={{ padding: "5px 10px", color: "" }}
+                        className='test'
+                        style={{ padding: 5, margin: 2 }}
                         type="search"
                     />
                 </Link>
@@ -100,7 +101,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 okText="Xóa"
                 cancelText="Hủy"
             >
-                <Icon style={{ padding: "5px 10px" }} type="delete" theme="twoTone" twoToneColor="red" />
+                <Icon className='test' style={{ padding: 5, margin: 2 }} type="delete" theme="twoTone" twoToneColor="red" />
             </Popconfirm>
             {/* <Popconfirm
                 placement="topRight"
@@ -109,7 +110,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 okText="Chặn"
                 cancelText="Hủy"
             >
-                <Icon style={{ padding: "5px 10px" }} type="stop" theme="twoTone" twoToneColor="red" />
+                <Icon style={{ padding: 5 }} type="stop" theme="twoTone" twoToneColor="red" />
             </Popconfirm> */}
         </>
     };
@@ -202,6 +203,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     <>
                         <Tooltip placement="top" title={item.candidate.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
                             <Icon
+                                className='test'
                                 type={item.candidate.unlocked ? "unlock" : "lock"}
                                 style={{ padding: "5px 5px", color: item.candidate.unlocked ? "green" : "red" }}
                             />
