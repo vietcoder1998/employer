@@ -123,7 +123,7 @@ export const TYPE = {
         shortName: 'shortName',
         regionID: 'regionID',
         schoolTypeID: 'schoolTypeID',
-        jobNameIDs:'jobNameIDs',
+        jobNameIDs: 'jobNameIDs',
         hasRequest: 'hasRequest',
         owner: 'owner',
         state: 'state'
