@@ -198,12 +198,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
-                    <Menu.Item key="pendings-jobs">
+                    {/* <Menu.Item key="pendings-jobs">
                         <Link to={routeLink.ANNOU_DEFAULT} >
                             <Icon type="coffee" />
                             <span>Bài viết</span>
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="9">
                         <Link to={routeLink.COMMUNITY}>
                             <Icon type="mobile" />
