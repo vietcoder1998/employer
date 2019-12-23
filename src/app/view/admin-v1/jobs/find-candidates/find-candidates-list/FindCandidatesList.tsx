@@ -242,6 +242,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 loading_table: false,
             }
         }
+
+        return null
     };
 
     async componentDidMount() {
