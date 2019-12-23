@@ -1,9 +1,9 @@
-import { POST } from './../../common/const/method';
+import { POST } from './../../const/method';
 import { IConnectSchools } from './../models/connect-schools';
 import { CONNECT_SCHOOL } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListConnectSchoolsData(action: any) {

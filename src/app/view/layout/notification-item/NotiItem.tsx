@@ -3,11 +3,11 @@ import { IptLetter, Timer } from '../common/Common';
 import { Icon, Avatar, Tooltip } from 'antd';
 import { INoti } from '../../../../redux/models/notis';
 import './NotiItem.scss';
-import { TYPE } from '../../../../common/const/type';
-import { routeLink, routePath } from '../../../../common/const/break-cumb';
+import { TYPE } from '../../../../const/type';
+import { routeLink, routePath } from '../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
 import { _requestToServer } from '../../../../services/exec';
-import { PUT } from '../../../../common/const/method';
+import { PUT } from '../../../../const/method';
 import { NOTI } from '../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../environment/dev';
 //@ts-ignore

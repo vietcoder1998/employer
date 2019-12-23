@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Result, Tooltip, Modal, Input, Icon } from 'antd';
 import { connect } from 'react-redux';
-import { REDUX_SAGA, REDUX } from '../../../../../common/const/actions';
-import { TYPE } from '../../../../../common/const/type';
+import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
+import { TYPE } from '../../../../../const/type';
 import { IAppState } from '../../../../../redux/store/reducer';
 import { IMapState, IModalState, IDrawerState } from '../../../../../redux/models/mutil-box';
 // import './AdminAccount.scss';
@@ -11,7 +11,7 @@ import { IAdminAccount } from '../../../../../redux/models/admin-account';
 import AdminProfile from '../../../layout/admin-profile/AdminProfile';
 import { InputTitle } from '../../../layout/input-tittle/InputTitle';
 import { _requestToServer } from '../../../../../services/exec';
-import { POST } from '../../../../../common/const/method';
+import { POST } from '../../../../../const/method';
 import { RE_PASSWORD } from '../../../../../services/api/public.api';
 import { OAUTH2_HOST } from '../../../../../environment/dev';
 import DrawerConfig from '../../../layout/config/DrawerConfig';

@@ -1,17 +1,17 @@
 import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../../common/const/actions';
+import { REDUX_SAGA } from '../../../../../../const/actions';
 import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
-import { timeConverter } from '../../../../../../common/utils/convertTime';
+import { timeConverter } from '../../../../../../utils/convertTime';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { ISavedCandidateProfile } from '../../../../../../redux/models/saved-candidate-profiles';
-import { DELETE } from '../../../../../../common/const/method';
+import { DELETE } from '../../../../../../const/method';
 import { _requestToServer } from '../../../../../../services/exec';
 import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
-// import { TYPE } from '../../../../../../common/const/type';
+// import { TYPE } from '../../../../../../const/type';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {

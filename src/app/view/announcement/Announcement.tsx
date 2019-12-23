@@ -9,9 +9,9 @@ import { IAppState } from '../../../redux/store/reducer';
 import { connect } from 'react-redux';
 import './Announcement.scss';
 import { IAnnouType } from '../../../redux/models/annou-types';
-import { routeLink, routePath } from '../../../common/const/break-cumb';
-import { TYPE } from '../../../common/const/type';
-import { REDUX_SAGA } from '../../../common/const/actions';
+import { routeLink, routePath } from '../../../const/break-cumb';
+import { TYPE } from '../../../const/type';
+import { REDUX_SAGA } from '../../../const/actions';
 
 const Switch = require("react-router-dom").Switch;
 const { TabPane } = Tabs;

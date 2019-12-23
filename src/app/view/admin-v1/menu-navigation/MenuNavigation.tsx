@@ -8,7 +8,7 @@ import logo from '../../../../assets/image/logo-white.png'
 // @ts-ignore
 import logoIcon from '../../../../assets/image/logo-icon-white.png'
 import { Link } from 'react-router-dom';
-import { routeLink, routePath } from '../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../const/break-cumb';
 import { LinkTo } from '../../layout/common/Common';
 const { Sider } = Layout;
 const { SubMenu } = Menu;

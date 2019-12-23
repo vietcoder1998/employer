@@ -1,9 +1,9 @@
 import React from 'react';
 import './AffixRight.scss';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';
-import limitString from '../../../../../../common/utils/limitString';
+import limitString from '../../../../../../utils/limitString';
 import { Link } from 'react-router-dom';
-import { routeLink } from '../../../../../../common/const/break-cumb';
+import { routeLink } from '../../../../../../const/break-cumb';
 
 interface IAffixRight {
     list_data?: Array<IAnnouncement>

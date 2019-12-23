@@ -1,5 +1,5 @@
 import {IRatings} from '../models/ratings';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IRatings = {
     items: [],

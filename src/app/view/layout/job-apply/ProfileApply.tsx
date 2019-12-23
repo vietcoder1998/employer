@@ -2,8 +2,8 @@ import React from 'react';
 import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Checkbox, Button, TimePicker, Radio } from 'antd';
 import { IptLetterP, IptLetter } from '../common/Common';
-import randomID from '../../../../common/utils/randomID';
-import { TYPE } from '../../../../common/const/type';
+import randomID from '../../../../utils/randomID';
+import { TYPE } from '../../../../const/type';
 import moment from 'moment';
 const { Option } = Select;
 

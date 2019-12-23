@@ -1,4 +1,4 @@
-import { REDUX } from '../../common/const/actions';
+import { REDUX } from '../../const/actions';
 import { INotis } from '../models/notis';
 
 export const geListtNotis = (data?: INotis) => ({

@@ -5,7 +5,7 @@ import './ForgetPw.scss';
 import Header from '../layout/header/Header';
 import Footer from '../layout/footer/Footer';
 import { _requestToServer } from '../../../services/exec';
-import { POST } from '../../../common/const/method';
+import { POST } from '../../../const/method';
 import { M_S } from '../../../services/api/public.api';
 import { noInfoHeader } from '../../../services/auth';
 import { OAUTH2_HOST } from '../../../environment/dev';

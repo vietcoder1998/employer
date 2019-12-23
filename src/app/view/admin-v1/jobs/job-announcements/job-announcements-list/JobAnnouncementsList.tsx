@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
+import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message } from 'antd';
-import { timeConverter, momentToUnix } from '../../../../../../common/utils/convertTime';
+import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './JobAnnouncementsList.scss';
-import { TYPE } from '../../../../../../common/const/type';
+import { TYPE } from '../../../../../../const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../redux/models/job-announcements';
@@ -14,12 +14,12 @@ import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST, DELETE, PUT } from '../../../../../../common/const/method';
+import { POST, DELETE, PUT } from '../../../../../../const/method';
 import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;

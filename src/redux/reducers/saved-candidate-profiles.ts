@@ -1,5 +1,5 @@
-import {ISavedCandidateProfiles} from '../models/saved-candidate';
-import {REDUX} from '../../common/const/actions';
+import {ISavedCandidateProfiles} from './../models/saved-candidate';
+import {REDUX} from '../../const/actions';
 
 let initState: ISavedCandidateProfiles = {
     items: [],

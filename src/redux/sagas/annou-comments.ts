@@ -1,10 +1,10 @@
 import { ANNOU_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
-import { POST } from './../../common/const/method';
+import { POST } from './../../const/method';
 import { IAnnouComments } from '../models/annou-comments';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { ANNOU_COMMENTS } from '../../services/api/private.api';
 import { EMPLOYER_HOST, PUBLIC_HOST } from '../../environment/dev';
 

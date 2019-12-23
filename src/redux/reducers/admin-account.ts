@@ -1,5 +1,5 @@
 import { IAdminAccount } from './../models/admin-account';
-import { REDUX } from '../../common/const/actions';
+import { REDUX } from '../../const/actions';
 
 let initState: IAdminAccount = {
    

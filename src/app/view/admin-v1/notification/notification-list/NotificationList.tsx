@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../common/const/actions';
+import { REDUX_SAGA } from '../../../../../const/actions';
 import { Icon } from 'antd';
 import { NotUpdate } from '../../../layout/common/Common';
 import { IAppState } from '../../../../../redux/store/reducer';
 import Loading from '../../../layout/loading/Loading';
 import NotiItem from '../../../layout/notification-item/NotiItem';
 import { INoti } from '../../../../../redux/models/notis';
-import randomID from '../../../../../common/utils/randomID';
+import randomID from '../../../../../utils/randomID';
 
 interface INotiticationsListProps extends StateProps, DispatchProps {
     match?: any;

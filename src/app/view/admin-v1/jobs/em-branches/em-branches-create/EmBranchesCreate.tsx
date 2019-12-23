@@ -2,17 +2,17 @@ import React from 'react'
 import { Icon, Divider, Row, Col, Button, Input } from 'antd';
 import { connect } from 'react-redux';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
-import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
-import { TYPE } from '../../../../../../common/const/type';
+import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
+import { TYPE } from '../../../../../../const/type';
 import Mapcontainer from '../../../../layout/map/Map';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { _requestToServer } from '../../../../../../services/exec';
 import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import { POST, PUT } from '../../../../../../common/const/method';
+import { POST, PUT } from '../../../../../../const/method';
 import { IEmBranch } from '../../../../../../redux/models/em-branches';
 import { IMapState } from '../../../../../../redux/models/mutil-box';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
 interface IEmBranchesCreateState {
     title?: string;

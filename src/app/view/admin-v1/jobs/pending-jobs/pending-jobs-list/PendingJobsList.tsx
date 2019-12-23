@@ -2,15 +2,15 @@ import React, { PureComponent, Fragment } from 'react'
 import { connect } from 'react-redux';
 import './PendingJobsList.scss';
 
-import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
+import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { Button, Table, Icon, Modal, Tooltip } from 'antd';
-import { timeConverter } from '../../../../../../common/utils/convertTime';
+import { timeConverter } from '../../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST } from '../../../../../../common/const/method';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { POST } from '../../../../../../const/method';
+import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
 import { PENDING_JOBS } from '../../../../../../services/api/private.api';
-import { TYPE } from '../../../../../../common/const/type';
+import { TYPE } from '../../../../../../const/type';
 // import { IptLetter } from '../../../../layout/common/Common';
 import { IPendingJob } from '../../../../../../redux/models/pending-jobs';
 import { IAppState } from '../../../../../../redux/store/reducer';

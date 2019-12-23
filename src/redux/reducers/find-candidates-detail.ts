@@ -1,5 +1,5 @@
 import { IFindCandidateDetail } from './../models/find-candidates-detail';
-import { REDUX } from '../../common/const/actions';
+import { REDUX } from '../../const/actions';
 
 let initState: IFindCandidateDetail = {
     id: null,

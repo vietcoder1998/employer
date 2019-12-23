@@ -1,5 +1,5 @@
 import { IConnectSchoolDetail } from './../models/connect-school-detail';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IConnectSchoolDetail = {};
 

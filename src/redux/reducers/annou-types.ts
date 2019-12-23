@@ -1,5 +1,5 @@
 import { IAnnouTypes } from './../models/annou-types';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IAnnouTypes = {
     items: [],

@@ -1,10 +1,10 @@
 import { SKILLS } from './../../services/api/private.api';
 import { noInfoHeader } from './../../services/auth';
 import { ISkills } from '../models/skills';
-import { GET } from '../../common/const/method';
+import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { PUBLIC_HOST } from '../../environment/dev';
 
 function* getListSkillsData(action) {

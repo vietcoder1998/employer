@@ -1,11 +1,11 @@
 import { authHeaders, noInfoHeader } from './../../services/auth';
 import { ANNOU_PUBLIC } from './../../services/api/public.api';
 import { IAnnouncementDetail } from '../models/announcement_detail';
-import { GET } from '../../common/const/method';
+import { GET } from '../../const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { EMPLOYER_HOST, PUBLIC_HOST } from '../../environment/dev';
 
 function* getListAnnouncementDetailData(action: any) {

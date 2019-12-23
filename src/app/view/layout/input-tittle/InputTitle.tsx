@@ -1,6 +1,6 @@
 import { Input, Select, } from "antd";
 import React from 'react';
-import { TYPE } from "../../../../common/const/type";
+import { TYPE } from "../../../../const/type";
 import { Required } from "../common/Common";
 
 let { Option } = Select;

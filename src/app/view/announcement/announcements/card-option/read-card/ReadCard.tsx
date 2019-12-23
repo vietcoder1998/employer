@@ -5,9 +5,9 @@ import { Timer, NotUpdate } from '../../../../layout/common/Common';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/base-image.jpg';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';
-import limitString from '../../../../../../common/utils/limitString';
+import limitString from '../../../../../../utils/limitString';
 import { Link } from 'react-router-dom';
-import { routeLink } from '../../../../../../common/const/break-cumb';
+import { routeLink } from '../../../../../../const/break-cumb';
 
 interface IReadCard {
     item?: IAnnouncement

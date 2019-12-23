@@ -7,7 +7,7 @@ import avatar from '../../../../assets/image/test_avatar.jpg';
 import { Avatar, Icon, Badge } from 'antd';
 import { IConnectSchool } from '../../../../redux/models/connect-schools';
 import { NotUpdate } from '../common/Common';
-import { TYPE } from '../../../../common/const/type';
+import { TYPE } from '../../../../const/type';
 import { Link } from 'react-router-dom';
 
 interface ICardSchoolProps {

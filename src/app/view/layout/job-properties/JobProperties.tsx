@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Icon, Avatar } from 'antd';
 import './JobProperties.scss'
-import { convertStringToArray } from '../../../../common/utils/convertStringToArray';
+import { convertStringToArray } from '../../../../utils/convertStringToArray';
 import { IptLetter } from '../common/Common';
-import { weekDays } from '../../../../common/utils/day';
-import { timeConverter } from '../../../../common/utils/convertTime';
+import { weekDays } from '../../../../utils/day';
+import { timeConverter } from '../../../../utils/convertTime';
 
 interface IJobPropertiesProps {
     job_detail?: any;

@@ -6,9 +6,9 @@ import { IFindCandidateDetail } from '../../../../redux/models/find-candidates-d
 import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
-import { TYPE } from '../../../../common/const/type';
+import { TYPE } from '../../../../const/type';
 import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
-import { timeConverter } from '../../../../common/utils/convertTime';
+import { timeConverter } from '../../../../utils/convertTime';
 import { NotUpdate } from '../common/Common';
 
 interface ICandidateProfileState {

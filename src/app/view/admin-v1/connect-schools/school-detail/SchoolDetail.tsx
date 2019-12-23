@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import './SchoolDetail.scss';
 import SchoolInfo from '../../../layout/school-info/SchoolInfo';
 import { IAppState } from '../../../../../redux/store/reducer';
-import { REDUX_SAGA } from '../../../../../common/const/actions';
+import { REDUX_SAGA } from '../../../../../const/actions';
 import { connect } from 'react-redux';
 
 interface ISchoolDetailState {

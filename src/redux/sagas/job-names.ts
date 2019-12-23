@@ -1,10 +1,10 @@
 import { noInfoHeader } from './../../services/auth';
 import { JOB_NAMES } from './../../services/api/public.api';
 import { IJobNames } from '../models/job-names';
-import { GET } from '../../common/const/method';
+import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { PUBLIC_HOST } from '../../environment/dev';
 
 function* getListJobNameData(action: any) {

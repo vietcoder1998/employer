@@ -1,19 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA, REDUX } from '../../../../../../common/const/actions';
+import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { Button, Table, Icon, Select, Row, Col, Avatar, Drawer, Slider, Tooltip } from 'antd';
-import { timeConverter } from '../../../../../../common/utils/convertTime';
-import { TYPE } from '../../../../../../common/const/type';
+import { timeConverter } from '../../../../../../utils/convertTime';
+import { TYPE } from '../../../../../../const/type';
 import { IptLetterP } from './../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IRegion } from '../../../../../../redux/models/regions';
 import { IFindCandidate, IFindCandidateFilter } from '../../../../../../redux/models/find-candidates';
-import findIdWithValue from '../../../../../../common/utils/findIdWithValue';
+import findIdWithValue from '../../../../../../utils/findIdWithValue';
 import { ISkill } from '../../../../../../redux/models/find-candidates-detail';
 import { ILanguage } from '../../../../../../redux/models/languages';
 import { IModalState } from '../../../../../../redux/models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
-import { routeLink, routePath } from '../../../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../../../const/break-cumb';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {

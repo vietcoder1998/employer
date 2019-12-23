@@ -1,5 +1,5 @@
 import {IJobNames} from '../models/job-names';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 export const getJobName = (data?: IJobNames) => ({
     type: REDUX.JOB_NAMES.GET_JOB_NAMES,

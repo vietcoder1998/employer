@@ -1,7 +1,7 @@
 import React from 'react'
 import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
 import JobService from './job-service/JobService';
-import { routePath } from '../../../../common/const/break-cumb';
+import { routePath } from '../../../../const/break-cumb';
 import Promotion from './promotion/Promotion';
 const Switch = require("react-router-dom").Switch;
 

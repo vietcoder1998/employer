@@ -1,10 +1,10 @@
 import { ANNOU_TYPES_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
 import { IAnnouTypes } from '../models/annou-types';
-import { GET } from '../../common/const/method';
+import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { ANNOU_TYPES } from '../../services/api/private.api';
 import { EMPLOYER_HOST, PUBLIC_HOST } from '../../environment/dev';
 

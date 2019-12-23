@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA } from '../../../../../common/const/actions';
+import { REDUX_SAGA } from '../../../../../const/actions';
 import { Row, Col, Divider, Affix, Icon } from 'antd';
-// import { timeConverter, momentToUnix } from '../../../../../common/utils/convertTime';
-// import { TYPE } from '../../../../../common/const/type';
+// import { timeConverter, momentToUnix } from '../../../../../utils/convertTime';
+// import { TYPE } from '../../../../../const/type';
 // import { IptLetter } from '../../../layout/common/Common';
 // import { _requestToServer } from '../../../../../services/exec';
 // import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
 import { IAnnouCommentsBody } from '../../../../../redux/models/annou-comments';
-// import { routeLink, routePath } from '../../../../../common/const/break-cumb';
+// import { routeLink, routePath } from '../../../../../const/break-cumb';
 import './AnnouncementsList.scss';
 import FirstCard from '../card-option/first-card/FirstCard';
 import MutilCard from '../card-option/mutil-card/MutilCard';

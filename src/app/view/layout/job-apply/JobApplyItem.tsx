@@ -1,11 +1,11 @@
 import React from 'react';
 import { Row, Col, Button, Avatar, Tooltip, Rate } from 'antd';
 import { NotUpdate } from '../common/Common';
-import { TYPE } from '../../../../common/const/type';
+import { TYPE } from '../../../../const/type';
 import { IApplyJob } from '../../../../redux/models/apply-job';
 import { Link } from 'react-router-dom';
-import { routeLink, routePath } from '../../../../common/const/break-cumb';
-import { timeConverter } from '../../../../common/utils/convertTime';
+import { routeLink, routePath } from '../../../../const/break-cumb';
+import { timeConverter } from '../../../../utils/convertTime';
 import './JobApplyItem.scss';
 
 interface IApplyJobItem {

@@ -6,7 +6,7 @@ import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
 import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
-import { TYPE } from '../../../../../../common/const/type';
+import { TYPE } from '../../../../../../const/type';
 
 interface ICommentAnnou {
     list_annou_comment?: Array<IAnnouComment>;

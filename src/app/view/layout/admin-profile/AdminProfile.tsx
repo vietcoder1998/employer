@@ -12,14 +12,14 @@ import { connect } from 'react-redux';
 import TextArea from 'antd/lib/input/TextArea';
 import MapContainter from './../map/Map';
 import { IMapState } from '../../../../redux/models/mutil-box';
-import { REDUX, REDUX_SAGA } from '../../../../common/const/actions';
+import { REDUX, REDUX_SAGA } from '../../../../const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { _requestToServer } from '../../../../services/exec';
-import { PUT } from '../../../../common/const/method';
+import { PUT } from '../../../../const/method';
 import { ADMIN_ACCOUNT } from '../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../environment/dev';
 import { sendFileHeader } from '../../../../services/auth';
-import randomID from '../../../../common/utils/randomID';
+import randomID from '../../../../utils/randomID';
 
 interface IAdminProfileProps extends StateProps, DispatchProps {
     data?: IAdminAccount,

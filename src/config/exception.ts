@@ -1,6 +1,6 @@
 import { loginHeaders } from './../services/auth';
 import { RFGTK } from './../services/api/public.api';
-import { POST } from './../common/const/method';
+import { POST } from './../const/method';
 import { _requestToServer } from './../services/exec';
 import Cookies from 'universal-cookie';
 import Swal from 'sweetalert2';

@@ -3,7 +3,7 @@ import './AnnoDefault.scss';
 import { IAppState } from '../../../../../redux/store/reducer';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { routeLink, routePath } from '../../../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../../../const/break-cumb';
 
 interface IAnnoDefaultProps extends StateProps, DispatchProps {
     match: Readonly<any>;

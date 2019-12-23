@@ -6,7 +6,7 @@ import { Avatar, Skeleton, Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 import { IAnnouncement } from '../../../../../../redux/models/announcements';
 import { Link } from 'react-router-dom';
-import { routeLink } from '../../../../../../common/const/break-cumb';
+import { routeLink } from '../../../../../../const/break-cumb';
 
 
 interface IFirstCard {

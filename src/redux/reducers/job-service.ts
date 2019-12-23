@@ -1,4 +1,4 @@
-import { REDUX } from './../../common/const/actions';
+import { REDUX } from './../../const/actions';
 import { IJobService } from './../models/job-service';
 
 let initState: IJobService = {

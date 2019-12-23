@@ -1,5 +1,5 @@
 import {IRatingUser} from '../models/rating-user';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IRatingUser = {
     jobAccomplishmentRating: 0,

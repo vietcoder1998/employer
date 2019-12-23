@@ -4,7 +4,7 @@ import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
-import { breakCumb, routeLink, routePath } from '../../../common/const/break-cumb';
+import { breakCumb, routeLink, routePath } from '../../../const/break-cumb';
 
 import Jobs from './jobs/Jobs';
 import ConnectSchools from './connect-schools/ConnectSchools';
@@ -18,9 +18,9 @@ import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 import NotiItem from '../layout/notification-item/NotiItem';
 
 import { IAppState } from '../../../redux/store/reducer';
-import { REDUX_SAGA } from '../../../common/const/actions';
+import { REDUX_SAGA } from '../../../const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
-import { TYPE } from '../../../common/const/type';
+import { TYPE } from '../../../const/type';
 import { Link } from 'react-router-dom';
 import { INoti } from '../../../redux/models/notis';
 import { NotUpdate } from '../layout/common/Common';

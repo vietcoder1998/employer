@@ -1,5 +1,5 @@
 import {IFindCandidates} from '../models/find-candidates';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IFindCandidates = {
     items: [],

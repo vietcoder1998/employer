@@ -3,8 +3,8 @@ import { IptLetter, Timer, NotUpdate } from '../common/Common';
 import { Avatar, Rate } from 'antd';
 import { IRating } from '../../../../redux/models/ratings';
 import './RatingItem.scss';
-import { TYPE } from '../../../../common/const/type';
-import { routeLink } from '../../../../common/const/break-cumb';
+import { TYPE } from '../../../../const/type';
+import { routeLink } from '../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
 
 interface IRatingItemProps {

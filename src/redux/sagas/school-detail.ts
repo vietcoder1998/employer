@@ -1,10 +1,10 @@
 import { SCHOOL } from './../../services/api/public.api';
 import { noInfoHeader } from './../../services/auth';
 import { ISchoolDetail } from '../models/school-detail';
-import { GET } from '../../common/const/method';
+import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
-import { REDUX_SAGA, REDUX } from '../../common/const/actions'
+import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { PUBLIC_HOST } from '../../environment/dev';
 
 function* getListSchoolDetailData(action: any) {

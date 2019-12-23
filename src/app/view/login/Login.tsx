@@ -2,13 +2,13 @@ import React, { PureComponent } from 'react'
 import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
-import { POST } from '../../../common/const/method';
+import { POST } from '../../../const/method';
 import { OAUTH2_HOST, EMPLOYER_HOST } from '../../../environment/dev';
 import { OAUTH2_LOGIN, EMPLOYER_REGISTER } from '../../../services/api/public.api';
 import { loginHeaders, noInfoHeader } from '../../../services/auth';
 import Header from '../layout/header/Header';
 import Footer from '../layout/footer/Footer';
-import { routeLink, routePath } from '../../../common/const/break-cumb';
+import { routeLink, routePath } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
 import { LinkTo } from '../layout/common/Common';
 import setupLogin from '../../../config/setup-login';

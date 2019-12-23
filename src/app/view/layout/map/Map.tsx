@@ -3,10 +3,9 @@ import React, { CSSProperties } from 'react';
 import './Map.scss';
 import { connect } from 'react-redux';
 import GeoCode from 'react-geocode';
-import { REDUX } from '../../../../common/const/actions';
+import { REDUX } from '../../../../const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../redux/models/mutil-box';
-import mapConvert from '../../../../common/utils/map-convert';
 import Autocomplete from 'react-google-autocomplete';
 import IApiMap from '../../../../redux/models/google-map-api';
 
@@ -85,10 +84,6 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                 }
             )
         }
-    }
-
-    getData = (event: string) => {
-        mapConvert(event, 'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28');
     }
 
     render() {

@@ -1,5 +1,5 @@
 import {IApplyJobs} from '../models/apply-job';
-import {REDUX} from '../../common/const/actions';
+import {REDUX} from '../../const/actions';
 
 let initState: IApplyJobs = {
     items: [],

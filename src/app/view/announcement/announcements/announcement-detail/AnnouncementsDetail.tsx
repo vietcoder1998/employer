@@ -1,20 +1,20 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
-import { REDUX_SAGA, } from '../../../../../common/const/actions';
+import { REDUX_SAGA, } from '../../../../../const/actions';
 import { Button, Icon, Row, Col, Affix, BackTop } from 'antd';
-// import { TYPE } from '../../../../../common/const/type';
+// import { TYPE } from '../../../../../const/type';
 // import { IptLetter } from '../../../layout/common/Common';
 import { _requestToServer } from '../../../../../services/exec';
-// import { DELETE } from '../../../../../common/const/method';
+// import { DELETE } from '../../../../../const/method';
 // import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
 import { IAnnouCommentsBody, IAnnouComment } from '../../../../../redux/models/annou-comments';
-// import { routeLink, routePath } from '../../../../../common/const/break-cumb';
+// import { routeLink, routePath } from '../../../../../const/break-cumb';
 import './AnnouncementsDetail.scss';
 import HeaderAnnou from '../card-option/header-annou/HeaderAnnou';
 import ContentAnnou from '../card-option/content-annou/ContentAnnou';
 import CommentAnnou from '../card-option/comment-annou/CommentAnnou';
 import { IAppState } from '../../../../../redux/store/reducer';
-import { DELETE, POST } from '../../../../../common/const/method';
+import { DELETE, POST } from '../../../../../const/method';
 import { ANNOUNCEMENT_DETAIL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
 import { NotUpdate } from '../../../layout/common/Common';
