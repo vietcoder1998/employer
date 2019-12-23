@@ -1,4 +1,4 @@
-import {ISavedCandidateProfiles} from './../models/saved-candidate';
+import {ISavedCandidateProfiles} from './../models/saved-candidate-profiles';
 import {REDUX} from '../../const/actions';
 
 let initState: ISavedCandidateProfiles = {
