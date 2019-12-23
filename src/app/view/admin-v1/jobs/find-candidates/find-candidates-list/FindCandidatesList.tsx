@@ -26,7 +26,7 @@ let ImageRender = (props: any) => {
     }
 };
 
-interface FindCandidatesListProps extends StateProps, DispatchProps {
+interface IFindCandidatesListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     handleModal: Function;
@@ -36,7 +36,7 @@ interface FindCandidatesListProps extends StateProps, DispatchProps {
     getAnnoucementDetail: Function;
 };
 
-interface FindCandidatesListState {
+interface IFindCandidatesListState {
     data_table?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
@@ -57,7 +57,7 @@ interface FindCandidatesListState {
     type_view?: string;
 };
 
-class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCandidatesListState> {
+class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFindCandidatesListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -189,7 +189,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(nextProps?: IFindCandidatesListProps, prevState?: IFindCandidatesListState) {
         if (nextProps.list_find_candidates && nextProps.list_find_candidates !== prevState.list_find_candidates) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
@@ -237,7 +237,7 @@ class FindCandidatesList extends React.Component<FindCandidatesListProps, FindCa
                 });
             })
             return {
-                list_find_candidates: nextProps.type_management,
+                list_find_candidates: nextProps.list_find_candidates,
                 data_table,
                 loading_table: false,
             }
