@@ -358,7 +358,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             />
                         </Link>
                     </Tooltip>
-                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
+                    <Tooltip placement="top" title={"Quản lý bài đăng tương tự"}>
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
                             <Icon
                                 className='test'

@@ -144,7 +144,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             width: 100,
         },
         {
-            title: 'Đại chỉ',
+            title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
             width: 320,

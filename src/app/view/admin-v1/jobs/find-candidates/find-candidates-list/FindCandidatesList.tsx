@@ -554,7 +554,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Tình trạng xác minh"} />
+                                <IptLetterP value={"Trạng thái xác minh"} />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"

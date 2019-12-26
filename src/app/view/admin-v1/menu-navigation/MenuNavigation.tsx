@@ -213,13 +213,13 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     <Menu.Item key="10">
                         <Link to={routeLink.GUIDE}>
                             <Icon type="read" />
-                            <span>Hướng dẫn</span>
+                            <span>Hướng dẫn sử dụng</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="25">
                         <Link to={routeLink.PRIVACY}>
                             <Icon type="book" />
-                            <span>Điều khoản</span>
+                            <span>Điều khoản sử dụng</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="26">

@@ -373,7 +373,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.FIX || type_cpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Tạo bài đăng mới(${normal_quantity ? normal_quantity : 0})`}
+                    {type_cpn === TYPE.FIX || type_cpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài(${normal_quantity ? normal_quantity : 0})`}
                 </h5>
                 <Divider orientation="left" >Nội dung bài đăng</Divider>
                 <div className="announcements-create-content">

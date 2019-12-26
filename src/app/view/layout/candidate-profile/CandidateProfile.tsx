@@ -122,36 +122,6 @@ function CandidateProfile(props: ICandidateProfileProps) {
             </div>
             <div className="candidate-profile-body">
                 <Row >
-                    <Col md={12} >
-                        <div className="wrapper">
-                            <h6> <Icon type="project" /> Kinh nghiệm</h6>
-                            <div style={{ paddingLeft: "30px" }}>
-                                <hr />
-                            </div>
-                            <div>
-                                <TimeLineConfig
-                                    reserve={true}
-                                >
-                                    {data && data.experiences && data.experiences.length > 0 ?
-                                        data.experiences.map((item: any, index: number) =>
-                                            <TimeLineConfigItem
-                                                color="#1890ff"
-                                                key={index}
-                                            >
-                                                <ul>
-                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
-                                                    <li><strong>đến :  {item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
-                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>tại :{item.companyName}</li>
-                                                    <li style={{ marginTop: "20px" }}>{item.description}</li>
-                                                </ul>
-                                            </TimeLineConfigItem>
-                                        )
-                                        : <NotUpdate />
-                                    }
-                                </TimeLineConfig>
-                            </div>
-                        </div>
-                    </Col>
                     <Col md={12}>
                         <div className="wrapper">
                             <h6> <Icon type="read" />Học vấn</h6>
@@ -173,6 +143,36 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                     <li><strong>đến :  {item.finishedDate === -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
                                                     <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{item.school}</li>
                                                     <li style={{ marginTop: "10px" }}>{item.description}</li>
+                                                </ul>
+                                            </TimeLineConfigItem>
+                                        )
+                                        : <NotUpdate />
+                                    }
+                                </TimeLineConfig>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col md={12} >
+                        <div className="wrapper">
+                            <h6> <Icon type="project" /> Kinh nghiệm</h6>
+                            <div style={{ paddingLeft: "30px" }}>
+                                <hr />
+                            </div>
+                            <div>
+                                <TimeLineConfig
+                                    reserve={true}
+                                >
+                                    {data && data.experiences && data.experiences.length > 0 ?
+                                        data.experiences.map((item: any, index: number) =>
+                                            <TimeLineConfigItem
+                                                color="#1890ff"
+                                                key={index}
+                                            >
+                                                <ul>
+                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
+                                                    <li><strong>đến :  {item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
+                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>tại :{item.companyName}</li>
+                                                    <li style={{ marginTop: "20px" }}>{item.description}</li>
                                                 </ul>
                                             </TimeLineConfigItem>
                                         )
@@ -255,7 +255,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                             </div>
                             <div >
                                 <label className="block-span">Số lượt đánh giá</label>
-                                <label style={{marginLeft: 10}}> {data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}</label>
+                                <label style={{ marginLeft: 10 }}> {data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}</label>
                                 <div>
                                     <label className="block-span">Thái độ </label>
                                     <Rate disabled value={data ? data.rating.jobAccomplishmentRating : 1} />

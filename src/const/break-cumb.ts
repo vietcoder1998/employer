@@ -67,7 +67,7 @@ export const breakCumb = [
     { label: "list", name: "Danh sách", icon: null, url: "/list", disable: true },
     { label: "fix", name: "Chỉnh sửa", icon: null, url: "/fix", disable: true },
     { label: "apply", name: "Ứng tuyển", icon: null, url: "/apply", disable: true },
-    { label: "convernient", name: "Tiện ích", icon: null, url: "/convernient", disable: true },
+    { label: "convernient", name: "Tiện ích dịch vụ", icon: null, url: "/convernient", disable: true },
     { label: "more-info", name: "Thông tin khác", icon: null, url: "/more-info", disable: true },
     // Jobs
     { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
@@ -84,12 +84,12 @@ export const breakCumb = [
     // Notification
     { label: "noti", name: "Thông báo", icon: null, url: routeLink.NOTI + routePath.LIST },
     // Convernient service
-    { label: "job-service", name: "Gói dịch vụ", icon: null, url: routeLink.JOB_SERVICE },
+    { label: "job-service", name: "Chi tiết gói", icon: null, url: routeLink.JOB_SERVICE },
     { label: "promotion", name: "Khuyến mãi", icon: null, url: routeLink.PROMOTION },
     //More-Info
     { label: "community", name: "App Mobile", icon: null, url: routeLink.COMMUNITY },
-    { label: "guide", name: "Hướng dẫn ", icon: null, url: routeLink.GUIDE },
+    { label: "guide", name: "Hướng dẫn sử dụng ", icon: null, url: routeLink.GUIDE },
     { label: "feed-back", name: "Phản hồi", icon: null, url: routeLink.FEED_BACK },
-    { label: "privacy", name: "Điều khoản", icon: null, url: routeLink.PRIVACY },
+    { label: "privacy", name: "Điều khoản sử dụng", icon: null, url: routeLink.PRIVACY },
     { label: "annou-default", name: "Bài viết", icon: null, url: routeLink.ANNOU_DEFAULT },
 ]

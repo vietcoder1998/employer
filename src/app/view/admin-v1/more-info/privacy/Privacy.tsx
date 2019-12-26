@@ -42,7 +42,7 @@ function Privacy(props?: IPrivacyProps) {
     return (
         < >
             <h5>
-                Điều khoản
+                Điều khoản sử dụng
             </h5>
             <div
                 style={skale ? undefined : bigSize}
