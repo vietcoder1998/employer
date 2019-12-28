@@ -15,9 +15,9 @@ import { Link } from 'react-router-dom';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
-        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50, padding: '15px 0' }} icon="user" />
+        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50}} icon="user" />
     } else {
-        return <div style={{ width: 50, height: 50, textAlign: "center" }}>
+        return <div style={{ width: 50, height: 50, textAlign: "center",padding: '15px 0'  }}>
             <Icon type="file-image" style={{fontSize: 20}} />
         </div>
     }
