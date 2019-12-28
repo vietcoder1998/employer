@@ -73,13 +73,14 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
 
     static getDerivedStateFromProps(nextProps: any, prevState: IEmBranchesCreateState) {
         if (
-            nextProps.match.params.id &&
-            nextProps.match.params.id !== prevState.id
+            (nextProps.match.params.id &&
+            nextProps.match.params.id !== prevState.id) || !prevState.body
         ) {
             let type_cpn = TYPE.CREATE;
             if (nextProps.match.url.includes("fix")) {
                 type_cpn = TYPE.EDIT;
             };
+
             let { body } = prevState;
             nextProps.list_em_branches.forEach((element: IEmBranch) => {
                 if (element.id === nextProps.match.params.id) {
@@ -106,11 +107,11 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
     };
 
     createRequest = async () => {
-        let { body, type_cpn } = this.state;
+        let { body, type_cpn, id } = this.state;
         let { mapState } = this.props;
         body.lat = mapState.marker.lat;
         body.lon = mapState.marker.lng;
-
+        await this.setState({ loading: true });
         switch (type_cpn) {
             case TYPE.CREATE:
                 await _requestToServer(
@@ -126,12 +127,12 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                     if (res) {
                         this.props.history.push(routeLink.EM_BRANCHES + routePath.LIST);
                     }
-                })
+                }).finally(() => this.setState({ loading: false }))
                 break;
             case TYPE.EDIT:
                 await _requestToServer(
                     PUT,
-                    EM_BRANCHES_API + `/${localStorage.getItem("id_em_branches")}`,
+                    EM_BRANCHES_API + `/${id}`,
                     body,
                     null,
                     undefined,
@@ -142,9 +143,8 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                     if (res) {
                         this.props.history.push(routeLink.EM_BRANCHES + routePath.LIST);
                     }
-                })
+                }).finally(() => this.setState({ loading: false }))
                 break;
-
 
             default:
                 break;
@@ -152,8 +152,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
     }
 
     render() {
-        let { mapState } = this.props;
-        let { body, type_cpn } = this.state;
+        let { body, type_cpn, loading } = this.state;
 
         let btcc = "Hủy";
         let btnx = "Tạo mới"
@@ -164,12 +163,12 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
         return (
             <div className='common-content'>
                 <h5>
-                    Thêm chi nhánh
+                    {type_cpn === TYPE.EDIT ? "Thêm chi nhánh" : "Sửa chi nhánh"}
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
                     <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
-                        <Divider orientation="left" >Thông tin sơ lược</Divider>
+                        <Divider orientation="left" >Thông tin chi nhánh</Divider>
                         <div className="announcements-create-content">
                             <InputTitle
                                 type={TYPE.INPUT}
@@ -234,45 +233,27 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                                 }
                             />
                             <InputTitle
-                                title="Vị trí"
-                                widthLabel="200px"
-                                placeholder="ex: Nhân viên văn phòng"
-                                children={
-                                    <Input
-                                        value={mapState.location}
-                                        placeholder="Chọn vị trí trên bản đồ"
-                                        style={{ width: 550 }}
-                                        type="text"
-                                        maxLength={260}
-                                        readOnly
-                                    />
-                                }
-                            />
-                            <InputTitle
                                 title="Bản đồ"
                                 widthLabel="200px"
                                 placeholder="ex: Nhân viên văn phòng"
                                 children={
-                                    <Mapcontainer />
+                                    <Mapcontainer opensearch={true} />
                                 }
                             />
                             <Divider orientation="left" >Hoàn tất</Divider>
                             <div className="em-branches-create-content">
                                 <Button
                                     type="primary"
-                                    prefix={"check"}
+                                    icon={loading ? "loading" : "check"}
                                     style={{
                                         margin: "10px 10px",
                                         float: "right"
                                     }}
-                                    icon="right"
                                     onClick={() => this.createRequest()}
                                     children={btnx}
                                 />
-
                                 <Button
                                     type="danger"
-                                    prefix={"check"}
                                     style={{
                                         margin: "10px 10px",
                                         float: "right"

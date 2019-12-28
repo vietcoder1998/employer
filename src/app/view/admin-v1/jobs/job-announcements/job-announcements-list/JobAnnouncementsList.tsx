@@ -254,7 +254,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         },
 
         {
-            title: 'Độ ưu tiên',
+            title: 'Dịch vụ sử dụng',
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
@@ -794,7 +794,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     </DrawerConfig>
                     <div className="common-content">
                         <h5>
-                            Quản lý bài đăng
+                            Quản lý bài đăng {`(${totalItems})`}
                             <Tooltip title="Tìm kiếm" >
                                 <Button
                                     onClick={() => this.searchJobAnnouncement()}
@@ -850,6 +850,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         style={{ width: "100%" }}
                                         onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
                                     >
+                                        <Option value={null}>Tất cả</Option>
                                         {
                                             list_job_names &&
                                             list_job_names.map(
@@ -910,7 +911,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     />
                                 </Col>
                                 <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                    <IptLetterP value={"Trạng thái gói dịch vụ"} />
+                                    <IptLetterP value={"Hạn đang bài"} />
                                     <Select
                                         showSearch
                                         defaultValue="Tất cả"
@@ -920,8 +921,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
                                     >
                                         <Option value={null}>Tất cả</Option>
-                                        <Option value={TYPE.TRUE}>Còn hạn</Option>
-                                        <Option value={TYPE.FALSE}>Hết hạn</Option>
+                                        <Option value={TYPE.FALSE}>Còn hạn</Option>
+                                        <Option value={TYPE.TRUE}>Hết hạn</Option>
                                     </Select>
                                 </Col>
                                 <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >

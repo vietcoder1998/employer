@@ -17,6 +17,7 @@ import { OAUTH2_HOST } from '../../../../../environment/dev';
 import DrawerConfig from '../../../layout/config/DrawerConfig';
 import { IRating } from '../../../../../redux/models/ratings';
 import RatingItem from '../../../layout/rating-item/RatingItem';
+import { NotUpdate } from '../../../layout/common/Common';
 
 interface IAdminAccountState {
     title?: string;
@@ -256,7 +257,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     title={"Đánh giá " + (total_rating && total_rating > 0 ? `(${total_rating})` : "")}
                     width={500}
                 >
-                    {list_ratings && list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />)}
+                    {list_ratings && list_ratings.length > 0 ? list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />) : <NotUpdate msg={"Chưa có đánh giá"} />}
                 </DrawerConfig>
                 <div className='common-content'>
                     <h5>

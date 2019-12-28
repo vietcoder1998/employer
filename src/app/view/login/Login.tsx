@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message } from 'antd';
+import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
 import { POST } from '../../../const/method';
@@ -105,8 +105,13 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     undefined,
                     noInfoHeader,
                     EMPLOYER_HOST,
-                    true,
-                ).finally(() => this.setState({ loading: false }))
+                    false,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        notification.success({message: "Tạo tài khoản thành công", duration: 5, description: "Vui lòng xác thực qua gmail"});
+                    }
+                }).finally(() => this.setState({ loading: false }))
                 break;
             default:
                 break;
@@ -259,10 +264,10 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                         <div className='msg-noti '>
                                             <h5 style={{ textAlign: "center" }}>Đăng kí</h5>
                                             <Form onSubmit={this.handleSubmit} className="login-form">
-                                                <p>Tên của bạn</p>
+                                                <p>Tên công ty/ tổ chức</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('employerName', {
-                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền tên của bạn' }],
+                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền Tên công ty/ tổ chức' }],
                                                     })(
                                                         <Input
                                                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -274,7 +279,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Tên gmail</p>
+                                                <p>Gmail đăng nhập</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('gmail', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền gmail' }],

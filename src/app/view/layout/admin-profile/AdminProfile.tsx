@@ -555,7 +555,7 @@ function AdminProfile(props: IAdminProfileProps) {
                         <div className="description-info">
                             <IptLetterP value={"Mặt trước giấy phép kinh doanh"} style={{ marginBottom: 10 }} />
                             <div className="image-f-d">
-                                <img className="ic" src={identityCardFrontImageUrl ? identityCardFrontImageUrl : backGround} alt="Ảnh trước" /> :
+                                <img className="ic" src={identityCardFrontImageUrl ? identityCardFrontImageUrl : backGround} alt="Ảnh trước" onError={() => setIdentityCardFrontImageUrl(backGround)} /> :
                             </div>
                             {
                                 front ?
@@ -605,7 +605,7 @@ function AdminProfile(props: IAdminProfileProps) {
                         <div className="description-info">
                             <IptLetterP value={"Ảnh văn phòng làm việc"} />
                             <div className="image-f-d" >
-                                <img className="ic" src={identityCardBackImageUrl ? identityCardBackImageUrl : backGround} alt="Ảnh sau" />
+                                <img className="ic" src={identityCardBackImageUrl ? identityCardBackImageUrl : backGround} alt="Ảnh sau" onError={() => setIdentityCardBackImageUrl(backGround)} />
                             </div>
                             {
                                 back ?

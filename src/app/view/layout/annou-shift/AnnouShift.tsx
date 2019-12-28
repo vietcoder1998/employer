@@ -395,6 +395,7 @@ export function ShiftContent(props: IShiftContent) {
                                 value={minSalary}
                                 min={0}
                                 step={1000}
+                                style={{width: '100%', maxWidth: '200px'}}
                                 onChange={(value: number) => setMinsalary(value)}
                                 disabled={!agreement}
                             />
@@ -405,7 +406,8 @@ export function ShiftContent(props: IShiftContent) {
                             <InputNumber
                                 value={maxSalary}
                                 placeholder='ex: 5000000'
-                                min={minSalary + 1000}
+                                min={minSalary}
+                                style={{width: '100%', maxWidth: '200px'}}
                                 step={1000}
                                 onChange={(value: number) => setMaxSalary(value)}
                                 disabled={!agreement}

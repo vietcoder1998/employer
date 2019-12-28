@@ -15,10 +15,10 @@ import { Link } from 'react-router-dom';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
-        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
+        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50, padding: '15px 0' }} icon="user" />
     } else {
-        return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
-            <Icon type="area-chart" />
+        return <div style={{ width: 50, height: 50, textAlign: "center" }}>
+            <Icon type="file-image" style={{fontSize: 20}} />
         </div>
     }
 };
@@ -313,7 +313,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     >
                     </Modal>
                     <h5>
-                        Danh sách ứng viên đã lưu
+                        Danh sách ứng viên đã lưu {`(${totalItems})`}
                     </h5>
                     <div className="table-operations">
                         <Table

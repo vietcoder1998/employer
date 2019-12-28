@@ -37,7 +37,7 @@ export default function JobDetail(props: IJobDetailProps) {
             <div className='detail-job b_b'>
                 <h6>CHI TIẾT</h6>
                 <Avatar src={job_detail && job_detail.employer.logoUrl} icon="user"
-                    style={{ width: "60px", height: "60px", margin: "20px 0px" }} />
+                    style={{ width: 50, height: 50, margin: "20px 0px" }} />
                 <ul>
                     <li className='d_j_t'>
                         <IptLetter value={"Tiêu đề:"} />

@@ -18,10 +18,10 @@ let { Option } = Select;
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
-        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: "60px", height: "60px" }} icon="user" />
+        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50 }} icon="user" />
     } else {
-        return <div style={{ width: "60px", height: "60px", padding: "20px 0px" }}>
-            <Icon type="area-chart" />
+        return <div style={{ width: 50, height: 50, textAlign: "center", padding: '15px 0' }}>
+            <Icon type="file-image" style={{fontSize: 20}} />
         </div>
     }
 };
@@ -101,7 +101,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         },
         {
             title: 'Ảnh',
-            width: 30,
+            width: 50,
             dataIndex: 'avatarUrl',
             className: 'action',
             key: 'avatarUrl',
@@ -131,7 +131,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 320,
+            width: 300,
         },
         {
             title: 'Tỉnh thành',
@@ -153,7 +153,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 80,
+            width: 50,
         },
     ];
 
@@ -463,7 +463,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 </Drawer>
                 <div className="common-content">
                     <h5>
-                        Tìm kiếm ứng viên
+                        Tìm kiếm ứng viên {`(${totalItems})`}
                         <Tooltip title="Tìm kiếm" >
                             <Button
                                 onClick={() => this.searchFindCandidate()}
@@ -586,7 +586,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1000 }}
+                            scroll={{ x: 900 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
