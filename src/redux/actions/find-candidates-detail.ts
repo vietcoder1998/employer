@@ -1,4 +1,4 @@
-import { IFindCandidateDetail } from './../models/find-candidates-detail';
+import { IFindCandidateDetail } from '././../../models/find-candidates-detail';
 import { REDUX } from '../../const/actions';
 
 export const getFindCandidateDetail = (data?: IFindCandidateDetail) => ({

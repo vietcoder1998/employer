@@ -1,5 +1,5 @@
 import { REDUX } from '../../const/actions';
-import { INotis } from '../models/notis';
+import { INotis } from './../../models/notis';
 
 export const geListtNotis = (data?: INotis) => ({
     type: REDUX.LIST_RATE.GET_LIST_RATE, 

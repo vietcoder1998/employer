@@ -10,8 +10,8 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { EM_BRANCHES_API } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { POST, PUT } from '../../../../../../const/method';
-import { IEmBranch } from '../../../../../../redux/models/em-branches';
-import { IMapState } from '../../../../../../redux/models/mutil-box';
+import { IEmBranch } from '../../../../../../models/em-branches';
+import { IMapState } from '../../../../../../models/mutil-box';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
 interface IEmBranchesCreateState {

@@ -8,7 +8,7 @@ import { Tabs, Affix } from 'antd';
 import { IAppState } from '../../../redux/store/reducer';
 import { connect } from 'react-redux';
 import './Announcement.scss';
-import { IAnnouType } from '../../../redux/models/annou-types';
+import { IAnnouType } from '../../../models/annou-types';
 import { routeLink, routePath } from '../../../const/break-cumb';
 import { TYPE } from '../../../const/type';
 import { REDUX_SAGA } from '../../../const/actions';

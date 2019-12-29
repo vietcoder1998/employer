@@ -4,7 +4,7 @@ import { REDUX_SAGA } from '../../../../../../const/actions';
 import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
 import { timeConverter } from '../../../../../../utils/convertTime';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { ISavedCandidateProfile } from '../../../../../../redux/models/saved-candidate-profiles';
+import { ISavedCandidateProfile } from '../../../../../../models/saved-candidate-profiles';
 import { DELETE } from '../../../../../../const/method';
 import { _requestToServer } from '../../../../../../services/exec';
 import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';

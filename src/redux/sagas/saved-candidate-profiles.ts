@@ -1,5 +1,5 @@
 import { GET } from './../../const/method';
-import { ISavedCandidateProfiles } from './../models/saved-candidate-profiles';
+import { ISavedCandidateProfiles } from '././../../models/saved-candidate-profiles';
 import { SAVED_CANDIDATE_PROFILES } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

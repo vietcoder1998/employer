@@ -3,7 +3,7 @@ import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Checkbox, Button, TimePicker, Radio } from 'antd';
 import { IptLetterP, IptLetter, Required } from '../common/Common';
 import randomID from '../../../../utils/randomID';
-import { IShift } from '../../../../redux/models/announcements';
+import { IShift } from '../../../../models/announcements';
 import { TYPE } from '../../../../const/type';
 import moment from 'moment';
 const { Option } = Select;

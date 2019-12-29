@@ -1,4 +1,4 @@
-import { IFindCandidates } from './../models/find-candidates';
+import { IFindCandidates } from '././../../models/find-candidates';
 import { REDUX } from '../../const/actions';
 
 export const getConnectSchoolDetail = (data?: IFindCandidates) => ({

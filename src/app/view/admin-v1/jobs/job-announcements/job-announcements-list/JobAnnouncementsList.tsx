@@ -7,17 +7,17 @@ import './JobAnnouncementsList.scss';
 import { TYPE } from '../../../../../../const/type';
 import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
-import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../redux/models/job-announcements';
+import { IJobAnnouncementsFilter, IJobAnnouncement } from '../../../../../../models/job-announcements';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IJobName } from '../../../../../../redux/models/job-names';
-import { IEmBranch } from '../../../../../../redux/models/em-branches';
+import { IJobName } from '../../../../../../models/job-names';
+import { IEmBranch } from '../../../../../../models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
-import { IJobAnnouncementDetail } from '../../../../../../redux/models/job-annoucement-detail';
+import { IJobAnnouncementDetail } from '../../../../../../models/job-annoucement-detail';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST, DELETE, PUT } from '../../../../../../const/method';
 import { JOB_PRIORITY_HOME, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
@@ -358,7 +358,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             />
                         </Link>
                     </Tooltip>
-                    <Tooltip placement="top" title={"Quản lý bài đăng tương tự"}>
+                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
                             <Icon
                                 className='test'

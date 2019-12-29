@@ -1,6 +1,6 @@
 import { SCHOOL } from './../../services/api/public.api';
 import { noInfoHeader } from './../../services/auth';
-import { ISchoolDetail } from '../models/school-detail';
+import { ISchoolDetail } from './../../models/school-detail';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

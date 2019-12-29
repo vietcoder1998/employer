@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
 import { TYPE } from '../../../../../const/type';
 import { IAppState } from '../../../../../redux/store/reducer';
-import { IMapState, IModalState, IDrawerState } from '../../../../../redux/models/mutil-box';
+import { IMapState, IModalState, IDrawerState } from '../../../../../models/mutil-box';
 // import './AdminAccount.scss';
 // import Loading from '../../../layout/loading/Loading';
-import { IAdminAccount } from '../../../../../redux/models/admin-account';
+import { IAdminAccount } from '../../../../../models/admin-account';
 import AdminProfile from '../../../layout/admin-profile/AdminProfile';
 import { InputTitle } from '../../../layout/input-tittle/InputTitle';
 import { _requestToServer } from '../../../../../services/exec';
@@ -15,7 +15,7 @@ import { POST } from '../../../../../const/method';
 import { RE_PASSWORD } from '../../../../../services/api/public.api';
 import { OAUTH2_HOST } from '../../../../../environment/dev';
 import DrawerConfig from '../../../layout/config/DrawerConfig';
-import { IRating } from '../../../../../redux/models/ratings';
+import { IRating } from '../../../../../models/ratings';
 import RatingItem from '../../../layout/rating-item/RatingItem';
 import { NotUpdate } from '../../../layout/common/Common';
 
@@ -257,6 +257,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     title={"Đánh giá " + (total_rating && total_rating > 0 ? `(${total_rating})` : "")}
                     width={500}
                 >
+                    <NotUpdate msg={"Chỉ bạn xem được nội dung này"} />
                     {list_ratings && list_ratings.length > 0 ? list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />) : <NotUpdate msg={"Chưa có đánh giá"} />}
                 </DrawerConfig>
                 <div className='common-content'>

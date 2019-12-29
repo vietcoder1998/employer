@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import GeoCode from 'react-geocode';
 import { REDUX } from '../../../../const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
-import { IMapState } from '../../../../redux/models/mutil-box';
+import { IMapState } from '../../../../models/mutil-box';
 import Autocomplete from 'react-google-autocomplete';
-import IApiMap from '../../../../redux/models/google-map-api';
+import IApiMap from '../../../../models/google-map-api';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 

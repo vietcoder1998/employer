@@ -1,5 +1,5 @@
 import { GET } from './../../const/method';
-import { INotis } from '../models/notis';
+import { INotis } from './../../models/notis';
 import { NOTI } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

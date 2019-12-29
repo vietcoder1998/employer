@@ -22,7 +22,7 @@ import { REDUX_SAGA } from '../../../const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
 import { TYPE } from '../../../const/type';
 import { Link } from 'react-router-dom';
-import { INoti } from '../../../redux/models/notis';
+import { INoti } from '../../../models/notis';
 import { NotUpdate } from '../layout/common/Common';
 import Notitication from './notification/Notification';
 import ClearCache from 'react-clear-cache';

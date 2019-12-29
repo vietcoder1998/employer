@@ -4,7 +4,7 @@ import { Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/base-image.jpg';
-import { IAnnouncement } from '../../../../../../redux/models/announcements';
+import { IAnnouncement } from '../../../../../../models/announcements';
 import limitString from '../../../../../../utils/limitString';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../const/break-cumb';

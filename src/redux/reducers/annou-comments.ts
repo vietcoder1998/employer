@@ -1,4 +1,4 @@
-import { IAnnouComments } from './../models/annou-comments';
+import { IAnnouComments } from '././../../models/annou-comments';
 import {REDUX} from '../../const/actions';
 
 let initState: IAnnouComments = {

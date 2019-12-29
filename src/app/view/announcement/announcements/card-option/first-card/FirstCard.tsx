@@ -4,7 +4,7 @@ import './FirstCard.scss';
 import testImg from '../../../../../../assets/image/base-image.jpg';
 import { Avatar, Skeleton, Icon } from 'antd';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
-import { IAnnouncement } from '../../../../../../redux/models/announcements';
+import { IAnnouncement } from '../../../../../../models/announcements';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../const/break-cumb';
 

@@ -1,4 +1,4 @@
-import {IAdminAccount} from '../models/admin-account';
+import {IAdminAccount} from './../../models/admin-account';
 import {REDUX} from '../../const/actions';
 
 export const getAdminAccount = (data?: IAdminAccount) => ({

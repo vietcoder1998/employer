@@ -1,6 +1,6 @@
 import { noInfoHeader } from './../../services/auth';
 import { JOB_NAMES } from './../../services/api/public.api';
-import { IJobNames } from '../models/job-names';
+import { IJobNames } from './../../models/job-names';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

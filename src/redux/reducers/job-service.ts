@@ -1,5 +1,5 @@
 import { REDUX } from './../../const/actions';
-import { IJobService } from './../models/job-service';
+import { IJobService } from '././../../models/job-service';
 
 let initState: IJobService = {
     nomalQuantity: 0,

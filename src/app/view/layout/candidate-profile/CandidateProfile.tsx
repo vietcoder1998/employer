@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon, Avatar, Row, Col, Progress, Tag, Rate } from 'antd';
 import './CandidateProfile.scss';
-import { IFindCandidateDetail } from '../../../../redux/models/find-candidates-detail';
+import { IFindCandidateDetail } from '../../../../models/find-candidates-detail';
 // @ts-ignore
 import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore

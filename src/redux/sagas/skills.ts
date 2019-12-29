@@ -1,6 +1,6 @@
 import { SKILLS } from './../../services/api/private.api';
 import { noInfoHeader } from './../../services/auth';
-import { ISkills } from '../models/skills';
+import { ISkills } from './../../models/skills';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

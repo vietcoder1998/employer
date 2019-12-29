@@ -1,6 +1,6 @@
 import { noInfoHeader, authHeaders } from './../../services/auth';
 import { GET } from './../../const/method';
-import { IAnnouComment } from './../models/annou-comments';
+import { IAnnouComment } from '././../../models/annou-comments';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'

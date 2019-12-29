@@ -1,7 +1,7 @@
 import React from 'react';
 import { IptLetter, Timer, NotUpdate } from '../common/Common';
 import { Avatar, Rate } from 'antd';
-import { IRating } from '../../../../redux/models/ratings';
+import { IRating } from '../../../../models/ratings';
 import './RatingItem.scss';
 import { TYPE } from '../../../../const/type';
 import { routeLink } from '../../../../const/break-cumb';

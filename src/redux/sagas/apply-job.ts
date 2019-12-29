@@ -1,4 +1,4 @@
-import { IApplyJobs } from '../models/apply-job';
+import { IApplyJobs } from './../../models/apply-job';
 import { APPLY_JOB } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

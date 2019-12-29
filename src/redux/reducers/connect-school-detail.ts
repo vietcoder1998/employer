@@ -1,4 +1,4 @@
-import { IConnectSchoolDetail } from './../models/connect-school-detail';
+import { IConnectSchoolDetail } from '././../../models/connect-school-detail';
 import {REDUX} from '../../const/actions';
 
 let initState: IConnectSchoolDetail = {};

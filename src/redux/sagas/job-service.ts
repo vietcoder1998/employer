@@ -1,5 +1,5 @@
 import { NORMAL_SERVICE, HOME_INDAY_SERVICE, HOME_TOP_SERVICE, UN_LOCK_PROFILE_SERVICE, SEARCH_HIGHT_LIGHT_SERVICE } from './../../services/api/private.api';
-import { IJobService } from './../models/job-service';
+import { IJobService } from '././../../models/job-service';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

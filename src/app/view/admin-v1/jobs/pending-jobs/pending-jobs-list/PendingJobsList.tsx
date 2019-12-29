@@ -12,10 +12,10 @@ import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { TYPE } from '../../../../../../const/type';
 // import { IptLetter } from '../../../../layout/common/Common';
-import { IPendingJob } from '../../../../../../redux/models/pending-jobs';
+import { IPendingJob } from '../../../../../../models/pending-jobs';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
-import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { IModalState } from '../../../../../../models/mutil-box';
 import { Link } from 'react-router-dom';
 import { NotUpdate } from '../../../../layout/common/Common';
 

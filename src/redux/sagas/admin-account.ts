@@ -1,5 +1,5 @@
 import { ADMIN_ACCOUNT } from './../../services/api/private.api';
-import { IAdminAccount } from './../models/admin-account';
+import { IAdminAccount } from '././../../models/admin-account';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

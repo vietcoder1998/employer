@@ -7,11 +7,11 @@ import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
 
 import { NotUpdate, IptLetterP } from '../common/Common';
-import { IAdminAccount } from '../../../../redux/models/admin-account';
+import { IAdminAccount } from '../../../../models/admin-account';
 import { connect } from 'react-redux';
 import TextArea from 'antd/lib/input/TextArea';
 import MapContainter from './../map/Map';
-import { IMapState } from '../../../../redux/models/mutil-box';
+import { IMapState } from '../../../../models/mutil-box';
 import { REDUX, REDUX_SAGA } from '../../../../const/actions';
 import { IAppState } from '../../../../redux/store/reducer';
 import { _requestToServer } from '../../../../services/exec';
@@ -393,6 +393,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 prefix={<Icon type="bank" />}
                                                 value={employerName}
                                                 onChange={(event: any) => setEmployerName(event.target.value)}
+                                                placeholder="Tên công ti"
                                             />
                                             :
                                             <>
@@ -400,7 +401,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {employerName ? employerName : <NotUpdate />}
+                                                    {employerName ? employerName : <NotUpdate msg="Chưa cập nhật tên công ty" />}
                                                 </div>
                                             </>
                                     }
@@ -412,6 +413,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 prefix={<Icon type="mail" />}
                                                 value={email}
                                                 onChange={(event: any) => setEmail(event.target.value)}
+                                                placeholder='Gmail liên hệ'
                                             />
                                             :
                                             <>
@@ -419,7 +421,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {email ? email : <NotUpdate />}
+                                                    {email ? email : <NotUpdate  msg="Chưa cập nhật gmail liên hệ" />}
                                                 </div>
                                             </>
                                     }
@@ -431,6 +433,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 prefix={<Icon type="phone" />}
                                                 value={phone}
                                                 onChange={(event: any) => setPhone(event.target.value)}
+                                                placeholder='Số điện thoại'
                                             />
                                             :
                                             <>
@@ -438,7 +441,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {phone ? phone : <NotUpdate />}
+                                                    {phone ? phone : <NotUpdate msg="Chưa cập nhật số điện thoại" />}
                                                 </div>
                                             </>
                                     }
@@ -450,6 +453,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 prefix={<Icon type="file-search" />}
                                                 value={taxCode}
                                                 onChange={(event: any) => setTaxCode(event.target.value)}
+                                                placeholder='Mã số thuế'
                                             />
                                             :
                                             <>
@@ -457,7 +461,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 <div
                                                     className="info"
                                                 >
-                                                    {taxCode ? taxCode : <NotUpdate />}
+                                                    {taxCode ? taxCode :  <NotUpdate msg="Chưa cập nhật mã số thuế" />}
                                                 </div>
                                             </>
                                     }

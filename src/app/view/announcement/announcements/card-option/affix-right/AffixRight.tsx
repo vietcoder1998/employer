@@ -1,6 +1,6 @@
 import React from 'react';
 import './AffixRight.scss';
-import { IAnnouncement } from '../../../../../../redux/models/announcements';
+import { IAnnouncement } from '../../../../../../models/announcements';
 import limitString from '../../../../../../utils/limitString';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../const/break-cumb';

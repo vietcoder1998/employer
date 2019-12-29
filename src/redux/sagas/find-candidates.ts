@@ -1,4 +1,4 @@
-import { IFindCandidates } from '../models/find-candidates';
+import { IFindCandidates } from './../../models/find-candidates';
 import { POST } from '../../const/method';
 import { FIND_CANDIDATES } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';

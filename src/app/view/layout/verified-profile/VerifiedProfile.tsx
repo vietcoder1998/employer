@@ -1,6 +1,6 @@
 import React from "react";
 import './VerifiedProfile.scss';
-import { IFindCandidateDetail } from "../../../../redux/models/find-candidates-detail";
+import { IFindCandidateDetail } from "../../../../models/find-candidates-detail";
 import { NotUpdate } from "../common/Common";
 import { Row, Col, Skeleton } from "antd";
 

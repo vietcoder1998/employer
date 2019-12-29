@@ -1,4 +1,4 @@
-import { IPendingJobDetail } from './../models/pending-job-detail';
+import { IPendingJobDetail } from '././../../models/pending-job-detail';
 import { REDUX } from '../../const/actions';
 
 export const getPendingJobDetail = (data?: IPendingJobDetail) => ({

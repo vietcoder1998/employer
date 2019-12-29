@@ -1,5 +1,5 @@
 import { noInfoHeader } from '../../services/auth';
-import { ILanguages } from '../models/languages';
+import { ILanguages } from './../../models/languages';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

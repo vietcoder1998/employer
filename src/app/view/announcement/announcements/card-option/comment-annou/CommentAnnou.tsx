@@ -3,7 +3,7 @@ import './CommentAnnou.scss';
 //@ts-ignore
 import testImg from '../../../../../../assets/image/base-image.jpg';
 import { Skeleton, Avatar, Icon, Divider, Rate } from 'antd';
-import { IAnnouComment } from '../../../../../../redux/models/annou-comments';
+import { IAnnouComment } from '../../../../../../models/annou-comments';
 import TextArea from 'antd/lib/input/TextArea';
 import { Timer, NotUpdate } from '../../../../layout/common/Common';
 import { TYPE } from '../../../../../../const/type';

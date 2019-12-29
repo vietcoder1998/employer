@@ -1,7 +1,7 @@
 import React from 'react';
 import { IptLetter, Timer } from '../common/Common';
 import { Icon, Avatar, Tooltip } from 'antd';
-import { INoti } from '../../../../redux/models/notis';
+import { INoti } from '../../../../models/notis';
 import './NotiItem.scss';
 import { TYPE } from '../../../../const/type';
 import { routeLink, routePath } from '../../../../const/break-cumb';

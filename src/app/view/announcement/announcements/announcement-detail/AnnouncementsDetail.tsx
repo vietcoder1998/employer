@@ -7,7 +7,7 @@ import { Button, Icon, Row, Col, Affix, BackTop } from 'antd';
 import { _requestToServer } from '../../../../../services/exec';
 // import { DELETE } from '../../../../../const/method';
 // import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
-import { IAnnouCommentsBody, IAnnouComment } from '../../../../../redux/models/annou-comments';
+import { IAnnouCommentsBody, IAnnouComment } from '../../../../../models/annou-comments';
 // import { routeLink, routePath } from '../../../../../const/break-cumb';
 import './AnnouncementsDetail.scss';
 import HeaderAnnou from '../card-option/header-annou/HeaderAnnou';

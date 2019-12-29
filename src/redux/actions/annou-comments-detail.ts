@@ -1,4 +1,4 @@
-import { IAnnouComment } from './../models/annou-comments';
+import { IAnnouComment } from '././../../models/annou-comments';
 import {REDUX} from '../../const/actions';
 
 export const getAnnouCommentDetail = (data?: IAnnouComment) => ({

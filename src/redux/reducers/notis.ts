@@ -1,4 +1,4 @@
-import {INotis} from '../models/notis';
+import {INotis} from './../../models/notis';
 import {REDUX} from '../../const/actions';
 
 let initState: INotis = {

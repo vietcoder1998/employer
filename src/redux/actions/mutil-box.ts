@@ -1,5 +1,5 @@
 import { REDUX } from './../../const/actions';
-import { IModalState, IMapState, IDrawerState } from './../models/mutil-box';
+import { IModalState, IMapState, IDrawerState } from '././../../models/mutil-box';
 import { TYPE } from './../../const/type';
 export const handleDrawer = (drawerState?: IDrawerState) => ({
     type: REDUX.HANDLE_DRAWER,

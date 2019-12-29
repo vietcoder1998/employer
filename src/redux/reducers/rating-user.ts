@@ -1,4 +1,4 @@
-import {IRatingUser} from '../models/rating-user';
+import {IRatingUser} from './../../models/rating-user';
 import {REDUX} from '../../const/actions';
 
 let initState: IRatingUser = {

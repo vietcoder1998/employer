@@ -6,14 +6,15 @@ import { timeConverter } from '../../../../../../utils/convertTime';
 import { TYPE } from '../../../../../../const/type';
 import { IptLetterP } from './../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IRegion } from '../../../../../../redux/models/regions';
-import { IFindCandidate, IFindCandidateFilter } from '../../../../../../redux/models/find-candidates';
+import { IRegion } from '../../../../../../models/regions';
+import { IFindCandidate, IFindCandidateFilter } from '../../../../../../models/find-candidates';
 import findIdWithValue from '../../../../../../utils/findIdWithValue';
-import { ISkill } from '../../../../../../redux/models/find-candidates-detail';
-import { ILanguage } from '../../../../../../redux/models/languages';
-import { IModalState } from '../../../../../../redux/models/mutil-box';
+import { ISkill } from '../../../../../../models/find-candidates-detail';
+import { ILanguage } from '../../../../../../models/languages';
+import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
+import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {
@@ -21,7 +22,7 @@ let ImageRender = (props: any) => {
         return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50 }} icon="user" />
     } else {
         return <div style={{ width: 50, height: 50, textAlign: "center", padding: '15px 0' }}>
-            <Icon type="file-image" style={{fontSize: 20}} />
+            <Icon type="file-image" style={{ fontSize: 20 }} />
         </div>
     }
 };
@@ -227,7 +228,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.avatarUrl} alt="Ảnh đại diện" />,
-                    name: (item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : ""),
+                    name: <CanProPop data={item} children={(item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : "")} />,
                     lookingForJob: item.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.address ? item.address : "",
                     region: item.region ? item.region.name : "",

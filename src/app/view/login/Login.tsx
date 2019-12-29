@@ -74,7 +74,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     }
 
     createRequest = async (type?: "LOGIN" | "REGISTER") => {
-        let { password, username, employerName, email } = this.state;
+        let { password, username, employerName, email, phone } = this.state;
         let lat = localStorage.getItem("lat");
         let lon = localStorage.getItem("lon");
         this.setState({ loading: true })
@@ -101,7 +101,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                 await _requestToServer(
                     POST,
                     EMPLOYER_REGISTER,
-                    { username, password, employerName, lat, lon, email },
+                    { username, password, employerName, lat, lon, email , phone},
                     undefined,
                     noInfoHeader,
                     EMPLOYER_HOST,
@@ -109,7 +109,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     false
                 ).then((res: any) => {
                     if (res) {
-                        notification.success({message: "Tạo tài khoản thành công", duration: 5, description: "Vui lòng xác thực qua gmail"});
+                        notification.success({
+                            message: "Tạo tài khoản thành công", 
+                            duration: 60, 
+                            description: <div>Vui lòng xác thực qua <a className='link_to' href='https://mail.google.com/mail/u/0/#inbox' >{email}</a></div>
+                        });
                     }
                 }).finally(() => this.setState({ loading: false }))
                 break;
@@ -319,7 +323,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     value={localStorage.getItem("location")}
                                                     onClick={() => { this.setState({ open_drawer: true }) }}
                                                 />
-                                                <p>Mật khẩu</p>
+                                                <p style={{paddingTop: 20}}>Mật khẩu</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('password', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền mật khẩu' }],

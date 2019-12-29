@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button, Avatar, Tooltip, Rate } from 'antd';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
-import { IApplyJob } from '../../../../redux/models/apply-job';
+import { IApplyJob } from '../../../../models/apply-job';
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../const/break-cumb';
 import { timeConverter } from '../../../../utils/convertTime';
@@ -65,23 +65,28 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 <Avatar style={{ width: "4vw", height: "4vw", margin: "0.2vw" }} shape="square" src={data.candidate.avatarUrl} alt="anh" icon="user" />
                             </div>
                             <div style={{ margin: "0px 15px" }}>
-                                <h6>
+                                <p style={{marginBottom: 5}}>
                                     {data ? data.candidate.lastName + " " + data.candidate.firstName : <NotUpdate />}
                                     {data && data.candidate.gender && data.candidate.gender === TYPE.MALE ? " (Nam)" : " (Nữ)"}
-                                </h6>
-                                <p style={{ fontStyle: "italic" }}>
-                                    {data ? data.message : <NotUpdate msg="Không có" />}
                                 </p>
                                 <span
                                     style={{
                                         fontSize: "0.7rem",
-                                        float: "right"
                                     }}
                                 >
                                     {data && timeConverter(data.appliedDate, 1000, "HH:mm DD-MM-YY")}
                                 </span>
+                                <p style={{marginBottom: 5}}>
+                                    Lời nhắn: 
+                                </p>
+                                <div className="test" style={{ fontStyle: "italic", padding: '5px 10px', width: '100%' }}>
+                                    {data ? data.message : <NotUpdate msg="Không có" />}
+                                </div>
                             </div>
                         </div>
+                    </Col>
+                    <Col md={24} lg={24} xl={24}>
+                        
                     </Col>
                     <Col md={24} lg={24} xl={24}>
                         <ul >

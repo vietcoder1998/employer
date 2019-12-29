@@ -1,5 +1,5 @@
 import { TYPE } from './../../const/type';
-import { IMutilBox } from './../models/mutil-box';
+import { IMutilBox } from '././../../models/mutil-box';
 import { REDUX } from './../../const/actions';
 
 let initState: IMutilBox = {

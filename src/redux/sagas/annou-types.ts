@@ -1,6 +1,6 @@
 import { ANNOU_TYPES_PUBLIC } from './../../services/api/public.api';
 import { authHeaders, noInfoHeader } from './../../services/auth';
-import { IAnnouTypes } from '../models/annou-types';
+import { IAnnouTypes } from './../../models/annou-types';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';

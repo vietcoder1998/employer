@@ -7,14 +7,14 @@ import { Row, Col, Divider, Affix, Icon } from 'antd';
 // import { IptLetter } from '../../../layout/common/Common';
 // import { _requestToServer } from '../../../../../services/exec';
 // import { ANNOU_COMMENTS } from '../../../../../services/api/private.api';
-import { IAnnouCommentsBody } from '../../../../../redux/models/annou-comments';
+import { IAnnouCommentsBody } from '../../../../../models/annou-comments';
 // import { routeLink, routePath } from '../../../../../const/break-cumb';
 import './AnnouncementsList.scss';
 import FirstCard from '../card-option/first-card/FirstCard';
 import MutilCard from '../card-option/mutil-card/MutilCard';
 import AffixRight from '../card-option/affix-right/AffixRight';
 import ReadCard from '../card-option/read-card/ReadCard';
-import { IAnnouncement } from '../../../../../redux/models/announcements';
+import { IAnnouncement } from '../../../../../models/announcements';
 import { IAppState } from '../../../../../redux/store/reducer';
 
 interface IAnnouncementsListProps extends StateProps, DispatchProps {

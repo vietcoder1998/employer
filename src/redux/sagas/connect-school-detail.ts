@@ -1,4 +1,4 @@
-import { IConnectSchoolDetail } from '../models/connect-school-detail';
+import { IConnectSchoolDetail } from './../../models/connect-school-detail';
 import { GET } from '../../const/method';
 import { CONNECT_SCHOOL } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';

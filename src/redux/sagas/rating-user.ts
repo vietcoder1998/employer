@@ -1,6 +1,6 @@
 import { FIND_CANDIDATE_DETAIL } from './../../services/api/private.api';
 import { GET } from '../../const/method';
-import { IRatingUser } from '../models/rating-user';
+import { IRatingUser } from './../../models/rating-user';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'

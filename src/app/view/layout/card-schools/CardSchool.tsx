@@ -5,7 +5,7 @@ import backGround from './../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
 import { Avatar, Icon, Badge } from 'antd';
-import { IConnectSchool } from '../../../../redux/models/connect-schools';
+import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
 import { Link } from 'react-router-dom';

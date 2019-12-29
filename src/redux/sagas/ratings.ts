@@ -1,5 +1,5 @@
 import { GET } from '../../const/method';
-import { IRatings } from '../models/ratings';
+import { IRatings } from './../../models/ratings';
 import { LIST_RATE } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
