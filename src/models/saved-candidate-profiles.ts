@@ -28,6 +28,7 @@ export interface ISavedCandidateProfile {
             id?: number;
             name?: string
         };
+        coverUrl?: string;
         address?: string;
         lat?: number;
         lon?: number;

@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent,  } from 'react'
 import { connect } from 'react-redux';
 import './PendingJobsList.scss';
 
@@ -101,17 +101,18 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             fixed: 'left',
         },
         {
-            title: 'Nhà tuyển dụng',
-            dataIndex: 'employerName',
-            key: 'employerName',
-            width: 200,
-            fixed: 'left'
-        },
-        {
             title: 'Tiêu đề',
             width: 350,
             dataIndex: 'jobTitle',
             key: 'jobTitle',
+            fixed: 'left'
+
+        },
+        {
+            title: 'Nhà tuyển dụng',
+            dataIndex: 'employerName',
+            key: 'employerName',
+            width: 200,
         },
         {
             title: 'Công việc',
@@ -205,7 +206,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         <Tooltip title="Xem chi tiết">
                             <Icon type="search"
                                 className={"test"}
-                                style={{padding: "5px"}}
+                                style={{ padding: "5px" }}
                                 onClick={
                                     async () => {
                                         nextProps.handleModal({ open_modal: true });
@@ -287,7 +288,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
         let { list_job_names, totalItems, job_detail, open_modal, list_job_skills } = this.props;
 
         return (
-            <Fragment>
+            <>
                 <Modal
                     visible={open_modal}
                     title="CHI TIẾT CÔNG VIỆC"
@@ -335,7 +336,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 </Modal>
                 <div className="common-content">
                     <h5>
-                        Danh sách bài đăng đang chờ
+                        Danh sách bài đăng đang chờ {`(${totalItems})`}
                     </h5>
                     <div>
                         <Table
@@ -356,7 +357,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         />
                     </div>
                 </div>
-            </Fragment>
+            </>
         )
     }
 }

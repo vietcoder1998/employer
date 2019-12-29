@@ -228,7 +228,13 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.avatarUrl} alt="Ảnh đại diện" />,
-                    name: <CanProPop data={item} children={(item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : "")} />,
+                    name:
+                        <CanProPop
+                            background={item.coverUrl}
+                            avatar={item.avatarUrl}
+                            data={item}
+                            children={(item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : "")}
+                        />,
                     lookingForJob: item.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.address ? item.address : "",
                     region: item.region ? item.region.name : "",

@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent,  } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import JobAnnouncementsList from './job-announcements-list/JobAnnouncementsList';
 import JobAnnouncementsCreate from './job-announcements-create/JobAnnouncementsCreate';
@@ -19,7 +19,7 @@ export default class JobAnnouncements extends PureComponent<IJobAnnouncementsPro
     render() {
         let  {path} = this.props.match;
         return (
-            <Fragment >
+            < >
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={JobAnnouncementsList} />
                     <ErrorBoundaryRoute path={`${path}/create`} component={JobAnnouncementsCreate} />
@@ -28,7 +28,7 @@ export default class JobAnnouncements extends PureComponent<IJobAnnouncementsPro
                     <ErrorBoundaryRoute path={`${path}/pending/:id`} component={JobAnnouncementsCreate} />
                     <ErrorBoundaryRoute path={`${path}/apply/:id`} component={JobAnnouncementsApply} />
                 </Switch>
-            </Fragment>
+            </>
         )
     }
 }

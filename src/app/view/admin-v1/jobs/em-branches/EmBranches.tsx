@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, {  } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import EmBranchesList from './em-branches-list/EmBranchesList';
 import EmBranchesCreate from './em-branches-create/EmBranchesCreate';
@@ -15,12 +15,12 @@ interface IEmBranchesProps {
 export default function EmBranches(props: IEmBranchesProps) {
     let { path } = props.match
     return (
-        <Fragment >
+        < >
             <Switch>
                 <ErrorBoundaryRoute path={`${path}/list`} component={EmBranchesList} />
                 <ErrorBoundaryRoute path={`${path}/create`} component={EmBranchesCreate} />
                 <ErrorBoundaryRoute path={`${path}/fix/:id`} component={EmBranchesCreate} />
             </Switch>
-        </Fragment>
+        </>
     )
 }

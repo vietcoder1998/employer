@@ -11,6 +11,8 @@ export const routePath = {
     PENDING: '/pending',
     PROFILE: '/profile',
     CONVERNIENT: '/convernient',
+    CONNECTED: '/connected',
+    UNCONNECT: '/unconnect',
 
     EM_BRANCHES: '/em-branches',
     SAVE_CANDIDATE: '/saved-candidate',
@@ -34,7 +36,7 @@ export const routePath = {
 
 export const routeLink = {
     // Job
-    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS ,
+    PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS,
     EM_BRANCHES: routePath.ADMIN + routePath.JOBS + routePath.EM_BRANCHES,
     FIND_CANDIDATES: routePath.ADMIN + routePath.JOBS + routePath.FIND_CANDIDATES,
     SAVE_CANDIDATE: routePath.ADMIN + routePath.JOBS + routePath.SAVE_CANDIDATE,
@@ -42,13 +44,16 @@ export const routeLink = {
     ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
     // Connect School
     CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
+    CONNECTED_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.CONNECTED,
+    UNCONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.UNCONNECT,
+    PENDING_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.PENDING,
     // User controller
-    USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER ,
+    USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER,
     // Notification
     NOTI: routePath.ADMIN + routePath.NOTI,
     // Convernient
-    JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT  + routePath.JOB_SERVICE,
-    PROMOTION: routePath.ADMIN + routePath.CONVERNIENT  + routePath.PROMOTION,
+    JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT + routePath.JOB_SERVICE,
+    PROMOTION: routePath.ADMIN + routePath.CONVERNIENT + routePath.PROMOTION,
     // More info
     COMMUNITY: routePath.ADMIN + routePath.MORE_INFO + routePath.COMMUNITY,
     GUIDE: routePath.ADMIN + routePath.MORE_INFO + routePath.GUIDE,
@@ -69,6 +74,9 @@ export const breakCumb = [
     { label: "apply", name: "Ứng tuyển", icon: null, url: "/apply", disable: true },
     { label: "convernient", name: "Tiện ích dịch vụ", icon: null, url: "/convernient", disable: true },
     { label: "more-info", name: "Thông tin khác", icon: null, url: "/more-info", disable: true },
+    { label: "connected", name: "Đã gửi lời mời", icon: null, url: "/more-info", disable: true },
+    { label: "unconnect", name: "Chưa gửi lời mời", icon: null, url: "/unconnect", disable: true },
+    { label: "pending", name: "Đang chờ", icon: null, url: "/pending", disable: true },
     // Jobs
     { label: "announcements", name: "Bài viết", icon: null, url: routeLink.ANNOUNCEMENT + routePath.LIST },
     { label: "job-announcements", name: "Quản lý bài đăng", icon: null, url: routeLink.JOB_ANNOUNCEMENTS + routePath.LIST },
@@ -78,6 +86,9 @@ export const breakCumb = [
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
     // Connect School
     { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
+    { label: routePath.CONNECTED, name: "Đã gửi kết nối", icon: null, url: routeLink.CONNECTED_SCHOOLS + routePath.LIST },
+    { label: routePath.UNCONNECT, name: "Chưa gửi kết nối", icon: null, url: routeLink.UNCONNECT_SCHOOLS + routePath.LIST },
+    { label: routePath.PENDING, name: "Đang gửi kết nối", icon: null, url: routeLink.PENDING_SCHOOLS + routePath.LIST },
     // School 
     { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
     { label: "user-controller", name: "Quản lý tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },

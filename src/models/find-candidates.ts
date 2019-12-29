@@ -38,8 +38,9 @@ export interface IFindCandidate {
         attitudeRating?: number,
         skillRating?: number,
         jobAccomplishmentRating?: number,
-        ratingCount?: number
-    }
+        ratingCount?: number,
+    },
+    coverUrl?: string;
 }
 
 export interface IFindCandidates {

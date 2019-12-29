@@ -1,5 +1,5 @@
 import React from 'react';
-import './ConnectSchoolList.scss';
+import './ConnectedSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
 import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input } from 'antd';
@@ -22,6 +22,7 @@ import { _requestToServer } from '../../../../../services/exec';
 import { POST, PUT } from '../../../../../const/method';
 import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../environment/dev';
+import { routeLink, routePath } from '../../../../../const/break-cumb';
 let { Option } = Select;
 const { Panel } = Collapse;
 const typeReturn = (type?: string) => {
@@ -43,7 +44,7 @@ const typeReturn = (type?: string) => {
     return result;
 }
 
-interface IConnectSchoolsListProps extends StateProps, DispatchProps {
+interface IConnectedSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     location?: any;
@@ -52,10 +53,10 @@ interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     handleMapState: (mapState?: IMapState) => any;
     getListConnectSchools: (body?: IConnectSchoolsFilter, pageIndex?: number, pageSize?: number) => any;
     getConnectSchoolDetail: (id?: string) => any;
-    setConnectSchoolDetail: (data?: any) => any;
+    setConnectSchoolDetail: () => any;
 };
 
-interface IConnectSchoolsListState {
+interface IConnectedSchoolsListState {
     data_table?: Array<IConnectSchool>;
     pageIndex?: number;
     pageSize?: number;
@@ -81,7 +82,7 @@ interface IConnectSchoolsListState {
     search?: any;
 };
 
-class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConnectSchoolsListState> {
+class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, IConnectedSchoolsListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -204,7 +205,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps?: IConnectSchoolsListProps, prevState?: IConnectSchoolsListState) {
+    static getDerivedStateFromProps(nextProps?: IConnectedSchoolsListProps, prevState?: IConnectedSchoolsListState) {
         if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
             let { list_connect_schools } = prevState;
             if (nextProps.list_connect_schools) {
@@ -240,6 +241,24 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 school_msg,
                 dataSchool: nextProps.connect_schools_detail
             }
+        }
+
+        if (nextProps.location.search && nextProps.location.search !== prevState.search) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (id) {
+                nextProps.handleDrawer();
+                setTimeout(() => {
+                    nextProps.getConnectSchoolDetail(id);
+                }, 700);
+
+                return {
+                    search: nextProps.location.search
+                }
+            }
+
+            return null
         }
 
         return null
@@ -302,13 +321,10 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         let { list_connect_schools } = this.props;
         let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
-        this.props.handleDrawer({ open_drawer: true });
-        this.props.setConnectSchoolDetail(dataSchool);
         setTimeout(() => {
-            if (dataSchool.state) {
-                this.props.getConnectSchoolDetail(id);
-            }
+
         }, 500);
+        this.props.history.push(routeLink.CONNECT_SCHOOLS + routePath.LIST + `?id=${dataSchool.id}`)
     }
 
     createRequest = async (type?: string) => {
@@ -384,7 +400,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         return (
             <>
                 <DrawerConfig
-                    title="Thông tin nhà trường"
+                    title="Đã gửi lời mời"
                     width={"60vw"}
                 >
                     {
@@ -506,7 +522,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 </DrawerConfig>
                 <div className="common-content">
                     <h5>
-                        Kết nối trường học
+                        Đã gửi lời mời tới trường
                         <Tooltip title="Tìm kiếm trường học" >
                             <Button
                                 onClick={() => this.searchConnectSchools()}
@@ -644,8 +660,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
     handleMapState: (mapState?: IMapState) =>
         dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState }),
-    setConnectSchoolDetail: (data?: any) =>
-        dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL, data })
+    setConnectSchoolDetail: () =>
+        dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -661,4 +677,4 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectSchoolsList);
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectedSchoolsList);

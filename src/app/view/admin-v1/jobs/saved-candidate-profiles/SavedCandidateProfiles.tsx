@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent,  } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import SavedCandidateProfilesList from './saved-candidate-profiles-list/SavedCandidateProfilesList';
 const Switch = require("react-router-dom").Switch;
@@ -25,11 +25,11 @@ export default class SavedCandidateProfile extends PureComponent<ISavedCandidate
     render() {
         let  {path} = this.props.match
         return (
-            <Fragment >
+            < >
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/list`} component={SavedCandidateProfilesList} />
                 </Switch>
-            </Fragment>
+            </>
         )
     }
 }

@@ -127,10 +127,10 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
-                    <Menu.Item key="5">
+                    <Menu.Item key="connected">
                         <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
-                            <Icon type="search" />
-                            <span>Tìm kiếm </span>
+                            <Icon type="carry-out" />
+                            <span>Danh sách </span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>
@@ -156,7 +156,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </Link>
                     </Menu.Item>
                 </SubMenu>
-
                 <SubMenu
                     key="sub5"
                     title={

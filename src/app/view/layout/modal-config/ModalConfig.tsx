@@ -46,7 +46,7 @@ export class ModalConfig extends React.Component<IModalConfigProps, IModalConfig
             isOpen,
         } = this.props;
         return (
-            <React.Fragment>
+            <>
                 <div
                     className={`modal-config-bg${isOpen ? " " : " none"}`}
                     style={{ ...style }}
@@ -82,7 +82,7 @@ export class ModalConfig extends React.Component<IModalConfigProps, IModalConfig
                         </Button>
                     </div>
                 </div>
-            </React.Fragment>
+            </>
         )
     };
 }

@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { PureComponent,  } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../const/actions';
 import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
@@ -12,6 +12,7 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
 // import { TYPE } from '../../../../../../const/type';
+import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
@@ -184,7 +185,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 100,
+            width: 40,
             render: () => this.editToolAction()
         },
     ];
@@ -217,7 +218,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
-                    name: (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : ""),
+                    name: <CanProPop background={item.candidate.coverUrl} avatar={item.candidate.avatarUrl} data={item} children={(item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")} />,
                     lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.candidate.address ? item.candidate.address : "",
                     region: item.candidate.region ? item.candidate.region.name : "",
@@ -294,7 +295,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             totalItems,
         } = this.props
         return (
-            <Fragment>
+            <>
                 <div className="common-content">
                     <Modal
                         visible={show_modal}
@@ -338,7 +339,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                         />
                     </div>
                 </div>
-            </Fragment>
+            </>
         )
     }
 };

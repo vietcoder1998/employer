@@ -37,7 +37,7 @@ class SchoolDetail extends PureComponent<ISchoolDetailProps, ISchoolDetailState>
         let { school_detail } = this.props;
         return (
             <div>
-                <h5>{`Thông tin của trường`}</h5>
+                <h5>{school_detail.name + `(${school_detail && school_detail})`}</h5>
                 <SchoolInfo data={school_detail} />
             </div>
         )

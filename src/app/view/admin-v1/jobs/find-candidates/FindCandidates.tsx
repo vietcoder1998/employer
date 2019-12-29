@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, {  } from 'react'
 import ErrorBoundaryRoute from './../../../../../routes/ErrorBoundaryRoute';
 import FindCandidatesList from './find-candidates-list/FindCandidatesList';
 import FindCandidatesDetail from './find-candidates-detail/FindCandidatesDetail';
@@ -12,11 +12,11 @@ interface IFindCandidatesProps {
 export default function FindCandidates(props: IFindCandidatesProps) {
     let { path } = props.match
     return (
-        <Fragment >
+        < >
             <Switch>
                 <ErrorBoundaryRoute path={`${path}/list`} component={FindCandidatesList} />
                 <ErrorBoundaryRoute path={`${path}/detail/:id`} component={FindCandidatesDetail} />
             </Switch>
-        </Fragment>
+        </>
     )
 }
