@@ -13,6 +13,8 @@ export const routePath = {
     CONVERNIENT: '/convernient',
     CONNECTED: '/connected',
     UNCONNECT: '/unconnect',
+    REJECTED: '/rejected',
+    ACCEPTED: '/accepted',
 
     EM_BRANCHES: '/em-branches',
     SAVE_CANDIDATE: '/saved-candidate',

@@ -104,7 +104,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         this.setState({ loading: true });
         setTimeout(() => {
             this.setState({ loading: false });
-        }, 400);
+        }, 500);
     }
 
     render() {
@@ -184,6 +184,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 style={{
                                     padding: 0,
                                 }}
+                                onVisibleChange={(visible?: boolean) => { if (visible) { this.props.getListNoti() } }}
                             >
                                 <Badge
                                     count={totalNoti && totalNoti > 0 ? totalNoti : 0}

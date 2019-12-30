@@ -38,7 +38,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
             color_me = "#168ECD";
             break;
         case TYPE.SCHOOL:
-            color_me = "purple";
+            color_me = "#ffc107";
             break;
         default:
             break;

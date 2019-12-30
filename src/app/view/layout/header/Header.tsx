@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // @ts-ignore
 import logo from '../../../../../src/logo-01.png';
 import './Header.scss';
+import { Icon } from 'antd';
 
 export default function Header(props) {
   let token = localStorage.getItem("ecr");
@@ -15,20 +16,36 @@ export default function Header(props) {
         {
           token ?
             '' :
-            <div style={{ float: 'right' }}>
-              <Link
-                to='/login'
-                className='underline'
-              >
-                Đăng nhập
+            <div>
+              <div style={{ float: 'right' }}>
+                <Link
+                  to='/login'
+                  className='underline'
+                >
+                  Đăng nhập
               </Link>
-              /
+                /
               <Link
-                to='/register'
-                className='underline'
-              >
-                Đăng kí
+                  to='/register'
+                  className='underline'
+                >
+                  Đăng kí
               </Link>
+              </div>
+              <div style={{ float: "right" }} >
+                <Link
+                  to='/login'
+                  className='underline'
+                >
+                  <Icon type="android" style={{ fontSize: 20, marginRight: 10, marginTop: -5 }} />
+                </Link>
+                <Link
+                  to='/register'
+                  className='underline'
+                >
+                  <Icon type="apple" style={{ fontSize: 20, marginRight: 10, marginTop: -5}} />
+                </Link>
+              </div>
             </div>
         }
       </div>

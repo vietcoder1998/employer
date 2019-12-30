@@ -128,11 +128,30 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="connected">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
-                            <Icon type="carry-out" />
-                            <span>Danh sách </span>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.CONNECTED + routePath.LIST}>
+                            <Icon type="check" />
+                            <span>Đã kết nối </span>
                         </Link>
                     </Menu.Item>
+                    <Menu.Item key="rejected">
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.REJECTED + routePath.LIST}>
+                            <Icon type="close" />
+                            <span>Đã từ chối</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="pending">
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.PENDING + routePath.LIST}>
+                            <Icon type="loading" />
+                            <span>Đang kết nối</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="unconnect">
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.UNCONNECT + routePath.LIST}>
+                            <Icon type="question" />
+                            <span>Chưa kết nối </span>
+                        </Link>
+                    </Menu.Item>
+
                 </SubMenu>
                 <SubMenu
                     key="sub3"

@@ -1,4 +1,4 @@
-import React, { PureComponent,  } from 'react'
+import React, { PureComponent, } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../const/actions';
 import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
@@ -16,10 +16,10 @@ import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
 
 let ImageRender = (props: any) => {
     if (props.src && props.src !== "") {
-        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50}} icon="user" />
+        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50 }} icon="user" />
     } else {
-        return <div style={{ width: 50, height: 50, textAlign: "center",padding: '15px 0'  }}>
-            <Icon type="file-image" style={{fontSize: 20}} />
+        return <div style={{ width: 50, height: 50, textAlign: "center", padding: '15px 0' }}>
+            <Icon type="file-image" style={{ fontSize: 20 }} />
         </div>
     }
 };
@@ -185,7 +185,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 40,
+            width: 100,
             render: () => this.editToolAction()
         },
     ];
@@ -204,7 +204,6 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     <>
                         <Tooltip placement="top" title={item.candidate.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
                             <Icon
-                                className='test'
                                 type={item.candidate.unlocked ? "unlock" : "lock"}
                                 style={{ padding: "5px 5px", color: item.candidate.unlocked ? "green" : "red" }}
                                 theme={"filled"}
@@ -218,7 +217,16 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
-                    name: <CanProPop background={item.candidate.coverUrl} avatar={item.candidate.avatarUrl} data={item} children={(item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")} />,
+                    name:
+                        <CanProPop
+                            id={item.candidate ? item.candidate.id : ''}
+                            background={item.candidate.coverUrl}
+                            avatar={item.candidate.avatarUrl}
+                            data={item}
+                            children={
+                                (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")
+                            } />
+                    ,
                     lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.candidate.address ? item.candidate.address : "",
                     region: item.candidate.region ? item.candidate.region.name : "",
@@ -322,7 +330,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1050 }}
+                            scroll={{ x: 1110 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

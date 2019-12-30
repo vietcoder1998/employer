@@ -18,7 +18,7 @@ interface ICanProPop {
 };
 
 export default function CanProPop(props?: ICanProPop): JSX.Element {
-    let { children, data, avatar, background } = props;
+    let { children, data, avatar, background, id } = props;
     // const [loading, setLoading] = React.useState(false);
 
     const content = (
@@ -73,7 +73,7 @@ export default function CanProPop(props?: ICanProPop): JSX.Element {
                     <Icon type={data && data.unlocked ? 'unlock' : 'lock'} theme={'filled'} style={{ color: data && data.unlocked ? 'green' : '' }} />
                     {data && data.unlocked ? 'Đã mở khóa' : 'Chưa mở khóa'}
                 </Button>
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${data.id}`} target='_blank'>
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
                     <Button
                         size={'small'}
                         className='test'
@@ -95,7 +95,7 @@ export default function CanProPop(props?: ICanProPop): JSX.Element {
             placement={'topLeft'}
         >
             <div className='link-to' style={{ color: "#168ecd" }}>
-                <Link href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${data.id}`} target='_blank'>
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
                     {children}
                 </Link>
             </div>

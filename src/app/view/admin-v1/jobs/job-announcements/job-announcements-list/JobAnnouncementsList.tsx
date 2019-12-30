@@ -186,7 +186,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         },
         {
             title: 'Tiêu đề',
-            width: 200,
+            width: 150,
             dataIndex: 'title',
             key: 'jobTitle',
         },
@@ -973,7 +973,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 columns={this.columns}
                                 loading={loading_table}
                                 dataSource={data_table}
-                                scroll={{ x: 1900 }}
+                                scroll={{ x: 1850 }}
                                 bordered
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"

@@ -15,6 +15,10 @@ import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
+// import { _requestToServer } from '../../../../../../services/exec';
+// import { POST } from '../../../../../../const/method';
+// import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+// import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 let { Option } = Select;
 
 let ImageRender = (props: any) => {
@@ -154,7 +158,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 50,
+            width: 100,
         },
     ];
 
@@ -205,11 +209,42 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             >
                                 <Icon
                                     className='test'
-                                    style={{ padding: "5px 5px", color: "blue" }}
+                                    style={{ padding: 5, margin: 2 }}
                                     type="search"
                                 />
                             </a>
                         </Tooltip>
+                        {/* <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
+                            <Icon
+                                className='test'
+                                style={{
+                                    padding: 5,
+                                    margin: 2,
+                                    color: item.saved ? 'red' : 'green'
+                                }}
+                                type="save"
+                                onClick={async () => {
+                                    await _requestToServer(
+                                        POST,
+                                        SAVED_CANDIDATE_PROFILES + `/${id}/saved`,
+                                        undefined,
+                                        undefined,
+                                        undefined,
+                                        EMPLOYER_HOST,
+                                        false,
+                                        true,
+                                    ).then((res: any) => {
+                                        if (res) {
+                                            setTimeout(() => {
+                                                if (id === item.id) {
+                                                    item.saved = !item.saved;
+                                                }
+                                            }, 500);
+                                        }
+                                    })
+                                }}
+                            />
+                        </Tooltip> */}
                     </>
                 );
 
@@ -218,6 +253,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                         <Tooltip placement="top" title={item.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
                             <Icon
                                 type={item.unlocked ? "unlock" : "lock"}
+                                theme={'filled'}
                                 style={{ padding: "5px 5px", color: item.unlocked ? "green" : "red" }}
                             />
                         </Tooltip>
@@ -230,6 +266,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     avatarUrl: <ImageRender src={item.avatarUrl} alt="Ảnh đại diện" />,
                     name:
                         <CanProPop
+                            id={item.id}
                             background={item.coverUrl}
                             avatar={item.avatarUrl}
                             data={item}
@@ -242,7 +279,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     unlocked: Lock(),
                     operation: EditToolTip(item.id)
                 });
-            })
+            });
+
             return {
                 list_find_candidates: nextProps.list_find_candidates,
                 data_table,
@@ -593,7 +631,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 900 }}
+                            scroll={{ x: 950 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

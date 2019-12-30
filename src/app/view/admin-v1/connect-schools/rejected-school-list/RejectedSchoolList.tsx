@@ -1,5 +1,5 @@
 import React from 'react';
-import './ConnectSchoolList.scss';
+import './RejectedSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
 import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input } from 'antd';
@@ -43,7 +43,7 @@ const typeReturn = (type?: string) => {
     return result;
 }
 
-interface IConnectSchoolsListProps extends StateProps, DispatchProps {
+interface IRejectedSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     location?: any;
@@ -55,7 +55,7 @@ interface IConnectSchoolsListProps extends StateProps, DispatchProps {
     setConnectSchoolDetail: (data?: any) => any;
 };
 
-interface IConnectSchoolsListState {
+interface IRejectedSchoolsListState {
     data_table?: Array<IConnectSchool>;
     pageIndex?: number;
     pageSize?: number;
@@ -81,7 +81,7 @@ interface IConnectSchoolsListState {
     search?: any;
 };
 
-class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConnectSchoolsListState> {
+class RejectedSchoolsList extends React.Component<IRejectedSchoolsListProps, IRejectedSchoolsListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -102,7 +102,10 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
             open_drawer: false,
             connect_schools_detail: {},
             dataSchool: {},
-            body: {}
+            body: {
+                hasRequest: true,
+                state: TYPE.REJECTED
+            }
         };
     }
 
@@ -204,7 +207,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps?: IConnectSchoolsListProps, prevState?: IConnectSchoolsListState) {
+    static getDerivedStateFromProps(nextProps?: IRejectedSchoolsListProps, prevState?: IRejectedSchoolsListState) {
         if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
             let { list_connect_schools } = prevState;
             if (nextProps.list_connect_schools) {
@@ -302,6 +305,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
         let { list_connect_schools } = this.props;
         let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
+        this.props.handleDrawer({ open_drawer: true });
         this.props.handleDrawer({ open_drawer: true });
         this.props.setConnectSchoolDetail(dataSchool);
         setTimeout(() => {
@@ -452,7 +456,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                         </Col>
                                     </Row>
                                 </Panel>
-                                <Panel header={"Phản hồi nhà trường"} key="2" >
+                                <Panel header={dataSchool.owner === TYPE.EMPLOYER ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"} key="2" >
                                     <TextArea
                                         value={school_msg}
                                         placeholder="Chưa có yêu cầu"
@@ -460,7 +464,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                         disabled={true}
                                     />
                                 </Panel>
-                                <Panel header="Phản hồi từ phía bạn" key="3" >
+                                <Panel header={dataSchool.owner !== TYPE.EMPLOYER ? "Phản hồi từ phía bạn" : "Lời mời từ phía bạn"} key="2" >
                                     <TextArea
                                         value={candidate_msg}
                                         placeholder="Chưa có yêu cầu"
@@ -506,7 +510,7 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                 </DrawerConfig>
                 <div className="common-content">
                     <h5>
-                        Kết nối trường học
+                        Danh sách trường đã từ chối
                         <Tooltip title="Tìm kiếm trường học" >
                             <Button
                                 onClick={() => this.searchConnectSchools()}
@@ -570,19 +574,6 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Yêu cầu kết nối"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.hasRequest)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đã gửi </Option>
-                                    <Option value={TYPE.FALSE}>Chưa gửi</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tên rút gọn"} />
                                 <Input
                                     placeholder="Tất cả"
@@ -605,16 +596,24 @@ class ConnectSchoolsList extends React.Component<IConnectSchoolsListProps, IConn
 
                             </Col>
                         </Row>
-                        <div className="school-content">
-                            {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ? list_connect_schools.map(
-                                (item: IConnectSchool, index: number) =>
-                                    <div
-                                        key={index}
-                                    >
-                                        <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
-                                    </div>
-                            ) : <Empty />) : <Loading />}
-                        </div>
+                        {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
+                            <Row>
+                                {
+                                    list_connect_schools.map(
+                                        (item: IConnectSchool, index: number) =>
+                                            <Col
+                                                xxl={6}
+                                                xl={8}
+                                                md={12}
+                                                lg={8}
+                                                key={index}
+                                            >
+                                                <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
+                                            </Col>
+                                    )
+                                }
+                            </Row>
+                            : <Empty />) : <Loading />}
                         <div style={{ textAlign: "center", margin: " 40px 20px", }}>
                             <Pagination
                                 showQuickJumper
@@ -661,4 +660,4 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectSchoolsList);
+export default connect(mapStateToProps, mapDispatchToProps)(RejectedSchoolsList);
