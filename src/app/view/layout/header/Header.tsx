@@ -33,18 +33,22 @@ export default function Header(props) {
               </Link>
               </div>
               <div style={{ float: "right" }} >
-                <Link
-                  to='/login'
+                <a
+                  href='https://play.google.com/store/apps/details?id=com.worksvn.employer&hl=vi'
                   className='underline'
+                  target='_blank'
+                  rel="noopener noreferrer"
                 >
                   <Icon type="android" style={{ fontSize: 20, marginRight: 10, marginTop: -5 }} />
-                </Link>
-                <Link
-                  to='/register'
+                </a>
+                <a
+                  href='https://apps.apple.com/vn/app/works-vn-tuy%E1%BB%83n-d%E1%BB%A5ng/id1486080602'
                   className='underline'
+                  target='_blank'
+                  rel="noopener noreferrer"
                 >
-                  <Icon type="apple" style={{ fontSize: 20, marginRight: 10, marginTop: -5}} />
-                </Link>
+                  <Icon type="apple" style={{ fontSize: 20, marginRight: 10, marginTop: -5 }} />
+                </a>
               </div>
             </div>
         }
