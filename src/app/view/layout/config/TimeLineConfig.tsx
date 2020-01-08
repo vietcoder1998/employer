@@ -77,7 +77,6 @@ export const TimeLineConfig = (props: any) => {
     return (
         <ul className="time-line-config" style={grTl} >
             {props.children ? props.children : null}
-            {props.reserve ? <TimeLineConfigItem color="blue" reserve={true} children="Đang khám phá ..." /> : null}
         </ul>
     )
 }

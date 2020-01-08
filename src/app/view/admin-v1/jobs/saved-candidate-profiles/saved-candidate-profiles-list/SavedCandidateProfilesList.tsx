@@ -13,15 +13,21 @@ import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
 // import { TYPE } from '../../../../../../const/type';
 import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
+//@ts-ignore
+import avatar_men from './../../../../../../assets/image/no-avatar.png';
+//@ts-ignore
+import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
 
-let ImageRender = (props: any) => {
-    if (props.src && props.src !== "") {
-        return <Avatar shape="square" src={props.src} alt={props.alt} style={{ width: 50, height: 50 }} icon="user" />
-    } else {
-        return <div style={{ width: 50, height: 50, textAlign: "center", padding: '15px 0' }}>
-            <Icon type="file-image" style={{ fontSize: 20 }} />
-        </div>
-    }
+let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: string }) => {
+    const [err, setErr] = React.useState(false)
+    return <Avatar
+        shape="square"
+        src={!err && props.src && props.src !== '' ? props.src : (props.gender === "MALE" ? avatar_men : avatar_women)}
+        alt={props.alt}
+        style={{ width: 50, height: 50 }}
+        //@ts-ignore
+        onError={() => setErr(true)}
+    />
 };
 
 interface SavedCandidateProfilesListProps extends StateProps, DispatchProps {
@@ -215,7 +221,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 data_table.push({
                     key: item.candidate.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    avatarUrl: <ImageRender src={item.candidate.avatarUrl} alt="Ảnh đại diện" />,
+                    avatarUrl: <ImageRender src={item.candidate.avatarUrl} gender={item.candidate.gender} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
                     name:
                         <CanProPop

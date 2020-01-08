@@ -5,7 +5,9 @@ import { IFindCandidateDetail } from '../../../../models/find-candidates-detail'
 // @ts-ignore
 import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
-import avatar from '../../../../assets/image/test_avatar.jpg';
+import avatar_men from '../../../../assets/image/no-avatar.png';
+// @ts-ignore
+import avatar_women from '../../../../assets/image/women-no-avatar.jpg';
 import { TYPE } from '../../../../const/type';
 import { TimeLineConfig, TimeLineConfigItem } from '../config/TimeLineConfig';
 import { timeConverter } from '../../../../utils/convertTime';
@@ -24,7 +26,7 @@ interface ICandidateProfileProps {
 
 function CandidateProfile(props: ICandidateProfileProps) {
     let { data } = props;
-    let [avatarUrl, setAvatarUrl] = React.useState(avatar);
+    let [avatarUrl, setAvatarUrl] = React.useState(avatar_men);
     let [coverUrl, setcoverUrl] = React.useState(backGround);
 
     let [onErrAvatar, setErrAvatar] = React.useState(false);
@@ -56,7 +58,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                             <div className="block-image">
                                 <Avatar
                                     // @ts-ignore
-                                    src={!onErrAvatar && avatarUrl ? avatarUrl : avatar}
+                                    src={!onErrAvatar && avatarUrl ? avatarUrl : (data.gender === "MALE" ? avatar_men : avatar_women)}
                                     style={{
                                         height: 140,
                                         width: 140,
@@ -139,8 +141,8 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 key={index}
                                             >
                                                 <ul>
-                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
-                                                    <li><strong>đến :  {item.finishedDate === -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
+                                                    <li><strong>Từ : {item.startedDate && item.startedDate !== -1 ? timeConverter(item.startedDate, 1000) : "Chưa có"}</strong></li>
+                                                    <li><strong>đến :  {item.finishedDate && item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Chưa có"}</strong></li>
                                                     <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{item.school}</li>
                                                     <li style={{ marginTop: "10px" }}>{item.description}</li>
                                                 </ul>
@@ -169,8 +171,8 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 key={index}
                                             >
                                                 <ul>
-                                                    <li><strong>Từ : {timeConverter(item.startedDate, 1000)}</strong></li>
-                                                    <li><strong>đến :  {item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Hiện tại"}</strong></li>
+                                                    <li><strong>Từ : {item.startedDate && item.startedDate !== -1 ? timeConverter(item.startedDate, 1000) : "Chưa có"}</strong></li>
+                                                    <li><strong>đến :  {item.finishedDate && item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Chưa có"}</strong></li>
                                                     <li style={{ marginTop: "20px", textTransform: "capitalize" }}>tại :{item.companyName}</li>
                                                     <li style={{ marginTop: "20px" }}>{item.description}</li>
                                                 </ul>

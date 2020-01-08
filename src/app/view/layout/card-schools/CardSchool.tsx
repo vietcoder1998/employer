@@ -3,7 +3,6 @@ import './CardSchool.scss';
 // @ts-ignore
 import backGround from './../../../../assets/image/base-image.jpg';
 // @ts-ignore
-import avatar from '../../../../assets/image/test_avatar.jpg';
 import { Avatar, Icon, Badge } from 'antd';
 import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
@@ -92,7 +91,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                     <div className="school">
                         <Avatar
                             className="logo-school"
-                            src={props && props.item && props.item.logoUrl ? props.item.logoUrl : avatar}
+                            src={props && props.item && props.item.logoUrl ? props.item.logoUrl : backGround}
                             style={{
                                 width: 60,
                                 height: 60,
