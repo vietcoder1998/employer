@@ -143,6 +143,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 <ul>
                                                     <li><strong>Từ : {item.startedDate && item.startedDate !== -1 ? timeConverter(item.startedDate, 1000) : "Chưa có"}</strong></li>
                                                     <li><strong>đến :  {item.finishedDate && item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Chưa có"}</strong></li>
+                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>{item.branchOfLearning ? item.branchOfLearning : "Chưa có"}</li>
                                                     <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{item.school}</li>
                                                     <li style={{ marginTop: "10px" }}>{item.description}</li>
                                                 </ul>
@@ -173,6 +174,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 <ul>
                                                     <li><strong>Từ : {item.startedDate && item.startedDate !== -1 ? timeConverter(item.startedDate, 1000) : "Chưa có"}</strong></li>
                                                     <li><strong>đến :  {item.finishedDate && item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Chưa có"}</strong></li>
+                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>{item.jobName ? item.jobName : "Chưa có"}</li>
                                                     <li style={{ marginTop: "20px", textTransform: "capitalize" }}>tại :{item.companyName}</li>
                                                     <li style={{ marginTop: "20px" }}>{item.description}</li>
                                                 </ul>
