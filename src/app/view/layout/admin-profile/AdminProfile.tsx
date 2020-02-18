@@ -393,7 +393,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                                 prefix={<Icon type="bank" />}
                                                 value={employerName}
                                                 onChange={(event: any) => setEmployerName(event.target.value)}
-                                                placeholder="Tên công ti"
+                                                placeholder="Tên công ty"
                                             />
                                             :
                                             <>

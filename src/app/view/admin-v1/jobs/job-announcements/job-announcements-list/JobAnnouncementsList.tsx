@@ -20,6 +20,8 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
+import JobSuitableCandidate from '../../../../layout/job-suitable-candidate/JobSuitableCandidate';
+import JobDetail from '../../../../layout/job-detail/JobDetail';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
@@ -88,6 +90,7 @@ interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     getListJobService: Function;
     handleDrawer: Function;
     handleModal: Function;
+    getListJobSuitableCandidate: Function;
 };
 
 interface IJobAnnouncementsListState {
@@ -121,6 +124,8 @@ interface IJobAnnouncementsListState {
     searchExpired: boolean;
     job_announcement_detail: IJobAnnouncementDetail;
     type_modal: string;
+    ojd?: boolean;
+    jid?: boolean;
 };
 
 
@@ -172,6 +177,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             searchExpired: false,
             job_announcement_detail: null,
             type_modal: null,
+            ojd: false,
+            jid: false,
         };
     }
 
@@ -266,6 +273,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
+            render: ({ hidden, id }) => this.EditToolTip(hidden, id),
             width: 200,
         }
     ];
@@ -302,6 +310,79 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         this.setState({ show_modal: !show_modal });
     };
 
+    EditToolTip = (hidden?: boolean, id?: string) => {
+        let { body, pageIndex, pageSize } = this.state;
+        return (
+            <>
+                <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
+                    <Icon
+                        className='test'
+                        type={hidden ? "eye-invisible" : "eye"}
+                        style={{ padding: "5px 5px", color: hidden ? "black" : "gray", margin: 2 }}
+                        onClick={async () => await _requestToServer(
+                            PUT,
+                            JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
+                            undefined,
+                            undefined,
+                            undefined,
+                            EMPLOYER_HOST,
+                            false,
+                            false
+                        ).then((res: any) => {
+                            if (res) {
+                                setTimeout(() => {
+                                    this.props.getListJobAnnouncements(body, pageIndex, pageSize);
+                                }, 250);
+                                message.success("Thành công", 2);
+                            }
+                        })}
+                    />
+                </Tooltip>
+                <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
+                    <Icon
+                        className='test'
+                        type="dollar"
+                        style={{ padding: "5px 5px", color: "orange", margin: 2 }}
+                        onClick={async () => {
+                            await this.props.handleDrawer();
+                            await setTimeout(() => { this.props.getJobAnnouncementDetail(id) }, 250)
+                        }} />
+                </Tooltip>
+                <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
+                        <Icon
+                            className='test'
+                            style={{ padding: "5px 5px", margin: 2 }}
+                            type="edit"
+                            theme="twoTone"
+                            twoToneColor="green"
+                        />
+                    </Link>
+                </Tooltip>
+                <Tooltip placement="top" title={"Đăng bài tương tự"}>
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
+                        <Icon
+                            className='test'
+                            style={{ padding: "5px 5px", margin: 2 }}
+                            type="copy"
+                            theme="twoTone"
+                        />
+                    </Link>
+                </Tooltip>
+                <Tooltip placement="topRight" title={"Xóa bài đăng"}>
+                    <Icon
+                        className='test'
+                        style={{ padding: "5px 5px", margin: 2 }}
+                        type="delete"
+                        theme="twoTone"
+                        twoToneColor="red"
+                        onClick={() => this.props.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
+                    />
+                </Tooltip>
+            </>
+        )
+    }
+
     static getDerivedStateFromProps(nextProps: IJobAnnouncementsListProps, prevState: IJobAnnouncementsListState) {
         if (
             nextProps.list_job_announcements &&
@@ -309,77 +390,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         ) {
             let { pageIndex, pageSize } = prevState;
             let data_table = [];
-
-
-            let EditToolTip = (hidden?: boolean, id?: string) => (
-                <>
-                    <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
-                        <Icon
-                            className='test'
-                            type={hidden ? "eye-invisible" : "eye"}
-                            style={{ padding: "5px 5px", color: hidden ? "black" : "gray", margin: 2 }}
-                            onClick={async () => await _requestToServer(
-                                PUT,
-                                JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
-                                undefined,
-                                undefined,
-                                undefined,
-                                EMPLOYER_HOST,
-                                false,
-                                false
-                            ).then((res: any) => {
-                                if (res) {
-                                    setTimeout(() => {
-                                        nextProps.getListJobAnnouncements(prevState.body, prevState.pageIndex, prevState.pageSize);
-                                    }, 250);
-                                    message.success("Thành công", 2);
-                                }
-                            })}
-                        />
-                    </Tooltip>
-                    <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
-                        <Icon
-                            className='test'
-                            type="dollar"
-                            style={{ padding: "5px 5px", color: "orange", margin: 2 }}
-                            onClick={async () => {
-                                await nextProps.handleDrawer();
-                                await setTimeout(() => { nextProps.getJobAnnouncementDetail(id) }, 250)
-                            }} />
-                    </Tooltip>
-                    <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
-                            <Icon
-                                className='test'
-                                style={{ padding: "5px 5px", margin: 2 }}
-                                type="edit"
-                                theme="twoTone"
-                                twoToneColor="green"
-                            />
-                        </Link>
-                    </Tooltip>
-                    <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                        <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
-                            <Icon
-                                className='test'
-                                style={{ padding: "5px 5px", margin: 2 }}
-                                type="copy"
-                                theme="twoTone"
-                            />
-                        </Link>
-                    </Tooltip>
-                    <Tooltip placement="topRight" title={"Xóa bài đăng"}>
-                        <Icon
-                            className='test'
-                            style={{ padding: "5px 5px", margin: 2 }}
-                            type="delete"
-                            theme="twoTone"
-                            twoToneColor="red"
-                            onClick={() => nextProps.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
-                        />
-                    </Tooltip>
-                </>
-            )
 
             nextProps.list_job_announcements.forEach((item: IJobAnnouncement, index: number) => {
                 data_table.push({
@@ -400,7 +410,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
                             <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
                         </>,
-                    operation: EditToolTip(item.hidden, item.id)
+                    operation: { hidden: item.hidden, id: item.id }
                 });
             })
 
@@ -484,7 +494,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         }
 
         this.setState({ body });
-    }
+    };
 
     setPageIndex = async (event: any) => {
         await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
@@ -642,6 +652,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             searchExpired,
             body,
             loading,
+            ojd,
+            jid
         } = this.state;
 
         let {
@@ -650,7 +662,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             list_job_names,
             list_em_branches,
             list_job_service,
-            modalState
+            modalState,
+            job_detail,
+            job_suitable_candidates,
         } = this.props;
 
         let homeExpiration = job_announcement_detail.priority.homeExpiration;
@@ -693,6 +707,54 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     ]}
                     children={modalState.msg}
                 />
+                <Modal
+                    visible={ojd}
+                    title={"Chi tiết công việc"}
+                    destroyOnClose={true}
+                    onOk={this.createRequest}
+                    width={'90vw'}
+                    onCancel={() => {
+                        this.setState({ ojd: false, loading: false });
+                    }}
+                    footer={[
+                        <Button
+                            key="cancel"
+                            children="Hủy"
+                            onClick={() => {
+                                this.setState({
+                                    ojd: false,
+                                });
+                            }}
+                        />
+                    ]}
+                >
+                    <Row>
+                        <Col span={10}>
+                            <JobDetail
+                                jobDetail={{
+                                    jobName: job_detail.jobName.name,
+                                    jobTitle: job_detail.jobTitle,
+                                    employerName: job_detail.employerName,
+                                    employerUrl: job_detail.employerLogoUrl,
+                                    expriratedDate: job_detail.expirationDate,
+                                    jobType: job_detail.jobType,
+                                    shifts: job_detail.shifts,
+                                    description: job_detail.description
+                                }}
+                            />
+                        </Col>
+                        <Col span={4}>
+                            <h6>ỨNG VIÊN THÍCH HỢP</h6>
+                            <JobSuitableCandidate
+                                job_suitable_candidates={job_suitable_candidates.items}
+                                pageIndex={job_suitable_candidates.pageIndex}
+                                pageSize={job_suitable_candidates.pageSize}
+                                totalItems={job_suitable_candidates.totalItems}
+                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize)}
+                            />
+                        </Col>
+                    </Row>
+                </ Modal>
                 <>
                     <DrawerConfig
                         title={"Kích hoạt gói dịch vụ tuyển dụng"}
@@ -1006,6 +1068,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getJobAnnouncementDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
+    getListJobSuitableCandidate: (jid?: string, pageIndex?: number, pageSize?: number) =>
+        dispatch({ type: REDUX_SAGA.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, jid, pageIndex, pageSize }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -1016,7 +1080,9 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     job_announcement_detail: state.JobAnnouncementDetail,
     modalState: state.MutilBox.modalState,
     drawerState: state.MutilBox.drawerState,
-    totalItems: state.JobAnnouncements.totalItems
+    totalItems: state.JobAnnouncements.totalItems,
+    job_suitable_candidates: state.JobSuitableCandidates,
+    job_detail: state.JobAnnouncementDetail
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

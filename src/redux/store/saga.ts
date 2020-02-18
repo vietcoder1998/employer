@@ -25,6 +25,7 @@ import { RatingsWatcher } from '../sagas/ratings';
 import { RatingUserWatcher } from '../sagas/rating-user';
 import { AnnouCommentDetailWatcher } from '../sagas/annou-comment-detail';
 import { SchoolDetailWatcher } from '../sagas/school-detail';
+import { JobSuitableCandidatesWatcher } from '../sagas/job-suitable-candidate';
 
 export default function* rootSaga() {
     try {
@@ -54,7 +55,8 @@ export default function* rootSaga() {
             RatingsWatcher(),
             RatingUserWatcher(),
             AnnouCommentDetailWatcher(),
-            SchoolDetailWatcher()
+            SchoolDetailWatcher(),
+            JobSuitableCandidatesWatcher()
         ])
     } catch (err) {
         throw err;

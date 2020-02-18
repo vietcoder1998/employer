@@ -27,6 +27,7 @@ import { JobAnnouncements } from '../reducers/job-announcements';
 import { ApplyJobs } from './../reducers/apply-job';
 
 import { combineReducers } from 'redux';
+import { JobSuitableCandidates } from './../reducers/job-suitable-candidate';
 
 const rootReducer = combineReducers({
     JobAnnouncements,
@@ -55,7 +56,8 @@ const rootReducer = combineReducers({
     Ratings,
     RatingUser,
     AnnouCommentDetail,
-    SchoolsDetail
+    SchoolsDetail,
+    JobSuitableCandidates
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

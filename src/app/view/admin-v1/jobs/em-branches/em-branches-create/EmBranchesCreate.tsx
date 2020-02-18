@@ -181,7 +181,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                                         type="text"
                                         maxLength={260}
                                         prefix={<Icon type="shop" style={{ color: "gray", marginBottom: "-5px" }} />}
-                                        placeholder="ex: Công ti cổ phần công nghệ Worksvn JSC"
+                                        placeholder="ex: Công ty cổ phần công nghệ Worksvn JSC"
                                         onChange={
                                             (event: any) => {
                                                 body["branchName"] = event.target.value;

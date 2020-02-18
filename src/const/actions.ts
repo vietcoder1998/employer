@@ -99,6 +99,9 @@ export const REDUX = {
     },
     RATING_USER: {
         GET_RATING_USER: "GET_RATING_USER"
+    },
+    JOB_SUITABLE_CANDIDATE: {
+        GET_JOB_SUITABLE_CANDIDATE: "JOB_SUITABLE_CANDIDATE"
     }
 };
 
@@ -195,5 +198,8 @@ export const REDUX_SAGA = {
     },
     RATING_USER: {
         GET_RATING_USER: "GET_RATING_USER_DATA"
-    }
+    },
+    JOB_SUITABLE_CANDIDATE: {
+        GET_JOB_SUITABLE_CANDIDATE: "GET_JOB_SUITABLE_CANDIDATE_DATA",
+    },
 }

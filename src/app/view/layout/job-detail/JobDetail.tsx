@@ -5,55 +5,50 @@ import { convertStringToArray } from '../../../../utils/convertStringToArray';
 import { IptLetter, NotUpdate } from '../common/Common';
 import { weekDays } from '../../../../utils/day';
 import { timeConverter } from '../../../../utils/convertTime';
-import { IPendingJobDetail } from '../../../../models/pending-job-detail';
 import { ISkill } from '../../../../models/skills';
-import findIdWithValue from '../../../../utils/findIdWithValue';
-import { IJobName } from '../../../../models/job-names';
-import randomID from '../../../../utils/randomID';
+import { IJobName } from '../../../../models/job-type';
+import IJobDetail from '../../../../models/job-detail';
 
 interface IJobDetailProps {
-    job_detail?: IPendingJobDetail,
     list_job_skills?: Array<ISkill>,
     job_id?: string,
     list_job_names?: Array<IJobName>
+    jobDetail?: IJobDetail;
 }
 
 export default function JobDetail(props: IJobDetailProps) {
-    let { job_detail, list_job_skills, job_id, list_job_names } = props;
-    let [requireSkill, setRequireSkill] = React.useState([]);
-    let [id, setId] = React.useState(null)
-
-
-    let list_des = job_detail && convertStringToArray(job_detail.data.description);
-
-    if (job_detail && job_detail.data && job_detail.data.requiredSkillIDs.length > 0 && job_id !== id) {
-        let requireSkill = findIdWithValue(list_job_skills, job_detail.data.requiredSkillIDs, "id", "name");
-        setRequireSkill(requireSkill);
-        setId(job_id)
-    }
-
+    let { jobDetail } = props;
+    let list_des = jobDetail && convertStringToArray(jobDetail.description);
+    
     return (
         <div className='job-detail'>
             <div className='detail-job b_b'>
                 <h6>CHI TIẾT</h6>
-                <Avatar src={job_detail && job_detail.employer.logoUrl} icon="user"
-                    style={{ width: 50, height: 50, margin: "20px 0px" }} />
+                <Avatar src={jobDetail && jobDetail.employerUrl} icon="user"
+                    style={{ width: "60px", height: "60px", margin: "20px 0px" }} />
                 <ul>
                     <li className='d_j_t'>
-                        <IptLetter value={"Tiêu đề:"} />
-
-                        <label> {job_detail && job_detail.data.jobTitle ? job_detail.data.jobTitle : "Không có"}
+                        <IptLetter value={"Tiêu đề bài đăng:"} />
+                        <label>
+                            {jobDetail && jobDetail.jobTitle ? jobDetail.jobTitle : "Không có"}
                         </label>
                     </li>
                     <li className='d_j_t'>
                         <IptLetter value={"Tên công việc: "} />
-                        <label> {job_detail && job_detail.data.jobNameID ? findIdWithValue(list_job_names, job_detail.data.jobNameID, "id", "name")
-                            : "Không có"}
+                        <label>
+                            {jobDetail && jobDetail.jobName ? jobDetail.jobName : "Không có"}
                         </label>
                     </li>
                     <li className='d_j_t'>
                         <IptLetter value={"Tên nhà tuyển dụng: "} />
-                        <label> {job_detail && job_detail.employer.employerName ? job_detail.employer.employerName : "Không có"}
+                        <label>
+                            {jobDetail && jobDetail.employerName ? jobDetail.employerName : "Không có"}
+                        </label>
+                    </li>
+                    <li className='d_j_t'>
+                        <IptLetter value={"Tên chi nhánh: "} />
+                        <label>
+                            {jobDetail && jobDetail.employerBranch ? jobDetail.employerBranch : "Không có"}
                         </label>
                     </li>
                 </ul>
@@ -62,28 +57,29 @@ export default function JobDetail(props: IJobDetailProps) {
                 <h6>MÔ TẢ CHUNG</h6>
                 <ul>
                     <li className='d_j_t'>
-                        <Icon type="solution" style={{ color: 'blue' }} />
                         <IptLetter value={"Loại công việc:"} />
-
                         <label>
                             {
-                                job_detail &&
-                                    job_detail.data.jobType ?
-                                    job_detail.data.jobType
+                                jobDetail &&
+                                    jobDetail.jobType ?
+                                    jobDetail.jobType
                                     : <NotUpdate />
                             }
                         </label>
                     </li>
                     <li className='d_j_t'>
-                        <Icon type="calendar" style={{ color: 'green' }} />
                         <IptLetter value={"Ngày đăng: "} />
-                        <label> {job_detail && timeConverter(job_detail.createdDate, 1000)}
+                        <label> {jobDetail && timeConverter(jobDetail.createdDate, 1000)}
                         </label>
                     </li>
                     <li className='d_j_t'>
-                        <Icon type="calendar" style={{ color: 'red' }} />
                         <IptLetter value={"Ngày hết hạn: "} />
-                        <label> {job_detail && timeConverter(job_detail.data.expirationDate, 1000)}
+                        <label> {jobDetail && timeConverter(jobDetail.expriratedDate, 1000)}
+                        </label>
+                    </li>
+                    <li className='d_j_t'>
+                        <IptLetter value={"Phản hồi cuối: "} />
+                        <label> {jobDetail &&  jobDetail.repliedDate !==-1 ?timeConverter(jobDetail.repliedDate, 1000): "Chưa có phản hồi"} 
                         </label>
                     </li>
                 </ul>
@@ -94,11 +90,10 @@ export default function JobDetail(props: IJobDetailProps) {
                 {list_des &&
                     list_des !== [] ?
                     list_des.map(
-                        (item: any, index?: number) => (
-                            <p key={index}>
-                                {item.value[0] === '+' || item.value[0] === '\n' ||
-                                    item.value[0] === '-' || item.value[0] === '=' ? "" : '-'}
-                                {item.value}</p>)) :
+                        (item: any) => (<p key={item.index}>
+                            {item.value[0] === '+' || item.value[0] === '\n' ||
+                                item.value[0] === '-' || item.value[0] === '=' ? "" : '-'}
+                            {item.value}</p>)) :
                     <p>Vui lòng liên hệ chi tiết với nhà tuyển dụng</p>
                 }
             </div>
@@ -107,41 +102,39 @@ export default function JobDetail(props: IJobDetailProps) {
                 <h6>CA LÀM VIỆC</h6>
                 <div>
                     {
-                        job_detail &&
-                        job_detail.data.shifts &&
-                        job_detail.data.shifts.map((item: any, index: number) => {
+                        jobDetail &&
+                        jobDetail.shifts &&
+                        jobDetail.shifts.map((item: any, index: number) => {
                             let maxSalary = '' + item.maxSalary && item.maxSalary === 0 ? '' : ('-' + item.maxSalary);
-                            return (
-                                <div key={index} className='time-content b_b'>
-                                    <p>
-                                        <label> Ca số {index + 1} </label>
-                                    </p>
-                                    <p>
-                                        <Icon type="clock-circle"
-                                            style={{ color: 'blue' }} />{' ' + item.startTime + '-' + item.endTime}
-                                    </p>
-                                    <p>
-                                        <Icon type="dollar" style={{ color: 'rgb(224, 224, 34)' }} />
-                                        {item.minSalary ? (
-                                            <span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : " Thỏa thuận"}
-                                    </p>
-                                    <div className='week-day'>
-                                        {weekDays.map((itemWeek: any, nextIndex?: number) => {
-                                            if (item[itemWeek] === true) {
-                                                let day = 'T' + (nextIndex + 2);
-                                                if (nextIndex === 6) {
-                                                    day = 'CN'
-                                                }
-                                                return (<label key={randomID(8)} className='time-span'>
-                                                    {day}
-                                                </label>)
+                            return (<div key={index} className='time-content b_b'>
+                                <p>
+                                    <label> Ca số {index + 1} </label>
+                                </p>
+                                <p>
+                                    <Icon type="clock-circle"
+                                        style={{ color: 'blue' }} />{' ' + item.startTime + '-' + item.endTime}
+                                </p>
+                                <p>
+                                    <Icon type="dollar" style={{ color: 'rgb(224, 224, 34)' }} />
+                                    {item.minSalary ? (
+                                        <span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : " Thỏa thuận"}
+                                </p>
+                                <div className='week-day'>
+                                    {weekDays.map((itemWeek, index) => {
+                                        if (item[itemWeek] === true) {
+                                            let day = 'T' + (index + 2);
+                                            if (index === 6) {
+                                                day = 'CN'
                                             }
-                                            else {
-                                                return undefined
-                                            }
-                                        })}
-                                    </div>
-                                </div>)
+
+                                            return (<label key={index} className='time-span'>
+                                                {day}
+                                            </label>)
+                                        }
+                                        return ''
+                                    })}
+                                </div>
+                            </div>)
                         })
                     }
                 </div>
@@ -150,14 +143,11 @@ export default function JobDetail(props: IJobDetailProps) {
             <div className='skills-job-detail '>
                 <h6>KỸ NĂNG CÔNG VIỆC</h6>
                 <div>
-                    {job_detail && job_detail.data &&
-                        job_detail.data.requiredSkillIDs &&
-                        job_detail.data.requiredSkillIDs.length > 0 &&
-                        requireSkill &&
-                        requireSkill.length > 0 ?
-                        requireSkill.map(
+                    {jobDetail &&
+                        jobDetail.requiredSkills ?
+                        jobDetail.requiredSkills.map(
                             (item: any, index: number) => (
-                                <label key={index} className='skills-detail'>{item}</label>
+                                <label key={index} className='skills-detail'>{item.name}</label>
                             )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>
                     }
                 </div>

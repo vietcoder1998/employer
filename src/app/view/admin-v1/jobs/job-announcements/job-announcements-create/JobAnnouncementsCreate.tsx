@@ -475,7 +475,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         }
                         widthLabel="150px"
                         widthSelect="100%"
-                        placeholder="ex: Công ti abc"
+                        placeholder="ex: Công ty abc"
                     />
 
                     <InputTitle

@@ -1,9 +1,9 @@
-import React, { PureComponent,  } from 'react'
+import React, { PureComponent, } from 'react'
 import { connect } from 'react-redux';
 import './PendingJobsList.scss';
 
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Modal, Tooltip } from 'antd';
+import { Button, Table, Icon, Modal, Tooltip, Empty } from 'antd';
 import { timeConverter } from '../../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../const/method';
@@ -285,7 +285,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
 
     render() {
         let { data_table, loading, message, loading_table, state, job_id } = this.state;
-        let { list_job_names, totalItems, job_detail, open_modal, list_job_skills } = this.props;
+        let { totalItems, job_detail, open_modal } = this.props;
 
         return (
             <>
@@ -322,15 +322,28 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         </Link>
                     ]}
                 >
-                    <JobDetail
-                        job_detail={job_detail}
-                        list_job_skills={list_job_skills}
-                        job_id={job_id}
-                        list_job_names={list_job_names}
-                    />
+                    {
+                        job_detail ? <JobDetail
+                            jobDetail={{
+                                jobName: job_detail.jobName && job_detail.jobName.name,
+                                jobTitle: job_detail.data.jobTitle,
+                                employerName: job_detail.employer.employerName,
+                                employerUrl: job_detail.employer.logoUrl,
+                                employerBranch: job_detail.employerBranchName,
+                                expriratedDate: job_detail.data.expirationDate,
+                                jobType: job_detail.data.jobType,
+                                shifts: job_detail.data.shifts,
+                                description: job_detail.data.description,
+                                requiredSkills: job_detail.requiredSkills,
+                                createdDate: job_detail.createdDate,
+                                repliedDate: job_detail.repliedDate
+                            }}
+                        /> : <Empty description={'Không có mô tả phù hợp'} />
+                    }
+
                     {
                         job_detail && job_detail.message ? <div style={{ padding: "10px 25px" }}>
-                            LÍ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
+                            LÝ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
                         </div> : ''
                     }
                 </Modal>
