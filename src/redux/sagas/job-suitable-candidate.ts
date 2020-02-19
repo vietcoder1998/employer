@@ -1,9 +1,10 @@
 import { IJobSuitableCandidates } from '../../models/job-suitable-candidate';
 import { POST } from '../../const/method';
-import { JOB_ANNOUNCEMENTS } from '../../services/api/private.api';
+import { JOB_ANNOUNCEMENTS, ADMIN_ACCOUNT } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'
+import { EMPLOYER_HOST } from '../../environment/dev';
 
 function* getListJobSuitableCandidatesData(action: any) {
     let res = yield call(callJobSuitableCandidates, action);
@@ -34,13 +35,13 @@ function callJobSuitableCandidates(action: any) {
 
         let res = _requestToServer(
             POST,
-            JOB_ANNOUNCEMENTS + `/${jid}/candidates/recommended`,
+            ADMIN_ACCOUNT + `/${jid}/candidates/recommended`,
             action.body ? action.body : {},
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,
                 pageSize: action.pageSize ? action.pageSize : 10
             },
-            undefined,
+            EMPLOYER_HOST,
             undefined,
             false,
             false

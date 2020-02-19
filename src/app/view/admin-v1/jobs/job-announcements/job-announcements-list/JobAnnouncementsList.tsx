@@ -369,6 +369,20 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         />
                     </Link>
                 </Tooltip>
+                <Tooltip placement="topRight" title={"Xem ứng viên tương thích"}>
+                    <Icon
+                        className='test'
+                        style={{ padding: "5px 5px", margin: 2 }}
+                        type="solution"
+                        twoToneColor="purple"
+                        onClick={() => {
+                            this.setState({ ojd: true });
+                            setTimeout(() => {
+                                this.props.getListJobSuitableCandidate(id, 0, 10)
+                            }, 300);
+                        }}
+                    />
+                </Tooltip>
                 <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                     <Icon
                         className='test'

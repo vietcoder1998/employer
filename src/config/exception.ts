@@ -47,7 +47,7 @@ export const exceptionShowNoti = async (err: any) => {
                         localStorage.clear();
                         window.location.assign('/');
                     },
-                    timer: 3000
+                    timer: 5000
                 })
         }
 

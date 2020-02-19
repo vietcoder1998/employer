@@ -11,3 +11,4 @@ export const RFGTK= "/api/authentication/refresh-token"
 export const RSPW= "/api/users/password/reset";
 export const SMRQ = '/api/users/password/new'
 export const M_S = '/api/users/password/reset/request';
+export const JOB_SUITABLE_CANDIDATE = '/api/employers/{id}/candidates/recommended';
