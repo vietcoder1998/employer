@@ -125,7 +125,7 @@ interface IJobAnnouncementsListState {
     job_announcement_detail: IJobAnnouncementDetail;
     type_modal: string;
     ojd?: boolean;
-    jid?: boolean;
+    jid?: string;
 };
 
 
@@ -178,7 +178,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             job_announcement_detail: null,
             type_modal: null,
             ojd: false,
-            jid: false,
+            jid: null,
         };
     }
 
@@ -375,10 +375,12 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         style={{ padding: "5px 5px", margin: 2 }}
                         type="solution"
                         twoToneColor="purple"
-                        onClick={() => {
+                        onClick={async () => {
                             this.setState({ ojd: true });
                             setTimeout(() => {
-                                this.props.getListJobSuitableCandidate(id, 0, 10)
+                                this.props.getListJobSuitableCandidate(id, 0, 10);
+                                this.props.getJobAnnouncementDetail(id);
+                                this.setState({jid: id})
                             }, 300);
                         }}
                     />
@@ -723,10 +725,10 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 />
                 <Modal
                     visible={ojd}
-                    title={"Chi tiết công việc"}
+                    title={"CHI TIẾT CÔNG VIỆC"}
                     destroyOnClose={true}
                     onOk={this.createRequest}
-                    width={'90vw'}
+                    width={'80vw'}
                     onCancel={() => {
                         this.setState({ ojd: false, loading: false });
                     }}
@@ -743,7 +745,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     ]}
                 >
                     <Row>
-                        <Col span={10}>
+                        <Col span={14}>
                             <JobDetail
                                 jobDetail={{
                                     jobName: job_detail.jobName.name,
@@ -753,11 +755,13 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     expriratedDate: job_detail.expirationDate,
                                     jobType: job_detail.jobType,
                                     shifts: job_detail.shifts,
-                                    description: job_detail.description
+                                    description: job_detail.description,
+                                    createdDate: job_detail.createdDate,
+                                    employerBranch: job_detail.employerBranchName
                                 }}
                             />
                         </Col>
-                        <Col span={4}>
+                        <Col span={10}>
                             <h6>ỨNG VIÊN THÍCH HỢP</h6>
                             <JobSuitableCandidate
                                 job_suitable_candidates={job_suitable_candidates.items}

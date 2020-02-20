@@ -19,6 +19,10 @@ import CanProPop from './../../../../layout/can-pro-pop/CanProProp';
 import avatar_men from './../../../../../../assets/image/no-avatar.png';
 //@ts-ignore
 import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
+import { _requestToServer } from './../../../../../../services/exec';
+import { POST, DELETE } from '../../../../../../const/method';
+import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 
 let { Option } = Select;
 
@@ -31,7 +35,7 @@ let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: stri
         style={{ width: 50, height: 50 }}
         //@ts-ignore
         onError={() => setErr(true)}
-        />
+    />
 };
 
 interface IFindCandidatesListProps extends StateProps, DispatchProps {
@@ -121,7 +125,13 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             className: "action",
             width: 90,
         },
-
+        {
+            title: 'Hoàn thiện hồ sơ',
+            dataIndex: 'completePercent',
+            className: 'action',
+            key: 'completePercent',
+            width: 100,
+        },
         {
             title: 'Trạng thái',
             dataIndex: 'lookingForJob',
@@ -153,6 +163,13 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             dataIndex: 'birthday',
             className: 'action',
             key: 'birthday',
+            width: 100,
+        },
+        {
+            title: 'Xác minh',
+            dataIndex: 'profileVerified',
+            className: 'action',
+            key: 'profileVerified',
             width: 100,
         },
         {
@@ -217,20 +234,20 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                 />
                             </a>
                         </Tooltip>
-                        {/* <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
+                        <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
                             <Icon
                                 className='test'
                                 style={{
                                     padding: 5,
                                     margin: 2,
-                                    color: item.saved ? 'red' : 'green'
+                                    color: item.saved ? 'red' : 'black'
                                 }}
                                 type="save"
                                 onClick={async () => {
                                     await _requestToServer(
-                                        POST,
-                                        SAVED_CANDIDATE_PROFILES + `/${id}/saved`,
-                                        undefined,
+                                        item.saved ? DELETE : POST,
+                                        item.saved ? SAVED_CANDIDATE_PROFILES + `/saved` : SAVED_CANDIDATE_PROFILES + `/${id}/saved`,
+                                        item.saved ? [id] : undefined,
                                         undefined,
                                         undefined,
                                         EMPLOYER_HOST,
@@ -238,16 +255,12 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                         true,
                                     ).then((res: any) => {
                                         if (res) {
-                                            setTimeout(() => {
-                                                if (id === item.id) {
-                                                    item.saved = !item.saved;
-                                                }
-                                            }, 500);
+                                            nextProps.getListFindCandidates(prevState.body, prevState.pageIndex, prevState.pageSize)
                                         }
                                     })
                                 }}
                             />
-                        </Tooltip> */}
+                        </Tooltip>
                     </>
                 );
 
@@ -280,7 +293,9 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     region: item.region ? item.region.name : "",
                     birthday: item.birthday === -1 ? "" : timeConverter(item.birthday, 1000),
                     unlocked: Lock(),
-                    operation: EditToolTip(item.id)
+                    operation: EditToolTip(item.id),
+                    completePercent: item.completePercent + '%',
+                    profileVerified: item.profileVerified ? 'Đã xác minh' : ' Chưa xác minh'
                 });
             });
 
@@ -354,13 +369,13 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     advancedFilter = () => {
         let { body } = this.state;
 
-        let { list_skills,
+        let {
+            list_skills,
             list_languages,
-            list_job_names } = this.props;
+        } = this.props;
 
         let list_skill_options = list_skills.map((item: ISkill, index: number) => (<Option key={index} value={item.name} children={item.name} />));
         let list_language_options = list_languages.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
-        let list_job_names_options = list_job_names.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
         return <>
             <IptLetterP
                 value={"Năm sinh"}
@@ -397,23 +412,30 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 }}
             />
             <hr />
-            <>
-                <IptLetterP value={"Loại công việc"} />
+            < >
+                <IptLetterP value={"Trạng thái hồ sơ"} />
                 <Select
-                    mode="multiple"
-                    size="default"
-                    placeholder="ex: Nhân viên văn phòng , Phục vụ ..."
-                    value={findIdWithValue(list_job_names, body.jobNameIDs, "id", "name")}
-                    onChange={
-                        (event: any) => {
-                            let list_data = findIdWithValue(list_job_names, event, "name", "id")
-                            body.jobNameIDs = list_data;
-                            this.setState({ body })
-                        }
-                    }
+                    showSearch
+                    defaultValue="Tất cả"
                     style={{ width: "100%" }}
+                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.completeProfile)}
                 >
-                    {list_job_names_options}
+                    <Option value={null}>Tất cả</Option>
+                    <Option value={TYPE.TRUE}>Hoàn thiện </Option>
+                    <Option value={TYPE.FALSE}>Chưa hoàn thiện</Option>
+                </Select>
+            </>
+            <>
+                <IptLetterP value={"Trạng thái xác minh"} />
+                <Select
+                    showSearch
+                    defaultValue="Tất cả"
+                    style={{ width: "100%" }}
+                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileVerified)}
+                >
+                    <Option value={null}>Tất cả</Option>
+                    <Option value={TYPE.TRUE}>Đã xác minh </Option>
+                    <Option value={TYPE.FALSE}>Chưa xác minh </Option>
                 </Select>
             </>
             <>
@@ -435,7 +457,6 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     {list_skill_options}
                 </Select>
             </>
-
             <>
                 <IptLetterP value={"Loại ngôn ngữ"} />
                 <Select
@@ -490,12 +511,16 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             data_table,
             loading_table,
             open_drawer,
+            body
         } = this.state;
 
         let {
             totalItems,
             list_regions,
+            list_job_names
         } = this.props;
+
+        let list_job_names_options = list_job_names.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         return (
             <>
@@ -588,32 +613,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                     }
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái hồ sơ"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.completeProfile)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Hoàn thiện </Option>
-                                    <Option value={TYPE.FALSE}>Chưa hoàn thiện</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái xác minh"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileVerified)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.TRUE}>Đã xác minh </Option>
-                                    <Option value={TYPE.FALSE}>Chưa xác minh </Option>
-                                </Select>
-                            </Col>
+
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái mở khóa"} />
                                 <Select
@@ -627,14 +627,32 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                     <Option value={TYPE.FALSE}>Chưa mở khóa</Option>
                                 </Select>
                             </Col>
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Loại công việc"} />
+                                <Select
+                                    mode="multiple"
+                                    size="default"
+                                    placeholder="ex: Nhân viên văn phòng , Phục vụ ..."
+                                    value={findIdWithValue(list_job_names, body.jobNameIDs, "id", "name")}
+                                    onChange={
+                                        (event: any) => {
+                                            let list_data = findIdWithValue(list_job_names, event, "name", "id")
+                                            body.jobNameIDs = list_data;
+                                            this.setState({ body })
+                                        }
+                                    }
+                                    style={{ width: "100%" }}
+                                >
+                                    {list_job_names_options}
+                                </Select>
+                            </Col>
                         </Row>
-
                         <Table
                             // @ts-ignore
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 950 }}
+                            scroll={{ x: 1220 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

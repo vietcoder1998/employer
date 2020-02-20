@@ -35,7 +35,7 @@ function callFindCandidates(action: any) {
                 action.body ? action.body : null,
                 {
                     pageIndex: action.pageIndex ? action.pageIndex : 0,
-                    pageSize: action.pageSize ? action.pageSize : 10
+                    pageSize: action.pageSize ? action.pageSize : 10,
                 },
                 undefined,
                 EMPLOYER_HOST,
