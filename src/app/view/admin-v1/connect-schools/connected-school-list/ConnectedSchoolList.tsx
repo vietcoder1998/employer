@@ -477,16 +477,15 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     <TextArea
                                         value={school_msg}
                                         placeholder="Chưa có yêu cầu"
-                                        rows={3}
-                                        disabled={true}
+                                        rows={5}
                                     />
                                 </Panel>
                                 <Panel header={dataSchool.owner !== TYPE.EMPLOYER ? "Phản hồi từ phía bạn" : "Lời mời từ phía bạn"} key="2" >
                                     <TextArea
                                         value={candidate_msg}
                                         placeholder="Chưa có yêu cầu"
-                                        rows={3}
-
+                                        rows={5}
+                                                        
                                         onChange={(event: any) => {
                                             this.setState({ candidate_msg: event.target.value })
                                         }}
