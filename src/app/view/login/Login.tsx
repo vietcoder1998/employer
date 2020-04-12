@@ -32,6 +32,7 @@ interface LoginState {
     state?: "LOGIN" | "REGISTER";
     confirm?: boolean;
     loading?: boolean;
+    hp ?: boolean;
 }
 
 interface LoginProps {
@@ -57,6 +58,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             state: "LOGIN",
             confirm: false,
             loading: false,
+            hp: true,
         }
     }
 
@@ -132,7 +134,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { err_msg, password, username, open_drawer, state, repassword, confirm, loading } = this.state;
+        let { err_msg, password, username, open_drawer, state, repassword, confirm, loading, hp } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -309,6 +311,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             placeholder="ex: 0123456789"
                                                             type="text"
                                                             maxLength={160}
+                                                           
                                                             onChange={(event: any) => this.setState({ phone: event.target.value })}
                                                         />
                                                     )}
@@ -333,8 +336,9 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                                 style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                             maxLength={160}
                                                             size="large"
-                                                            type="password"
+                                                            type={hp ? "password": "text"}
                                                             placeholder="Chứa ít nhất 6 kí tự"
+                                                            suffix={<Icon type='eye' onClick={()=> this.setState({hp:!hp})} />}
                                                             onChange={
                                                                 (event: any) => this.setState({ password: event.target.value })
                                                             }

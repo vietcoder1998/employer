@@ -1,3 +1,8 @@
+import { JobServiceEvent } from './../reducers/job-service-event';
+import { EventJobDetail } from './../reducers/event-job-detail';
+import { EventJobs } from './../reducers/event-jobs';
+import { EventDetail } from './../reducers/event-detail';
+import { EventSchools } from './../reducers/event-schools';
 import { SchoolsDetail } from './../reducers/school-detail';
 import { AnnouCommentDetail } from './../reducers/annou-comment-detail';
 import { RatingUser } from './../reducers/rating-user';
@@ -57,7 +62,12 @@ const rootReducer = combineReducers({
     RatingUser,
     AnnouCommentDetail,
     SchoolsDetail,
-    JobSuitableCandidates
+    JobSuitableCandidates,
+    EventSchools,
+    EventDetail,
+    EventJobs,
+    EventJobDetail,
+    JobServiceEvent
 });
 
 export type IAppState = ReturnType<typeof rootReducer>;

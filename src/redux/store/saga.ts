@@ -26,6 +26,11 @@ import { RatingUserWatcher } from '../sagas/rating-user';
 import { AnnouCommentDetailWatcher } from '../sagas/annou-comment-detail';
 import { SchoolDetailWatcher } from '../sagas/school-detail';
 import { JobSuitableCandidatesWatcher } from '../sagas/job-suitable-candidate';
+import { EventSchoolsWatcher } from '../sagas/event-schools';
+import { EventDetailWatcher } from '../sagas/event-detail';
+import { EventJobssWatcher } from '../sagas/event-jobs';
+import { EventJobDetailWatcher } from '../sagas/event-job-detail';
+import { JobServiceEventWatcher } from '../sagas/job-service-event';
 
 export default function* rootSaga() {
     try {
@@ -56,7 +61,12 @@ export default function* rootSaga() {
             RatingUserWatcher(),
             AnnouCommentDetailWatcher(),
             SchoolDetailWatcher(),
-            JobSuitableCandidatesWatcher()
+            JobSuitableCandidatesWatcher(),
+            EventSchoolsWatcher(),
+            EventJobssWatcher(),
+            EventDetailWatcher(),
+            EventJobDetailWatcher(),
+            JobServiceEventWatcher()
         ])
     } catch (err) {
         throw err;

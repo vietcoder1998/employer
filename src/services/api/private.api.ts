@@ -10,7 +10,9 @@ export const FIND_CANDIDATES = '/api/employers/candidates/query';
 export const APPLY_JOB = '/api/employers/jobs';
 export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
 export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';
+
 export const CONNECT_SCHOOL = '/api/employers/connections/schools';
+export const EVENT_SCHOOLS = '/api/employers/schools/events'
 export const ADMIN_ACCOUNT = '/api/employers';
 export const NOTI = '/api/employers/notifications';
 export const LIST_RATE = '/api/employers/ratings'

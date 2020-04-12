@@ -33,7 +33,9 @@ export const routePath = {
     ANNOU_DEFAULT: '/annou-default',
     PRIVACY: '/privacy',
     FEED_BACK: '/feed-back',
-    PROMOTION: '/promotion'
+    PROMOTION: '/promotion',
+    EVENT: '/event',
+    SCHOOLS: '/schools'
 };
 
 export const routeLink = {
@@ -49,6 +51,7 @@ export const routeLink = {
     CONNECTED_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.CONNECTED,
     UNCONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.UNCONNECT,
     PENDING_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.PENDING,
+    EVENT: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.EVENT,
     // User controller
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER,
     // Notification
@@ -91,6 +94,7 @@ export const breakCumb = [
     { label: routePath.CONNECTED, name: "Đã gửi kết nối", icon: null, url: routeLink.CONNECTED_SCHOOLS + routePath.LIST },
     { label: routePath.UNCONNECT, name: "Chưa gửi kết nối", icon: null, url: routeLink.UNCONNECT_SCHOOLS + routePath.LIST },
     { label: routePath.PENDING, name: "Đang gửi kết nối", icon: null, url: routeLink.PENDING_SCHOOLS + routePath.LIST },
+    { label: routePath.EVENT, name: "Sự kiện", icon: null, url: routeLink.EVENT + routePath.LIST },
     // School 
     { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
     { label: "user-controller", name: "Quản lý tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },

@@ -7,6 +7,7 @@ import ConnectedSchoolList from './connected-school-list/ConnectedSchoolList';
 import { routePath } from '../../../../const/break-cumb';
 import PendingSchoolList from './pending-school-list/PendingSchoolList';
 import RejectedSchoolList from './rejected-school-list/RejectedSchoolList';
+import EventSchool from './event-schools/EventSchools';
 const Switch = require("react-router-dom").Switch;
 
 interface ConnectSchoolsState {
@@ -30,7 +31,7 @@ export default class ConnectSchools extends PureComponent<ConnectSchoolsProps, C
                     <ErrorBoundaryRoute path={`${path}${routePath.PENDING}/list`} component={PendingSchoolList} />
                     <ErrorBoundaryRoute path={`${path}${routePath.UNCONNECT}/list`} component={UnConnectSchoolList} />
                     <ErrorBoundaryRoute path={`${path}${routePath.CONNECTED}/list`} component={ConnectedSchoolList} />
-
+                    <ErrorBoundaryRoute path={`${path}${routePath.EVENT}`} component={EventSchool} />
                 </Switch>
             </>
         )

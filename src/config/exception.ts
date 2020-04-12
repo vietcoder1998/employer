@@ -11,9 +11,11 @@ import setupLogin from './setup-login';
 export const exceptionShowNoti = async (err: any) => {
     if (err && err && err.response && err.response.data) {
         let res = err.response.data;
-        if (res.code && res.code !== 4014) {
+        if (res.code && res.code !== 4011) {
             notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
-        } else {
+        }
+        
+        if  (res.code && res.code === 4011) {
             // @ts-ignore
             let cookies = new Cookies();
 
