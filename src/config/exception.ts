@@ -5,7 +5,7 @@ import { _requestToServer } from './../services/exec';
 import Cookies from 'universal-cookie';
 import Swal from 'sweetalert2';
 import { notification } from 'antd';
-import { OAUTH2_HOST } from '../../../environment/dev';
+import { OAUTH2_HOST } from '../environment/dev';
 import setupLogin from './setup-login';
 
 export const exceptionShowNoti = async (err: any) => {
