@@ -88,7 +88,10 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     OAUTH2_LOGIN,
                     { username, password },
                     undefined,
-                    loginHeaders("worksvn-employer-web", "worksvn-employer-web@works.vn"),
+                    loginHeaders(
+                        process.env.REACT_APP_CLIENT_ID ? process.env.REACT_APP_CLIENT_ID : 'worksvn-employer-web',
+                        process.env.REACT_APP_CLIENT_SECRET ? process.env.REACT_APP_CLIENT_SECRET : 'worksvn-employer-web@works.vn'
+                    ),
                     OAUTH2_HOST,
                     null,
                 ).then((res: any) => {
