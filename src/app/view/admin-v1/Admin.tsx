@@ -7,7 +7,6 @@ import clearStorage from '../../../services/clearStorage';
 import { breakCumb, routeLink, routePath } from '../../../const/break-cumb';
 
 import Jobs from './jobs/Jobs';
-import ConnectSchools from './connect-schools/ConnectSchools';
 import ConvernientService from './convernient-service/ConvernientService';
 import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
 import Profile from './profile/Profile';
@@ -26,6 +25,7 @@ import { INoti } from '../../../models/notis';
 import { NotUpdate } from '../layout/common/Common';
 import Notitication from './notification/Notification';
 import ClearCache from 'react-clear-cache';
+import ConnectEvent from './connect-event/ConnectEvent';
 
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -259,7 +259,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 <Col sm={22} md={22} lg={20}>
                                     <Switch>
                                         <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
-                                        <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectSchools} />
+                                        <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectEvent} />
                                         <ErrorBoundaryRoute path={`${path}/convernient`} component={ConvernientService} />
                                         <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
                                         <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />

@@ -43,7 +43,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         alt="worksvnlogo"
                     />
                 </LinkTo>
-
             </div>
             <Icon
                 className="trigger"
@@ -66,7 +65,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     margin: "50px 0px",
                     paddingBottom: 100,
                     height: "100vh",
-                    overflowY: "auto"
+                    overflowY: "auto",
+                    color: "#000000"
                 }}
                 onClick={(event: any) => {
                     props.onCallLoading()
@@ -123,7 +123,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="share-alt" />
-                            <span>Kết nối trường học</span>
+                            <span>Trường học</span>
                         </span>
                     }
                 >
@@ -135,26 +135,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     </Menu.Item>
                     <Menu.Item key="connected">
                         <Link to={routeLink.CONNECT_SCHOOLS + routePath.CONNECTED + routePath.LIST}>
-                            <Icon type="check" />
-                            <span>Đã kết nối </span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="rejected">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.REJECTED + routePath.LIST}>
-                            <Icon type="close" />
-                            <span>Đã từ chối</span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="pending">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.PENDING + routePath.LIST}>
-                            <Icon type="loading" />
-                            <span>Đang kết nối</span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="unconnect">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.UNCONNECT + routePath.LIST}>
-                            <Icon type="question" />
-                            <span>Chưa kết nối </span>
+                            <Icon type="api" />
+                            <span>Kết nối</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>

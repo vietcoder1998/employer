@@ -1,8 +1,8 @@
 import React from 'react';
-import './PendingSchoolList.scss';
+import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
-import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input } from 'antd';
+import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input, Tabs } from 'antd';
 // import { timeConverter } from '../../../../../../utils/convertTime';
 import { TYPE } from '../../../../../const/type';
 import { IptLetter, IptLetterP, NotUpdate } from '../../../layout/common/Common';
@@ -20,9 +20,11 @@ import { timeConverter } from '../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../services/exec';
 import { POST, PUT } from '../../../../../const/method';
 import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
-import { EMPLOYER_HOST } from '../../../../../environment/dev';
+
 let { Option } = Select;
 const { Panel } = Collapse;
+const { TabPane } = Tabs;
+
 const typeReturn = (type?: string) => {
     let result = <NotUpdate msg="Chưa phản hồi" />
     switch (type) {
@@ -42,7 +44,7 @@ const typeReturn = (type?: string) => {
     return result;
 }
 
-interface IPendingSchoolListProps extends StateProps, DispatchProps {
+interface IConnectedSchoolsListProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     location?: any;
@@ -54,7 +56,7 @@ interface IPendingSchoolListProps extends StateProps, DispatchProps {
     setConnectSchoolDetail: (data: any) => any;
 };
 
-interface IPendingSchoolListState {
+interface IConnectedSchoolsListState {
     data_table?: Array<IConnectSchool>;
     pageIndex?: number;
     pageSize?: number;
@@ -80,7 +82,7 @@ interface IPendingSchoolListState {
     search?: any;
 };
 
-class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendingSchoolListState> {
+class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, IConnectedSchoolsListState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -102,7 +104,8 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
             connect_schools_detail: {},
             dataSchool: {},
             body: {
-                state: TYPE.PENDING
+                hasRequest: true,
+                state: TYPE.ACCEPTED
             }
         };
     }
@@ -205,7 +208,7 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
         this.setState({ show_modal: !show_modal });
     };
 
-    static getDerivedStateFromProps(nextProps?: IPendingSchoolListProps, prevState?: IPendingSchoolListState) {
+    static getDerivedStateFromProps(nextProps?: IConnectedSchoolsListProps, prevState?: IConnectedSchoolsListState) {
         if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
             let { list_connect_schools } = prevState;
             if (nextProps.list_connect_schools) {
@@ -221,14 +224,6 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
             let { connect_schools_detail } = nextProps;
             let candidate_msg = null;
             let school_msg = null;
-
-            if (connect_schools_detail.owner === "EMPLOYER") {
-                candidate_msg = connect_schools_detail.requestMessage;
-                school_msg = connect_schools_detail.replyMessage;
-            } else {
-                candidate_msg = connect_schools_detail.replyMessage;
-                school_msg = connect_schools_detail.requestMessage;
-            }
 
             setTimeout(() => {
                 nextProps.handleMapState({ marker: { lat: connect_schools_detail.lat, lng: connect_schools_detail.lon } })
@@ -297,24 +292,39 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
         await this.props.getListConnectSchools(body, pageIndex, pageSize);
     };
 
-    onChangeType = (event: any, param?: string) => {
+    onChangeType = (event?: any, param?: string) => {
         let { body } = this.state;
         let { list_regions } = this.props;
         let value: any = event;
         list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
         switch (event) {
             case TYPE.TRUE:
-                value = true;
+                body.hasRequest = true;
+                body.state = TYPE.PENDING;
                 break;
             case TYPE.FALSE:
-                value = false;
+                body.hasRequest = false;
+                body.state = TYPE.PENDING;
+                break;
+            case TYPE.CONNECTED:
+                body.hasRequest = true;
+                body.state = TYPE.CONNECTED;
+                break;
+            case TYPE.REJECTED:
+                body.state = TYPE.REJECTED;
                 break;
             default:
+                body.state = null;
+                body.hasRequest = null;
                 break;
         };
 
-        body[param] = value;
+        if (param) {
+            body[param] = value;
+        };
+
         this.setState({ body });
+        this.searchConnectSchools();
     };
 
     onSetDataSchool = async (id?: string) => {
@@ -322,11 +332,13 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
         let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
         this.props.handleDrawer({ open_drawer: true });
+        await this.setState({ loading: true });
         setTimeout(() => {
             if (dataSchool.state) {
                 this.props.getConnectSchoolDetail(id);
             }
         }, 500);
+        await this.setState({ loading: false });
     }
 
     createRequest = async (type?: string) => {
@@ -366,7 +378,7 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
             body,
             undefined,
             undefined,
-            EMPLOYER_HOST,
+            undefined,
             true
         ).then(
             (res: any) => {
@@ -402,11 +414,11 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
         return (
             <>
                 <DrawerConfig
-                    title="Đang gửi lời mời"
+                    title="Đã gửi lời mời"
                     width={"60vw"}
                 >
                     {
-                        dataSchool ? (
+                        dataSchool && !loading ? (
                             <Collapse
                                 defaultActiveKey={['1', '2', '3']}
                                 bordered={false}
@@ -474,15 +486,14 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
                                     <TextArea
                                         value={school_msg}
                                         placeholder="Chưa có yêu cầu"
-                                        rows={3}
-                                        disabled={true}
+                                        rows={5}
                                     />
                                 </Panel>
                                 <Panel header={dataSchool.owner !== TYPE.EMPLOYER ? "Phản hồi từ phía bạn" : "Lời mời từ phía bạn"} key="2" >
                                     <TextArea
                                         value={candidate_msg}
                                         placeholder="Chưa có yêu cầu"
-                                        rows={3}
+                                        rows={5}
 
                                         onChange={(event: any) => {
                                             this.setState({ candidate_msg: event.target.value })
@@ -509,22 +520,11 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
                             }}
                             onClick={() => this.createRequest(TYPE.ACCEPTED)}
                         />
-                        <Button
-                            icon={loading ? "loading" : "stop"}
-                            children={"Hủy phản hồi"}
-                            type={"danger"}
-                            style={{
-                                marginRight: "10px",
-                                float: "right",
-                                display: dataSchool.state === TYPE.ACCEPTED ? "block" : "none"
-                            }}
-                            onClick={() => this.createRequest(TYPE.REJECTED)}
-                        />
                     </div>
                 </DrawerConfig>
                 <div className="common-content">
                     <h5>
-                        Danh sách trường đang có yêu cầu kết nối
+                        Danh sách trường học
                         <Tooltip title="Tìm kiếm trường học" >
                             <Button
                                 onClick={() => this.searchConnectSchools()}
@@ -543,6 +543,20 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
                     </h5>
                     <div className="table-operations">
                         <Row >
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Trạng thái kết nối"} />
+                                <Select
+                                    showSearch
+                                    defaultValue="Tất cả"
+                                    style={{ width: "100%" }}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.state)}
+                                >
+                                    <Option value={null}>Tất cả</Option>
+                                    <Option value={TYPE.PENDING}>Đang gửi yêu cầu</Option>
+                                    <Option value={TYPE.ACCEPTED}>Đã chấp nhận</Option>
+                                    <Option value={TYPE.REJECTED}>Đã từ chối</Option>
+                                </Select>
+                            </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Bên gửi"} />
                                 <Select
@@ -573,7 +587,6 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
                                     }
                                 </Select>
                             </Col>
-                          
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tên rút gọn"} />
                                 <Input
@@ -597,24 +610,34 @@ class PendingSchoolList extends React.Component<IPendingSchoolListProps, IPendin
 
                             </Col>
                         </Row>
+                        <Row>
+                            <Tabs onChange={(event) => this.onChangeType(event)}>
+                                <TabPane tab="Đã kết nối" key={"CONNECTED"}>
+                                </TabPane>
+                                <TabPane tab="Đã từ chối" key={"REJECTED"}>
+                                </TabPane>
+                                <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE}>
+                                </TabPane>
+                                <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE}>
+                                </TabPane>
+                                <TabPane tab="Chưa kết nối" key={"none"}>
+                                </TabPane>
 
+                            </Tabs>
+                        </Row>
                         {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
-                            <Row>
-                                {
-                                    list_connect_schools.map(
-                                        (item: IConnectSchool, index: number) =>
-                                            <Col
-                                                xxl={6}
-                                                xl={8}
-                                                md={12}
-                                                lg={8}
-                                                key={index}
-                                            >
-                                                <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
-                                            </Col>
-                                    )
-                                }
-                            </Row>
+                            list_connect_schools.map(
+                                (item: IConnectSchool, index: number) =>
+                                    <Col
+                                        xxl={6}
+                                        xl={8}
+                                        md={8}
+                                        lg={8}
+                                        key={index}
+                                    >
+                                        <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
+                                    </Col>
+                            )
                             : <Empty />) : <Loading />}
                         <div style={{ textAlign: "center", margin: " 40px 20px", }}>
                             <Pagination
@@ -662,4 +685,4 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(PendingSchoolList);
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectedSchoolsList);
