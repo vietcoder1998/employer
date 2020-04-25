@@ -96,11 +96,33 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             width: 100,
         },
         {
+            title: 'Ngày bắt đầu',
+            dataIndex: 'createdDate',
+            className: 'action',
+            key: 'createdDate',
+            width: 100,
+        },
+        {
+            title: 'Ngày kết thúc',
+            dataIndex: 'finishedDate',
+            className: 'action',
+            key: 'finishedDate',
+            width: 100,
+        },
+        {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
             width: 150,
         },
+        {
+            title: 'Nơi tổ chức',
+            dataIndex: 'schoolName',
+            className: 'action',
+            key: 'schoolName',
+            width: 100,
+        },
+       
         {
             title: 'Nơi tổ chức',
             dataIndex: 'schoolName',
@@ -173,8 +195,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     schoolName: item.school && item.school.name ? item.school.name : '',
                     address: item.school && item.school.address ? item.school.address : '',
                     name: item.name ? item.name : '',
-                    startedDate: item.startedDate !== -1 ? timeConverter(item.startedDate) : "",
-                    finishedDate: item.finishedDate !== -1 ? timeConverter(item.finishedDate) : "",
+                    startedDate: item.startedDate ? timeConverter(item.createdDate) : "",
+                    finishedDate: item.finishedDate  ? timeConverter(item.finishedDate) : "",
                     data: item
                 });
             });

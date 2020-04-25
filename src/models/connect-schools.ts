@@ -37,6 +37,6 @@ export interface IConnectSchoolsFilter {
     schoolTypeID?: number,
     jobNameIDs?: Array<number>,
     hasRequest?: boolean,
-    owner?: "EMPLOYER",
+    owner?: string,
     state?: string
 }

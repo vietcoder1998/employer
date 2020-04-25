@@ -105,7 +105,13 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             dataSchool: {},
             body: {
                 hasRequest: true,
-                state: TYPE.ACCEPTED
+                state: TYPE.ACCEPTED,
+                name: null,
+                shortName: null,
+                regionID: null,
+                schoolTypeID: null,
+                jobNameIDs: [],
+                owner: null,
             }
         };
     }
@@ -301,21 +307,27 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             case TYPE.TRUE:
                 body.hasRequest = true;
                 body.state = TYPE.PENDING;
+                body.owner = TYPE.SCHOOL;
                 break;
             case TYPE.FALSE:
-                body.hasRequest = false;
-                body.state = TYPE.PENDING;
-                break;
-            case TYPE.CONNECTED:
                 body.hasRequest = true;
-                body.state = TYPE.CONNECTED;
+                body.state = TYPE.PENDING;
+                body.owner = TYPE.EMPLOYER;
+                break;
+            case TYPE.ACCEPTED:
+                body.hasRequest = true;
+                body.owner = null;
+                body.state = TYPE.ACCEPTED;
                 break;
             case TYPE.REJECTED:
+                body.owner = null;
+                body.hasRequest = null;
                 body.state = TYPE.REJECTED;
                 break;
             default:
+                body.hasRequest = false;
                 body.state = null;
-                body.hasRequest = null;
+                body.owner = null;
                 break;
         };
 
@@ -612,9 +624,9 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                         </Row>
                         <Row>
                             <Tabs onChange={(event) => this.onChangeType(event)}>
-                                <TabPane tab="Đã kết nối" key={"CONNECTED"}>
+                                <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED}>
                                 </TabPane>
-                                <TabPane tab="Đã từ chối" key={"REJECTED"}>
+                                <TabPane tab="Đã từ chối" key={TYPE.REJECTED}>
                                 </TabPane>
                                 <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE}>
                                 </TabPane>

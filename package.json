@@ -32,6 +32,7 @@
     "react-easy-crop": "^1.17.0",
     "react-geocode": "^0.2.1",
     "react-google-autocomplete": "^1.1.2",
+    "react-image-crop": "^8.6.2",
     "react-pdf": "^4.1.0",
     "react-places-autocomplete": "^7.2.1",
     "react-redux": "^7.1.1",
