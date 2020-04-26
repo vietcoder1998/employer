@@ -36,7 +36,7 @@ const viewCount = (id?: string | number, count?: string | number, color?: "red" 
     >
         <Tooltip title="Xem chi tiết">
             <Link
-                to={routeLink.EVENT + routePath.APPLY + `/${id}?state=${state}`}
+                to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
                 disabled={count === 0 ? true : false}
                 target="_blank"
             >
@@ -55,7 +55,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             return (
                 <Tooltip title={"Gói tuyển dụng gấp"} placement="left">
                     <div className='top f-sm'>
-                        ({props.timeLeft})
+                        {props.timeLeft ? props.timeLeft : "Hết hạn"}
                     </div>
                 </Tooltip>
             );
@@ -63,7 +63,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             return (
                 <Tooltip title={"Gói tìm kiếm nổi bật"} placement="left">
                     <div className='high_light f-sm'>
-                        ({props.timeLeft})
+                        {props.timeLeft ? props.timeLeft : "Hết hạn"}
                     </div>
                 </Tooltip>
             );
@@ -197,16 +197,17 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         },
         {
             title: 'Tiêu đề',
-            width: 150,
+            width: 200,
             dataIndex: 'title',
             key: 'jobTitle',
+            fixed: 'left'
         },
 
         {
             title: 'Tên công việc',
             dataIndex: 'jobName',
             key: 'jobName',
-            width: 200,
+            width: 140,
         },
         {
             title: 'Đang chờ',
@@ -751,7 +752,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 />
                 <Modal
                     visible={ojd}
-                    title={"CHI TIẾT CÔNG VIỆC"}
+                    title={"THÔNG TIN CÔNG VIỆC"}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
@@ -822,7 +823,6 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 disabled={un_active_home}
                             >
                                 <Radio value={TYPE.TOP}>Tuyển dụng gấp</Radio>
-                                <Radio value={TYPE.IN_DAY}>Tuyển dụng trong ngày</Radio>
                             </Radio.Group>
                             <Button
                                 icon="check"
@@ -841,34 +841,6 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 Kích hoạt
                             </Button>
                         </IptLetterP>
-                        {/* <IptLetterP
-                                style={{ margin: "15px 5px" }}
-                                value={`Nhóm gói tuyển dụng tìm kiếm" ${searchExpiration !== -1 && searchExpired ? "(Hết hạn)" : ""}`}
-                            >
-                                <Radio.Group onChange={
-                                    (event: any) => this.onChoseSearchPriority(event.target.value)}
-                                    value={searchPriority}
-                                    disabled={un_active_search}
-                                >
-                                    <Radio value={TYPE.HIGHLIGHT}>Tìm kiếm nổi bật</Radio>
-                                </Radio.Group>
-                                <Button
-                                    type={un_active_search ? "ghost" : "primary"}
-                                    icon="check"
-                                    style={{
-                                        float: "right"
-                                    }}
-                                    disabled={un_active_search}
-                                    onClick={() => {
-                                        this.props.handleModal({
-                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
-                                            type_modal: TYPE.JOB_FILTER.searchPriority
-                                        });
-                                    }}
-                                >
-                                    Kích hoạt
-                            </Button>
-                            </IptLetterP> */}
                     </>
                     <div style={{
                         marginTop: "30px",
@@ -1077,7 +1049,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1850 }}
+                            scroll={{ x: 1680 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

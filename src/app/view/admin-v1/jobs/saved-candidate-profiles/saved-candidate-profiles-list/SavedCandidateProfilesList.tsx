@@ -135,15 +135,17 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
         {
             title: 'Ảnh',
             width: 30,
+            className: 'action',
             dataIndex: 'avatarUrl',
             key: 'avatarUrl',
+            fixed: 'left',
         },
         {
-            title: 'Trạng thái',
+            title: 'Mở khóa',
             className: 'action',
             dataIndex: 'unlocked',
             key: 'unlocked',
-            width: 100,
+            width: 80,
         },
         {
             title: 'Ngày lưu',
@@ -318,11 +320,10 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                         style={{ top: "5vh" }}
                         footer={[
                             <Button
-                                key="back"
-                                type="danger"
+                                type={"danger"}
                                 onClick={this.onToggleModal}
                             >
-                                Thoát
+                                Đóng
                         </Button>
                         ]}
                     >
@@ -336,7 +337,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                             columns={this.columns}
                             loading={loading_table}
                             dataSource={data_table}
-                            scroll={{ x: 1110 }}
+                            scroll={{ x: 1000 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

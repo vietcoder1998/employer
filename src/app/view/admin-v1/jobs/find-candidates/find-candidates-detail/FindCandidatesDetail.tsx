@@ -349,12 +349,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     </IptLetterP>
                     <hr />
                     <Button
-                        icon="close"
+                        type={"danger"}
                         onClick={() =>{
                             this.props.handleDrawer({open_drawer: false})
                         }}
                     >
-                        Thoát
+                        Đóng
                         </Button>
                     <Button
                         type="primary"

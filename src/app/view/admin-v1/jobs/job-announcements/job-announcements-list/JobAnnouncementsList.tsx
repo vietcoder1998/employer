@@ -55,7 +55,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             return (
                 <Tooltip title={"Gói tuyển dụng gấp"} placement="left">
                     <div className='top f-sm'>
-                        ({props.timeLeft})
+                        {props.timeLeft}
                     </div>
                 </Tooltip>
             );
@@ -63,7 +63,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             return (
                 <Tooltip title={"Gói tìm kiếm nổi bật"} placement="left">
                     <div className='high_light f-sm'>
-                        ({props.timeLeft})
+                        {props.timeLeft}
                     </div>
                 </Tooltip>
             );
@@ -71,7 +71,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
             return (
                 <Tooltip title={"Gói tuyển dụng trong ngày"} placement="left">
                     <div className='in_day f-sm'>
-                        ({props.timeLeft})
+                        {props.timeLeft}
                     </div>
                 </Tooltip>
             );
@@ -193,16 +193,18 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
         },
         {
             title: 'Tiêu đề',
-            width: 150,
+            width: 200,
             dataIndex: 'title',
-            key: 'jobTitle',
+            key: 'title',
+            fixed: 'left'
         },
 
         {
             title: 'Tên công việc',
             dataIndex: 'jobName',
+            className: 'action',
             key: 'jobName',
-            width: 200,
+            width: 160,
         },
         {
             title: 'Đang chờ',
@@ -243,7 +245,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             dataIndex: 'jobType',
             className: 'action',
             key: 'jobType',
-            width: 110,
+            width: 100,
         },
         {
             title: 'Ngày đăng',
@@ -265,7 +267,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
-            width: 190,
+            width: 120,
         },
         {
             title: 'Thao tác',
@@ -725,7 +727,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 />
                 <Modal
                     visible={ojd}
-                    title={"CHI TIẾT CÔNG VIỆC"}
+                    title={"THÔNG TIN CÔNG VIỆC"}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
@@ -1053,7 +1055,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 columns={this.columns}
                                 loading={loading_table}
                                 dataSource={data_table}
-                                scroll={{ x: 1850 }}
+                                scroll={{ x: 1620 }}
                                 bordered
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"

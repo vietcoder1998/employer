@@ -70,6 +70,7 @@ interface IPendingJobListState {
     search?: string;
     list_jobs?: Array<IPendingJob>
     job_id?: string;
+    body?: any;
 }
 
 class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobListState> {
@@ -88,6 +89,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             loading: false,
             loading_table: true,
             job_id: null,
+            body: {}
         }
     }
 
@@ -116,7 +118,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
         },
         {
             title: 'Công việc',
-            width: 180,
+            width: 100,
             dataIndex: 'jobName',
             className: 'action',
             key: 'jobName',
@@ -151,7 +153,8 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
         {
             title: 'Địa chỉ',
             dataIndex: 'address',
-            key: '6'
+            width: 200,
+            key: 'address'
         },
         {
             title: 'Hành động',
@@ -159,7 +162,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             dataIndex: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 75
+            width: 80
         },
     ];
 
@@ -284,28 +287,27 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     render() {
-        let { data_table, loading, message, loading_table, state, job_id } = this.state;
+        let { data_table, loading, loading_table, state, job_id } = this.state;
         let { totalItems, job_detail, open_modal } = this.props;
 
         return (
             <>
                 <Modal
                     visible={open_modal}
-                    title="CHI TIẾT CÔNG VIỆC"
+                    title={
+                        <div style={{ fontWeight: "bolder", textTransform: "capitalize" }}>{job_detail.jobTitle}</div>
+                    }
                     onCancel={() => this.props.handleModal({ open_modal: false })}
                     destroyOnClose={true}
                     width="55vw"
                     style={{ top: "5vh", height: "80vh" }}
                     footer={[
                         <Button
-                            key="back"
                             type="danger"
-                            icon="close"
                             loading={loading}
                             onClick={async () => this.props.handleModal({ open_modal: false })}
-                            disabled={state === TYPE.REJECTED || !message}
                         >
-                            Thoát
+                            Đóng
                         </Button>,
                         <Link key="submit" to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${job_id}`} target='_blank' >
                             <Button
@@ -342,33 +344,39 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     }
 
                     {
-                        job_detail && job_detail.message ? <div style={{ padding: "10px 25px" }}>
-                            LÝ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
-                        </div> : ''
+                        job_detail && job_detail.message ?
+                            <div
+                                style={{
+                                    padding: "10px 25px",
+                                    color: "red",
+                                    backgroundColor: "white",
+                                    marginTop: 10
+                                }}
+                            >
+                                LÝ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
+                            </div> : ''
                     }
                 </Modal>
                 <div className="common-content">
                     <h5>
                         Danh sách bài đăng đang chờ {`(${totalItems})`}
                     </h5>
-                    <div>
-                        <Table
-                            // @ts-ignore
-                            columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
-                            scroll={{ x: 1850 }}
-                            bordered
-                            pagination={{ total: totalItems, showSizeChanger: true }}
-                            size="middle"
-                            onChange={this.setPageIndex}
-                            onRow={
-                                (event: any) => ({
-                                    onClick: () => this.setState({ job_id: event.key })
-                                })
-                            }
-                        />
-                    </div>
+                    <Table
+                        // @ts-ignore
+                        columns={this.columns}
+                        loading={loading_table}
+                        dataSource={data_table}
+                        scroll={{ x: 1400 }}
+                        bordered
+                        pagination={{ total: totalItems, showSizeChanger: true }}
+                        size="middle"
+                        onChange={this.setPageIndex}
+                        onRow={
+                            (event: any) => ({
+                                onClick: () => this.setState({ job_id: event.key })
+                            })
+                        }
+                    />
                 </div>
             </>
         )

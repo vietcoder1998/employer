@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
+import { Divider, Button, Input, Select, Tabs, message, Result } from 'antd';
 import { connect } from 'react-redux';
 import './EventJobsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -15,7 +15,6 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { POST, PUT } from '../../../../../../const/method';
 import { PENDING_JOBS, EVENT_SCHOOLS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import moment from 'moment';
 import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 
@@ -414,7 +413,7 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
                         widthComponent="400px"
                     >
                         <TextArea
-                            rows={5}
+                            rows={15}
                             style={{ width: '100%' }}
                             maxLength={10000}
                             placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 10000 kí tự)"
@@ -432,30 +431,6 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
                             <label> Hiện tại: <span style={{ color }}> {body.description ? body.description.length : 0}</span> kí tự</label>}
                         />
                     </p>
-
-                    <InputTitle
-                        title="Thời gian hết hạn"
-                        required={true}
-                        type="SWITCH"
-                        widthLabel="150px"
-                    >
-                        <DatePicker
-                            format={"DD/MM/YYYY"}
-                            style={{ width: '100%' }}
-                            placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
-                            defaultPickerValue={null}
-                            value={body.expirationDate ? moment(body.expirationDate) : null}
-                            onChange={
-                                (event?: any) => {
-                                    event ?
-                                        body.expirationDate = event.unix() * 1000 :
-                                        body.expirationDate = null;
-                                    this.setState({ body });
-                                }
-                            }
-                            disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
-                        />
-                    </InputTitle>
                     <InputTitle
                         title="Chọn công việc"
                         required={true}
@@ -579,7 +554,7 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
                         </TabPane>
                     </Tabs>
                     <div>
-                        <NotUpdate msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
+                        <NotUpdate warning={true} msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
                     </div>
                 </div>
                 {

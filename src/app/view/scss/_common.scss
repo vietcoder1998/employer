@@ -39,6 +39,9 @@ code {
 
 .ant-breadcrumb {
   padding-bottom: 10px !important;
+  svg {
+    margin-top: -8px;
+  }
 }
 
 .all-content {
@@ -521,6 +524,11 @@ h5 {
     text-decoration: underline;
     cursor: pointer;
   }
+
+  svg {
+    margin-top: -5px;
+    margin-right: 5px;
+  }
 }
 
 // For Border
@@ -627,11 +635,11 @@ thead {
 }
 
 .n-candidate {
-  font-size: 1rem;
+  font-size: 0.9rem;
   text-align: center;
 
   svg {
-    margin-top: -5px;
+    margin-top: -8px;
   }
 }
 

@@ -91,10 +91,7 @@ export const breakCumb = [
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
     // Connect School
     { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
-    { label: routePath.CONNECTED, name: "Đã gửi kết nối", icon: null, url: routeLink.CONNECTED_SCHOOLS + routePath.LIST },
-    { label: routePath.UNCONNECT, name: "Chưa gửi kết nối", icon: null, url: routeLink.UNCONNECT_SCHOOLS + routePath.LIST },
-    { label: routePath.PENDING, name: "Đang gửi kết nối", icon: null, url: routeLink.PENDING_SCHOOLS + routePath.LIST },
-    { label: routePath.EVENT, name: "Sự kiện", icon: null, url: routeLink.EVENT + routePath.LIST },
+    { label: "event", name: "Sự kiện", icon: null, url: routeLink.EVENT + routePath.LIST },
     // School 
     { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
     { label: "user-controller", name: "Quản lý tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },

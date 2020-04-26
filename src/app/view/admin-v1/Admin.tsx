@@ -164,7 +164,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                             />) : <NotUpdate msg="Không có thông báo" />
                                             }
                                         </div>
-
                                         <div
                                             className="a_c link-to"
                                             style={{ padding: 10 }}

@@ -20,7 +20,7 @@ export default function EventDetail(props?: IEventDetail) {
             <p>
                 <Icon type={'calendar'} />  {timeConverter(props.createdDate, 1000) + " - " + timeConverter(props.finishedDate, 1000)}
             </p>
-            <div>
+            <div style={{padding: 10}}>
                 {props.description}
             </div>
         </div>

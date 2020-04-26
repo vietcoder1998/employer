@@ -88,7 +88,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.state = {
             data_table: [],
             pageIndex: 0,
-            pageSize: 6,
+            pageSize: 10,
             show_modal: false,
             loading: false,
             announcementTypeID: null,
@@ -130,6 +130,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             width: 30,
             dataIndex: 'avatarUrl',
             key: 'avatarUrl',
+            className: 'action',
+            fixed: 'left',
         },
         {
             title: 'Mở khóa',
@@ -517,8 +519,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
                     <div style={{ margin: "20px 0px", width: "100%" }}>
                         <Button
-                            icon="left"
-                            children={"Thoát"}
+                            type={"danger"}
+                            children={"Đóng"}
                             style={{ float: "left" }}
                         />
                         <Button
@@ -624,34 +626,31 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                         </Row>
                         <Row>
                             <Tabs onChange={(event) => this.onChangeType(event)}>
-                                <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED}>
-                                </TabPane>
-                                <TabPane tab="Đã từ chối" key={TYPE.REJECTED}>
-                                </TabPane>
-                                <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE}>
-                                </TabPane>
-                                <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE}>
-                                </TabPane>
-                                <TabPane tab="Chưa kết nối" key={"none"}>
-                                </TabPane>
+                                <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED} />
+                                <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
+                                <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE} />
+                                <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE} />
+                                <TabPane tab="Chưa kết nối" key={"none"} />
+
 
                             </Tabs>
+                            {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
+                                list_connect_schools.map(
+                                    (item: IConnectSchool, index: number) =>
+                                        <Col
+                                            xxl={6}
+                                            xl={8}
+                                            md={8}
+                                            lg={8}
+                                            key={index}
+                                        >
+                                            <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
+                                        </Col>
+                                )
+                                : <Empty description="Chưa có trường phù hợp" />) : <Loading />}
                         </Row>
-                        {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
-                            list_connect_schools.map(
-                                (item: IConnectSchool, index: number) =>
-                                    <Col
-                                        xxl={6}
-                                        xl={8}
-                                        md={8}
-                                        lg={8}
-                                        key={index}
-                                    >
-                                        <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
-                                    </Col>
-                            )
-                            : <Empty />) : <Loading />}
-                        <div style={{ textAlign: "center", margin: " 40px 20px", }}>
+
+                        <Row style={{ textAlign: "center", margin: " 40px 20px", }}>
                             <Pagination
                                 showQuickJumper
                                 showSizeChanger
@@ -661,7 +660,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 onShowSizeChange={(event: any) => this.setPageSize(event)}
                                 onChange={(event: any) => this.setPageIndex(event)}
                             />
-                        </div>
+                        </Row>
                     </div>
                 </div>
             </>

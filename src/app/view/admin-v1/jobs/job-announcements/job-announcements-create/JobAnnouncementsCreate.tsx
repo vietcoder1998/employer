@@ -403,7 +403,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         widthComponent="400px"
                     >
                         <TextArea
-                            rows={5}
+                            rows={15}
                             style={{ width: '100%' }}
                             maxLength={10000}
                             placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 10000 kí tự)"
@@ -568,7 +568,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         </TabPane>
                     </Tabs>
                     <div>
-                        <NotUpdate msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
+                        <NotUpdate warning={true} msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
                     </div>
                 </div>
                 {

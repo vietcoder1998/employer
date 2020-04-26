@@ -8,6 +8,7 @@ import { timeConverter } from '../../../../utils/convertTime';
 import { ISkill } from '../../../../models/skills';
 import { IJobName } from '../../../../models/job-type';
 import IJobDetail from '../../../../models/job-detail';
+import { IShift } from '../../../../models/announcements';
 
 interface IJobDetailProps {
     list_job_skills?: Array<ISkill>,
@@ -22,19 +23,12 @@ export default function JobDetail(props: IJobDetailProps) {
 
     return (
         <>
-            <h6>MÔ TẢ </h6>
             <div className='job-detail test'>
-                <h6>CHI TIẾT</h6>
-                <div className='detail-job b_b'>
+                <div className='detail-job-general b_b'>
+                    <h6>NHÀ TUYỂN DỤNG</h6>
                     <Avatar src={jobDetail && jobDetail.employerUrl} icon="user" shape={'square'}
                         style={{ width: "60px", height: "60px", margin: "20px 0px" }} />
                     <ul>
-                        <li className='d_j_t'>
-                            <IptLetter value={"Tiêu đề bài đăng:"} />
-                            <label>
-                                {jobDetail && jobDetail.jobTitle ? jobDetail.jobTitle : "Không có"}
-                            </label>
-                        </li>
                         <li className='d_j_t'>
                             <IptLetter value={"Tên công việc: "} />
                             <label>
@@ -102,11 +96,11 @@ export default function JobDetail(props: IJobDetailProps) {
                 {/* Time */}
                 <div className='time-job b_t'>
                     <h6>CA LÀM VIỆC</h6>
-                    <div>
+                    <div className='job-view-detail'>
                         {
                             jobDetail &&
                             jobDetail.shifts &&
-                            jobDetail.shifts.map((item: any, index: number) => {
+                            jobDetail.shifts.map((item: IShift, index: number) => {
                                 let maxSalary = '' + item.maxSalary && item.maxSalary === 0 ? '' : ('-' + item.maxSalary);
                                 return (<div key={index} className='time-content b_b'>
                                     <p>
@@ -114,12 +108,12 @@ export default function JobDetail(props: IJobDetailProps) {
                                     </p>
                                     <p>
                                         <Icon type="clock-circle"
-                                            style={{ color: 'blue' }} />{' ' + item.startTime + '-' + item.endTime}
+                                            style={{ color: 'blue', marginTop: -5 }} />
+                                        {item.startTime && item.endTime ? ' ' + item.startTime + '-' + item.endTime : "Không có"}
                                     </p>
                                     <p>
                                         <Icon type="dollar" style={{ color: 'rgb(224, 224, 34)' }} />
-                                        {item.minSalary ? (
-                                            <span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : " Thỏa thuận"}
+                                        {item.minSalary && item.maxSalary ? (<span>{' ' + item.minSalary ? item.minSalary : maxSalary + '/' + item.unit}  </span>) : "Thỏa thuận"}
                                     </p>
                                     <div className='week-day'>
                                         {weekDays.map((itemWeek, index) => {

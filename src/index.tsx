@@ -11,6 +11,7 @@ import '../node_modules/font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "antd/dist/antd.css";
 import 'sweetalert2/src/sweetalert2.scss';
+import 'react-image-crop/dist/ReactCrop.css';
 import Routes from './routes/Routes';
 
 require('dotenv').config();

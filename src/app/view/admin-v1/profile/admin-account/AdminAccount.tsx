@@ -262,7 +262,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                 </DrawerConfig>
                 <div className='common-content'>
                     <h5>
-                        Tình trạng hồ sơ
+                        Hồ sơ nhà tuyển dụng
                         <Tooltip title="Xem đánh giá" >
                             <Button
                                 type="primary"

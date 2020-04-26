@@ -20,7 +20,7 @@ export default class JobProperties extends PureComponent<IJobPropertiesProps,IJo
         return (
             <div className='job-detail'>
                 <div className='detail-job b_b'>
-                    <h6>CHI TIẾT</h6>
+                    <h6>NHÀ TUYỂN DỤNG</h6>
                     <Avatar src={job_detail && job_detail.employer.logoUrl} icon="user" style={{ width: 50, height: 50, margin: "20px 0px" }} />
                     <ul>
                         <li className='d_j_t'>
