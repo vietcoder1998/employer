@@ -162,7 +162,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     type="search"
                 />
             </Tooltip>
-            <Tooltip placement="top" title={"Xem công việc"}>
+            <Tooltip placement="top" title={"Xem bài đăng"}>
                 <a
                     href={routeLink.EVENT + routePath.JOBS + `/list?id=${item.id}`}
                     target="_blank"
@@ -171,7 +171,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     <Icon
                         className='test'
                         style={{ padding: 5, margin: 2, color: "green" }}
-                        type="plus"
+                        type="file-search"
                     />
                 </a>
             </Tooltip>
@@ -340,7 +340,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 <div className="common-content">
                     <h5>
                         Danh sách sự kiện {`(${totalItems})`}
-                        <Tooltip title="Tìm kiếm" >
+                        <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventSchool()}
                                 type="primary"
@@ -352,7 +352,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "search"}
+                                icon={loading_table ? "loading" : "filter"}
                             />
                         </Tooltip>
                     </h5>

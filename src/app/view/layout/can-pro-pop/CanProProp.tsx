@@ -1,24 +1,29 @@
 import React from 'react';
 import { Popover, Avatar, Icon, Button } from 'antd';
 import './CanProProp.scss';
-import { IFindCandidate } from '../../../../models/find-candidates';
 //@ts-ignore
 import baseImage from '../../../../assets/image/base-image.jpg';
 import { NotUpdate } from '../common/Common';
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../const/break-cumb';
+import { IRegion } from '../../../../models/regions';
 
 interface ICanProPop {
     children?: JSX.Element | any;
-    data?: IFindCandidate;
     avatar?: string;
     id?: string;
+    unlocked?: boolean;
+    email?: string;
     background?: string;
+    region?: IRegion;
+    saveProfile?: boolean;
+    gender?: "MALE" | "FEMALE"
+    phone?: string;
     handleUnlocked?: () => any;
 };
 
 export default function CanProPop(props?: ICanProPop): JSX.Element {
-    let { children, data, avatar, background, id } = props;
+    let { children, avatar, background, id, unlocked, phone, email, region, gender } = props;
     // const [loading, setLoading] = React.useState(false);
 
     const content = (
@@ -46,40 +51,35 @@ export default function CanProPop(props?: ICanProPop): JSX.Element {
                 </div>
             </div>
             <div className='cpp-if'>
-                {data && data.gender === "MALE" ? <div><Icon type="man" style={{ marginRight: 5 }} />Nam</div> : <div><Icon type="woman" style={{ marginRight: 5 }} />Nữ</div>}
-                {data && data.region && data.region.name ? <div><Icon type="environment" style={{ marginRight: 5 }} />Sống tại {data.region.name}</div> : ''}
-                {data && data.phone ? <div><Icon type={'phone'} /> {data.phone}</div> :
+                {gender === "MALE" ? <div><Icon type="man" style={{ marginRight: 5 }} />Nam</div> : <div><Icon type="woman" style={{ marginRight: 5 }} />Nữ</div>}
+                {region && region.name ? <div><Icon type="environment" style={{ marginRight: 5 }} />Sống tại {region.name}</div> : ''}
+                {phone ? <div><Icon type={'phone'} /> {phone}</div> :
                     (
-                        data && data.unlocked ?
-                            <div><Icon type={'phone'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
+                        unlocked ?
+                            <div><Icon type={'phone'} style={{ marginRight: 5 }} /><NotUpdate msg="Chưa cập nhật thông tin" /></div> :
                             <div><Icon type={'phone'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
                     )
                 }
-                {data && data.email ? <div><Icon type={'mail'} style={{ marginRight: 5 }} /> {data.email}</div> :
+                {email ? <div><Icon type={'mail'} style={{ marginRight: 5 }} /> {email}</div> :
                     (
-                        data && data.unlocked ?
+                        unlocked ?
                             <div><Icon type={'mail'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
                             <div><Icon type={'mail'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
                     )
                 }
+                <Icon type={unlocked ? 'unlock' : 'lock'} theme={'filled'} style={{ color: unlocked ? 'green' : 'red', marginRight: 5 }} />
+                {
+                    unlocked ? 'Đã mở khóa' : 'Chưa mở khóa'
+                }
             </div>
             <div className='cpp-ct-ft'>
-                <Button
-                    size={'small'}
-                    className='test'
-                    style={{ float: 'right' }}
-                    onClick={props.handleUnlocked && data.unlocked === false ? () => props.handleUnlocked() : undefined}
-                >
-                    <Icon type={data && data.unlocked ? 'unlock' : 'lock'} theme={'filled'} style={{ color: data && data.unlocked ? 'green' : '' }} />
-                    {data && data.unlocked ? 'Đã mở khóa' : 'Chưa mở khóa'}
-                </Button>
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
                     <Button
-                        size={'small'}
                         className='test'
+                        type={'primary'}
                         style={{ float: 'right', marginRight: 5 }}
+                        icon={'search'}
                     >
-                        <Icon type={'search'} />
                         Xem chi tiết
                     </Button>
                 </Link>

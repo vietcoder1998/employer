@@ -226,14 +226,18 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} gender={item.candidate.gender} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
                     name:
-                        <CanProPop
-                            id={item.candidate ? item.candidate.id : ''}
-                            background={item.candidate.coverUrl}
-                            avatar={item.candidate.avatarUrl}
-                            data={item}
-                            children={
-                                (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")
-                            } />
+                        item && item.candidate ?
+                            <CanProPop
+                                id={ item.candidate.id}
+                                background={item.candidate.coverUrl}
+                                avatar={item.candidate.avatarUrl}
+                                unlocked={item.candidate.unlocked}
+                                email={item.candidate.email}
+                                gender={item.candidate.gender}
+                                phone={item.candidate.phone}
+                                children={
+                                    (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")
+                                } /> : null
                     ,
                     lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item.candidate.address ? item.candidate.address : "",
@@ -272,18 +276,6 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
 
     createRequest = async (type?: string) => {
         let { id } = this.state;
-        // let method = null;
-        // switch (type) {
-        //     case TYPE.DELETE:
-
-        //         break;
-        //     case TYPE.BAN:
-
-        //         break;
-
-        //     default:
-        //         break;
-        // }
         await _requestToServer(
             DELETE,
             SAVED_CANDIDATE_PROFILES + '/saved',

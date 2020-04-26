@@ -139,6 +139,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             width: 180,
             dataIndex: 'branchName',
             key: 'branchName',
+            fixed: 'left',
         },
 
         {
@@ -404,7 +405,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 
                     <h5>
                         Quản lý chi nhánh {`(${totalItems})`}
-                        <Tooltip title="Tìm kiếm" >
+                        <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEmBranch()}
                                 type="primary"
@@ -416,7 +417,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "search"}
+                                icon={loading_table ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Link to={routeLink.EM_BRANCHES + routePath.CREATE} >

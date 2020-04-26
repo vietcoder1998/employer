@@ -871,7 +871,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 <div className="common-content">
                     <h5>
                         Quản lý bài đăng sự kiện nhà trường {`(${totalItems})`}
-                        <Tooltip title="Tìm kiếm" >
+                        <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventJobs()}
                                 type="primary"
@@ -883,7 +883,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "search"}
+                                icon={loading_table ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE} >

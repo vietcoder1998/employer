@@ -257,7 +257,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     title={"Đánh giá " + (total_rating && total_rating > 0 ? `(${total_rating})` : "")}
                     width={500}
                 >
-                    <NotUpdate msg={"Chỉ bạn xem được nội dung này"} />
+                    <NotUpdate msg={"(Chỉ bạn xem được nội dung này)"} />
                     {list_ratings && list_ratings.length > 0 ? list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />) : <NotUpdate msg={"Chưa có đánh giá"} />}
                 </DrawerConfig>
                 <div className='common-content'>

@@ -320,7 +320,7 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
             list_em_branches,
             list_skills,
             eventJobDetail,
-            normal_quantity
+            normal_quantity,
         } = this.props;
 
         let ct_btn_ex = "Huỷ";

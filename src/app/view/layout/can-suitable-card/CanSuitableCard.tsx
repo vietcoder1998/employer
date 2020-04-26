@@ -41,7 +41,6 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                         height: 80
                     }}
                 />
-
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
                     <div style={{ color: background ? 'white' : '#168ECD', marginLeft: 5, fontWeight: 600, fontSize: 18 }}>
                         {children}
@@ -71,7 +70,6 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                 </div>
             </div>
             <div className='cpp-ct-ft'>
-
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
                     <Button
                         size={'small'}

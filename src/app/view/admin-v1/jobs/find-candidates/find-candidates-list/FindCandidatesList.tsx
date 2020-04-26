@@ -285,7 +285,10 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             id={item.id}
                             background={item.coverUrl}
                             avatar={item.avatarUrl}
-                            data={item}
+                            phone={item.phone}
+                            email={item.email}
+                            gender={item.gender}
+                            unlocked={item.unlocked}
                             children={(item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : "")}
                         />,
                     lookingForJob: item.lookingForJob ? "Đang tìm việc" : "Đã có việc",
@@ -537,7 +540,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 <div className="common-content">
                     <h5>
                         Tìm kiếm ứng viên {`(${totalItems})`}
-                        <Tooltip title="Tìm kiếm" >
+                        <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchFindCandidate()}
                                 type="primary"
@@ -549,7 +552,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "search"}
+                                icon={loading_table ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Tooltip title="Bộ lọc nâng cao" >

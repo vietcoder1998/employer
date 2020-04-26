@@ -86,7 +86,6 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         padding: "0px 10px"
                     }}
                     onClick={() => props.openDrawer(props.item.id)}
-
                 >
                     <div className="school">
                         <Avatar
@@ -108,7 +107,6 @@ export default function CardSchool(props?: ICardSchoolProps) {
                             {props && props.item && props.item.shortName ? `(${props.item.shortName})` : <NotUpdate />}
                         </p>
                     </div>
-
                 </div>
                 <Link to={`/v1/admin/connect-schools/school/${props.item.id}`} target='_blank'>
                     <div
@@ -117,8 +115,8 @@ export default function CardSchool(props?: ICardSchoolProps) {
                     >
                         <div>
                             <div className="view">
-                                Xem chi tiết
-                            <Icon type="search" />
+                                Thông tin trường
+                                <Icon type="search" />
                             </div>
                         </div>
                     </div>

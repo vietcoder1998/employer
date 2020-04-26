@@ -877,7 +877,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <div className="common-content">
                         <h5>
                             Quản lý bài đăng {`(${totalItems})`}
-                            <Tooltip title="Tìm kiếm" >
+                            <Tooltip title="Lọc tìm kiếm" >
                                 <Button
                                     onClick={() => this.searchJobAnnouncement()}
                                     type="primary"
@@ -889,7 +889,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         height: "45px",
                                         width: "45px"
                                     }}
-                                    icon={loading_table ? "loading" : "search"}
+                                    icon={loading_table ? "loading" : "filter"}
                                 />
                             </Tooltip>
                             <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE} >

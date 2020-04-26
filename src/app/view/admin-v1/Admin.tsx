@@ -164,6 +164,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                             />) : <NotUpdate msg="Không có thông báo" />
                                             }
                                         </div>
+
                                         <div
                                             className="a_c link-to"
                                             style={{ padding: 10 }}
@@ -195,7 +196,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                             fontSize: 20,
                                             color: "whitesmoke",
                                             float: "right",
-                                            margin: 15
+                                            margin: 15,
+                                            cursor: "pointer"
                                         }}
                                     />
                                 </Badge>

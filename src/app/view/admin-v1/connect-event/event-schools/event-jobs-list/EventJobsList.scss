@@ -18,8 +18,9 @@
   padding: 10px 20px; 
   margin: 5px; 
   border-radius: 3px;
+  border: solid gray 1px;
   &:hover{
-    margin-top: 3px!important;
+    border-color: rgb(185, 168, 15);
   }
 }
 .italic {font-style: italic;}

@@ -2,7 +2,7 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
-import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input, Tabs } from 'antd';
+import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input, Tabs, Drawer } from 'antd';
 // import { timeConverter } from '../../../../../../utils/convertTime';
 import { TYPE } from '../../../../../const/type';
 import { IptLetter, IptLetterP, NotUpdate } from '../../../layout/common/Common';
@@ -12,7 +12,6 @@ import { IConnectSchoolsFilter, IConnectSchool } from '../../../../../models/con
 import { IModalState, IMapState, IDrawerState } from '../../../../../models/mutil-box';
 import CardSchool from '../../../layout/card-schools/CardSchool';
 import Loading from '../../../layout/loading/Loading';
-import DrawerConfig from '../../../layout/config/DrawerConfig';
 import MapContainter from '../../../layout/map/Map';
 import { IConnectSchoolDetail } from '../../../../../models/connect-school-detail';
 import TextArea from 'antd/lib/input/TextArea';
@@ -76,8 +75,8 @@ interface IConnectedSchoolsListState {
     type_view?: string;
     dataSchool?: IConnectSchool;
     connect_schools_detail?: IConnectSchoolDetail,
-    candidate_msg?: string;
-    school_msg?: string;
+    requestMessage?: string;
+    replyMessage?: string;
     body?: IConnectSchoolsFilter;
     search?: any;
 };
@@ -98,8 +97,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             list_connect_schools: [],
             id: null,
             loading_table: true,
-            candidate_msg: null,
-            school_msg: null,
+            requestMessage: null,
+            replyMessage: null,
             open_drawer: false,
             connect_schools_detail: {},
             dataSchool: {},
@@ -230,8 +229,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
         if (nextProps.connect_schools_detail && nextProps.connect_schools_detail !== prevState.connect_schools_detail) {
             let { connect_schools_detail } = nextProps;
-            let candidate_msg = null;
-            let school_msg = null;
 
             setTimeout(() => {
                 nextProps.handleMapState({ marker: { lat: connect_schools_detail.lat, lng: connect_schools_detail.lon } })
@@ -240,8 +237,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             return {
                 connect_schools_detail: nextProps.connect_schools_detail,
                 loading_table: false,
-                candidate_msg,
-                school_msg,
+                requestMessage: nextProps.connect_schools_detail.requestMessage,
+                replyMessage: nextProps.connect_schools_detail.replyMessage,
                 dataSchool: nextProps.connect_schools_detail
             }
         }
@@ -350,13 +347,15 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         setTimeout(() => {
             if (dataSchool.state) {
                 this.props.getConnectSchoolDetail(id);
+            } else {
+                this.props.setConnectSchoolDetail({});
             }
         }, 500);
         await this.setState({ loading: false });
     }
 
     createRequest = async (type?: string) => {
-        let { candidate_msg, dataSchool } = this.state;
+        let { requestMessage, dataSchool } = this.state;
         let METHOD = PUT;
         let API = CONNECT_SCHOOL + `/${dataSchool.id}/request`;
         let body = {};
@@ -366,23 +365,23 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             case TYPE.ACCEPTED:
                 if (!dataSchool.owner) {
                     METHOD = POST;
-                    body = { requestMessage: candidate_msg }
+                    body = { requestMessage: requestMessage }
                 }
 
                 if (dataSchool.owner === TYPE.SCHOOL) {
                     API += `/reply/${TYPE.ACCEPTED}`;
-                    body = { replyMessage: candidate_msg }
+                    body = { replyMessage: requestMessage }
                 }
 
                 if (dataSchool.owner === TYPE.EMPLOYER) {
-                    body = { requestMessage: candidate_msg }
+                    body = { requestMessage: requestMessage }
                 }
 
                 break;
             case TYPE.REJECTED:
                 if (dataSchool.owner === TYPE.EMPLOYER) {
                     API += `/reply/${TYPE.REJECTED}`;
-                    body = { replyMessage: candidate_msg }
+                    body = { replyMessage: requestMessage }
                 }
         }
 
@@ -413,8 +412,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             loading_table,
             pageIndex,
             pageSize,
-            candidate_msg,
-            school_msg,
+            requestMessage,
+            replyMessage,
             dataSchool,
             loading,
             body
@@ -423,13 +422,17 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         let {
             totalItems,
             list_regions,
+            open_drawer
         } = this.props;
 
         return (
             <>
-                <DrawerConfig
+                <Drawer
                     title="Đã gửi lời mời"
-                    width={"60vw"}
+                    width={'60vw'}
+                    onClose={() => this.props.handleDrawer({ open_drawer: false })}
+                    destroyOnClose={true}
+                    visible={open_drawer}
                 >
                     {
                         dataSchool && !loading ? (
@@ -496,21 +499,21 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                         </Col>
                                     </Row>
                                 </Panel>
-                                <Panel header={dataSchool.owner === TYPE.EMPLOYER ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"} key="2" >
+                                <Panel header={dataSchool.owner !== TYPE.SCHOOL ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"} key="2" >
                                     <TextArea
-                                        value={school_msg}
+                                        value={replyMessage}
                                         placeholder="Chưa có yêu cầu"
                                         rows={5}
                                     />
                                 </Panel>
-                                <Panel header={dataSchool.owner !== TYPE.EMPLOYER ? "Phản hồi từ phía bạn" : "Lời mời từ phía bạn"} key="2" >
+                                <Panel header={dataSchool.owner === TYPE.SCHOOL ? "Phản hồi từ phía bạn" : "Lời mời từ phía bạn"} key="3" >
                                     <TextArea
-                                        value={candidate_msg}
+                                        value={requestMessage}
                                         placeholder="Chưa có yêu cầu"
                                         rows={5}
 
                                         onChange={(event: any) => {
-                                            this.setState({ candidate_msg: event.target.value })
+                                            this.setState({ requestMessage: event.target.value })
                                         }}
                                     />
                                 </Panel>
@@ -522,6 +525,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                             type={"danger"}
                             children={"Đóng"}
                             style={{ float: "left" }}
+                            onClick={() => this.props.handleDrawer()}
                         />
                         <Button
                             icon={loading ? "loading" : "check"}
@@ -535,7 +539,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                             onClick={() => this.createRequest(TYPE.ACCEPTED)}
                         />
                     </div>
-                </DrawerConfig>
+                </Drawer>
                 <div className="common-content">
                     <h5>
                         Danh sách trường học
@@ -551,7 +555,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "search"}
+                                icon={loading_table ? "loading" : "filter"}
                             />
                         </Tooltip>
                     </h5>
@@ -569,19 +573,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     <Option value={TYPE.PENDING}>Đang gửi yêu cầu</Option>
                                     <Option value={TYPE.ACCEPTED}>Đã chấp nhận</Option>
                                     <Option value={TYPE.REJECTED}>Đã từ chối</Option>
-                                </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Bên gửi"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.owner)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.EMPLOYER}>Nhà tuyển dụng </Option>
-                                    <Option value={TYPE.SCHOOL}>Nhà trường</Option>
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
@@ -621,7 +612,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             /> : <Icon type={"search"} />
                                     }
                                 />
-
                             </Col>
                         </Row>
                         <Row>
@@ -631,8 +621,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE} />
                                 <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE} />
                                 <TabPane tab="Chưa kết nối" key={"none"} />
-
-
                             </Tabs>
                             {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
                                 list_connect_schools.map(
@@ -647,9 +635,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
                                         </Col>
                                 )
-                                : <Empty description="Chưa có trường phù hợp" />) : <Loading />}
+                                : <Empty description="Không có trường phù hợp" />) : <Loading />}
                         </Row>
-
                         <Row style={{ textAlign: "center", margin: " 40px 20px", }}>
                             <Pagination
                                 showQuickJumper
@@ -679,7 +666,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX.HANDLE_DRAWER, drawerState }),
     handleMapState: (mapState?: IMapState) =>
         dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState }),
-    setConnectSchoolDetail: (data: any) =>
+    setConnectSchoolDetail: (data: IConnectSchoolDetail) =>
         dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL })
 });
 
@@ -691,6 +678,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     list_skills: state.Skills.items,
     list_job_names: state.JobNames.items,
     list_languages: state.Languages.items,
+    open_drawer: state.MutilBox.drawerState.open_drawer
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
