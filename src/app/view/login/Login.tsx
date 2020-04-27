@@ -46,7 +46,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
         this.state = {
             email: "",
             exactly: false,
-            loading: true,
+            loading: false,
             errMsg: "",
             password: null,
             repassword: null,

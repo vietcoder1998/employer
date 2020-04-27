@@ -49,14 +49,15 @@
     "webpack-cli": "^3.3.8"
   },
   "scripts": {
-    "start": "set PORT=3008 && react-scripts start && npm run generate-build-meta",
+    "start": "set PORT=3008 && react-scripts start && npm run generate-build-meta ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "predeploy": "npm run build",
-    "postbuild": "npm run generate-build-meta",
-    "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
+    "predeploy": "npm run build"
+  },
+  "bin": {
+    "generate-build-meta": "./bin/cli.js"
   },
   "eslintConfig": {
     "extends": "react-app"
