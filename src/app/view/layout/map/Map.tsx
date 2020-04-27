@@ -30,9 +30,9 @@ interface IMapContainerProps extends StateProps, DispatchProps {
     style?: CSSProperties;
     disabled?: boolean;
     opensearch?: string;
-    setMapState: (mapState?: IMapState) => any;
     disableMarker?: boolean;
-    onChange: () => any;
+    onChange: Function;
+    setMapState: (mapState?: IMapState) => any;
 }
 
 class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainerState> {
@@ -72,9 +72,6 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                 response => {
                     let { location } = this.state;
                     location = response.results[0].formatted_address;
-                    localStorage.setItem('location', location);
-                    localStorage.setItem('lat', lat);
-                    localStorage.setItem('lon', lng);
                     this.setState({ location, marker });
                     this.props.setMapState({ marker, location });
                 },
@@ -103,13 +100,19 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                     }}
                     placeholder={'Nhập địa chỉ tìm kiếm'}
                     onPlaceSelected={(place?: IApiMap) => {
-                        this.props.setMapState({
-                            location: place.formatted_address,
-                            marker: {
-                                lat: place.geometry.location.lat(),
-                                lng: place.geometry.location.lng(),
-                            }
-                        });
+                        try {
+                           place.geometry ?
+                            this.props.setMapState({
+                                location: place.formatted_address,
+                                marker: {
+                                    lat: place.geometry.location.lat(),
+                                    lng: place.geometry.location.lng(),
+                                }
+                            }) : alert("GoogleMap yêu cầu billing cho hoạt động này"); 
+                        } catch(err) {
+                            throw err
+                        }
+                        
                     }}
                     types={['geocode']}
                     componentRestrictions={{ country: "vn" }}
@@ -155,6 +158,4 @@ type DispatchProps = ReturnType<typeof mapStateTopProps>;
 
 export default connect(mapStateTopProps, mapDispatchToProps)(GoogleApiWrapper({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY
-        ? process.env.REACT_APP_GOOGLE_API_KEY :
-        'AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28',
 })(MapContainer))
