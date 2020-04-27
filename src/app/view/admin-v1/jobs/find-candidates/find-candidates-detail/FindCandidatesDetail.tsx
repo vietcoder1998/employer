@@ -23,14 +23,14 @@ const { Step } = Steps;
 
 interface IFindCandidatesDetailState {
     title?: string;
-    type_cpn?: string;
+    typeCpn?: string;
     id?: string;
     body?: IFindCandidateDetail;
     visible?: boolean;
     process?: boolean;
     loading?: boolean;
     fail?: boolean;
-    rating_user?: {
+    ratingUser?: {
         attitudeRating?: number,
         skillRating?: number,
         jobAccomplishmentRating?: number,
@@ -54,12 +54,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         this.state = {
             id: null,
             body: null,
-            type_cpn: TYPE.CREATE,
+            typeCpn: TYPE.CREATE,
             visible: false,
             process: false,
             loading: true,
             fail: false,
-            rating_user: {
+            ratingUser: {
                 attitudeRating: 0,
                 skillRating: 0,
                 jobAccomplishmentRating: 0,
@@ -82,11 +82,11 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         }
 
         if (
-            nextProps.find_candidates_detail &&
-            nextProps.find_candidates_detail !== prevState.body
+            nextProps.FindCandidateDetail &&
+            nextProps.FindCandidateDetail !== prevState.body
         ) {
 
-            let body = nextProps.find_candidates_detail;
+            let body = nextProps.FindCandidateDetail;
             let process = body.unlocked;
             return {
                 body,
@@ -97,12 +97,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         }
 
         if (
-            nextProps.rating_user &&
-            nextProps.rating_user !== prevState.rating_user
+            nextProps.ratingUser &&
+            nextProps.ratingUser !== prevState.ratingUser
         ) {
 
             return {
-                rating_user: nextProps.rating_user,
+                ratingUser: nextProps.ratingUser,
             }
         }
 
@@ -126,12 +126,12 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     };
 
     createRequest = async (type: string) => {
-        let { id, body, rating_user } = this.state;
+        let { id, body, ratingUser } = this.state;
         let rating = {
-            attitudeRating: rating_user.attitudeRating,
-            skillRating: rating_user.attitudeRating,
-            jobAccomplishmentRating: rating_user.attitudeRating,
-            comment: rating_user.attitudeRating,
+            attitudeRating: ratingUser.attitudeRating,
+            skillRating: ratingUser.attitudeRating,
+            jobAccomplishmentRating: ratingUser.attitudeRating,
+            comment: ratingUser.attitudeRating,
         }
         await this.setState({ loading: true })
         switch (type) {
@@ -217,15 +217,15 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             false, false
         ).then((res: any) => {
             if (res) {
-                this.setState({ rating_user: res.data })
+                this.setState({ ratingUser: res.data })
             }
         })
 
     };
 
     render() {
-        let { body, visible, loading, fail, rating_user } = this.state;
-        let { unlock_turn, modalState } = this.props;
+        let { body, visible, loading, fail, ratingUser } = this.state;
+        let { unlockTurn, modalState } = this.props;
 
         if (fail) {
             return <Result
@@ -272,7 +272,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             onClick={() => this.props.handleModal()}
                         >
                             <Icon type="unlock" />
-                            Mở khóa {unlock_turn ? `(${unlock_turn})` : null}
+                            Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
                         </button>
                     </div>
                 </div>
@@ -311,9 +311,9 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         value="Thái độ với công việc"
                     >
                         <Rate
-                            value={rating_user.attitudeRating}
+                            value={ratingUser.attitudeRating}
                             onChange={
-                                (event: number) => { rating_user.attitudeRating = event; this.setState({ rating_user }) }
+                                (event: number) => { ratingUser.attitudeRating = event; this.setState({ ratingUser }) }
                             }
                         />
                     </IptLetterP>
@@ -321,9 +321,9 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         value="Kĩ năng công việc"
                     >
                         <Rate
-                            value={rating_user.skillRating}
+                            value={ratingUser.skillRating}
                             onChange={
-                                (event: number) => { rating_user.skillRating = event; this.setState({ rating_user }) }
+                                (event: number) => { ratingUser.skillRating = event; this.setState({ ratingUser }) }
                             }
                         />
                     </IptLetterP>
@@ -331,9 +331,9 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         value="Trách nghiệm với công việc"
                     >
                         <Rate
-                            value={rating_user.jobAccomplishmentRating}
+                            value={ratingUser.jobAccomplishmentRating}
                             onChange={
-                                (event: number) => { rating_user.jobAccomplishmentRating = event; this.setState({ rating_user }) }
+                                (event: number) => { ratingUser.jobAccomplishmentRating = event; this.setState({ ratingUser }) }
                             }
                         />
                     </IptLetterP>
@@ -342,8 +342,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     >
                         <TextArea
                             placeholder={"ex: Ứng viên rất có tiềm năng..."}
-                            value={rating_user.comment}
-                            onChange={(event: any) => { rating_user.comment = event.target.value; this.setState({ rating_user }) }}
+                            value={ratingUser.comment}
+                            onChange={(event: any) => { ratingUser.comment = event.target.value; this.setState({ ratingUser }) }}
                             rows={4}
                         />
                     </IptLetterP>
@@ -351,7 +351,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     <Button
                         type={"danger"}
                         onClick={() =>{
-                            this.props.handleDrawer({open_drawer: false})
+                            this.props.handleDrawer({openDrawer: false})
                         }}
                     >
                         Đóng
@@ -376,7 +376,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                                     style={{ marginLeft: 15 }}
                                     onClick={() => {
                                         this.getRating();
-                                        this.props.handleDrawer({ open_drawer: true });
+                                        this.props.handleDrawer({ openDrawer: true });
                                     }}
                                 />
                             }
@@ -433,7 +433,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             disabled={body && body.unlocked}
                             onClick={() => this.props.handleModal()}
                         >
-                            Mở khóa {unlock_turn ? `(${unlock_turn})` : null}
+                            Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
                         </Button>
                         <Button
                             type={body && body.saved ? "danger" : "primary"}
@@ -483,9 +483,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     mapState: state.MutilBox.mapState,
-    find_candidates_detail: state.FindCandidateDetail,
-    unlock_turn: state.JobService.unlockProfileQuantity,
-    rating_user: state.RatingUser,
+    FindCandidateDetail: state.FindCandidateDetail,
+    unlockTurn: state.JobService.unlockProfileQuantity,
+    ratingUser: state.RatingUser,
     modalState: state.MutilBox.modalState
 })
 

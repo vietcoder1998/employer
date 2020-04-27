@@ -56,25 +56,25 @@ interface IConnectedSchoolsListProps extends StateProps, DispatchProps {
 };
 
 interface IConnectedSchoolsListState {
-    data_table?: Array<IConnectSchool>;
+    dataTable?: Array<IConnectSchool>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
     employerID?: string;
-    show_modal?: boolean;
+    showModal?: boolean;
     loading?: boolean;
-    type_management?: Array<any>;
+    typeMng?: Array<any>;
     announcementTypeID?: number;
     birthday?: number;
     adminID?: string;
     hidden?: boolean;
-    list_connect_schools?: Array<IConnectSchool>;
+    listConnectSchools?: Array<IConnectSchool>;
     id?: string;
-    loading_table?: boolean;
-    open_drawer: boolean;
-    type_view?: string;
+    loadingTable?: boolean;
+    openDrawer: boolean;
+    typeView?: string;
     dataSchool?: IConnectSchool;
-    connect_schools_detail?: IConnectSchoolDetail,
+    connectSchoolsDetail?: IConnectSchoolDetail,
     requestMessage?: string;
     replyMessage?: string;
     body?: IConnectSchoolsFilter;
@@ -85,22 +85,22 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
-            show_modal: false,
+            showModal: false,
             loading: false,
             announcementTypeID: null,
             birthday: null,
             adminID: null,
             hidden: false,
-            list_connect_schools: [],
+            listConnectSchools: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             requestMessage: null,
             replyMessage: null,
-            open_drawer: false,
-            connect_schools_detail: {},
+            openDrawer: false,
+            connectSchoolsDetail: {},
             dataSchool: {},
             body: {
                 hasRequest: true,
@@ -211,35 +211,35 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
     ];
 
     onToggleModal = () => {
-        let { show_modal } = this.state;
-        this.setState({ show_modal: !show_modal });
+        let { showModal } = this.state;
+        this.setState({ showModal: !showModal });
     };
 
     static getDerivedStateFromProps(nextProps?: IConnectedSchoolsListProps, prevState?: IConnectedSchoolsListState) {
-        if (nextProps.list_connect_schools && nextProps.list_connect_schools !== prevState.list_connect_schools) {
-            let { list_connect_schools } = prevState;
-            if (nextProps.list_connect_schools) {
-                list_connect_schools = nextProps.list_connect_schools;
+        if (nextProps.listConnectSchools && nextProps.listConnectSchools !== prevState.listConnectSchools) {
+            let { listConnectSchools } = prevState;
+            if (nextProps.listConnectSchools) {
+                listConnectSchools = nextProps.listConnectSchools;
             }
             return {
-                list_connect_schools,
-                loading_table: false,
+                listConnectSchools,
+                loadingTable: false,
             }
         }
 
-        if (nextProps.connect_schools_detail && nextProps.connect_schools_detail !== prevState.connect_schools_detail) {
-            let { connect_schools_detail } = nextProps;
+        if (nextProps.connectSchoolsDetail && nextProps.connectSchoolsDetail !== prevState.connectSchoolsDetail) {
+            let { connectSchoolsDetail } = nextProps;
 
             setTimeout(() => {
-                nextProps.handleMapState({ marker: { lat: connect_schools_detail.lat, lng: connect_schools_detail.lon } })
+                nextProps.handleMapState({ marker: { lat: connectSchoolsDetail.lat, lng: connectSchoolsDetail.lon } })
             }, 500);
 
             return {
-                connect_schools_detail: nextProps.connect_schools_detail,
-                loading_table: false,
-                requestMessage: nextProps.connect_schools_detail.requestMessage,
-                replyMessage: nextProps.connect_schools_detail.replyMessage,
-                dataSchool: nextProps.connect_schools_detail
+                connectSchoolsDetail: nextProps.connectSchoolsDetail,
+                loadingTable: false,
+                requestMessage: nextProps.connectSchoolsDetail.requestMessage,
+                replyMessage: nextProps.connectSchoolsDetail.replyMessage,
+                dataSchool: nextProps.connectSchoolsDetail
             }
         }
 
@@ -293,15 +293,15 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         if (type === "pageSize") {
             pageSize = event;
         }
-        await this.setState({ loading_table: true })
+        await this.setState({ loadingTable: true })
         await this.props.getListConnectSchools(body, pageIndex, pageSize);
     };
 
     onChangeType = (event?: any, param?: string) => {
         let { body } = this.state;
-        let { list_regions } = this.props;
+        let { listRegions } = this.props;
         let value: any = event;
-        list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
+        listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
         switch (event) {
             case TYPE.TRUE:
                 body.hasRequest = true;
@@ -339,10 +339,10 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
     };
 
     onSetDataSchool = async (id?: string) => {
-        let { list_connect_schools } = this.props;
-        let filter_arr = list_connect_schools.filter((item: IConnectSchool) => item.id === id);
+        let { listConnectSchools } = this.props;
+        let filter_arr = listConnectSchools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
-        this.props.handleDrawer({ open_drawer: true });
+        this.props.handleDrawer({ openDrawer: true });
         await this.setState({ loading: true });
         setTimeout(() => {
             if (dataSchool.state) {
@@ -408,8 +408,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
     render() {
         let {
-            list_connect_schools,
-            loading_table,
+            listConnectSchools,
+            loadingTable,
             pageIndex,
             pageSize,
             requestMessage,
@@ -421,8 +421,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
         let {
             totalItems,
-            list_regions,
-            open_drawer
+            listRegions,
+            openDrawer
         } = this.props;
 
         return (
@@ -430,9 +430,9 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                 <Drawer
                     title="Đã gửi lời mời"
                     width={'60vw'}
-                    onClose={() => this.props.handleDrawer({ open_drawer: false })}
+                    onClose={() => this.props.handleDrawer({ openDrawer: false })}
                     destroyOnClose={true}
-                    visible={open_drawer}
+                    visible={openDrawer}
                 >
                     {
                         dataSchool && !loading ? (
@@ -555,7 +555,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "filter"}
+                                icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
                     </h5>
@@ -585,8 +585,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        list_regions && list_regions.length >= 1 ?
-                                            list_regions.map((item: IRegion, index: number) =>
+                                        listRegions && listRegions.length >= 1 ?
+                                            listRegions.map((item: IRegion, index: number) =>
                                                 <Option key={index} value={item.name}>{item.name}</Option>
                                             ) : null
                                     }
@@ -622,8 +622,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE} />
                                 <TabPane tab="Chưa kết nối" key={"none"} />
                             </Tabs>
-                            {!loading_table ? (list_connect_schools && list_connect_schools.length > 0 ?
-                                list_connect_schools.map(
+                            {!loadingTable ? (listConnectSchools && listConnectSchools.length > 0 ?
+                                listConnectSchools.map(
                                     (item: IConnectSchool, index: number) =>
                                         <Col
                                             xxl={6}
@@ -671,14 +671,14 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_connect_schools: state.ConnectSchools.items,
-    connect_schools_detail: state.ConnectSchoolsDetail,
+    listConnectSchools: state.ConnectSchools.items,
+    connectSchoolsDetail: state.ConnectSchoolsDetail,
     totalItems: state.ConnectSchools.totalItems,
-    list_regions: state.Regions.items,
-    list_skills: state.Skills.items,
-    list_job_names: state.JobNames.items,
-    list_languages: state.Languages.items,
-    open_drawer: state.MutilBox.drawerState.open_drawer
+    listRegions: state.Regions.items,
+    listSkills: state.Skills.items,
+    listJobNames: state.JobNames.items,
+    listLanguages: state.Languages.items,
+    openDrawer: state.MutilBox.drawerState.openDrawer
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

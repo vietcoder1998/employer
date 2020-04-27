@@ -8,8 +8,6 @@ import EventJobsCreate from './event-jobs-create/EventJobsCreate';
 const Switch = require("react-router-dom").Switch;
 
 interface EventSchoolState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface EventSchoolProps  {

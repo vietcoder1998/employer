@@ -2,14 +2,14 @@ export interface IModalState {
     title?: string,
     open_modal?: boolean,
     children?: any,
-    type_modal?: string,
+    typeModal?: string,
     msg?: any,
 }
 
 export interface IDrawerState {
     title?: string,
     msg?: string,
-    open_drawer?: boolean,
+    openDrawer?: boolean,
     type_drawer?: any,
     children?: string,
 }

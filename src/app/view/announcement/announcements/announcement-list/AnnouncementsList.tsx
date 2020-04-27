@@ -33,12 +33,12 @@ interface IAnnouncementsListState {
     target?: string;
     jobNameID?: string;
     jobId?: string;
-    list_annou_types?: Array<any>;
-    value_type?: string;
+    listAnnouTypes?: Array<any>;
+    valueType?: string;
     announcementTypeID?: number;
     createdDate?: number;
     adminID?: string;
-    list_announcements?: Array<any>;
+    listAnnouncements?: Array<any>;
     loading?: boolean;
     data?: Array<any>;
     loadingMore?: boolean;
@@ -53,11 +53,11 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
         super(props);
         this.state = {
             target: undefined,
-            list_annou_types: [],
+            listAnnouTypes: [],
             announcementTypeID: undefined,
             createdDate: undefined,
             adminID: undefined,
-            list_announcements: [],
+            listAnnouncements: [],
             loading: true,
             pageIndex: 0,
             pageSize: 10,
@@ -108,11 +108,11 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
         }
 
         if (
-            nextProps.list_announcements &&
-            nextProps.list_announcements !== prevState.list_announcements
+            nextProps.listAnnouncements &&
+            nextProps.listAnnouncements !== prevState.listAnnouncements
         ) {
             return {
-                list_announcements: nextProps.list_annou_types,
+                listAnnouncements: nextProps.listAnnouTypes,
                 loadingMore: false,
                 loading: false
 
@@ -182,7 +182,7 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
         } = this.state;
 
         let {
-            list_announcements
+            listAnnouncements
         } = this.props;
 
         return (
@@ -194,21 +194,21 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                             <Row>
                                 <Divider children={"Nổi bật"} orientation="left" />
                                 <Col sm={24} md={12} lg={12} xl={12} xxl={6}>
-                                    <FirstCard item={list_announcements[0]} loading={loading} />
+                                    <FirstCard item={listAnnouncements[0]} loading={loading} />
                                 </Col>
                                 <Col sm={24} md={12} lg={12} xl={12} xxl={6}>
                                     <Row>
                                         <Col sm={24} md={24} lg={24} xl={12} xxl={6}>
-                                            <MutilCard item={list_announcements[1]} loading={loading} />
+                                            <MutilCard item={listAnnouncements[1]} loading={loading} />
                                         </Col>
                                         <Col sm={24} md={24} lg={24} xl={12} xxl={6}>
-                                            <MutilCard item={list_announcements[2]} loading={loading} />
+                                            <MutilCard item={listAnnouncements[2]} loading={loading} />
                                         </Col>
                                         <Col sm={24} md={12} lg={24} xl={12} xxl={6}>
-                                            <MutilCard item={list_announcements[3]} loading={loading} />
+                                            <MutilCard item={listAnnouncements[3]} loading={loading} />
                                         </Col>
                                         <Col sm={24} md={12} lg={24} xl={12} xxl={6}>
-                                            <MutilCard item={list_announcements[4]} loading={loading} />
+                                            <MutilCard item={listAnnouncements[4]} loading={loading} />
                                         </Col>
                                     </Row>
                                 </Col>
@@ -216,7 +216,7 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                             <Row >
                                 <Divider children={"Danh sách"} orientation="left" />
                                 <Col md={16} lg={16} xl={16} xxl={18}>
-                                    {list_announcements && list_announcements.length > 5 && list_announcements.map((item: IAnnouncement, index: number) => {
+                                    {listAnnouncements && listAnnouncements.length > 5 && listAnnouncements.map((item: IAnnouncement, index: number) => {
                                         if (index >= 0 && index <= 50) {
                                             return <ReadCard key={index} item={item} />
                                         }
@@ -226,8 +226,8 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                                 <Col md={8} lg={8} xl={8} xxl={6}>
                                     <Affix offsetTop={35}>
                                         <AffixRight
-                                            list_data={
-                                                list_announcements.filter((item: IAnnouncement, index: number) => index >= 0 && index <= 4)
+                                            listData={
+                                                listAnnouncements.filter((item: IAnnouncement, index: number) => index >= 0 && index <= 4)
                                             }
                                         />
                                     </Affix>
@@ -265,11 +265,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_annou_types: state.AnnouTypes.items,
-    list_announcements: state.Announcements.items,
+    listAnnouTypes: state.AnnouTypes.items,
+    listAnnouncements: state.Announcements.items,
     annoucement_detail: state.AnnouncementDetail,
     totalItems: state.Announcements.totalItems,
-    list_annou_comment: state.AnnouComments.items,
+    listAnnouComment: state.AnnouComments.items,
     loading_data: state.MutilBox.loading
 });
 

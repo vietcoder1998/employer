@@ -7,36 +7,36 @@ import { weekDays } from '../../../../utils/day';
 import { timeConverter } from '../../../../utils/convertTime';
 
 interface IJobPropertiesProps {
-    job_detail?: any;
+    jobDetail?: any;
 }
 
 interface IJobPropertiesState { }
 
 export default class JobProperties extends PureComponent<IJobPropertiesProps,IJobPropertiesState> {
     render() {
-        let { job_detail } = this.props;
-        let list_des = job_detail && convertStringToArray(job_detail.data.description);
+        let { jobDetail } = this.props;
+        let list_des = jobDetail && convertStringToArray(jobDetail.data.description);
 
         return (
             <div className='job-detail'>
                 <div className='detail-job b_b'>
                     <h6>NHÀ TUYỂN DỤNG</h6>
-                    <Avatar src={job_detail && job_detail.employer.logoUrl} icon="user" style={{ width: 50, height: 50, margin: "20px 0px" }} />
+                    <Avatar src={jobDetail && jobDetail.employer.logoUrl} icon="user" style={{ width: 50, height: 50, margin: "20px 0px" }} />
                     <ul>
                         <li className='d_j_t'>
                             <IptLetter value={"Tiêu đề:"} />
 
-                            <label> {job_detail && job_detail.data.jobTitle}
+                            <label> {jobDetail && jobDetail.data.jobTitle}
                             </label>
                         </li>
                         <li className='d_j_t'>
                             <IptLetter value={"Tên công việc: "} />
-                            <label> {job_detail && job_detail.data.jobName ? job_detail.data.jobName : "Không có"}
+                            <label> {jobDetail && jobDetail.data.jobName ? jobDetail.data.jobName : "Không có"}
                             </label>
                         </li>
                         <li className='d_j_t'>
                             <IptLetter value={"Tên nhà tuyển dụng: "} />
-                            <label> {job_detail && job_detail.employer.employerName ? job_detail.employer.employerName : "Không có"}
+                            <label> {jobDetail && jobDetail.employer.employerName ? jobDetail.employer.employerName : "Không có"}
                             </label>
                         </li>
                     </ul>
@@ -48,19 +48,19 @@ export default class JobProperties extends PureComponent<IJobPropertiesProps,IJo
                             <Icon type="solution" style={{ color: 'blue' }} />
                             <IptLetter value={"Loại công việc:"} />
 
-                            <label> {job_detail && job_detail.data.jobType}
+                            <label> {jobDetail && jobDetail.data.jobType}
                             </label>
                         </li>
                         <li className='d_j_t'>
                             <Icon type="calendar" style={{ color: 'green' }} />
                             <IptLetter value={"Ngày đăng: "} />
-                            <label> {job_detail && timeConverter(job_detail.createdDate, 1000)}
+                            <label> {jobDetail && timeConverter(jobDetail.createdDate, 1000)}
                             </label>
                         </li>
                         <li className='d_j_t'>
                             <Icon type="calendar" style={{ color: 'red' }} />
                             <IptLetter value={"Ngày hết hạn: "} />
-                            <label> {job_detail && timeConverter(job_detail.data.expirationDate, 1000)}
+                            <label> {jobDetail && timeConverter(jobDetail.data.expirationDate, 1000)}
                             </label>
                         </li>
                     </ul>
@@ -84,7 +84,7 @@ export default class JobProperties extends PureComponent<IJobPropertiesProps,IJo
                 <div className='time-job b_t'>
                     <h6>CA LÀM VIỆC</h6>
                     <div>
-                        {job_detail && job_detail.data && job_detail.data.shifts.map((item, index) => {
+                        {jobDetail && jobDetail.data && jobDetail.data.shifts.map((item, index) => {
                             let maxSalary = '' + item.maxSalary && item.maxSalary === 0 ? '' : ('-' + item.maxSalary);
                             return (<div key={index} className='time-content b_b'>
                                 <p>
@@ -121,10 +121,10 @@ export default class JobProperties extends PureComponent<IJobPropertiesProps,IJo
                 <div className='skills-job-detail '>
                     <h6>KỸ NĂNG CÔNG VIỆC</h6>
                     <div>
-                        {job_detail &&
-                            job_detail.requiredSkills &&
-                            job_detail.requiredSkills.length > 0 ?
-                            job_detail.requiredSkills.map(
+                        {jobDetail &&
+                            jobDetail.requiredSkills &&
+                            jobDetail.requiredSkills.length > 0 ?
+                            jobDetail.requiredSkills.map(
                                 (item, index) => (
                                     <label key={index} className='skills-detail'>{item.name}</label>
                                 )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>

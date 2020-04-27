@@ -34,7 +34,7 @@ interface IAnnouncementsDetailState {
     pageSize?: number;
     jobNameID?: string;
     message?: string
-    list_announcements?: Array<any>;
+    listAnnouncements?: Array<any>;
     id?: string;
     loading?: boolean;
     my_cmt?: IAnnouComment;
@@ -45,7 +45,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
     constructor(props: any) {
         super(props);
         this.state = {
-            list_announcements: [],
+            listAnnouncements: [],
             list_comment: [],
             id: "",
             loading: true,
@@ -124,7 +124,7 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
 
         let {
             annoucement_detail,
-            list_annou_comment,
+            listAnnouComment,
             comment,
             totalCmt
         } = this.props;
@@ -186,13 +186,13 @@ class AnnouncementsDetail extends PureComponent<IAnnouncementsDetailProps, IAnno
                                     <CommentAnnou
                                         totalCmt={totalCmt}
                                         loading={loading}
-                                        list_annou_comment={list_annou_comment}
+                                        listAnnouComment={listAnnouComment}
                                         onComment={this.onComment}
                                         onRemoveComment={this.onRemoveComment}
                                         commentDetail={comment}
                                     />
                                     {
-                                        totalCmt > 0 && totalCmt < list_annou_comment.length ?
+                                        totalCmt > 0 && totalCmt < listAnnouComment.length ?
                                             <div className='a_c'>
                                                 <Button style={{ width: "100%" }} onClick={this.getMoreCm}>
                                                     Tải thêm ...
@@ -248,9 +248,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_annou_types: state.AnnouTypes.items,
+    listAnnouTypes: state.AnnouTypes.items,
     annoucement_detail: state.AnnouncementDetail,
-    list_annou_comment: state.AnnouComments.items,
+    listAnnouComment: state.AnnouComments.items,
     totalCmt: state.AnnouComments.totalItems,
     comment: state.AnnouCommentDetail
 });

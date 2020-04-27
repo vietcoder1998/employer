@@ -9,7 +9,7 @@ import { Timer, NotUpdate } from '../../../../layout/common/Common';
 import { TYPE } from '../../../../../../const/type';
 
 interface ICommentAnnou {
-    list_annou_comment?: Array<IAnnouComment>;
+    listAnnouComment?: Array<IAnnouComment>;
     loading?: boolean;
     totalCmt?: string;
     commentDetail?: IAnnouComment;
@@ -20,7 +20,7 @@ interface ICommentAnnou {
 let token = localStorage.getItem("ecr");
 
 export default function CommentAnnou(props?: ICommentAnnou) {
-    let { list_annou_comment, commentDetail } = props;
+    let { listAnnouComment, commentDetail } = props;
     let [comment, setComment] = React.useState(null);
     let [rating, setRating] = React.useState(0);
     let [id, setId] = React.useState(0);
@@ -74,7 +74,7 @@ export default function CommentAnnou(props?: ICommentAnnou) {
 
                 <Divider />
                 {
-                    list_annou_comment && list_annou_comment.map((item: IAnnouComment, index: number) => {
+                    listAnnouComment && listAnnouComment.map((item: IAnnouComment, index: number) => {
                         let sub_title = "";
                         switch (item.userType) {
                             case TYPE.CANDIDATE:

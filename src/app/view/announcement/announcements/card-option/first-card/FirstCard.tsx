@@ -8,14 +8,12 @@ import { IAnnouncement } from '../../../../../../models/announcements';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../const/break-cumb';
 
-
 interface IFirstCard {
     item?: IAnnouncement
     loading?: boolean;
 }
 
 export default function FirstCard(props: IFirstCard) {
-
     return (
         <Link to={routeLink.ANNOUNCEMENT + `/detail/${props && props.item && props.item.id}`} target='_blank'>
             <div className='first-card test'  >

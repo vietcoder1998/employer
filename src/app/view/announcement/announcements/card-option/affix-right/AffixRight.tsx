@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../../const/break-cumb';
 
 interface IAffixRight {
-    list_data?: Array<IAnnouncement>
+    listData?: Array<IAnnouncement>
 }
 
 export default function AffixRight(props?: IAffixRight) {
@@ -20,7 +20,7 @@ export default function AffixRight(props?: IAffixRight) {
                 <hr />
                 <div className="list-data">
                     {
-                        props.list_data && props.list_data.map((item: IAnnouncement, index: number) =>
+                        props.listData && props.listData.map((item: IAnnouncement, index: number) =>
                             <Link key={index} to={routeLink.ANNOUNCEMENT + `/detail/${item && item.id}`} target='_blank' >
                                 <div className='data-item' >
                                     <h6>

@@ -34,13 +34,13 @@ class SchoolDetail extends PureComponent<ISchoolDetailProps, ISchoolDetailState>
     }
 
     render() {
-        let { school_detail } = this.props;
+        let { schoolDetail } = this.props;
         return (
             <div>
-                <h5>{school_detail.name
-                    // +  (school_detail && school_detail.state ?`(${school_detail && school_detail.state})`:'')
+                <h5>{schoolDetail.name
+                    // +  (schoolDetail && schoolDetail.state ?`(${schoolDetail && schoolDetail.state})`:'')
                 }</h5>
-                <SchoolInfo data={school_detail} />
+                <SchoolInfo data={schoolDetail} />
             </div>
         )
     }
@@ -48,7 +48,7 @@ class SchoolDetail extends PureComponent<ISchoolDetailProps, ISchoolDetailState>
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     mapState: state.MutilBox.mapState,
-    school_detail: state.SchoolsDetail
+    schoolDetail: state.SchoolsDetail
 });
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({

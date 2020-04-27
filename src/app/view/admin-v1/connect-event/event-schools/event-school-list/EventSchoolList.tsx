@@ -32,22 +32,22 @@ interface IEventSchoolsListProps extends StateProps, DispatchProps {
 };
 
 interface IEventSchoolsListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
     eid?: string;
     openModal?: boolean;
     loading?: boolean;
-    type_management?: Array<any>;
+    typeMng?: Array<any>;
     announcementTypeID?: number;
     hidden?: boolean;
     listEventSchools?: Array<any>;
     id?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     body?: IEventSchoolFilter;
-    open_drawer: boolean;
-    type_view?: string;
+    openDrawer: boolean;
+    typeView?: string;
     modalType?: "BANNER" | "DETAIL";
     newBanner?: any;
 };
@@ -56,7 +56,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
             openModal: false,
@@ -65,7 +65,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             hidden: false,
             listEventSchools: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             modalType: null,
             body: {
                 schoolID: null,
@@ -75,7 +75,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 started: null,
                 finished: null
             },
-            open_drawer: false,
+            openDrawer: false,
             eid: null,
             newBanner: null
         };
@@ -193,9 +193,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
 
     static getDerivedStateFromProps(nextProps?: IEventSchoolsListProps, prevState?: IEventSchoolsListState) {
         if (nextProps.listEventSchools && nextProps.listEventSchools !== prevState.listEventSchools) {
-            let data_table = [];
+            let dataTable = [];
             nextProps.listEventSchools.forEach((item: IEventSchool, index: number) => {
-                data_table.push({
+                dataTable.push({
                     id: item.school ? item.school.id : null,
                     index: index + 1,
                     bannerUrl: item.bannerUrl,
@@ -211,8 +211,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
 
             return {
                 listEventSchools: nextProps.listEventSchools,
-                data_table,
-                loading_table: false,
+                dataTable,
+                loadingTable: false,
             }
         }
 
@@ -230,7 +230,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.searchEventSchool();
     };
 
@@ -240,14 +240,14 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     };
 
     onCloseDrawer = () => {
-        this.setState({ open_drawer: false })
+        this.setState({ openDrawer: false })
     };
 
     // onChangeType = (event: any, param?: string) => {
     //     let { body } = this.state;
-    //     let { list_regions } = this.props;
+    //     let { listRegions } = this.props;
     //     let value: any = event;
-    //     list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
+    //     listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
     //     switch (event) {
     //         case TYPE.TRUE:
     //             value = true;
@@ -289,8 +289,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
 
     render() {
         let {
-            data_table,
-            loading_table,
+            dataTable,
+            loadingTable,
             openModal,
             modalType,
             newBanner
@@ -299,10 +299,10 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
         let {
             totalItems,
             eventDetail
-            // list_job_names
+            // listJobNames
         } = this.props;
 
-        // let list_job_names_options = list_job_names.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        // let listJobNames_options = listJobNames.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         return (
             <>
@@ -352,7 +352,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "filter"}
+                                icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
                     </h5>
@@ -394,8 +394,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        list_regions && list_regions.length >= 1 ?
-                                            list_regions.map((item: IRegion, index: number) =>
+                                        listRegions && listRegions.length >= 1 ?
+                                            listRegions.map((item: IRegion, index: number) =>
                                                 <Option key={index} value={item.name}>{item.name}</Option>
                                             ) : null
                                     }
@@ -405,8 +405,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                         <Table
                             // @ts-ignore
                             columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
+                            loading={loadingTable}
+                            dataSource={dataTable}
                             scroll={{ x: 880 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
@@ -440,10 +440,10 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     listEventSchools: state.EventSchools.items,
     eventDetail: state.EventDetail,
     totalItems: state.EventSchools.totalItems,
-    // list_regions: state.Regions.items,
-    // list_skills: state.Skills.items,
-    // list_job_names: state.JobNames.items,
-    // list_languages: state.Languages.items,
+    // listRegions: state.Regions.items,
+    // listSkills: state.Skills.items,
+    // listJobNames: state.JobNames.items,
+    // listLanguages: state.Languages.items,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

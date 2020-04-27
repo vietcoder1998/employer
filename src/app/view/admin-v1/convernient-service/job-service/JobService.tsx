@@ -10,21 +10,21 @@ interface IJobServiceProps extends StateProps, DispatchProps {
 }
 
 function JobService(props?: IJobServiceProps) {
-    let { list_job_service } = props;
+    let { listJobService } = props;
     return (
         < >
             <h5>Thông tin gói dịch vụ</h5>
             <div className='job-service'>
                 <Divider orientation="left" children={"Gói dịch vụ đặc biệt"} />
                 <div>
-                    <label className='top'>Gói tuyển dụng gấp: {list_job_service.homeTopQuantiy}</label>
-                    <label className='in_day'>Gói tuyển dụng trong ngày: {list_job_service.homeInDayQuantity}</label>
-                    <label className='high_light'>Gói tìm kiếm nổi bật:  {list_job_service.searchHighLightQuantity}</label>
+                    <label className='top'>Gói tuyển dụng gấp: {listJobService.homeTopQuantiy}</label>
+                    <label className='in_day'>Gói tuyển dụng trong ngày: {listJobService.homeInDayQuantity}</label>
+                    <label className='high_light'>Gói tìm kiếm nổi bật:  {listJobService.searchHighLightQuantity}</label>
                 </div>
                 <Divider orientation="left" children={"Gói dịch vụ thường"} />
                 <div>
-                    <label className='unlock'>Số lượt mở khóa ứng viên:  {list_job_service.unlockProfileQuantity}</label>
-                    <label className='unlock'>Số lượt đăng bài:  {list_job_service.nomalQuantity}</label>
+                    <label className='unlock'>Số lượt mở khóa ứng viên:  {listJobService.unlockProfileQuantity}</label>
+                    <label className='unlock'>Số lượt đăng bài:  {listJobService.nomalQuantity}</label>
                 </div>
             </div>
         </>
@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_job_service: state.JobService,
+    listJobService: state.JobService,
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

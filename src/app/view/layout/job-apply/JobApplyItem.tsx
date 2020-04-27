@@ -14,7 +14,7 @@ interface IApplyJobItem {
     index?: number;
     removeButton?: boolean;
     data?: IApplyJob;
-    id_default?: boolean;
+    defaultId?: boolean;
     l_btn?: boolean;
     type?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
     onChangeType?: Function;
@@ -29,7 +29,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
             className="job-apply-item"
             style={{
                 margin: "10px 0px",
-                border: `solid ${props.id_default ? "#5dabea" : "gray"} 1px`,
+                border: `solid ${props.defaultId ? "#5dabea" : "gray"} 1px`,
                 borderRadius: "5px",
                 padding: "0.2vw 0.5vw",
                 position: "relative",

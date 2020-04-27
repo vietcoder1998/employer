@@ -14,10 +14,8 @@ import { timeConverter } from '../../../../utils/convertTime';
 import { NotUpdate } from '../common/Common';
 
 interface ICandidateProfileState {
-    show_menu: boolean;
-    to_logout: boolean;
     location?: string;
-    data_breakcumb?: Array<string>
+    dataBreakcumb?: Array<string>
 };
 
 interface ICandidateProfileProps {

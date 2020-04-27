@@ -9,8 +9,6 @@ import PendingJobs from './pending-jobs/PendingJobs';
 const Switch = require("react-router-dom").Switch;
 
 interface IJobsState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface IJobsProps {

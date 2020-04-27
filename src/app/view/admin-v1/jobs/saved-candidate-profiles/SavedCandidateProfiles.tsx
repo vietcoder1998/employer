@@ -4,8 +4,6 @@ import SavedCandidateProfilesList from './saved-candidate-profiles-list/SavedCan
 const Switch = require("react-router-dom").Switch;
 
 interface ISavedCandidateProfileState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface ISavedCandidateProfileProps {
@@ -17,8 +15,6 @@ export default class SavedCandidateProfile extends PureComponent<ISavedCandidate
     constructor(props) {
         super(props);
         this.state = {
-            show_menu: true,
-            to_logout: false,
         }
     }r
 

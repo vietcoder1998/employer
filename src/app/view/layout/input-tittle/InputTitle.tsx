@@ -10,7 +10,7 @@ interface IInputitleProps {
     widthLabel?: string;
     widthComponent?: string;
     value?: string;
-    list_value?: Array<{ label?: string, value?: any }>;
+    listValue?: Array<{ label?: string, value?: any }>;
     type?: string;
     widthInput?: string;
     defaultValue?: string;
@@ -24,7 +24,7 @@ interface IInputitleProps {
 }
 
 interface INewSelect {
-    list_value?: Array<{ label?: string, value?: string }>;
+    listValue?: Array<{ label?: string, value?: string }>;
     value?: string;
     placeholder?: string;
     defaultValue?: string;
@@ -58,7 +58,7 @@ export const NewInput = (props: INewInput) => {
 }
 
 export const NewSelect = (props: INewSelect) => {
-    let { placeholder, list_value, onChange, widthSelect, disabled, value } = props;
+    let { placeholder, listValue, onChange, widthSelect, disabled, value } = props;
     return (
         <Select
             showSearch
@@ -70,9 +70,9 @@ export const NewSelect = (props: INewSelect) => {
             disabled={disabled ? disabled : false}
         >
             {
-                list_value &&
-                    list_value.length > 0 ?
-                    list_value.map(
+                listValue &&
+                    listValue.length > 0 ?
+                    listValue.map(
                         (item, index) => <Option key={index} value={item.value}>{item.label}</Option>
                     ) : null
             }
@@ -84,7 +84,7 @@ export const InputTitle = (props: IInputitleProps) => {
     let {
         defaultValue,
         value,
-        list_value,
+        listValue,
         placeholder,
         children,
         onChange,
@@ -114,7 +114,7 @@ export const InputTitle = (props: IInputitleProps) => {
             ComponentReturn = (
                 <NewSelect
                     defaultValue={defaultValue}
-                    list_value={list_value}
+                    listValue={listValue}
                     value={value}
                     placeholder={placeholder}
                     onChange={(event: any) => onChange ? onChange(event) : () => { }}

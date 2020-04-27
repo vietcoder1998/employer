@@ -6,8 +6,6 @@ import JobAnnouncementsApply from './job-announcements-apply/JobAnnouncementsApp
 const Switch = require("react-router-dom").Switch;
 
 interface IJobAnnouncementsState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface IJobAnnouncementsProps {

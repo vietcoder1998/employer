@@ -21,7 +21,7 @@ import { NotUpdate } from '../../../layout/common/Common';
 
 interface IAdminAccountState {
     title?: string;
-    type_cpn?: string;
+    typeCpn?: string;
     id?: string;
     body?: IAdminAccount;
     visible?: boolean;
@@ -30,9 +30,9 @@ interface IAdminAccountState {
     fail?: boolean;
     admin_account?: IAdminAccount;
     loading_rate?: boolean;
-    show_pw?: boolean;
-    show_rpw?: boolean;
-    show_npw?: boolean;
+    showPw?: boolean;
+    showRpw?: boolean;
+    showNpw?: boolean;
     pw?: string;
     rpw?: string;
     npw?: string;
@@ -57,14 +57,14 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
         this.state = {
             id: null,
             body: null,
-            type_cpn: TYPE.CREATE,
+            typeCpn: TYPE.CREATE,
             visible: false,
             process: false,
             loading: false,
             fail: false,
             loading_rate: false,
-            show_pw: false,
-            show_rpw: false,
+            showPw: false,
+            showRpw: false,
             pw: null,
             rpw: null,
             npw: null,
@@ -111,7 +111,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             }
 
             if (viewrate === 'true') {
-                nextProps.handleDrawer({ open_drawer: true });
+                nextProps.handleDrawer({ openDrawer: true });
                 setTimeout(() => {
                     nextProps.getListRating();
                 }, 700);
@@ -153,11 +153,11 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
             this.props.getListRating();
         }, 250);
 
-        await this.props.handleDrawer({ open_drawer: true });
+        await this.props.handleDrawer({ openDrawer: true });
     }
 
     render() {
-        let { body, loading, fail, show_pw, show_rpw, show_npw, pw, rpw, npw } = this.state;
+        let { body, loading, fail, showPw, showRpw, showNpw, pw, rpw, npw } = this.state;
         let { modalState, list_ratings, total_rating } = this.props;
         if (fail) {
             return <Result
@@ -198,10 +198,10 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                         />,
                         <Button
                             key="ok"
-                            type={modalState.type_modal === TYPE.DELETE ? "danger" : "primary"}
-                            icon={modalState.type_modal === TYPE.DELETE ? "delete" : "check"}
+                            type={modalState.typeModal === TYPE.DELETE ? "danger" : "primary"}
+                            icon={modalState.typeModal === TYPE.DELETE ? "delete" : "check"}
                             loading={loading}
-                            children={modalState.type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                            children={modalState.typeModal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
                             onClick={async () => this.createRequest()}
                             disabled={!(exact_rpw && exact_npw && exact_pw)}
                         />
@@ -215,9 +215,9 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                     placeholder="Nhập mật khẩu cũ"
                                     style={{ marginRight: 20, width: "80%" }}
                                     prefix={<Icon type={exact_pw ? "check" : "lock"} style={{ color: exact_rpw ? "greenyellow" : "gray" }} />}
-                                    suffix={<Icon type={show_pw ? "eye-invisible" : "eye"} onClick={() => this.setState({ show_pw: !show_pw })} />}
+                                    suffix={<Icon type={showPw ? "eye-invisible" : "eye"} onClick={() => this.setState({ showPw: !showPw })} />}
                                     onChange={(event: any) => this.setState({ pw: event.target.value })}
-                                    type={show_pw ? "text" : "password"}
+                                    type={showPw ? "text" : "password"}
                                 />
                             }
                         />
@@ -230,9 +230,9 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                     placeholder="Chứa ít nhất 6 kí tự và khác mật khẩu cũ"
                                     style={{ marginRight: 20, width: "80%" }}
                                     prefix={<Icon type={exact_npw ? "check" : "lock"} style={{ color: exact_npw ? "greenyellow" : "gray" }} />}
-                                    suffix={<Icon type={show_npw ? "eye-invisible" : "eye"} onClick={() => this.setState({ show_npw: !show_npw })} />}
+                                    suffix={<Icon type={showNpw ? "eye-invisible" : "eye"} onClick={() => this.setState({ showNpw: !showNpw })} />}
                                     onChange={(event: any) => this.setState({ npw: event.target.value })}
-                                    type={show_npw ? "text" : "password"}
+                                    type={showNpw ? "text" : "password"}
                                 />
                             }
                         />
@@ -245,9 +245,9 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                     placeholder="Chứa ít nhất 6 kí tự"
                                     style={{ marginRight: 20, width: "80%" }}
                                     prefix={<Icon type={exact_rpw ? "check" : "lock"} style={{ color: exact_rpw ? "greenyellow" : "gray" }} />}
-                                    suffix={<Icon type={show_rpw ? "eye-invisible" : "eye"} onClick={() => this.setState({ show_rpw: !show_rpw })} />}
+                                    suffix={<Icon type={showRpw ? "eye-invisible" : "eye"} onClick={() => this.setState({ showRpw: !showRpw })} />}
                                     onChange={(event: any) => this.setState({ rpw: event.target.value })}
-                                    type={show_rpw ? "text" : "password"}
+                                    type={showRpw ? "text" : "password"}
                                 />
                             }
                         />
@@ -275,7 +275,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                     width: "45px"
                                 }}
                                 icon={"star"}
-                                onClick={() => this.props.handleDrawer({ open_drawer: true })}
+                                onClick={() => this.props.handleDrawer({ openDrawer: true })}
                             />
                         </Tooltip>
                         <Tooltip title="Đổi mật khấu" >

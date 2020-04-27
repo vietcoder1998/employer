@@ -20,18 +20,17 @@ const cookies = new Cookies();
 interface LoginState {
     email?: string;
     exactly?: boolean;
-    is_loading?: boolean;
-    err_msg?: string;
+    loading?: boolean;
+    errMsg?: string;
     password?: string;
     repassword?: string;
     username?: string;
     employerName?: string;
     phone?: number;
     location?: string;
-    open_drawer?: boolean;
+    openDrawer?: boolean;
     state?: "LOGIN" | "REGISTER";
     confirm?: boolean;
-    loading?: boolean;
     hp ?: boolean;
 }
 
@@ -47,17 +46,16 @@ class Login extends PureComponent<LoginProps, LoginState> {
         this.state = {
             email: "",
             exactly: false,
-            is_loading: true,
-            err_msg: "",
+            loading: true,
+            errMsg: "",
             password: null,
             repassword: null,
             username: null,
             employerName: null,
-            open_drawer: false,
+            openDrawer: false,
             location: null,
             state: "LOGIN",
             confirm: false,
-            loading: false,
             hp: true,
         }
     }
@@ -137,7 +135,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { err_msg, password, username, open_drawer, state, repassword, confirm, loading, hp } = this.state;
+        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -157,8 +155,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
             <div className='all-content'>
                 <Header />
                 <Drawer
-                    visible={open_drawer}
-                    onClose={() => { this.setState({ open_drawer: false }) }}
+                    visible={openDrawer}
+                    onClose={() => { this.setState({ openDrawer: false }) }}
                     destroyOnClose={true}
                     width={"450px"}
                     title={"Chọn vị trí trên bản đồ"}
@@ -234,7 +232,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 </p>
 
                                             </Form>
-                                            {exactly ? "" : <p>{err_msg}</p>}
+                                            {exactly ? "" : <p>{errMsg}</p>}
                                         </div>
                                         <p className='a_c'
                                         >
@@ -327,7 +325,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     type="text"
                                                     maxLength={240}
                                                     value={localStorage.getItem("location")}
-                                                    onClick={() => { this.setState({ open_drawer: true }) }}
+                                                    onClick={() => { this.setState({ openDrawer: true }) }}
                                                 />
                                                 <p style={{paddingTop: 20}}>Mật khẩu</p>
                                                 <Form.Item>
@@ -388,7 +386,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     </Checkbox>
                                                 </p>
                                             </Form>
-                                            {exactly ? "" : <p>{err_msg}</p>}
+                                            {exactly ? "" : <p>{errMsg}</p>}
                                         </div>
                                         <p className='a_c'
                                         >

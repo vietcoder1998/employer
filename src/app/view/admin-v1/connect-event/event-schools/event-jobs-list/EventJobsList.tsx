@@ -95,36 +95,36 @@ interface IEventJobsListProps extends StateProps, DispatchProps {
 };
 
 interface IEventJobsListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
     employerID?: string;
     target?: string;
     jobNameID?: string;
     jobId?: string;
-    show_modal?: boolean;
+    showModal?: boolean;
     loading?: boolean;
     message?: string;
     listEmBranches?: Array<any>;
-    value_type?: string;
+    valueType?: string;
     announcementTypeID?: number;
     createdDate?: number;
     adminID?: string;
     hidden?: boolean;
     listEventJobs?: Array<any>;
     id?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     body?: IEventJobsFilter;
-    un_checkbox?: boolean;
-    list_check?: Array<any>;
-    state_check_box?: Array<string>;
-    open_drawer?: boolean;
+    unCheckbox?: boolean;
+    listCheck?: Array<any>;
+    stateCheckbox?: Array<string>;
+    openDrawer?: boolean;
     homePriority?: string;
     searchPriority?: string;
     homeExpired: boolean;
     searchExpired: boolean;
     eventJobDetail: IEventJobDetail;
-    type_modal: string;
+    typeModal: string;
     ojd?: boolean;
     jid?: string;
     eid?: string;
@@ -135,24 +135,24 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
             employerID: null,
             jobNameID: null,
             jobId: null,
-            show_modal: false,
+            showModal: false,
             loading: false,
             message: null,
             listEmBranches: [],
-            value_type: null,
+            valueType: null,
             announcementTypeID: null,
             createdDate: null,
             adminID: null,
             hidden: false,
             listEventJobs: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             body: {
                 schoolEventID: null,
                 expired: null,
@@ -172,14 +172,14 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 jobLocationFilter: null
             },
 
-            un_checkbox: false,
-            list_check: [],
+            unCheckbox: false,
+            listCheck: [],
             homePriority: null,
             searchPriority: null,
             homeExpired: false,
             searchExpired: false,
             eventJobDetail: null,
-            type_modal: null,
+            typeModal: null,
             ojd: false,
             jid: null,
             eid: null,
@@ -311,8 +311,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     ];
 
     onToggleModal = () => {
-        let { show_modal } = this.state;
-        this.setState({ show_modal: !show_modal });
+        let { showModal } = this.state;
+        this.setState({ showModal: !showModal });
     };
 
     EditToolTip = (hidden?: boolean, id?: string) => {
@@ -364,7 +364,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         target="_blank"
                     >
                         <Icon
-                            className='test'
+                            className='f-ic'
                             style={{ padding: "5px 5px", margin: 2 }}
                             type="edit"
                             theme="twoTone"
@@ -381,7 +381,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             `/${id}?eid=${body.schoolEventID}`
                         } target="_blank">
                         <Icon
-                            className='test'
+                            className='f-ic'
                             style={{ padding: "5px 5px", margin: 2 }}
                             type="copy"
                             theme="twoTone"
@@ -411,7 +411,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         type="delete"
                         theme="twoTone"
                         twoToneColor="red"
-                        onClick={() => this.props.handleModal({ msg: "Bạn muốn xóa bài đăng này", type_modal: TYPE.DELETE })}
+                        onClick={() => this.props.handleModal({ msg: "Bạn muốn xóa bài đăng này", typeModal: TYPE.DELETE })}
                     />
                 </Tooltip>
             </>
@@ -424,7 +424,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             nextProps.listEventJobs !== prevState.listEventJobs
         ) {
             let { pageIndex, pageSize, eid } = prevState;
-            let data_table = [];
+            let dataTable = [];
             let url_string = window.location.href;
             let url = new URL(url_string);
             let id = url.searchParams.get("id");
@@ -434,7 +434,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             nextProps.getJobServiceEvent(eid);
 
             nextProps.listEventJobs.forEach((item: IEventJob, index: number) => {
-                data_table.push({
+                dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     title: item.jobTitle,
@@ -458,8 +458,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
 
             return {
                 listEventJobs: nextProps.listEventJobs,
-                data_table,
-                loading_table: false,
+                dataTable,
+                loadingTable: false,
                 body,
                 eid
             }
@@ -541,7 +541,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.searchEventJobs();
     };
 
@@ -606,7 +606,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let { homePriority, searchPriority, id, body } = this.state;
         let { modalState } = this.props;
         await this.setState({ loading: true });
-        switch (modalState.type_modal) {
+        switch (modalState.typeModal) {
             case TYPE.JOB_FILTER.homePriority:
                 await _requestToServer(
                     POST,
@@ -685,11 +685,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
 
     render() {
         let {
-            data_table,
-            value_type,
-            loading_table,
-            un_checkbox,
-            list_check,
+            dataTable,
+            valueType,
+            loadingTable,
+            unCheckbox,
+            listCheck,
             homePriority,
             // searchPriority,
             homeExpired,
@@ -703,7 +703,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let {
             eventJobDetail,
             totalItems,
-            list_job_names,
+            listJobNames,
             listEmBranches,
             jobServiceEvent,
             modalState,
@@ -741,10 +741,10 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         />,
                         <Button
                             key="ok"
-                            type={modalState.type_modal === TYPE.DELETE ? "danger" : "primary"}
-                            icon={modalState.type_modal === TYPE.DELETE ? "delete" : "check"}
+                            type={modalState.typeModal === TYPE.DELETE ? "danger" : "primary"}
+                            icon={modalState.typeModal === TYPE.DELETE ? "delete" : "check"}
                             loading={loading}
-                            children={modalState.type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                            children={modalState.typeModal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
                             onClick={async () => this.createRequest()}
                         />
                     ]}
@@ -752,7 +752,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 />
                 <Modal
                     visible={ojd}
-                    title={"THÔNG TIN CÔNG VIỆC"}
+                    title={<div style={{textTransform: "uppercase"}}>{eventJobDetail.jobTitle}</div>}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
@@ -762,7 +762,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     footer={[
                         <Button
                             key="cancel"
-                            children="Hủy"
+                            type="danger"
+                            children="Đóng"
                             onClick={() => {
                                 this.setState({
                                     ojd: false,
@@ -790,7 +791,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         </Col>
                         <Col span={10}>
                             <JobSuitableCandidate
-                                job_suitable_candidates={jobSuitableCandidates.items}
+                                jobSuitableCandidates={jobSuitableCandidates.items}
                                 pageIndex={jobSuitableCandidates.pageIndex}
                                 pageSize={jobSuitableCandidates.pageSize}
                                 totalItems={jobSuitableCandidates.totalItems}
@@ -833,7 +834,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 onClick={() => {
                                     this.props.handleModal({
                                         msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
-                                        type_modal: TYPE.JOB_FILTER.homePriority
+                                        typeModal: TYPE.JOB_FILTER.homePriority
                                     });
                                 }}
                             >
@@ -857,13 +858,13 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     <div style={{ padding: "40px 10px 20px ", width: "100%" }}>
                         <Button
                             icon="close"
-                            type="dashed"
+                            type="danger"
                             style={{
                                 float: "left"
                             }}
                             onClick={() => this.onCancelRegisterBenefit()}
                         >
-                            Hủy bỏ thay đổi
+                            Đóng
                         </Button>
                     </div>
                 </DrawerConfig>
@@ -882,7 +883,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "filter"}
+                                icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE} >
@@ -927,8 +928,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        list_job_names &&
-                                        list_job_names.map(
+                                        listJobNames &&
+                                        listJobNames.map(
                                             (item: IJobName, index: number) => <Option key={index} value={item.id}>{item.name}</Option>
                                         )
                                     }
@@ -1008,7 +1009,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     defaultValue="Tất cả"
                                     optionFilterProp="children"
                                     style={{ width: "100%" }}
-                                    value={value_type}
+                                    value={valueType}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.hidden)}
                                 >
                                     <Option value={null}>Tất cả</Option>
@@ -1019,11 +1020,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
                                 <Checkbox
-                                    indeterminate={un_checkbox}
+                                    indeterminate={unCheckbox}
                                     onChange={
                                         (event: any) => {
                                             this.handleCheckBox(event.target.checked);
-                                            this.setState({ un_checkbox: event.target.checked })
+                                            this.setState({ unCheckbox: event.target.checked })
                                         }
                                     }
                                 >
@@ -1032,22 +1033,22 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 <hr />
                                 <CheckboxGroup
                                     options={plainOptions}
-                                    value={list_check}
+                                    value={listCheck}
                                     onChange={
                                         (event: any) => {
                                             this.handleCheckBox(event);
-                                            this.setState({ list_check: event })
+                                            this.setState({ listCheck: event })
                                         }
                                     }
-                                    disabled={un_checkbox}
+                                    disabled={unCheckbox}
                                 />
                             </Col>
                         </Row>
                         <Table
                             // @ts-ignore
                             columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
+                            loading={loadingTable}
+                            dataSource={dataTable}
                             scroll={{ x: 1680 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
@@ -1087,7 +1088,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     listEventJobs: state.EventJobs.items,
-    list_job_names: state.JobNames.items,
+    listJobNames: state.JobNames.items,
     listEmBranches: state.EmBranches.items,
     jobServiceEvent: state.JobServiceEvent,
     modalState: state.MutilBox.modalState,

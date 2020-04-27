@@ -22,10 +22,10 @@ interface INotiticationsListState {
     employerID?: string;
     jobNameID?: string;
     jobId?: string;
-    list_annou_types?: Array<any>;
+    listAnnouTypes?: Array<any>;
     createdDate?: number;
     hidden?: boolean;
-    list_noti?: Array<any>;
+    listNoti?: Array<any>;
     id?: string;
     initLoading?: boolean;
     loadingMore?: boolean;
@@ -39,7 +39,7 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
         this.state = {
             createdDate: undefined,
             hidden: undefined,
-            list_noti: [],
+            listNoti: [],
             id: "",
             initLoading: false,
             loading: false,
@@ -51,15 +51,15 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
 
     static getDerivedStateFromProps(nextProps: INotiticationsListProps, prevState: INotiticationsListState) {
         if (
-            nextProps.list_noti &&
+            nextProps.listNoti &&
             (nextProps.pageIndexNoti === 0 ||
                 nextProps.pageIndexNoti !== prevState.pageIndex)
         ) {
-            let { list_noti } = prevState;
-            list_noti = list_noti.concat(nextProps.list_noti);
+            let { listNoti } = prevState;
+            listNoti = listNoti.concat(nextProps.listNoti);
 
             return {
-                list_noti,
+                listNoti,
             };
         }
         return {
@@ -90,23 +90,23 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
     };
 
     setSeen = (id?: string) => {
-        let { list_noti } = this.state;
+        let { listNoti } = this.state;
         console.log(id);
-        list_noti.forEach((item?: INoti) => {
+        listNoti.forEach((item?: INoti) => {
             if (id === item.id) {
                 console.log(item.seen);
                 item.seen = !item.seen;
             }
         });
 
-        this.setState({ list_noti })
+        this.setState({ listNoti })
     }
 
     ListNoti = () => {
-        let { pageSize, list_noti } = this.state;
+        let { pageSize, listNoti } = this.state;
 
-        let list_noti_view = list_noti && list_noti && list_noti.length > 0 ?
-            list_noti.map(
+        let listNoti_view = listNoti && listNoti && listNoti.length > 0 ?
+            listNoti.map(
                 (item: INoti) =>
                     <NotiItem
                         key={randomID(16)}
@@ -117,7 +117,7 @@ class NotiticationsList extends PureComponent<INotiticationsListProps, INotitica
                         setSeen={this.setSeen}
                     />) : <NotUpdate msg="Không có thông báo" />
         return <div className="list-noti-show">
-            {list_noti_view}
+            {listNoti_view}
         </div>
     };
 
@@ -167,7 +167,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: INotiticationsListProps) =>
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_noti: state.Notis.items,
+    listNoti: state.Notis.items,
     totalItems: state.Notis.totalItems,
     pageIndexNoti: state.Notis.pageIndex,
     pageSizeNoti: state.Notis.pageSize,

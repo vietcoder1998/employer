@@ -33,13 +33,13 @@ const { Content, Header } = Layout;
 interface IAdminState {
     to_logout: boolean;
     location?: string;
-    data_breakcumb?: Array<string>,
+    dataBreakcumb?: Array<string>,
     loading?: boolean,
     pathname?: string,
-    list_noti?: Array<INoti>,
+    listNoti?: Array<INoti>,
     pageSize?: number,
     pageIndex?: number,
-    loading_noti?: boolean;
+    loadingNoti?: boolean;
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
@@ -61,11 +61,11 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         this.state = {
             to_logout: false,
             location: "/",
-            data_breakcumb: [],
+            dataBreakcumb: [],
             loading: true,
             pageSize: 10,
             pageIndex: 0,
-            loading_noti: false,
+            loadingNoti: false,
         };
     };
 
@@ -83,14 +83,14 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
         if (nextProps.location.pathname !== prevState.pathname) {
             let list_breakcumb = nextProps.location.pathname.split("/");
-            let data_breakcumb = [];
-            list_breakcumb.forEach(item => item !== "" && data_breakcumb.push(item));
+            let dataBreakcumb = [];
+            list_breakcumb.forEach(item => item !== "" && dataBreakcumb.push(item));
             window.scrollTo(0, 0);
             nextProps.handleLoading(false);
 
             return {
                 pathname: nextProps.location.pathname,
-                data_breakcumb,
+                dataBreakcumb,
             }
         }
         return null
@@ -108,9 +108,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     }
 
     render() {
-        let { data_breakcumb, loading, pageSize, pageIndex } = this.state;
+        let { dataBreakcumb, loading, pageSize, pageIndex } = this.state;
         let { path } = this.props.match;
-        let { totalNoti, list_noti } = this.props;
+        let { totalNoti, listNoti } = this.props;
 
         return (
             <Layout>
@@ -151,8 +151,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     < >
                                         <div className='list-noti'>
                                             {
-                                                list_noti && list_noti.length > 0 ?
-                                                    list_noti.map(
+                                                listNoti && listNoti.length > 0 ?
+                                                    listNoti.map(
                                                         (item: INoti) =>
                                                             <NotiItem
                                                                 key={item.id}
@@ -239,7 +239,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <Icon type="home" />
                                 </a>
                             </Breadcrumb.Item>
-                            {data_breakcumb.map((item: any) => {
+                            {dataBreakcumb.map((item: any) => {
                                 let newBreakCump = null;
                                 breakCumb.forEach((item_brk: any, index: number) => {
                                     if (item_brk.label === item) {
@@ -293,7 +293,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     loading: state.MutilBox.loading,
-    list_noti: state.Notis.items,
+    listNoti: state.Notis.items,
     totalNoti: state.Notis.totalItems
 })
 

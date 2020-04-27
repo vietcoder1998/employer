@@ -17,17 +17,17 @@ import { routeLink, routePath } from '../../../../../../const/break-cumb';
 interface IEmBranchesCreateState {
     title?: string;
     announcementTypeID: string;
-    type_management?: Array<any>;
-    list_item?: Array<{ label?: string, value?: string }>,
+    typeMng?: Array<any>;
+    listItem?: Array<{ label?: string, value?: string }>,
     loading?: boolean;
     previewImage?: any;
     previewVisible?: boolean;
     fileList?: Array<any>;
     hidden?: boolean;
     content?: string;
-    value_annou?: string;
-    announcement_detail?: any;
-    type_cpn?: string;
+    valueAnnou?: string;
+    annouDetail?: any;
+    typeCpn?: string;
     body?: {
         branchName?: string,
         contactEmail?: string,
@@ -51,14 +51,14 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
         this.state = {
             title: "",
             announcementTypeID: "",
-            type_management: [],
-            list_item: [],
+            typeMng: [],
+            listItem: [],
             loading: false,
             previewImage: null,
             previewVisible: false,
             fileList: [],
             hidden: false,
-            value_annou: "",
+            valueAnnou: "",
             body: {
                 branchName: null,
                 contactEmail: null,
@@ -66,7 +66,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                 lat: 0,
                 lon: 0
             },
-            type_cpn: TYPE.CREATE,
+            typeCpn: TYPE.CREATE,
             id: null,
         }
     }
@@ -76,13 +76,13 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
             (nextProps.match.params.id &&
             nextProps.match.params.id !== prevState.id) || !prevState.body
         ) {
-            let type_cpn = TYPE.CREATE;
+            let typeCpn = TYPE.CREATE;
             if (nextProps.match.url.includes("fix")) {
-                type_cpn = TYPE.EDIT;
+                typeCpn = TYPE.EDIT;
             };
 
             let { body } = prevState;
-            nextProps.list_em_branches.forEach((element: IEmBranch) => {
+            nextProps.listEmBranches.forEach((element: IEmBranch) => {
                 if (element.id === nextProps.match.params.id) {
                     nextProps.handleMap({ marker: { lat: element.lat, lng: element.lon }, location: element.address });
                     body.branchName = element.branchName;
@@ -95,7 +95,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
 
             return {
                 body,
-                type_cpn,
+                typeCpn,
                 id: nextProps.match.params.id
             }
         }
@@ -107,12 +107,12 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
     };
 
     createRequest = async () => {
-        let { body, type_cpn, id } = this.state;
+        let { body, typeCpn, id } = this.state;
         let { mapState } = this.props;
         body.lat = mapState.marker.lat;
         body.lon = mapState.marker.lng;
         await this.setState({ loading: true });
-        switch (type_cpn) {
+        switch (typeCpn) {
             case TYPE.CREATE:
                 await _requestToServer(
                     POST,
@@ -152,18 +152,18 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
     }
 
     render() {
-        let { body, type_cpn, loading } = this.state;
+        let { body, typeCpn, loading } = this.state;
 
         let btcc = "Hủy";
         let btnx = "Tạo mới"
 
-        if (type_cpn === TYPE.EDIT) {
+        if (typeCpn === TYPE.EDIT) {
             btnx = "Lưu lại"
         }
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.EDIT ? "Thêm chi nhánh" : "Sửa chi nhánh"}
+                    {typeCpn === TYPE.EDIT ? "Thêm chi nhánh" : "Sửa chi nhánh"}
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
@@ -284,7 +284,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
     mapState: state.MutilBox.mapState,
-    list_em_branches: state.EmBranches.items
+    listEmBranches: state.EmBranches.items
 })
 
 type StateProps = ReturnType<typeof mapStateToProps>;

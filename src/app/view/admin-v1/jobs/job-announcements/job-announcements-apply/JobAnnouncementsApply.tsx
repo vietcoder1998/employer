@@ -23,13 +23,13 @@ const { TabPane } = Tabs;
 interface IJobAnnouncementsApplyState {
     title: string;
     announcementTypeID: string;
-    type_management: Array<any>;
-    list_item: Array<{ label: string, value: string }>,
+    typeMng: Array<any>;
+    listItem: Array<{ label: string, value: string }>,
     loading: boolean;
-    value_annou: string;
-    type_cpn: string;
-    list_em_branches: Array<IEmBranch>;
-    list_apply_jobs?: Array<IApplyJob>;
+    valueAnnou: string;
+    typeCpn: string;
+    listEmBranches: Array<IEmBranch>;
+    listApplyJobs?: Array<IApplyJob>;
     id?: string;
     jobName?: string;
     address?: string;
@@ -40,7 +40,7 @@ interface IJobAnnouncementsApplyState {
     list_rejected?: Array<IApplyJob>;
     list_shifts?: Array<IShiftDetail>;
     l_btn?: boolean;
-    default_id?: string;
+    defaultId?: string;
 };
 
 interface IJobAnnouncementsApplyProps extends StateProps, DispatchProps {
@@ -58,19 +58,19 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         this.state = {
             title: "",
             announcementTypeID: "",
-            type_management: [],
-            list_item: [],
+            typeMng: [],
+            listItem: [],
             loading: false,
-            value_annou: "",
-            list_em_branches: [],
-            type_cpn: null,
-            list_apply_jobs: [],
+            valueAnnou: "",
+            listEmBranches: [],
+            typeCpn: null,
+            listApplyJobs: [],
             id: null,
             list_pending: [],
             list_accepted: [],
             list_rejected: [],
             list_shifts: [],
-            default_id: null,
+            defaultId: null,
             l_btn: false
         };
     };
@@ -89,26 +89,26 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             props.match.params.id &&
             props.match.params.id !== state.id
         ) {
-            let list_apply_jobs = props.list_apply_jobs;
+            let listApplyJobs = props.listApplyJobs;
             const param = new URLSearchParams(props.location.search);
             const state = param.get('state');
             return {
                 id: props.match.params.id,
-                list_apply_jobs,
+                listApplyJobs,
                 state
             }
         }
 
         if (
-            props.list_apply_jobs &&
-            props.list_apply_jobs !== state.list_apply_jobs
+            props.listApplyJobs &&
+            props.listApplyJobs !== state.listApplyJobs
         ) {
-            let list_apply_jobs = props.list_apply_jobs;
+            let listApplyJobs = props.listApplyJobs;
             let list_pending = [];
             let list_accepted = [];
             let list_rejected = [];
-            if (list_apply_jobs && list_apply_jobs.length > 0) {
-                list_apply_jobs.forEach((item: IApplyJob, index: number) => {
+            if (listApplyJobs && listApplyJobs.length > 0) {
+                listApplyJobs.forEach((item: IApplyJob, index: number) => {
                     switch (item.state) {
                         case TYPE.PENDING:
                             list_pending.push(item);
@@ -126,7 +126,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 })
             }
             return {
-                list_apply_jobs,
+                listApplyJobs,
                 list_pending,
                 list_rejected,
                 list_accepted,
@@ -136,13 +136,13 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         return null
     }
 
-    searchShift = (id?: string, type?: string, default_id?: string) => {
-        let { list_apply_jobs } = this.state;
+    searchShift = (id?: string, type?: string, defaultId?: string) => {
+        let { listApplyJobs } = this.state;
         this.setState({ loading: true })
         let list_shifts = [];
         setTimeout(() => {
             if (id) {
-                list_apply_jobs.forEach((item: IApplyJob) => {
+                listApplyJobs.forEach((item: IApplyJob) => {
                     if (id === item.candidate.id) {
                         list_shifts = item.appliedShifts;
                     }
@@ -152,7 +152,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             this.setState({ list_shifts, loading: false })
         }, 250);
 
-        this.setState({ default_id })
+        this.setState({ defaultId })
     }
 
     createRequest = async (cid?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => {
@@ -184,7 +184,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             list_pending,
             list_shifts,
             loading,
-            default_id,
+            defaultId,
             l_btn
         } = this.state;
 
@@ -225,7 +225,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                         l_btn={l_btn}
                                                         data={item}
                                                         id={item.candidate.id}
-                                                        id_default={item.candidate.id === default_id}
+                                                        defaultId={item.candidate.id === defaultId}
                                                         onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                         onClick={
                                                             (event: string) => this.searchShift(event, TYPE.PENDING, item.candidate.id)
@@ -246,7 +246,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                         type={"ACCEPTED"}
                                                         data={item}
                                                         id={item.candidate.id}
-                                                        id_default={item.candidate.id === default_id}
+                                                        defaultId={item.candidate.id === defaultId}
                                                         onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                         onClick={
                                                             (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.candidate.id)
@@ -268,7 +268,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                             key={index}
                                                             data={item}
                                                             id={item.candidate.id}
-                                                            id_default={item.candidate.id === default_id}
+                                                            defaultId={item.candidate.id === defaultId}
                                                             onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                             onClick={
                                                                 (event: string) => this.searchShift(event, TYPE.REJECTED, item.candidate.id)
@@ -332,15 +332,15 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getApplyJobs: (id?: string, list_apply_jobs?: string) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, list_apply_jobs }),
+    getApplyJobs: (id?: string, listApplyJobs?: string) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, listApplyJobs }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_job_names: state.JobNames.items,
-    list_skills: state.Skills.items,
-    list_em_branches: state.EmBranches.items,
-    list_apply_jobs: state.ApplyJobs.items,
+    listJobNames: state.JobNames.items,
+    listSkills: state.Skills.items,
+    listEmBranches: state.EmBranches.items,
+    listApplyJobs: state.ApplyJobs.items,
     totalItems: state.ApplyJobs.totalItems
 });
 

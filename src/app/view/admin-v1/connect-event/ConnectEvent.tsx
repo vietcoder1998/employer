@@ -8,8 +8,6 @@ import SchoolDetail from './school-detail/SchoolDetail';
 const Switch = require("react-router-dom").Switch;
 
 interface ConnectEventState {
-    show_menu: boolean;
-    to_logout: boolean;
 }
 
 interface ConnectEventProps  {

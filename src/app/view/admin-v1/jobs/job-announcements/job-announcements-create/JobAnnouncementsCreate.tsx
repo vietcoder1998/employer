@@ -26,19 +26,19 @@ const { TabPane } = Tabs;
 interface IJobAnnouncementsCreateState {
     title: string;
     announcementTypeID: string;
-    type_management: Array<any>;
-    list_item: Array<{ label: string, value: string }>,
+    typeMng: Array<any>;
+    listItem: Array<{ label: string, value: string }>,
     loading: boolean;
-    value_annou: string;
-    type_cpn: string;
-    list_em_branches: Array<IEmBranch>;
+    valueAnnou: string;
+    typeCpn: string;
+    listEmBranches: Array<IEmBranch>;
     body: IAnnoucementBody;
     id?: string;
     jobName?: string;
     address?: string;
     skills?: Array<string>
-    not_complete?: boolean;
-    job_announcement_detail?: any;
+    notComplete?: boolean;
+    jobAnnouncementDetail?: any;
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
@@ -55,12 +55,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         this.state = {
             title: "",
             announcementTypeID: "",
-            type_management: [],
-            list_item: [],
+            typeMng: [],
+            listItem: [],
             loading: false,
-            value_annou: "",
-            type_cpn: TYPE.CREATE,
-            list_em_branches: [],
+            valueAnnou: "",
+            typeCpn: TYPE.CREATE,
+            listEmBranches: [],
             body: {
                 jobTitle: null,
                 jobNameID: null,
@@ -123,63 +123,63 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
 
         if (
-            (props.job_announcement_detail ||
-                props.pending_job_detail) && props.match.params.id !== state.body.id
+            (props.jobAnnouncementDetail ||
+                props.pendingJobDetail) && props.match.params.id !== state.body.id
         ) {
-            let type_cpn = TYPE.CREATE;
-            let job_announcement_detail = null;
+            let typeCpn = TYPE.CREATE;
+            let jobAnnouncementDetail = null;
             let jobID = null;
             let body = state.body;
             let id = state.body.id;
             let requiredSkillIDs = [];
 
             if (props.match.url.includes("pending")) {
-                type_cpn = TYPE.PENDING;
-                id = props.pending_job_detail.id;
-                job_announcement_detail = props.pending_job_detail.data;
-                jobID = job_announcement_detail.jobNameID;
-                requiredSkillIDs = job_announcement_detail.requiredSkillIDs
+                typeCpn = TYPE.PENDING;
+                id = props.pendingJobDetail.id;
+                jobAnnouncementDetail = props.pendingJobDetail.data;
+                jobID = jobAnnouncementDetail.jobNameID;
+                requiredSkillIDs = jobAnnouncementDetail.requiredSkillIDs
             };
 
             if (props.match.url.includes("fix")) {
-                type_cpn = TYPE.FIX;
-                id = props.job_announcement_detail.id;
-                job_announcement_detail = props.job_announcement_detail;
-                jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
-                requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
-                    job_announcement_detail.requiredSkills.map((item: any) => item.id)
+                typeCpn = TYPE.FIX;
+                id = props.jobAnnouncementDetail.id;
+                jobAnnouncementDetail = props.jobAnnouncementDetail;
+                jobID = jobAnnouncementDetail.jobName && jobAnnouncementDetail.jobName.id;
+                requiredSkillIDs = jobAnnouncementDetail.requiredSkills && jobAnnouncementDetail.requiredSkills.length &&
+                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id)
             };
 
             if (props.match.url.includes("copy")) {
-                type_cpn = TYPE.COPY;
-                id = props.job_announcement_detail.id;
-                job_announcement_detail = props.job_announcement_detail;
-                jobID = job_announcement_detail.jobName && job_announcement_detail.jobName.id;
-                requiredSkillIDs = job_announcement_detail.requiredSkills && job_announcement_detail.requiredSkills.length &&
-                    job_announcement_detail.requiredSkills.map((item: any) => item.id)
+                typeCpn = TYPE.COPY;
+                id = props.jobAnnouncementDetail.id;
+                jobAnnouncementDetail = props.jobAnnouncementDetail;
+                jobID = jobAnnouncementDetail.jobName && jobAnnouncementDetail.jobName.id;
+                requiredSkillIDs = jobAnnouncementDetail.requiredSkills && jobAnnouncementDetail.requiredSkills.length &&
+                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id)
             };
 
-            console.log(job_announcement_detail);
+            console.log(jobAnnouncementDetail);
 
-            if (type_cpn !== TYPE.CREATE) {
-                if (job_announcement_detail) {
+            if (typeCpn !== TYPE.CREATE) {
+                if (jobAnnouncementDetail) {
                     body.id = id;
-                    body.description = job_announcement_detail.description;
-                    body.jobTitle = job_announcement_detail.jobTitle;
+                    body.description = jobAnnouncementDetail.description;
+                    body.jobTitle = jobAnnouncementDetail.jobTitle;
                     body.jobNameID = jobID;
-                    body.jobType = job_announcement_detail.jobType;
-                    body.employerBranchID = job_announcement_detail.employerBranchID;
-                    body.description = job_announcement_detail.description;
-                    body.expirationDate = job_announcement_detail.expirationDate;
-                    body.shifts = job_announcement_detail.shifts;
+                    body.jobType = jobAnnouncementDetail.jobType;
+                    body.employerBranchID = jobAnnouncementDetail.employerBranchID;
+                    body.description = jobAnnouncementDetail.description;
+                    body.expirationDate = jobAnnouncementDetail.expirationDate;
+                    body.shifts = jobAnnouncementDetail.shifts;
                     body.requiredSkillIDs = requiredSkillIDs
                 };
             };
 
             return {
                 body,
-                type_cpn,
-                job_announcement_detail
+                typeCpn,
+                jobAnnouncementDetail
             }
         }
         return null
@@ -225,11 +225,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     };
 
     createRequest = async () => {
-        let { body, type_cpn, id } = this.state;
-        let newBody = await this.pretreatmentBody(body, type_cpn);
-        let matching = (type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY) ? `` : `/${id}`;
-        let METHOD = type_cpn === TYPE.CREATE || type_cpn === TYPE.COPY ? POST : PUT;
-        let API = type_cpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
+        let { body, typeCpn, id } = this.state;
+        let newBody = await this.pretreatmentBody(body, typeCpn);
+        let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `` : `/${id}`;
+        let METHOD = typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY ? POST : PUT;
+        let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
 
         await _requestToServer(
@@ -252,18 +252,18 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         })
     }
 
-    pretreatmentBody = (body: IAnnoucementBody, type_cpn: string) => {
+    pretreatmentBody = (body: IAnnoucementBody, typeCpn: string) => {
         let newBody = body;
-        this.setState({ not_complete: false });
+        this.setState({ notComplete: false });
 
         newBody.shifts.forEach((element: any, index: number) => {
             if (!element.genderRequireds || element.genderRequireds.length === 0) {
                 message.warning(`Ca cần thêm số lượng tuyển`);
-                this.setState({ not_complete: true })
+                this.setState({ notComplete: true })
             }
 
             element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
-                if (item.id && type_cpn !== TYPE.CREATE) {
+                if (item.id && typeCpn !== TYPE.CREATE) {
                     return {
                         id: item.id,
                         quantity: item.quantity,
@@ -282,7 +282,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             );
         });
 
-        if (type_cpn !== TYPE.FIX || type_cpn !== TYPE.PENDING) {
+        if (typeCpn !== TYPE.FIX || typeCpn !== TYPE.PENDING) {
             newBody.shifts.forEach((element: IShift, index: number) => {
                 if (element.id) {
                     delete element["id"]
@@ -304,23 +304,23 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     render() {
         let {
-            type_cpn,
+            typeCpn,
             body,
             loading
         } = this.state;
 
         let {
-            list_job_names,
-            list_em_branches,
-            list_skills,
-            job_announcement_detail,
-            normal_quantity
+            listJobNames,
+            listEmBranches,
+            listSkills,
+            jobAnnouncementDetail,
+            normalQuantity
         } = this.props;
 
         let ct_btn_ex = "Huỷ";
         let ct_btn_nt = "Lưu lại";
 
-        switch (type_cpn) {
+        switch (typeCpn) {
             case TYPE.COPY:
                 ct_btn_ex = "Huỷ tạo";
                 ct_btn_nt = "Tạo mới(bản sao)";
@@ -338,12 +338,12 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 break;
         };
 
-        let list_job_name_options = list_job_names.map((item: IJobName) => ({ label: item.name, value: item.id }));
-        let list_em_branches_options = list_em_branches.map((item: any) => ({ label: item.branchName, value: item.id }));
-        let list_skill_options = list_skills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let list_job_name_options = listJobNames.map((item: IJobName) => ({ label: item.name, value: item.id }));
+        let listEmBranches_options = listEmBranches.map((item: any) => ({ label: item.branchName, value: item.id }));
+        let list_skill_options = listSkills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         if (
-            !job_announcement_detail && job_announcement_detail.id
+            !jobAnnouncementDetail && jobAnnouncementDetail.id
         ) {
             return <Result
                 status="404"
@@ -373,7 +373,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         return (
             <div className='common-content'>
                 <h5>
-                    {type_cpn === TYPE.FIX || type_cpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài(${normal_quantity ? normal_quantity : 0})`}
+                    {typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài(${normalQuantity ? normalQuantity : 0})`}
                 </h5>
                 <Divider orientation="left" >Nội dung bài đăng</Divider>
                 <div className="announcements-create-content">
@@ -449,8 +449,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         title="Chọn công việc"
                         required={true}
                         type={TYPE.SELECT}
-                        list_value={list_job_name_options}
-                        value={findIdWithValue(list_job_names, body.jobNameID, "id", "name")}
+                        listValue={list_job_name_options}
+                        value={findIdWithValue(listJobNames, body.jobNameID, "id", "name")}
                         onChange={
                             (event: any) => {
                                 body.jobNameID = event;
@@ -465,8 +465,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         title="Chọn chi nhánh "
                         required={true}
                         type={TYPE.SELECT}
-                        list_value={list_em_branches_options}
-                        value={findIdWithValue(list_em_branches, body.employerBranchID, "id", "branchName")}
+                        listValue={listEmBranches_options}
+                        value={findIdWithValue(listEmBranches, body.employerBranchID, "id", "branchName")}
                         onChange={
                             (event: any) => {
                                 body.employerBranchID = event;
@@ -486,11 +486,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             mode="multiple"
                             size="default"
                             placeholder="ex: Giao tiếp, Tiếng Anh"
-                            value={findIdWithValue(list_skills, body.requiredSkillIDs, "id", "name")}
+                            value={findIdWithValue(listSkills, body.requiredSkillIDs, "id", "name")}
                             onChange={
                                 (event: any) => {
-                                    let list_data = findIdWithValue(list_skills, event, "name", "id")
-                                    body.requiredSkillIDs = list_data;
+                                    let listData = findIdWithValue(listSkills, event, "name", "id")
+                                    body.requiredSkillIDs = listData;
                                     this.setState({ body })
                                 }
                             }
@@ -508,7 +508,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         onChange={(event: string) => {
                             body.jobType = event;
                             this.setState({ body });
-                            type_cpn === TYPE.CREATE && this.replaceShift();
+                            typeCpn === TYPE.CREATE && this.replaceShift();
                         }}
                     >
                         <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME}>
@@ -573,10 +573,10 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 </div>
                 {
 
-                    (job_announcement_detail.acceptedApplied === 0 &&
-                        job_announcement_detail.pendingApplied === 0 &&
-                        job_announcement_detail.rejectedApplied === 0) ||
-                        (type_cpn !== TYPE.FIX) ?
+                    (jobAnnouncementDetail.acceptedApplied === 0 &&
+                        jobAnnouncementDetail.pendingApplied === 0 &&
+                        jobAnnouncementDetail.rejectedApplied === 0) ||
+                        (typeCpn !== TYPE.FIX) ?
                         <div className="Announcements-create-content">
                             <Button
                                 type="primary"
@@ -614,12 +614,12 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_job_names: state.JobNames.items,
-    job_announcement_detail: state.JobAnnouncementDetail,
-    pending_job_detail: state.PendingJobDetail,
-    list_skills: state.Skills.items,
-    list_em_branches: state.EmBranches.items,
-    normal_quantity: state.JobService.nomalQuantity
+    listJobNames: state.JobNames.items,
+    jobAnnouncementDetail: state.JobAnnouncementDetail,
+    pendingJobDetail: state.PendingJobDetail,
+    listSkills: state.Skills.items,
+    listEmBranches: state.EmBranches.items,
+    normalQuantity: state.JobService.nomalQuantity
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

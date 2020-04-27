@@ -29,7 +29,7 @@ interface EmBranchesListProps extends StateProps, DispatchProps {
 };
 
 interface EmBranchesListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
@@ -37,19 +37,19 @@ interface EmBranchesListState {
     target?: string;
     branchNameID?: string;
     jobId?: string;
-    show_modal?: boolean;
+    showModal?: boolean;
     loading?: boolean;
     pendingJob?: any;
     message?: string;
-    type_management?: Array<any>;
-    value_type?: string;
+    typeMng?: Array<any>;
+    valueType?: string;
     announcementTypeID?: number;
     createdDate?: number;
     adminID?: string;
     hidden?: boolean;
-    list_em_branches?: Array<any>;
+    listEmBranches?: Array<any>;
     id?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     body: IEmBranchesFilter;
 };
 
@@ -57,26 +57,26 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
             state: null,
             employerID: null,
             branchNameID: null,
             jobId: null,
-            show_modal: false,
+            showModal: false,
             loading: false,
             pendingJob: null,
             message: null,
-            type_management: [],
-            value_type: null,
+            typeMng: [],
+            valueType: null,
             announcementTypeID: null,
             createdDate: null,
             adminID: null,
             hidden: false,
-            list_em_branches: [],
+            listEmBranches: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             body: {
                 regionID: null,
                 headquarters: null,
@@ -92,7 +92,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     title="Xem chi tiết (sửa)"
                 >
                     <Icon
-                        className='test'
+                        className="f-ic"
                         style={{ padding: 5, margin: 2 }}
                         type="edit"
                         theme="twoTone"
@@ -107,7 +107,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     title="Xóa chi nhánh"
                 >
                     <Icon
-                        className='test'
+                        className="f-ic"
                         style={{ padding: 5, margin: 2 }}
                         type="delete"
                         theme="twoTone"
@@ -122,7 +122,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     };
 
     deleteAnnoun = async () => {
-        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", type_modal: TYPE.DELETE });
+        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE });
     };
 
     columns = [
@@ -195,7 +195,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 120,
+            width: 80,
             render: () => this.editToolAction()
         },
     ];
@@ -228,24 +228,24 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     ];
 
     onToggleModal = () => {
-        let { show_modal } = this.state;
-        this.setState({ show_modal: !show_modal });
+        let { showModal } = this.state;
+        this.setState({ showModal: !showModal });
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.type_management !== prevState.type_management) {
+        if (nextProps.typeMng !== prevState.typeMng) {
             return {
-                type_management: nextProps.type_management,
-                value_type: "Tất cả",
+                typeMng: nextProps.typeMng,
+                valueType: "Tất cả",
                 announcementTypeID: null
             }
         }
 
-        if (nextProps.list_em_branches !== prevState.list_em_branches) {
+        if (nextProps.listEmBranches !== prevState.listEmBranches) {
             let { pageIndex, pageSize } = prevState;
-            let data_table = [];
-            nextProps.list_em_branches.forEach((item: IEmBranch, index: number) => {
-                data_table.push({
+            let dataTable = [];
+            nextProps.listEmBranches.forEach((item: IEmBranch, index: number) => {
+                dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     branchName: item.branchName ? item.branchName : "",
@@ -259,9 +259,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 });
             })
             return {
-                list_em_branches: nextProps.type_management,
-                data_table,
-                loading_table: false,
+                listEmBranches: nextProps.typeMng,
+                dataTable,
+                loadingTable: false,
             }
         } return null;
     };
@@ -277,7 +277,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.searchEmBranch();
     };
 
@@ -288,9 +288,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 
     onChangeType = (event: any, param?: string) => {
         let { body } = this.state;
-        let { list_regions } = this.props;
+        let { listRegions } = this.props;
         let value: any = event;
-        list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } })
+        listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } })
         switch (event) {
             case TYPE.EXIST:
                 value = true;
@@ -329,7 +329,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
     createRequest = async () => {
         let { modalState } = this.props;
         this.setState({ loading: true })
-        switch (modalState.type_modal) {
+        switch (modalState.typeModal) {
             case TYPE.DELETE:
                 await _requestToServer(
                     DELETE,
@@ -356,14 +356,14 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 
     render() {
         let {
-            data_table,
-            loading_table,
+            dataTable,
+            loadingTable,
             loading
         } = this.state;
 
         let {
             totalItems,
-            list_regions,
+            listRegions,
             modalState,
         } = this.props
         return (
@@ -393,10 +393,10 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             />,
                             <Button
                                 key="ok"
-                                type={modalState.type_modal === TYPE.DELETE ? "danger" : "primary"}
-                                icon={modalState.type_modal === TYPE.DELETE ? "delete" : "check"}
+                                type={modalState.typeModal === TYPE.DELETE ? "danger" : "primary"}
+                                icon={modalState.typeModal === TYPE.DELETE ? "delete" : "check"}
                                 loading={loading}
-                                children={modalState.type_modal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
+                                children={modalState.typeModal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
                                 onClick={async () => this.createRequest()}
                             />
                         ]}
@@ -417,7 +417,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "filter"}
+                                icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Link to={routeLink.EM_BRANCHES + routePath.CREATE} >
@@ -462,8 +462,8 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        list_regions && list_regions.length >= 1 ?
-                                            list_regions.map((item: IRegion, index: number) =>
+                                        listRegions && listRegions.length >= 1 ?
+                                            listRegions.map((item: IRegion, index: number) =>
                                                 <Option key={index} value={item.name}>{item.name}</Option>
                                             ) : null
                                     }
@@ -473,9 +473,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                         <Table
                             // @ts-ignore
                             columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
-                            scroll={{ x: 1300 }}
+                            loading={loadingTable}
+                            dataSource={dataTable}
+                            scroll={{ x: 1260 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
@@ -506,9 +506,9 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_em_branches: state.EmBranches.items,
+    listEmBranches: state.EmBranches.items,
     totalItems: state.EmBranches.totalItems,
-    list_regions: state.Regions.items,
+    listRegions: state.Regions.items,
     modalState: state.MutilBox.modalState
 });
 

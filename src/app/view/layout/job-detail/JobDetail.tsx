@@ -11,9 +11,9 @@ import IJobDetail from '../../../../models/job-detail';
 import { IShift } from '../../../../models/announcements';
 
 interface IJobDetailProps {
-    list_job_skills?: Array<ISkill>,
-    job_id?: string,
-    list_job_names?: Array<IJobName>
+    listSkills?: Array<ISkill>,
+    jid?: string,
+    listJobNames?: Array<IJobName>
     jobDetail?: IJobDetail;
 }
 

@@ -49,42 +49,42 @@ interface IFindCandidatesListProps extends StateProps, DispatchProps {
 };
 
 interface IFindCandidatesListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
     employerID?: string;
-    show_modal?: boolean;
+    showModal?: boolean;
     loading?: boolean;
-    type_management?: Array<any>;
+    typeMng?: Array<any>;
     announcementTypeID?: number;
     birthday?: number;
     adminID?: string;
     hidden?: boolean;
-    list_find_candidates?: Array<any>;
+    listFindCandidates?: Array<any>;
     id?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     body?: IFindCandidateFilter;
-    open_drawer: boolean;
-    type_view?: string;
+    openDrawer: boolean;
+    typeView?: string;
 };
 
 class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFindCandidatesListState> {
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
-            show_modal: false,
+            showModal: false,
             loading: false,
             announcementTypeID: null,
             birthday: null,
             adminID: null,
             hidden: false,
-            list_find_candidates: [],
+            listFindCandidates: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             body: {
                 gender: null,
                 birthYearStart: null,
@@ -98,7 +98,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 languageIDs: [],
                 unlocked: null,
             },
-            open_drawer: false
+            openDrawer: false
         };
     }
 
@@ -178,7 +178,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            width: 100,
+            render: (data) => this.EditToolTip(data),
+            width: 80,
         },
     ];
 
@@ -210,59 +211,62 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     ];
 
     onToggleModal = () => {
-        let { show_modal } = this.state;
-        this.setState({ show_modal: !show_modal });
+        let { showModal } = this.state;
+        this.setState({ showModal: !showModal });
+    };
+
+    EditToolTip = (item?: IFindCandidate) => {
+        let { body, pageIndex, pageSize } = this.state;
+        return <>
+            <Tooltip placement="top" title={"Xem chi tiết"}>
+                <a
+                    href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Icon
+                        className="f-ic"
+                        style={{ padding: 5, margin: 2 }}
+                        type="search"
+                    />
+                </a>
+            </Tooltip>
+            <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
+                <Icon
+                    className="f-ic"
+                    style={{
+                        padding: 5,
+                        margin: 2,
+                        color: item.saved ? 'red' : 'black'
+                    }}
+                    type="save"
+                    onClick={async () => {
+                        await _requestToServer(
+                            item.saved ? DELETE : POST,
+                            item.saved ? SAVED_CANDIDATE_PROFILES + `/saved` : SAVED_CANDIDATE_PROFILES + `/${item.id}/saved`,
+                            item.saved ? [item.id] : undefined,
+                            undefined,
+                            undefined,
+                            EMPLOYER_HOST,
+                            false,
+                            true,
+                        ).then((res: any) => {
+                            if (res) {
+                                this.props.getListFindCandidates(body, pageIndex, pageSize)
+                            }
+                        })
+                    }}
+                />
+            </Tooltip>
+        </>
     };
 
     static getDerivedStateFromProps(nextProps?: IFindCandidatesListProps, prevState?: IFindCandidatesListState) {
-        if (nextProps.list_find_candidates && nextProps.list_find_candidates !== prevState.list_find_candidates) {
+        if (nextProps.listFindCandidates && nextProps.listFindCandidates !== prevState.listFindCandidates) {
             let { pageIndex, pageSize } = prevState;
-            let data_table = [];
-            nextProps.list_find_candidates.forEach((item: IFindCandidate, index: number) => {
-                let EditToolTip = (id?: string) => (
-                    <>
-                        <Tooltip placement="top" title={"Xem chi tiết"}>
-                            <a
-                                href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Icon
-                                    className='test'
-                                    style={{ padding: 5, margin: 2 }}
-                                    type="search"
-                                />
-                            </a>
-                        </Tooltip>
-                        <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
-                            <Icon
-                                className='test'
-                                style={{
-                                    padding: 5,
-                                    margin: 2,
-                                    color: item.saved ? 'red' : 'black'
-                                }}
-                                type="save"
-                                onClick={async () => {
-                                    await _requestToServer(
-                                        item.saved ? DELETE : POST,
-                                        item.saved ? SAVED_CANDIDATE_PROFILES + `/saved` : SAVED_CANDIDATE_PROFILES + `/${id}/saved`,
-                                        item.saved ? [id] : undefined,
-                                        undefined,
-                                        undefined,
-                                        EMPLOYER_HOST,
-                                        false,
-                                        true,
-                                    ).then((res: any) => {
-                                        if (res) {
-                                            nextProps.getListFindCandidates(prevState.body, prevState.pageIndex, prevState.pageSize)
-                                        }
-                                    })
-                                }}
-                            />
-                        </Tooltip>
-                    </>
-                );
+            let dataTable = [];
+            nextProps.listFindCandidates.forEach((item: IFindCandidate, index: number) => {
+
 
                 const Lock = () => (
                     <>
@@ -276,7 +280,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     </>
                 );
 
-                data_table.push({
+                dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.avatarUrl} gender={item.gender} alt="Ảnh đại diện" />,
@@ -296,16 +300,16 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     region: item.region ? item.region.name : "",
                     birthday: item.birthday === -1 ? "" : timeConverter(item.birthday, 1000),
                     unlocked: Lock(),
-                    operation: EditToolTip(item.id),
+                    operation: item,
                     completePercent: item.completePercent + '%',
-                    profileVerified: item.profileVerified ? 'Đã xác minh' : ' Chưa xác minh'
+                    profileVerified: item.profileVerified ? 'Đã xác minh' : ' Chưa xác minh',
                 });
             });
 
             return {
-                list_find_candidates: nextProps.list_find_candidates,
-                data_table,
-                loading_table: false,
+                listFindCandidates: nextProps.listFindCandidates,
+                dataTable,
+                loadingTable: false,
             }
         }
 
@@ -323,7 +327,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.searchFindCandidate();
     };
 
@@ -333,14 +337,14 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     };
 
     onCloseDrawer = () => {
-        this.setState({ open_drawer: false })
+        this.setState({ openDrawer: false })
     };
 
     onChangeType = (event: any, param?: string) => {
         let { body } = this.state;
-        let { list_regions } = this.props;
+        let { listRegions } = this.props;
         let value: any = event;
-        list_regions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
+        listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
         switch (event) {
             case TYPE.TRUE:
                 value = true;
@@ -365,7 +369,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         body.jobNameIDs = [];
         this.setState({
             body,
-            open_drawer: false
+            openDrawer: false
         })
     }
 
@@ -373,12 +377,12 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         let { body } = this.state;
 
         let {
-            list_skills,
-            list_languages,
+            listSkills,
+            listLanguages,
         } = this.props;
 
-        let list_skill_options = list_skills.map((item: ISkill, index: number) => (<Option key={index} value={item.name} children={item.name} />));
-        let list_language_options = list_languages.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let list_skill_options = listSkills.map((item: ISkill, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let list_language_options = listLanguages.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
         return <>
             <IptLetterP
                 value={"Năm sinh"}
@@ -447,11 +451,11 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     mode="multiple"
                     size="default"
                     placeholder="ex: Giao tiếp, Tiếng Anh,..."
-                    value={findIdWithValue(list_skills, body.skillIDs, "id", "name")}
+                    value={findIdWithValue(listSkills, body.skillIDs, "id", "name")}
                     onChange={
                         (event: any) => {
-                            let list_data = findIdWithValue(list_skills, event, "name", "id")
-                            body.skillIDs = list_data;
+                            let listData = findIdWithValue(listSkills, event, "name", "id")
+                            body.skillIDs = listData;
                             this.setState({ body })
                         }
                     }
@@ -466,11 +470,11 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     mode="multiple"
                     size="default"
                     placeholder="ex: Tiếng Anh, Tiếng Trung,.."
-                    value={findIdWithValue(list_languages, body.languageIDs, "id", "name")}
+                    value={findIdWithValue(listLanguages, body.languageIDs, "id", "name")}
                     onChange={
                         (event: any) => {
-                            let list_data = findIdWithValue(list_languages, event, "name", "id")
-                            body.languageIDs = list_data;
+                            let listData = findIdWithValue(listLanguages, event, "name", "id")
+                            body.languageIDs = listData;
                             this.setState({ body })
                         }
                     }
@@ -497,7 +501,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                         float: "right"
                     }}
                     onClick={async () => {
-                        await this.setState({ open_drawer: false });
+                        await this.setState({ openDrawer: false });
                         await setTimeout(() => {
                             this.searchFindCandidate();
                         }, 250);
@@ -511,19 +515,19 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
 
     render() {
         let {
-            data_table,
-            loading_table,
-            open_drawer,
+            dataTable,
+            loadingTable,
+            openDrawer,
             body
         } = this.state;
 
         let {
             totalItems,
-            list_regions,
-            list_job_names
+            listRegions,
+            listJobNames
         } = this.props;
 
-        let list_job_names_options = list_job_names.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let listJobNames_options = listJobNames.map((item: ILanguage, index: number) => (<Option key={index} value={item.name} children={item.name} />));
 
         return (
             <>
@@ -533,7 +537,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     width={"60vw"}
                     closable={true}
                     onClose={() => this.onCancelAdvancedFind()}
-                    visible={open_drawer}
+                    visible={openDrawer}
                 >
                     {this.advancedFilter()}
                 </Drawer>
@@ -552,12 +556,12 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                     height: "45px",
                                     width: "45px"
                                 }}
-                                icon={loading_table ? "loading" : "filter"}
+                                icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
                         <Tooltip title="Bộ lọc nâng cao" >
                             <Button
-                                onClick={() => this.setState({ open_drawer: true })}
+                                onClick={() => this.setState({ openDrawer: true })}
                                 type="primary"
                                 style={{
                                     float: "right",
@@ -609,8 +613,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
-                                        list_regions && list_regions.length >= 1 ?
-                                            list_regions.map((item: IRegion, index: number) =>
+                                        listRegions && listRegions.length >= 1 ?
+                                            listRegions.map((item: IRegion, index: number) =>
                                                 <Option key={index} value={item.name}>{item.name}</Option>
                                             ) : null
                                     }
@@ -636,26 +640,26 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                                     mode="multiple"
                                     size="default"
                                     placeholder="ex: Nhân viên văn phòng , Phục vụ ..."
-                                    value={findIdWithValue(list_job_names, body.jobNameIDs, "id", "name")}
+                                    value={findIdWithValue(listJobNames, body.jobNameIDs, "id", "name")}
                                     onChange={
                                         (event: any) => {
-                                            let list_data = findIdWithValue(list_job_names, event, "name", "id")
-                                            body.jobNameIDs = list_data;
+                                            let listData = findIdWithValue(listJobNames, event, "name", "id")
+                                            body.jobNameIDs = listData;
                                             this.setState({ body })
                                         }
                                     }
                                     style={{ width: "100%" }}
                                 >
-                                    {list_job_names_options}
+                                    {listJobNames_options}
                                 </Select>
                             </Col>
                         </Row>
                         <Table
                             // @ts-ignore
                             columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
-                            scroll={{ x: 1220 }}
+                            loading={loadingTable}
+                            dataSource={dataTable}
+                            scroll={{ x: 1130 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
@@ -687,12 +691,12 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_find_candidates: state.FindCandidates.items,
+    listFindCandidates: state.FindCandidates.items,
     totalItems: state.FindCandidates.totalItems,
-    list_regions: state.Regions.items,
-    list_skills: state.Skills.items,
-    list_job_names: state.JobNames.items,
-    list_languages: state.Languages.items,
+    listRegions: state.Regions.items,
+    listSkills: state.Skills.items,
+    listJobNames: state.JobNames.items,
+    listLanguages: state.Languages.items,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

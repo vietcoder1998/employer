@@ -54,7 +54,7 @@ interface IPendingJobListProps extends StateProps, DispatchProps {
 }
 
 interface IPendingJobListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
     state?: string;
@@ -62,14 +62,14 @@ interface IPendingJobListState {
     jobType?: string;
     jobNameID?: string;
     jobId?: string;
-    show_job?: boolean;
+    showJob?: boolean;
     loading?: boolean;
     pendingJob?: any;
     message?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     search?: string;
-    list_jobs?: Array<IPendingJob>
-    job_id?: string;
+    listJobs?: Array<IPendingJob>
+    jid?: string;
     body?: any;
 }
 
@@ -77,7 +77,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     constructor(props: any) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageSize: 10,
             state: TYPE.PENDING,
             employerID: undefined,
@@ -85,10 +85,10 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             jobNameID: undefined,
             pageIndex: 0,
             jobId: undefined,
-            show_job: false,
+            showJob: false,
             loading: false,
-            loading_table: true,
-            job_id: null,
+            loadingTable: true,
+            jid: null,
             body: {}
         }
     }
@@ -157,11 +157,12 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             key: 'address'
         },
         {
-            title: 'Hành động',
+            title: 'Thao tác',
             key: 'operation',
             dataIndex: 'operation',
             fixed: 'right',
             className: 'action',
+            render:(data) => this.EditTool(data),
             width: 80
         },
     ];
@@ -183,17 +184,34 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.queryPendingJob();
     };
 
+    EditTool = (item?: IPendingJob) => {
+        return (
+            <Tooltip title="Xem chi tiết">
+                <Icon type="search"
+                    className={"f-ic"}
+                    style={{ padding: "5px" }}
+                    onClick={
+                        async () => {
+                            this.props.handleModal({ open_modal: true });
+                            this.props.getPendingJobDetail(item.id);
+                        }
+                    }
+                />
+            </Tooltip>
+        )
+    }
+
     static getDerivedStateFromProps(nextProps: IPendingJobListProps, prevState: IPendingJobListState) {
-        if (nextProps.list_jobs && nextProps.list_jobs !== prevState.list_jobs) {
-            let data_table: any = [];
+        if (nextProps.listJobs && nextProps.listJobs !== prevState.listJobs) {
+            let dataTable: any = [];
             let { pageIndex, pageSize } = prevState;
 
-            nextProps.list_jobs.forEach((item: IPendingJob, index: any) => {
-                data_table.push({
+            nextProps.listJobs.forEach((item: IPendingJob, index: any) => {
+                dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     jobName: item.jobName.name,
@@ -205,25 +223,14 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     jobTitle: item.jobTitle,
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
                     jobType: <Label type={item.jobType} value={item.jobType} />,
-                    operation:
-                        <Tooltip title="Xem chi tiết">
-                            <Icon type="search"
-                                className={"test"}
-                                style={{ padding: "5px" }}
-                                onClick={
-                                    async () => {
-                                        nextProps.handleModal({ open_modal: true });
-                                        nextProps.getPendingJobDetail(item.id);
-                                    }
-                                }
-                            />
-                        </Tooltip>
+                    operation: item
+
                 });
             });
             return {
-                list_jobs: nextProps.list_jobs,
-                data_table,
-                loading_table: false
+                listJobs: nextProps.listJobs,
+                dataTable,
+                loadingTable: false
             }
         }
 
@@ -266,19 +273,19 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     onToggleModal = () => {
-        let { show_job, message } = this.state;
-        if (show_job) {
+        let { showJob, message } = this.state;
+        if (showJob) {
             message = ""
         }
-        this.setState({ show_job: !show_job, message, loading: false });
+        this.setState({ showJob: !showJob, message, loading: false });
     };
 
     handlePendingJob = async (state?: string) => {
-        let { job_id, message } = this.state;
+        let { jid, message } = this.state;
         let body = state === "accepted" ? undefined : { message };
         await this.setState({ loading: true });
         await _requestToServer(
-            POST, PENDING_JOBS + `/${job_id}/${state}`,
+            POST, PENDING_JOBS + `/${jid}/${state}`,
             body,
             null, null, undefined, true, false
         );
@@ -287,15 +294,15 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     render() {
-        let { data_table, loading, loading_table, state, job_id } = this.state;
-        let { totalItems, job_detail, open_modal } = this.props;
+        let { dataTable, loading, loadingTable, state, jid } = this.state;
+        let { totalItems, jobDetail, open_modal } = this.props;
 
         return (
             <>
                 <Modal
                     visible={open_modal}
                     title={
-                        <div style={{ fontWeight: "bolder", textTransform: "capitalize" }}>{job_detail.jobTitle}</div>
+                        <div style={{ fontWeight: "bolder", textTransform: "capitalize" }}>{jobDetail.jobTitle}</div>
                     }
                     onCancel={() => this.props.handleModal({ open_modal: false })}
                     destroyOnClose={true}
@@ -309,7 +316,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         >
                             Đóng
                         </Button>,
-                        <Link key="submit" to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${job_id}`} target='_blank' >
+                        <Link key="submit" to={routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${jid}`} target='_blank' >
                             <Button
                                 key="submit"
                                 type="primary"
@@ -325,26 +332,26 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     ]}
                 >
                     {
-                        job_detail ? <JobDetail
+                        jobDetail ? <JobDetail
                             jobDetail={{
-                                jobName: job_detail.jobName && job_detail.jobName.name,
-                                jobTitle: job_detail.data.jobTitle,
-                                employerName: job_detail.employer.employerName,
-                                employerUrl: job_detail.employer.logoUrl,
-                                employerBranch: job_detail.employerBranchName,
-                                expriratedDate: job_detail.data.expirationDate,
-                                jobType: job_detail.data.jobType,
-                                shifts: job_detail.data.shifts,
-                                description: job_detail.data.description,
-                                requiredSkills: job_detail.requiredSkills,
-                                createdDate: job_detail.createdDate,
-                                repliedDate: job_detail.repliedDate
+                                jobName: jobDetail.jobName && jobDetail.jobName.name,
+                                jobTitle: jobDetail.data.jobTitle,
+                                employerName: jobDetail.employer.employerName,
+                                employerUrl: jobDetail.employer.logoUrl,
+                                employerBranch: jobDetail.employerBranchName,
+                                expriratedDate: jobDetail.data.expirationDate,
+                                jobType: jobDetail.data.jobType,
+                                shifts: jobDetail.data.shifts,
+                                description: jobDetail.data.description,
+                                requiredSkills: jobDetail.requiredSkills,
+                                createdDate: jobDetail.createdDate,
+                                repliedDate: jobDetail.repliedDate
                             }}
                         /> : <Empty description={'Không có mô tả phù hợp'} />
                     }
 
                     {
-                        job_detail && job_detail.message ?
+                        jobDetail && jobDetail.message ?
                             <div
                                 style={{
                                     padding: "10px 25px",
@@ -353,7 +360,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                                     marginTop: 10
                                 }}
                             >
-                                LÝ DO TỪ CHỐI: <NotUpdate msg={job_detail.message} />
+                                LÝ DO TỪ CHỐI: <NotUpdate msg={jobDetail.message} />
                             </div> : ''
                     }
                 </Modal>
@@ -364,8 +371,8 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     <Table
                         // @ts-ignore
                         columns={this.columns}
-                        loading={loading_table}
-                        dataSource={data_table}
+                        loading={loadingTable}
+                        dataSource={dataTable}
                         scroll={{ x: 1400 }}
                         bordered
                         pagination={{ total: totalItems, showSizeChanger: true }}
@@ -373,7 +380,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         onChange={this.setPageIndex}
                         onRow={
                             (event: any) => ({
-                                onClick: () => this.setState({ job_id: event.key })
+                                onClick: () => this.setState({ jid: event.key })
                             })
                         }
                     />
@@ -399,11 +406,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_jobs: state.PendingJobs.items,
-    list_job_names: state.JobNames.items,
-    list_job_skills: state.Skills.items,
+    listJobs: state.PendingJobs.items,
+    listJobNames: state.JobNames.items,
+    listSkills: state.Skills.items,
     modalState: state.MutilBox.modalState,
-    job_detail: state.PendingJobDetail,
+    jobDetail: state.PendingJobDetail,
     open_modal: state.MutilBox.modalState.open_modal,
     totalItems: state.PendingJobs.totalItems,
 });

@@ -38,20 +38,20 @@ interface SavedCandidateProfilesListProps extends StateProps, DispatchProps {
 };
 
 interface SavedCandidateProfilesListState {
-    data_table?: Array<any>;
+    dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
-    show_modal?: boolean;
+    showModal?: boolean;
     loading?: boolean;
     pendingJob?: any;
     message?: string;
-    type_management?: Array<any>;
-    value_type?: string;
+    typeMng?: Array<any>;
+    valueType?: string;
     announcementTypeID?: number;
     adminID?: string;
-    list_find_candidates?: Array<any>;
+    listFindCandidates?: Array<any>;
     id?: string;
-    loading_table?: boolean;
+    loadingTable?: boolean;
     body: any;
 };
 
@@ -59,18 +59,18 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     constructor(props) {
         super(props);
         this.state = {
-            data_table: [],
+            dataTable: [],
             pageIndex: 0,
             pageSize: 10,
-            show_modal: false,
+            showModal: false,
             loading: false,
             pendingJob: null,
-            value_type: null,
+            valueType: null,
             announcementTypeID: null,
             adminID: null,
-            list_find_candidates: [],
+            listFindCandidates: [],
             id: null,
-            loading_table: true,
+            loadingTable: true,
             body: {
                 gender: null,
                 birthYearStart: null,
@@ -95,7 +95,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             >
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
                     <Icon
-                        className='test'
+                        className="f-ic"
                         style={{ padding: 5, margin: 2 }}
                         type="search"
                     />
@@ -108,7 +108,13 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 okText="Xóa"
                 cancelText="Hủy"
             >
-                <Icon className='test' style={{ padding: 5, margin: 2 }} type="delete" theme="twoTone" twoToneColor="red" />
+                <Icon
+                    className="f-ic"
+                    style={{ padding: 5, margin: 2 }}
+                    type="delete"
+                    theme="twoTone"
+                    twoToneColor="red"
+                />
             </Popconfirm>
             {/* <Popconfirm
                 placement="topRight"
@@ -193,21 +199,21 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             key: 'operation',
             fixed: 'right',
             className: 'action',
-            width: 100,
+            width: 80,
             render: () => this.editToolAction()
         },
     ];
 
     onToggleModal = () => {
-        let { show_modal } = this.state;
-        this.setState({ show_modal: !show_modal });
+        let { showModal } = this.state;
+        this.setState({ showModal: !showModal });
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.list_find_candidates && nextProps.list_find_candidates !== prevState.list_find_candidates) {
+        if (nextProps.listFindCandidates && nextProps.listFindCandidates !== prevState.listFindCandidates) {
             let { pageIndex, pageSize } = prevState;
-            let data_table = [];
-            nextProps.list_find_candidates.forEach((item: ISavedCandidateProfile, index: number) => {
+            let dataTable = [];
+            nextProps.listFindCandidates.forEach((item: ISavedCandidateProfile, index: number) => {
                 const Lock = () => (
                     <>
                         <Tooltip placement="top" title={item.candidate.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
@@ -220,7 +226,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     </>
                 );
 
-                data_table.push({
+                dataTable.push({
                     key: item.candidate.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
                     avatarUrl: <ImageRender src={item.candidate.avatarUrl} gender={item.candidate.gender} alt="Ảnh đại diện" />,
@@ -228,7 +234,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     name:
                         item && item.candidate ?
                             <CanProPop
-                                id={ item.candidate.id}
+                                id={item.candidate.id}
                                 background={item.candidate.coverUrl}
                                 avatar={item.candidate.avatarUrl}
                                 unlocked={item.candidate.unlocked}
@@ -247,9 +253,9 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 });
             })
             return {
-                list_find_candidates: nextProps.list_find_candidates,
-                data_table,
-                loading_table: false,
+                listFindCandidates: nextProps.listFindCandidates,
+                dataTable,
+                loadingTable: false,
             }
         } return null;
     };
@@ -265,7 +271,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loading_table: true, pageSize: event.pageSize });
+        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
         await this.searchSavedCandidateProfiles();
     };
 
@@ -294,9 +300,9 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
 
     render() {
         let {
-            data_table,
-            show_modal,
-            loading_table,
+            dataTable,
+            showModal,
+            loadingTable,
         } = this.state;
 
         let {
@@ -306,7 +312,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             <>
                 <div className="common-content">
                     <Modal
-                        visible={show_modal}
+                        visible={showModal}
                         title="XEM TRƯỚC BÀI ĐĂNG"
                         onCancel={this.onToggleModal}
                         style={{ top: "5vh" }}
@@ -327,9 +333,9 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                         <Table
                             // @ts-ignore
                             columns={this.columns}
-                            loading={loading_table}
-                            dataSource={data_table}
-                            scroll={{ x: 1000 }}
+                            loading={loadingTable}
+                            dataSource={dataTable}
+                            scroll={{ x: 980 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
@@ -357,7 +363,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
-    list_find_candidates: state.SavedCandidateProfiles.items,
+    listFindCandidates: state.SavedCandidateProfiles.items,
     totalItems: state.SavedCandidateProfiles.totalItems,
 });
 

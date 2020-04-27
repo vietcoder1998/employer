@@ -4,7 +4,7 @@ import { IJobSuitableCandidate } from "../../../../models/job-suitable-candidate
 import CanSuitableCard from '../can-suitable-card/CanSuitableCard';
 
 interface IProps {
-    job_suitable_candidates?: Array<IJobSuitableCandidate>,
+    jobSuitableCandidates?: Array<IJobSuitableCandidate>,
     pageIndex?: number;
     pageSize?: number;
     totalItems?: number;
@@ -13,14 +13,14 @@ interface IProps {
 }
 
 export default function JobSuitableCandidate(props?: IProps) {
-    let { job_suitable_candidates } = props;
+    let { jobSuitableCandidates } = props;
 
     return (
         <div>
             {
-                job_suitable_candidates &&
-                    job_suitable_candidates.length > 0 ?
-                    job_suitable_candidates.map((item?: IJobSuitableCandidate) => (
+                jobSuitableCandidates &&
+                    jobSuitableCandidates.length > 0 ?
+                    jobSuitableCandidates.map((item?: IJobSuitableCandidate) => (
                         <CanSuitableCard data={item} avatar={item.avatarUrl} id={item.id} key={item.id}>
                             {item.lastName + " " + item.firstName}
                         </CanSuitableCard>
