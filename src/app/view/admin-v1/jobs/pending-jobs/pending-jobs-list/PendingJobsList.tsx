@@ -27,7 +27,7 @@ const Label = (props: any) => {
             value = "Đang chờ";
             break;
         case TYPE.ACCEPTED:
-            value = "Đã chấp nhận";
+            value = "Chấp nhận";
             break;
         case TYPE.REJECTED:
             value = "Đã từ chối";

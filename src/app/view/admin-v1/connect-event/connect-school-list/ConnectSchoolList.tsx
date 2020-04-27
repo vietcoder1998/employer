@@ -31,7 +31,7 @@ const typeReturn = (type?: string) => {
             result = <span><Icon type="loading" />Đang chờ</span>
             break;
         case TYPE.ACCEPTED:
-            result = <span><Icon type="check" />Đã chấp nhận</span>
+            result = <span><Icon type="check" />Chấp nhận</span>
             break;
         case TYPE.REJECTED:
             result = <span><Icon type="close" />Đã từ chối</span>
@@ -571,7 +571,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     <Option value={TYPE.PENDING}>Đang gửi yêu cầu</Option>
-                                    <Option value={TYPE.ACCEPTED}>Đã chấp nhận</Option>
+                                    <Option value={TYPE.ACCEPTED}>Chấp nhận</Option>
                                     <Option value={TYPE.REJECTED}>Đã từ chối</Option>
                                 </Select>
                             </Col>

@@ -217,7 +217,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             width: 100,
         },
         {
-            title: 'Đã chấp nhận',
+            title: 'Chấp nhận',
             dataIndex: 'acceptedApplied',
             className: 'action',
             key: 'acceptedApplied',
@@ -789,7 +789,6 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             />
                         </Col>
                         <Col span={10}>
-                            <h6>ỨNG VIÊN THÍCH HỢP</h6>
                             <JobSuitableCandidate
                                 job_suitable_candidates={jobSuitableCandidates.items}
                                 pageIndex={jobSuitableCandidates.pageIndex}

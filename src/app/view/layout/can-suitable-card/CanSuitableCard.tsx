@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Icon, Button } from 'antd';
+import { Avatar, Icon, Button, Tooltip } from 'antd';
 import './CanSuitableCard.scss';
 import { IFindCandidate } from '../../../../models/find-candidates';
 //@ts-ignore
@@ -22,7 +22,7 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
     // const [loading, setLoading] = React.useState(false);
 
     const content = (
-        <div className='cpp-ct'>
+        <div className='cpp-ct-card'>
             {background ? <div className='cpp-bg'>
                 <img src={background ? background : baseImage} alt='background' />
             </div> : <div style={{ height: 40 }}></div>
@@ -71,14 +71,17 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
             </div>
             <div className='cpp-ct-ft'>
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
-                    <Button
-                        size={'small'}
-                        className='test'
-                        style={{ float: 'right', marginRight: 5 }}
-                    >
-                        <Icon type={'search'} />
-                        Xem chi tiết
-                    </Button>
+                    <Tooltip title="Xem chi tiết">
+                        <Button
+                            icon="search"
+                            shape="circle"
+                            type="primary"
+                            className='test'
+                            style={{ float: 'right', marginRight: 5 }}
+                        >
+                        </Button>
+                    </Tooltip>
+
                 </Link>
             </div>
         </div>

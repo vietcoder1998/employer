@@ -214,7 +214,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             width: 100,
         },
         {
-            title: 'Đã chấp nhận',
+            title: 'Chấp nhận',
             dataIndex: 'acceptedApplied',
             className: 'action',
             key: 'acceptedApplied',
@@ -727,7 +727,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 />
                 <Modal
                     visible={ojd}
-                    title={"THÔNG TIN CÔNG VIỆC"}
+                    title={<div style={{textTransform: "uppercase"}}>{job_detail.jobTitle}</div>}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
@@ -764,7 +764,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             />
                         </Col>
                         <Col span={10}>
-                            <h6>ỨNG VIÊN THÍCH HỢP</h6>
                             <JobSuitableCandidate
                                 job_suitable_candidates={job_suitable_candidates.items}
                                 pageIndex={job_suitable_candidates.pageIndex}
