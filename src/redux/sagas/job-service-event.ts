@@ -26,6 +26,7 @@ const callEventJobServiceEvent = async (action: any) => {
             nomalQuantity: 0,
             homeInDayQuantity: 0,
             homeTopQuantiy: 0,
+            highlightTitleQuantity: 0,
         }
 
         let res1 = await _requestToServer(
@@ -37,7 +38,7 @@ const callEventJobServiceEvent = async (action: any) => {
             EMPLOYER_HOST,
             false,
             false
-        )
+        );
 
         let res2 = await _requestToServer(
             GET,
@@ -48,7 +49,7 @@ const callEventJobServiceEvent = async (action: any) => {
             EMPLOYER_HOST,
             false,
             false
-        )
+        );
 
         let res3 = await _requestToServer(
             GET,
@@ -59,11 +60,24 @@ const callEventJobServiceEvent = async (action: any) => {
             EMPLOYER_HOST,
             false,
             false
-        )
+        );
+
+        let res4 = await _requestToServer(
+            GET,
+            EVENT_SCHOOLS + `/${action.id}/services/jobs/title/highlight/quantity`,
+            null,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false
+        );
+
 
         data.nomalQuantity = res1.data ? res1.data.quantity : 0;
         data.homeInDayQuantity = res2.data ? res2.data.quantity : 0;
         data.homeTopQuantiy = res3.data ? res3.data.quantity : 0;
+        data.highlightTitleQuantity = res4.data ? res4.data.quantity : 0;
 
         return data;
 

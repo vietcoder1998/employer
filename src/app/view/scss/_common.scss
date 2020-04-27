@@ -526,9 +526,10 @@ button {
   padding: 5px;
   margin: 2px;
   cursor: pointer;
-
+  background-color: whitesmoke;
   &:hover {
     border: solid rgba(20, 20, 20, 0.843) 1px;
+    background-color: rgba(245, 245, 245, 0.367);
   }
 }
 

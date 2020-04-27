@@ -28,13 +28,13 @@ const typeReturn = (type?: string) => {
     let result = <NotUpdate msg="Chưa phản hồi" />
     switch (type) {
         case TYPE.PENDING:
-            result = <span><Icon type="loading" />Đang chờ</span>
+            result = <span style={{color: "orange"}} >Đang chờ</span>
             break;
         case TYPE.ACCEPTED:
-            result = <span><Icon type="check" />Chấp nhận</span>
+            result = <span style={{color: "green"}}>Chấp nhận</span>
             break;
         case TYPE.REJECTED:
-            result = <span><Icon type="close" />Đã từ chối</span>
+            result = <span style={{color: "red"}}>Đã từ chối</span>
             break;
         default:
             break;
@@ -293,8 +293,11 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         if (type === "pageSize") {
             pageSize = event;
         }
-        await this.setState({ loadingTable: true })
-        await this.props.getListConnectSchools(body, pageIndex, pageSize);
+        await this.setState({ loadingTable: true });
+        setTimeout(() => {
+            this.props.getListConnectSchools(body, pageIndex, pageSize);
+        }, 500);
+        
     };
 
     onChangeType = (event?: any, param?: string) => {
@@ -302,37 +305,38 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         let { listRegions } = this.props;
         let value: any = event;
         listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
-        switch (event) {
-            case TYPE.TRUE:
-                body.hasRequest = true;
-                body.state = TYPE.PENDING;
-                body.owner = TYPE.SCHOOL;
-                break;
-            case TYPE.FALSE:
-                body.hasRequest = true;
-                body.state = TYPE.PENDING;
-                body.owner = TYPE.EMPLOYER;
-                break;
-            case TYPE.ACCEPTED:
-                body.hasRequest = true;
-                body.owner = null;
-                body.state = TYPE.ACCEPTED;
-                break;
-            case TYPE.REJECTED:
-                body.owner = null;
-                body.hasRequest = null;
-                body.state = TYPE.REJECTED;
-                break;
-            default:
-                body.hasRequest = false;
-                body.state = null;
-                body.owner = null;
-                break;
-        };
 
         if (param) {
             body[param] = value;
-        };
+        } else {
+            switch (event) {
+                case TYPE.TRUE:
+                    body.hasRequest = true;
+                    body.state = TYPE.PENDING;
+                    body.owner = TYPE.SCHOOL;
+                    break;
+                case TYPE.FALSE:
+                    body.hasRequest = true;
+                    body.state = TYPE.PENDING;
+                    body.owner = TYPE.EMPLOYER;
+                    break;
+                case TYPE.ACCEPTED:
+                    body.hasRequest = true;
+                    body.owner = null;
+                    body.state = TYPE.ACCEPTED;
+                    break;
+                case TYPE.REJECTED:
+                    body.owner = null;
+                    body.hasRequest = null;
+                    body.state = TYPE.REJECTED;
+                    break;
+                default:
+                    body.hasRequest = false;
+                    body.state = null;
+                    body.owner = null;
+                    break;
+            };
+        }
 
         this.setState({ body });
         this.searchConnectSchools();
@@ -463,7 +467,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                                         children={
                                                             dataSchool &&
                                                                 dataSchool.createdDate !== -1 ?
-                                                                timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                                timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
                                                         } />
                                                 </li>
                                                 <li>
@@ -472,7 +476,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                                         children={
                                                             dataSchool &&
                                                                 dataSchool.createdDate !== -1 ?
-                                                                timeConverter(dataSchool.createdDate, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                                timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
                                                         } />
                                                 </li>
                                                 <li>
@@ -481,12 +485,12 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                                         children={
                                                             dataSchool &&
                                                                 dataSchool.lastModified !== -1 ?
-                                                                timeConverter(dataSchool.lastModified, 100, "HH:mm DD:MM:YY") : <NotUpdate msg="Chưa có" />
+                                                                timeConverter(dataSchool.lastModified, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
                                                         } />
                                                 </li>
                                                 <li>
                                                     <IptLetter
-                                                        value="Người gửi yêu cầu : "
+                                                        value="Phía gửi yêu cầu : "
                                                         children={
                                                             dataSchool && dataSchool.owner ?
                                                                 (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
@@ -561,20 +565,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                     </h5>
                     <div className="table-operations">
                         <Row >
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái kết nối"} />
-                                <Select
-                                    showSearch
-                                    defaultValue="Tất cả"
-                                    style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.state)}
-                                >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.PENDING}>Đang gửi yêu cầu</Option>
-                                    <Option value={TYPE.ACCEPTED}>Chấp nhận</Option>
-                                    <Option value={TYPE.REJECTED}>Đã từ chối</Option>
-                                </Select>
-                            </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Tỉnh thành"} />
                                 <Select

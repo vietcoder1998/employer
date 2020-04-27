@@ -5,6 +5,7 @@ let initState: IJobServiceEvent = {
     nomalQuantity: 0,
     homeInDayQuantity: 0,
     homeTopQuantiy: 0,
+    highlightTitleQuantity: 0,
 }
 
 export const JobServiceEvent = (state: IJobServiceEvent = initState, action: any): IJobServiceEvent => {

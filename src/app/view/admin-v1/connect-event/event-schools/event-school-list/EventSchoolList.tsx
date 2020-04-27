@@ -163,17 +163,15 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 />
             </Tooltip>
             <Tooltip placement="top" title={"Xem bài đăng"}>
-                <a
-                    href={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <Link
+                    to={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
                 >
                     <Icon
                         className="f-ic"
                         style={{color: "green" }}
                         type="file-search"
                     />
-                </a>
+                </Link>
             </Tooltip>
             <Tooltip placement="top" title={"Sửa Banner"}>
                 <Icon

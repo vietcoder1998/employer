@@ -38,7 +38,6 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             height: "30px",
                             marginLeft: 12,
                             marginTop: 8,
-
                         }}
                         alt="worksvnlogo"
                     />
@@ -71,6 +70,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 onClick={(event: any) => {
                     props.onCallLoading()
                 }}
+                defaultOpenKeys={["sub1"]}
             >
                 <SubMenu
                     key="sub1"

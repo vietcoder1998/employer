@@ -17,6 +17,7 @@ export const TYPE = {
     SCHOOL: 'SCHOOL',
     PUBLIC: 'PUBLIC',
     STUDENT: 'STUDENT',
+    TITLE_HIGHLIGHT: 'TITLE_HIGHLIGHT',
 
     ALL: 'ALL',
     CREATE: 'CREATE',
@@ -67,7 +68,9 @@ export const TYPE = {
         hasAcceptedApplied: 'hasAcceptedApplied',
         hasRejectedApplied: 'hasRejectedApplied',
         jobShiftFilter: 'jobShiftFilter',
-        jobLocationFilter: 'jobLocationFilter'
+        jobLocationFilter: 'jobLocationFilter',
+        highlightExpired:'highlightExpired',
+        highlightPriority: 'highlightPriority',
     },
 
     EM_BRANCHES: {

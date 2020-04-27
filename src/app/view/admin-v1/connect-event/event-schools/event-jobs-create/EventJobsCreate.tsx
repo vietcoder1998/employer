@@ -97,18 +97,18 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
     };
 
     static getDerivedStateFromProps(props?: IEventJobssCreateProps, state?: IEventJobssCreateState) {
-        let url_string = window.location.href;
-        let url = new URL(url_string);
-        let eid = url.searchParams.get("eid");
+
 
         if (props.match.params.id && props.match.params.id !== state.id) {
             let id = props.match.params.id;
+            let url_string = window.location.href;
+            let url = new URL(url_string);
+            let eid = url.searchParams.get("eid");
 
             if (
                 props.match.url.includes("fix") ||
                 props.match.url.includes("copy")
             ) {
-
                 props.getEventJobDetail(id, eid);
             }
 
@@ -117,23 +117,15 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
             ) {
                 props.getPendingJobDetail(id);
             }
-            props.getEventJobService(eid);
 
             return {
-                id,
-            }
-        }
-
-        if (eid) {
-            props.getEventJobService(eid);
-            return {
-                eid
+                id
             }
         }
 
         if (
             (props.eventJobDetail ||
-                props.pendingJobDetail) && props.match.params.id !== state.body.id
+                props.pendingJobDetail) && props.match.params.id
         ) {
             let typeCpn = TYPE.CREATE;
             let eventJobDetail = null;
@@ -189,20 +181,9 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
                 eventJobDetail
             }
         }
+
         return null
     }
-
-    onChangeValue = (event: any, param: string) => {
-        let { body } = this.state;
-        let value: any = event;
-        switch (param) {
-            case value:
-
-                break;
-        };
-        body[param] = value;
-        this.setState({ body });
-    };
 
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
@@ -231,10 +212,14 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
     };
 
     createRequest = async () => {
-        let { body, typeCpn, id, eid } = this.state;
+        let { body, typeCpn, id } = this.state;
+        let url_string = window.location.href;
+        let url = new URL(url_string);
+        let eid = url.searchParams.get("eid");
+
         let newBody = await this.pretreatmentBody(body, typeCpn);
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `/${eid}/jobs` : `/${eid}/jobs/${id}`;
-        let METHOD = typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY ? POST : PUT;
+        let METHOD = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY )? POST : PUT;
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : EVENT_SCHOOLS;
 
         await this.setState({ loading: true });

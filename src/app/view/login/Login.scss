@@ -1,15 +1,38 @@
 .login {
-    margin-top: 60px;
-    min-height: calc(100vh - 120px);
-    background-color: whitesmoke;
+    height: 100vh;
+    background-color: white;
+
+    .ant-tabs-bar {
+        display: none;
+        border-bottom: none;
+    }
+
+    .ant-tabs {
+        max-height: calc(100vh);
+        overflow-y: auto;
+    }
+
     .r-p-content {
+        color: black;
+        font-weight: 450;
         background-color: white;
-        padding: 20px 20px 50px;
-        margin-bottom: 30px;
+        padding: 30px 30px 50px;
+        margin: 0 20px 30px;
+        font-size: 0.9rem;
+        position: relative;
+
         p{
+            margin-top: 20px;
             font-weight: 500;
-            font-size: 1rem;
             margin-bottom: 5px;
+        }
+
+        .p-t {
+            font-weight: 650;
+        }
+
+        input {
+            font-size: medium;
         }
     }
 }

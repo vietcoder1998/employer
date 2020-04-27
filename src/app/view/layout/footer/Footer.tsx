@@ -5,7 +5,7 @@ export default function Footer(props) {
   return (
     <div className='footer' >
       {/* CopyRight */}
-      Copy right @ Work.vn2017
+      Copy right @Works.vn2017
     </div >
   );
 }

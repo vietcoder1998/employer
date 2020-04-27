@@ -43,7 +43,11 @@ export interface IEventJob {
         searchPriority?: string;
         searchExpired?: boolean;
         searchExpiration?: number;
-        searchTimeLeft?: string
+        searchTimeLeft?: string;
+        highlight: string;
+        highlightExpired: boolean;
+        highlightExpiration: number;
+        highlightTimeLeft: string;
     }
 }
 
@@ -63,12 +67,15 @@ export interface IEventJobsFilter {
     homeExpired?: boolean;
     searchPriority?: string;
     searchExpired?: boolean;
+    highlightExpired?: boolean;
+    highlightPriority?: string;
     excludedJobIDs?: string;
     jobNameIDs?: string;
     jobGroupIDs?: string;
     hasPendingApplied?: boolean;
     hasAcceptedApplied?: boolean;
     hasRejectedApplied?: boolean;
+
     jobShiftFilter?: {
         gender?: string;
         weekDays?: any;

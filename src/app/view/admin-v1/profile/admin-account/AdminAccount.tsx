@@ -185,7 +185,8 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     footer={[
                         <Button
                             key="cancel"
-                            children="Hủy"
+                            type="danger"
+                            children="Đóng"
                             icon="close"
                             onClick={() => {
                                 this.setState({

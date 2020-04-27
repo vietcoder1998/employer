@@ -285,7 +285,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         <Button
                             key="exit"
                             icon="close"
-                            children="Hủy"
+                            type="danger"
+                            children="Đóng"
                             onClick={() => this.props.handleModal()} />,
                         <Button
                             key="confirm"

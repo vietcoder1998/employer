@@ -1,19 +1,22 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification } from 'antd';
+import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification, Avatar } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
 import { POST } from '../../../const/method';
 import { OAUTH2_HOST, EMPLOYER_HOST } from '../../../environment/dev';
 import { OAUTH2_LOGIN, EMPLOYER_REGISTER } from '../../../services/api/public.api';
 import { loginHeaders, noInfoHeader } from '../../../services/auth';
-import Header from '../layout/header/Header';
-import Footer from '../layout/footer/Footer';
 import { routeLink, routePath } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
 import { LinkTo } from '../layout/common/Common';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';
 import { Link } from 'react-router-dom';
+//@ts-ignore
+import BGIM from './../../../assets/image/bsn.jpg';
+//@ts-ignore
+import LG from './../../../logo-01.png';
+
 const { TabPane } = Tabs;
 const cookies = new Cookies();
 
@@ -31,7 +34,7 @@ interface LoginState {
     openDrawer?: boolean;
     state?: "LOGIN" | "REGISTER";
     confirm?: boolean;
-    hp ?: boolean;
+    hp?: boolean;
 }
 
 interface LoginProps {
@@ -87,8 +90,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     { username, password },
                     undefined,
                     loginHeaders(
-                        process.env.REACT_APP_CLIENT_ID ,
-                        process.env.REACT_APP_CLIENT_SECRET 
+                        process.env.REACT_APP_CLIENT_ID,
+                        process.env.REACT_APP_CLIENT_SECRET
                     ),
                     OAUTH2_HOST,
                     null,
@@ -100,11 +103,12 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     }
                 }).finally(() => this.setState({ loading: false }))
                 break;
+
             case "REGISTER":
                 await _requestToServer(
                     POST,
                     EMPLOYER_REGISTER,
-                    { username, password, employerName, lat, lon, email , phone},
+                    { username, password, employerName, lat, lon, email, phone },
                     undefined,
                     noInfoHeader,
                     EMPLOYER_HOST,
@@ -113,8 +117,8 @@ class Login extends PureComponent<LoginProps, LoginState> {
                 ).then((res: any) => {
                     if (res) {
                         notification.success({
-                            message: "Tạo tài khoản thành công", 
-                            duration: 60, 
+                            message: "Tạo tài khoản thành công",
+                            duration: 60,
                             description: <div>Vui lòng xác thực qua <a className='link_to' href='https://mail.google.com/mail/u/0/#inbox' >{email}</a></div>
                         });
                     }
@@ -151,9 +155,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
         };
 
         return (
-
-            <div className='all-content'>
-                <Header />
+            <>
                 <Drawer
                     visible={openDrawer}
                     onClose={() => { this.setState({ openDrawer: false }) }}
@@ -175,15 +177,21 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     className="login"
                 >
                     <Row>
-                        <Col xs={0} sm={4} md={7} lg={7} xl={8} xxl={9}  ></Col>
-                        <Col xs={24} sm={16} md={10} lg={10} xl={8} xxl={6} >
-                            <Tabs defaultActiveKey="LOGIN" activeKey={state} onChange={(event: "LOGIN" | "REGISTER") => this.setState({ state: event })}  >
+                        <Col xs={24} sm={16} md={10} lg={10} xl={9} xxl={8} >
+                            <Tabs
+                                defaultActiveKey="LOGIN"
+                                activeKey={state}
+                                onChange={(event: "LOGIN" | "REGISTER") => this.setState({ state: event })}
+                            >
                                 <TabPane tab="Đăng nhập" key="LOGIN">
                                     <div className="r-p-content">
                                         <div className='msg-noti '>
-                                            <h5 style={{ textAlign: "center" }}>Đăng nhập</h5>
+                                            <div className="a_c">
+                                                <Avatar src={LG} style={{width: 240, height: 80}} />
+                                            </div>
+                                            <h5 style={{ textAlign: "center" }}>ĐĂNG NHẬP</h5>
                                             <Form onSubmit={this.handleSubmit} className="login-form">
-                                                <p>Tên đăng nhập</p>
+                                                <p className='p-t'>Tên đăng nhập</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('username', {
                                                         rules: [{ required: state === "LOGIN", message: 'Vui lòng điền tên đăng nhập' }],
@@ -202,7 +210,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Mật khẩu </p>
+                                                <p className='p-t'>Mật khẩu </p>
                                                 <Form.Item>
                                                     {getFieldDecorator('password', {
                                                         rules: [{ required: state === "LOGIN", message: 'Vui lòng điền mật khẩu ' }],
@@ -252,10 +260,17 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 {loading ? <Icon type={'loading'} /> : 'Đăng nhập'}
                                             </Button>
                                         </p>
-                                        <p className='a_c'>
-                                            <Link className={'underline'} to={'/forget-pw'} >Quên mật khẩu ? </Link>
+                                        <p className='p-t'>
+                                            <Link className={'underline a_l'} to={'/forget-pw'} >Quên mật khẩu ? </Link>
+                                            <Link
+                                                className={'underline'}
+                                                style={{ float: "right" }}
+                                                onClick={() => this.setState({ state: "REGISTER" })}
+                                            >
+                                                Đăng kí!
+                                            </Link>
                                         </p>
-                                        <p className='a_c'
+                                        <p className='a_l'
                                         >
                                             <LinkTo
                                                 target='_blank'
@@ -269,9 +284,12 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                 <TabPane tab="Đăng kí" key="REGISTER">
                                     <div className="r-p-content ">
                                         <div className='msg-noti '>
-                                            <h5 style={{ textAlign: "center" }}>Đăng kí</h5>
+                                        <div className="a_c">
+                                                <Avatar src={LG} style={{width: 240, height: 80}} />
+                                            </div>
+                                            <h5 style={{ textAlign: "center" }}>ĐĂNG KÍ</h5>
                                             <Form onSubmit={this.handleSubmit} className="login-form">
-                                                <p>Tên công ty/ tổ chức</p>
+                                                <p className='p-t'>Tên công ty/ tổ chức</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('employerName', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền Tên công ty/ tổ chức' }],
@@ -286,7 +304,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Gmail đăng nhập</p>
+                                                <p className='p-t'>Email</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('gmail', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền gmail' }],
@@ -301,7 +319,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Số điện thoại</p>
+                                                <p className='p-t'>Số điện thoại</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('phone', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền số điện thoại ' }],
@@ -312,12 +330,12 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             placeholder="ex: 0123456789"
                                                             type="text"
                                                             maxLength={160}
-                                                           
+
                                                             onChange={(event: any) => this.setState({ phone: event.target.value })}
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Địa chỉ trên bản đồ</p>
+                                                <p className='p-t'>Địa chỉ trên bản đồ</p>
                                                 <Input
                                                     prefix={<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                     size="large"
@@ -327,7 +345,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     value={localStorage.getItem("location")}
                                                     onClick={() => { this.setState({ openDrawer: true }) }}
                                                 />
-                                                <p style={{paddingTop: 20}}>Mật khẩu</p>
+                                                <p className='p-t'>Mật khẩu</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('password', {
                                                         rules: [{ required: state === "REGISTER", message: 'Vui lòng điền mật khẩu' }],
@@ -337,16 +355,16 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                                 style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                             maxLength={160}
                                                             size="large"
-                                                            type={hp ? "password": "text"}
+                                                            type={hp ? "password" : "text"}
                                                             placeholder="Chứa ít nhất 6 kí tự"
-                                                            suffix={<Icon type='eye' onClick={()=> this.setState({hp:!hp})} />}
+                                                            suffix={<Icon type='eye' onClick={() => this.setState({ hp: !hp })} />}
                                                             onChange={
                                                                 (event: any) => this.setState({ password: event.target.value })
                                                             }
                                                         />
                                                     )}
                                                 </Form.Item>
-                                                <p>Nhập lại mật khẩu</p>
+                                                <p className='p-t'>Nhập lại mật khẩu</p>
                                                 <Form.Item>
                                                     {getFieldDecorator('repassword', {
                                                         rules: [{ required: state === "REGISTER" && password !== repassword, message: 'Mật khẩu điền lại bị sai ' }],
@@ -402,15 +420,25 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 {loading ? <Icon type={'loading'} /> : 'Đăng kí'}
                                             </Button>
                                         </p>
+                                        <p className='p-t'>
+                                            <Link
+                                                className={'underline'}
+                                                style={{ float: "left" }}
+                                                onClick={() => this.setState({ state: "LOGIN" })}
+                                            >
+                                                Đăng nhập!
+                                            </Link>
+                                        </p>
                                     </div>
                                 </TabPane>
                             </Tabs>
                         </Col>
-                        <Col xs={0} sm={4} md={7} lg={10} xl={8} xxl={9}></Col>
+                        <Col xs={0} sm={8} md={14} lg={14} xl={15} xxl={16}>
+                            <img src={BGIM} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8 }} alt={"bg"} />
+                        </Col>
                     </Row>
                 </div>
-                <Footer />
-            </div>
+            </>
         )
     }
 }

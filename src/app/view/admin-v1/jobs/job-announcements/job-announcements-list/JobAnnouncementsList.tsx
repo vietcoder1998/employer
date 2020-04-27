@@ -344,7 +344,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Icon
                         className="f-ic"
                         type="dollar"
-                        style={{ color: "orange"}}
+                        style={{ color: "orange" }}
                         onClick={async () => {
                             await this.props.handleDrawer();
                             await setTimeout(() => { this.props.getJobAnnouncementDetail(id) }, 250)
@@ -361,7 +361,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     </Link>
                 </Tooltip>
                 <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
+                    <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`}>
                         <Icon
                             className="f-ic"
                             type="copy"
@@ -656,7 +656,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
     render() {
         let {
             dataTable,
-            valueType,
             loadingTable,
             unCheckbox,
             listCheck,
@@ -746,7 +745,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         <Col span={14}>
                             <JobDetail
                                 jobDetail={{
-                                    jobName: jobDetail.jobName ? jobDetail.jobName.name: "",
+                                    jobName: jobDetail.jobName ? jobDetail.jobName.name : "",
                                     jobTitle: jobDetail.jobTitle,
                                     employerName: jobDetail.employerName,
                                     employerUrl: jobDetail.employerLogoUrl,
@@ -788,8 +787,10 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 style={{ margin: "15px 5px" }}
                                 value={`Nhóm gói tuyển dụng ở trang chủ${homeExpiration !== -1 && homeExpired ? "(Hết hạn)" : ""}`}
                             >
-                                <Radio.Group onChange={
-                                    (event: any) => this.onChoseHomePriority(event.target.value)}
+                                <Radio.Group
+                                    onChange={
+                                        (event: any) => this.onChoseHomePriority(event.target.value)
+                                    }
                                     value={homePriority}
                                     disabled={un_active_home}
                                 >
@@ -811,7 +812,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     }}
                                 >
                                     Kích hoạt
-                            </Button>
+                                </Button>
                             </IptLetterP>
                             <IptLetterP
                                 style={{ margin: "15px 5px" }}
@@ -855,6 +856,25 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             }
                         </div>
                         <hr />
+                        <Row>
+                            <Col md={12}>
+                                <div className="test" style={{ padding: "10px 15px" }}>
+                                    <h6><Icon type="home" theme={"filled"} /> Gói dịch vụ ưu tiên trang chủ</h6>
+                                    <div>
+                                        Hiển thị bài đăng ở danh sách việc tuyển gấp trên trang chủ sự kiện,
+                                        tăng lượt view, click.
+                                </div>
+                                </div>
+                            </Col>
+                            <Col md={12}>
+                                <div className="test" style={{ padding: "10px 15px" }}>
+                                    <h6><Icon type="star" theme={"filled"} /> Gói tìm kiếm nổi bật</h6>
+                                    <div>
+                                        Tăng số lần người dùng nhìn thấy bài đăng khi tìm kiếm.
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
                         <div style={{ padding: "40px 10px 20px ", width: "100%" }}>
                             <Button
                                 icon="close"
@@ -866,7 +886,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                             >
                                 Đóng
                         </Button>
-
                         </div>
                     </DrawerConfig>
                     <div className="common-content">
@@ -1007,10 +1026,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     <Select
                                         showSearch
                                         placeholder="Tất cả"
-                                        defaultValue="Tất cả"
                                         optionFilterProp="children"
                                         style={{ width: "100%" }}
-                                        value={valueType}
                                         onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.hidden)}
                                     >
                                         <Option value={null}>Tất cả</Option>
