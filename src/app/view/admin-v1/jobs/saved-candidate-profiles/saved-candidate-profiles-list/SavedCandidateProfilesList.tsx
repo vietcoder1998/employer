@@ -96,8 +96,8 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
                     <Icon
                         className="f-ic"
-                        style={{ padding: 5, margin: 2 }}
                         type="search"
+                        twoToneColor="blue"
                     />
                 </Link>
             </Tooltip>
@@ -110,7 +110,6 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             >
                 <Icon
                     className="f-ic"
-                    style={{ padding: 5, margin: 2 }}
                     type="delete"
                     theme="twoTone"
                     twoToneColor="red"

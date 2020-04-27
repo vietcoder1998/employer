@@ -15,6 +15,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { PUT } from '../../../../../../const/method';
 import { EVENT_SCHOOLS } from '../../../../../../services/api/private.api';
 import { sendFileHeader } from '../../../../../../services/auth';
+import { Link } from 'react-router-dom';
 
 let ImageRender = (src?: string) => {
     return <img src={src}
@@ -152,25 +153,24 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
         return <>
             <Tooltip placement="top" title={"Xem chi tiết"}>
                 <Icon
-                    className='test'
+                    className="f-ic"
                     onClick={async () => {
                         this.props.getEventSchoolDetail(item.id);
                         this.setState({ modalType: "DETAIL" })
                         this.onToggleModal();
                     }}
-                    style={{ padding: 5, margin: 2 }}
                     type="search"
                 />
             </Tooltip>
             <Tooltip placement="top" title={"Xem bài đăng"}>
                 <a
-                    href={routeLink.EVENT + routePath.JOBS + `/list?id=${item.id}`}
+                    href={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     <Icon
-                        className='test'
-                        style={{ padding: 5, margin: 2, color: "green" }}
+                        className="f-ic"
+                        style={{color: "green" }}
                         type="file-search"
                     />
                 </a>
@@ -178,15 +178,24 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             <Tooltip placement="top" title={"Sửa Banner"}>
                 <Icon
                     type={"tool"}
-                    className='test'
+                    className="f-ic"
                     style={{
-                        padding: 5,
-                        margin: 2,
-                        cursor: 'pointer',
+                        
                         color: 'blue'
                     }}
                     onClick={() => this.setState({ modalType: "BANNER", openModal: true })}
                 />
+            </Tooltip>
+            <Tooltip title="Tạo bài đăng mới" >
+                <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${item.id}`} >
+                    <Icon
+                        type={"plus"}
+                        className="f-ic"
+                        style={{
+                            color: "green"
+                        }}
+                    />
+                </Link>
             </Tooltip>
         </>
     }
@@ -309,9 +318,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 <Modal
                     visible={openModal}
                     onCancel={() => this.onToggleModal()}
-                    title={modalType === "BANNER" ? "CẬP NHẬT BANNER" : <div style={{textTransform:"uppercase"}}>{eventDetail.name}</div>}
+                    title={modalType === "BANNER" ? "CẬP NHẬT BANNER" : <div style={{ textTransform: "uppercase" }}>{eventDetail.name}</div>}
                     width={'50vw'}
-                    bodyStyle={{padding: 10}}
+                    bodyStyle={{ padding: 10 }}
                     footer={[
                         <Button
                             key={"close"}

@@ -93,7 +93,6 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 >
                     <Icon
                         className="f-ic"
-                        style={{ padding: 5, margin: 2 }}
                         type="edit"
                         theme="twoTone"
                         onClick={() =>
@@ -108,7 +107,6 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 >
                     <Icon
                         className="f-ic"
-                        style={{ padding: 5, margin: 2 }}
                         type="delete"
                         theme="twoTone"
                         twoToneColor="red"

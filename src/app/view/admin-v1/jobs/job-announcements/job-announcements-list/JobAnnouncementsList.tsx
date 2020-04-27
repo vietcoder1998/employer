@@ -320,7 +320,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Icon
                         className="f-ic"
                         type={hidden ? "eye-invisible" : "eye"}
-                        style={{ padding: "5px 5px", color: hidden ? "black" : "gray", margin: 2 }}
+                        style={{ color: hidden ? "black" : "gray" }}
                         onClick={async () => await _requestToServer(
                             PUT,
                             JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
@@ -344,7 +344,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Icon
                         className="f-ic"
                         type="dollar"
-                        style={{ padding: "5px 5px", color: "orange", margin: 2 }}
+                        style={{ color: "orange"}}
                         onClick={async () => {
                             await this.props.handleDrawer();
                             await setTimeout(() => { this.props.getJobAnnouncementDetail(id) }, 250)
@@ -354,7 +354,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`} target="_blank">
                         <Icon
                             className="f-ic"
-                            style={{ padding: "5px 5px", margin: 2 }}
                             type="edit"
                             theme="twoTone"
                             twoToneColor="green"
@@ -365,7 +364,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`} target="_blank">
                         <Icon
                             className="f-ic"
-                            style={{ padding: "5px 5px", margin: 2 }}
                             type="copy"
                             theme="twoTone"
                         />
@@ -374,7 +372,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 <Tooltip placement="topRight" title={"Xem ứng viên tương thích"}>
                     <Icon
                         className="f-ic"
-                        style={{ padding: "5px 5px", margin: 2 }}
                         type="solution"
                         twoToneColor="purple"
                         onClick={async () => {
@@ -390,7 +387,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                     <Icon
                         className="f-ic"
-                        style={{ padding: "5px 5px", margin: 2 }}
                         type="delete"
                         theme="twoTone"
                         twoToneColor="red"

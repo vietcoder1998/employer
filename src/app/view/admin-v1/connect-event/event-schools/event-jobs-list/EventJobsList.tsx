@@ -321,9 +321,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             <>
                 <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
                     <Icon
-                        className='test'
+                        className="f-ic"
                         type={hidden ? "eye-invisible" : "eye"}
-                        style={{ padding: "5px 5px", color: hidden ? "black" : "gray", margin: 2 }}
+                        style={{ color: hidden ? "black" : "gray" }}
                         onClick={async () => await _requestToServer(
                             PUT,
                             EVENT_SCHOOLS + `/${id}/hidden/${!hidden}?schoolEventID=${body.schoolEventID}`,
@@ -345,9 +345,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 </Tooltip>
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                     <Icon
-                        className='test'
+                        className="f-ic"
                         type="dollar"
-                        style={{ padding: "5px 5px", color: "orange", margin: 2 }}
+                        style={{  color: "orange" }}
                         onClick={async () => {
                             await this.props.handleDrawer();
                             await setTimeout(() => { this.props.getEventJobDetail(id, body.schoolEventID) }, 250)
@@ -364,8 +364,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         target="_blank"
                     >
                         <Icon
-                            className='f-ic'
-                            style={{ padding: "5px 5px", margin: 2 }}
+                            className="f-ic"
                             type="edit"
                             theme="twoTone"
                             twoToneColor="green"
@@ -381,33 +380,15 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             `/${id}?eid=${body.schoolEventID}`
                         } target="_blank">
                         <Icon
-                            className='f-ic'
-                            style={{ padding: "5px 5px", margin: 2 }}
+                            className="f-ic"
                             type="copy"
                             theme="twoTone"
                         />
                     </Link>
                 </Tooltip>
-                {/* <Tooltip placement="topRight" title={"Xem ứng viên tương thích"}>
-                    <Icon
-                        className='test'
-                        style={{ padding: "5px 5px", margin: 2 }}
-                        type="solution"
-                        twoToneColor="purple"
-                        onClick={async () => {
-                            this.setState({ ojd: true });
-                            setTimeout(() => {
-                                this.props.getListJobSuitableCandidate(id, 0, 10);
-                                this.props.getEventJobDetail(id);
-                                this.setState({ jid: id })
-                            }, 300);
-                        }}
-                    />
-                </Tooltip> */}
                 <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                     <Icon
-                        className='test'
-                        style={{ padding: "5px 5px", margin: 2 }}
+                        className="f-ic"
                         type="delete"
                         theme="twoTone"
                         twoToneColor="red"
@@ -423,14 +404,13 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             nextProps.listEventJobs &&
             nextProps.listEventJobs !== prevState.listEventJobs
         ) {
-            let { pageIndex, pageSize, eid } = prevState;
+            let { pageIndex, pageSize } = prevState;
             let dataTable = [];
             let url_string = window.location.href;
             let url = new URL(url_string);
-            let id = url.searchParams.get("id");
+            let eid = url.searchParams.get("eid");
             let body = prevState.body;
-            body.schoolEventID = id;
-            eid = id;
+            body.schoolEventID = eid;
             nextProps.getJobServiceEvent(eid);
 
             nextProps.listEventJobs.forEach((item: IEventJob, index: number) => {
@@ -697,7 +677,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             body,
             loading,
             ojd,
-            jid
+            jid,
+            eid
         } = this.state;
 
         let {
@@ -886,7 +867,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip>
-                        <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE} >
+                        <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${eid}`} >
                             <Tooltip title="Tạo bài đăng mới" >
                                 <Button
                                     type="primary"

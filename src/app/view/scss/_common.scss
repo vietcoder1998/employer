@@ -523,6 +523,9 @@ button {
   border: solid rgba(30, 30, 30, 0.326)  1px;
   border-radius: 3px;
   transition: 250ms;
+  padding: 5px;
+  margin: 2px;
+  cursor: pointer;
 
   &:hover {
     border: solid rgba(20, 20, 20, 0.843) 1px;

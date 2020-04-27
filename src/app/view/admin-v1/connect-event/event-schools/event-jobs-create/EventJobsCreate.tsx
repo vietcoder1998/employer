@@ -46,11 +46,11 @@ interface IEventJobssCreateProps extends StateProps, DispatchProps {
     history: any;
     getEventJobDetail: Function;
     getListEmBranches: Function;
-    getPendingJobDetail: (id?: string) => any;
-    getSchoolEventJobs?: Function;
+    getPendingJobDetail: Function;
+    getEventJobService?: Function;
 };
 
-class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCreateState> {
+class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreateState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -93,19 +93,16 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
     };
 
     async componentDidMount() {
-        if (this.props.match.params.id) {
-
-        };
-
         this.props.getListEmBranches();
     };
 
     static getDerivedStateFromProps(props?: IEventJobssCreateProps, state?: IEventJobssCreateState) {
+        let url_string = window.location.href;
+        let url = new URL(url_string);
+        let eid = url.searchParams.get("eid");
+
         if (props.match.params.id && props.match.params.id !== state.id) {
             let id = props.match.params.id;
-            let url_string = window.location.href;
-            let url = new URL(url_string);
-            let eid = url.searchParams.get("eid");
 
             if (
                 props.match.url.includes("fix") ||
@@ -120,15 +117,19 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
             ) {
                 props.getPendingJobDetail(id);
             }
-            props.getSchoolEventJobs(eid);
-
+            props.getEventJobService(eid);
 
             return {
                 id,
-                eid
             }
         }
 
+        if (eid) {
+            props.getEventJobService(eid);
+            return {
+                eid
+            }
+        }
 
         if (
             (props.eventJobDetail ||
@@ -249,7 +250,7 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
         ).then((res: any) => {
             if (res) {
                 setTimeout(() => {
-                    this.props.history.push(routeLink.EVENT + routePath.JOBS + routePath.LIST + `?id=${eid}`);
+                    this.props.history.push(routeLink.EVENT + routePath.JOBS + routePath.LIST + `?eid=${eid}`);
                 }, 500);
             }
         }).finally(() => {
@@ -265,26 +266,26 @@ class EventJobssCreate extends Component<IEventJobssCreateProps, IEventJobssCrea
             if (!element.genderRequireds || element.genderRequireds.length === 0) {
                 message.warning(`Ca cần thêm số lượng tuyển`);
                 this.setState({ notComplete: true })
+            } else {
+                element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
+                    if (item.id && typeCpn !== TYPE.CREATE) {
+                        return {
+                            id: item.id,
+                            quantity: item.quantity,
+                            gender: item.gender,
+                        }
+                    } else {
+                        return {
+                            quantity: item.quantity,
+                            gender: item.gender,
+                        }
+                    }
+                });
+
+                element.genderRequireds = element.genderRequireds.filter(
+                    (item: any, index: number) => item.quantity && item.quantity !== 0
+                );
             }
-
-            element.genderRequireds = element.genderRequireds.map((item: any, index: number) => {
-                if (item.id && typeCpn !== TYPE.CREATE) {
-                    return {
-                        id: item.id,
-                        quantity: item.quantity,
-                        gender: item.gender,
-                    }
-                } else {
-                    return {
-                        quantity: item.quantity,
-                        gender: item.gender,
-                    }
-                }
-            });
-
-            element.genderRequireds = element.genderRequireds.filter(
-                (item: any, index: number) => item.quantity && item.quantity !== 0
-            );
         });
 
         if (typeCpn !== TYPE.FIX || typeCpn !== TYPE.PENDING) {
@@ -606,7 +607,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getEventJobDetail: (id?: string, schoolEventID?: string) => dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_EVENT_JOB_DETAIL, id, schoolEventID }),
     getPendingJobDetail: (id?: string) => dispatch({ type: REDUX_SAGA.PENDING_JOB_DETAIL.GET_PENDING_JOB_DETAIL, id }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
-    getSchoolEventJobs: (id?: string) => dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_EVENT_JOB_SERVICE, id })
+    getEventJobService: (id?: string) => dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_EVENT_JOB_SERVICE, id })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -621,4 +622,4 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventJobssCreate)
+export default connect(mapStateToProps, mapDispatchToProps)(EventJobCreate)

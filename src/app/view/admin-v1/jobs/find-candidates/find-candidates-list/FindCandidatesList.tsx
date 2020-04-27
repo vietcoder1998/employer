@@ -116,6 +116,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
             width: 50,
             dataIndex: 'avatarUrl',
             className: 'action',
+            fixed: 'left',
             key: 'avatarUrl',
         },
         {
@@ -226,7 +227,6 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 >
                     <Icon
                         className="f-ic"
-                        style={{ padding: 5, margin: 2 }}
                         type="search"
                     />
                 </a>
@@ -235,8 +235,6 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 <Icon
                     className="f-ic"
                     style={{
-                        padding: 5,
-                        margin: 2,
                         color: item.saved ? 'red' : 'black'
                     }}
                     type="save"
