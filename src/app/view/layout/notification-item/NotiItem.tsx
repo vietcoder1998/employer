@@ -1,5 +1,5 @@
 import React from 'react';
-import { IptLetter, Timer } from '../common/Common';
+import { IptLetter, Timer, CBtn } from '../common/Common';
 import { Icon, Avatar, Tooltip } from 'antd';
 import { INoti } from '../../../../models/notis';
 import './NotiItem.scss';
@@ -156,10 +156,7 @@ export default function NotiItem(props: INotiItemProps) {
                         !seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc'
                     }
                 >
-                    <Icon
-                        type={!seen ? 'eye' : 'eye-invisible'}
-                        onClick={() => createRequest()}
-                    />
+                    <CBtn type={!seen ? 'eye' : 'eye-invisible'} onClick={() => createRequest()}/>
                 </Tooltip>
             </div>
         </div>

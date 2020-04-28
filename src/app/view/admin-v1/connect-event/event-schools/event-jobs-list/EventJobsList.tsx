@@ -296,7 +296,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             className: 'action',
             dataIndex: 'operation',
             render: ({ hidden, id }) => this.EditToolTip(hidden, id),
-            width: 200,
+            width: 180,
         }
     ];
 
@@ -1104,7 +1104,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1680 }}
+                            scroll={{ x: 1660 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

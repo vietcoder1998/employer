@@ -520,7 +520,7 @@ button {
 }
 
 .f-ic {
-  border: solid rgba(30, 30, 30, 0.326)  1px;
+  border: solid rgba(30, 30, 30, 0.326) 1px;
   border-radius: 3px;
   transition: 250ms;
   padding: 5px;
@@ -530,6 +530,26 @@ button {
   &:hover {
     border: solid rgba(20, 20, 20, 0.843) 1px;
     background-color: rgba(245, 245, 245, 0.367);
+  }
+}
+
+.ant-table-header-column {
+  font-weight: 600;
+}
+
+.c-btn {
+  padding: 5px;
+  border-radius: 50%;
+  height: 25px;
+  width: 28px;
+  text-align: center;
+  transition: 0.5s;
+  svg {
+    margin-top: -8px;
+  }
+
+  &:hover {
+    background-color: rgba(41, 41, 41, 0.115);
   }
 }
 
@@ -665,10 +685,10 @@ thead {
 }
 
 .ant-select-selection__choice {
-  color: white!important;
-  background-color: $color_worksvn!important;
-  border: solid rgba(0, 0, 255, 0.306) 1px!important;
+  color: white !important;
+  background-color: $color_worksvn !important;
+  border: solid rgba(0, 0, 255, 0.306) 1px !important;
   i {
-    color: white !important
+    color: white !important;
   }
 }
