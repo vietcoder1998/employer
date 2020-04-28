@@ -1,6 +1,12 @@
 .login {
     height: 100vh;
     background-color: white;
+    .p-t {
+        font-weight: 650;
+        svg {
+            margin-top: -5px;
+        }
+    }
 
     .ant-tabs-bar {
         display: none;
@@ -12,23 +18,28 @@
         overflow-y: auto;
     }
 
+    .forget-pw {
+        vertical-align: center;
+        background-color: white;
+
+        .forgot-content {
+            margin: 30px 10px;
+            padding: 20px;
+            background-color: white;
+        }
+    }
+
     .r-p-content {
         color: black;
-        font-weight: 450;
         background-color: white;
         padding: 30px 30px 50px;
         margin: 0 20px 30px;
         font-size: 0.9rem;
         position: relative;
 
-        p{
+        p {
             margin-top: 20px;
-            font-weight: 500;
             margin-bottom: 5px;
-        }
-
-        .p-t {
-            font-weight: 650;
         }
 
         input {

@@ -29,7 +29,7 @@ export default function Header(props) {
                   to='/register'
                   className='underline'
                 >
-                  Đăng kí
+                  Đăng ký
               </Link>
               </div>
               <div style={{ float: "right" }} >

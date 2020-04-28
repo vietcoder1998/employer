@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification, Avatar } from 'antd';
+import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification, Avatar, Tooltip } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
 import { POST } from '../../../const/method';
 import { OAUTH2_HOST, EMPLOYER_HOST } from '../../../environment/dev';
-import { OAUTH2_LOGIN, EMPLOYER_REGISTER } from '../../../services/api/public.api';
+import { OAUTH2_LOGIN, EMPLOYER_REGISTER, M_S } from '../../../services/api/public.api';
 import { loginHeaders, noInfoHeader } from '../../../services/auth';
 import { routeLink, routePath } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
-import { LinkTo } from '../layout/common/Common';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';
 import { Link } from 'react-router-dom';
@@ -32,7 +31,7 @@ interface LoginState {
     phone?: number;
     location?: string;
     openDrawer?: boolean;
-    state?: "LOGIN" | "REGISTER";
+    state?: "LOGIN" | "REGISTER" | "FORGOT";
     confirm?: boolean;
     hp?: boolean;
 }
@@ -125,6 +124,20 @@ class Login extends PureComponent<LoginProps, LoginState> {
                 }).finally(() => this.setState({ loading: false }))
                 break;
             default:
+                this.setState({ loading: true });
+                _requestToServer(
+                    POST,
+                    M_S,
+                    {
+                        email
+                    },
+                    undefined,
+                    noInfoHeader,
+                    OAUTH2_HOST,
+                    true
+                ).finally(() => {
+                    this.setState({ loading: false })
+                })
                 break;
         };
     };
@@ -139,7 +152,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp } = this.state;
+        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp, email } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -187,7 +200,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                     <div className="r-p-content">
                                         <div className='msg-noti '>
                                             <div className="a_c">
-                                                <Avatar src={LG} style={{width: 240, height: 80}} />
+                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
                                             </div>
                                             <h5 style={{ textAlign: "center" }}>ĐĂNG NHẬP</h5>
                                             <Form onSubmit={this.handleSubmit} className="login-form">
@@ -261,33 +274,30 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                             </Button>
                                         </p>
                                         <p className='p-t'>
-                                            <Link className={'underline a_l'} to={'/forget-pw'} >Quên mật khẩu ? </Link>
+                                            <Link
+                                                className={'underline a_l'}
+                                                onClick={() => this.setState({ state: "FORGOT" })}
+                                            >
+                                                Quên mật khẩu ?
+                                                </Link>
                                             <Link
                                                 className={'underline'}
                                                 style={{ float: "right" }}
                                                 onClick={() => this.setState({ state: "REGISTER" })}
                                             >
-                                                Đăng kí!
+                                                Đăng ký <Icon type={"right"} />
                                             </Link>
                                         </p>
-                                        <p className='a_l'
-                                        >
-                                            <LinkTo
-                                                target='_blank'
-                                                href='https://works.vn'
-                                            >
-                                                Trợ giúp
-                                            </LinkTo>
-                                        </p>
+
                                     </div>
                                 </TabPane>
-                                <TabPane tab="Đăng kí" key="REGISTER">
+                                <TabPane tab="Đăng ký" key="REGISTER">
                                     <div className="r-p-content ">
                                         <div className='msg-noti '>
-                                        <div className="a_c">
-                                                <Avatar src={LG} style={{width: 240, height: 80}} />
+                                            <div className="a_c">
+                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
                                             </div>
-                                            <h5 style={{ textAlign: "center" }}>ĐĂNG KÍ</h5>
+                                            <h5 style={{ textAlign: "center" }}>ĐĂNG KÝ</h5>
                                             <Form onSubmit={this.handleSubmit} className="login-form">
                                                 <p className='p-t'>Tên công ty/ tổ chức</p>
                                                 <Form.Item>
@@ -384,7 +394,6 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                         />
                                                     )}
                                                 </Form.Item>
-
                                                 <p style={{ margin: "20px 0px" }}>
                                                     <Checkbox
                                                         onChange={
@@ -417,7 +426,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 onClick={(event: any) => this.handleSubmit(event, "REGISTER")}
                                                 disabled={!confirm}
                                             >
-                                                {loading ? <Icon type={'loading'} /> : 'Đăng kí'}
+                                                {loading ? <Icon type={'loading'} /> : 'Đăng ký'}
                                             </Button>
                                         </p>
                                         <p className='p-t'>
@@ -426,9 +435,76 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                 style={{ float: "left" }}
                                                 onClick={() => this.setState({ state: "LOGIN" })}
                                             >
-                                                Đăng nhập!
+                                                <Icon type={"left"} /> Đăng nhập
                                             </Link>
                                         </p>
+                                    </div>
+                                </TabPane>
+                                <TabPane tab="QUÊN MẬT KHẨU" key="FORGOT">
+                                    <div className="r-p-content">
+                                        <div className='msg-noti '>
+                                            <div className="a_c">
+                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
+                                            </div>
+                                            <h5 style={{ textAlign: "center" }}>QUÊN MẬT KHẨU</h5>
+                                            <div className="forget-pw">
+                                                <div className="forgot-content">
+                                                    <p className='normal a_c'>
+                                                        Xác nhận mật khẩu qua email
+                                                     </p>
+                                                    <p className='normal'>
+                                                        <Input
+                                                            placeholder="Email"
+                                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                            suffix={
+                                                                <Tooltip title="Email của bạn">
+                                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                                </Tooltip>
+                                                            }
+                                                            value={email}
+                                                            onChange={(event) => {
+                                                                this.setState({ email: event.target.value })
+                                                            }
+                                                            }
+                                                            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                                                                if (event.keyCode === 13) {
+                                                                    this.createRequest()
+                                                                }
+                                                            }}
+                                                            type='text'
+                                                        />
+                                                    </p>
+                                                    <p>
+                                                        <Button
+                                                            type='primary'
+                                                            onClick={
+                                                                () => this.createRequest()
+                                                            }
+                                                            block
+                                                        >
+                                                            {loading ? <Icon type={'loading'} /> : 'Gửi'}
+                                                        </Button>
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                            {exactly ? "" : <p>{errMsg}</p>}
+                                            <p className='p-t'>
+                                                <Link
+                                                    className={'underline a_l'}
+                                                    onClick={() => this.setState({ state: "LOGIN" })}
+                                                >
+                                                    <Icon type={"left"} /> Đăng nhập
+                                                    </Link>
+                                                <Link
+                                                    className={'underline'}
+                                                    style={{ float: "right" }}
+                                                    onClick={() => this.setState({ state: "REGISTER" })}
+                                                >
+                                                    Đăng ký <Icon type={"right"} />
+                                                </Link>
+                                            </p>
+                                        </div>
                                     </div>
                                 </TabPane>
                             </Tabs>

@@ -811,7 +811,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         });
                                     }}
                                 >
-                                    Kích hoạt
+                                    {un_active_home ? "Đã kích hoạt" : " Kích hoạt"}
                                 </Button>
                             </IptLetterP>
                             <IptLetterP
@@ -839,8 +839,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                         });
                                     }}
                                 >
-                                    Kích hoạt
-                            </Button>
+                                    {un_active_search ? "Đã kích hoạt" : " Kích hoạt"}
+                                </Button>
                             </IptLetterP>
                         </>
                         <div style={{

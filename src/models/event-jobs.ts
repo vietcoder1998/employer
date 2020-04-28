@@ -68,7 +68,7 @@ export interface IEventJobsFilter {
     searchPriority?: string;
     searchExpired?: boolean;
     highlightExpired?: boolean;
-    highlightPriority?: string;
+    highlight?: string;
     excludedJobIDs?: string;
     jobNameIDs?: string;
     jobGroupIDs?: string;

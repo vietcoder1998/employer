@@ -53,7 +53,7 @@ export interface IEventJobDetail {
         searchExpiration?: number,
         searchTimeLeft?: string,
 
-        highlightPriority?: string,
+        highlight?: string,
         highlightExpired?: boolean,
         highlightExpiration?: number,
         highlightTimeLeft?: string

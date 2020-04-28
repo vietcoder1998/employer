@@ -70,7 +70,7 @@ export const TYPE = {
         jobShiftFilter: 'jobShiftFilter',
         jobLocationFilter: 'jobLocationFilter',
         highlightExpired:'highlightExpired',
-        highlightPriority: 'highlightPriority',
+        highlight: 'highlight',
     },
 
     EM_BRANCHES: {
