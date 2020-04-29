@@ -432,7 +432,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         return (
             <>
                 <Drawer
-                    title="Đã gửi lời mời"
+                    title="THÔNG TIN KẾT NỐI"
                     width={'60vw'}
                     onClose={() => this.props.handleDrawer({ openDrawer: false })}
                     destroyOnClose={true}

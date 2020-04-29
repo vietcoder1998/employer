@@ -22,7 +22,7 @@ export default class ConnectEvent extends PureComponent<ConnectEventProps, Conne
             < >
                 <Switch>
                     <ErrorBoundaryRoute path={`${path}/school/:id`} component={SchoolDetail} />
-                    <ErrorBoundaryRoute path={`${path}${routePath.CONNECTED}/list`} component={ConnectedSchoolList} />
+                    <ErrorBoundaryRoute path={`${path}/list`} component={ConnectedSchoolList} />
                     <ErrorBoundaryRoute path={`${path}${routePath.EVENT}`} component={EventSchool} />
                 </Switch>
             </>

@@ -390,7 +390,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         type="delete"
                         theme="twoTone"
                         twoToneColor="red"
-                        onClick={() => this.props.handleModal({ msg: "Bạn muốn xóa bài đăng này", typeModal: TYPE.DELETE })}
+                        onClick={() => this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })}
                     />
                 </Tooltip>
             </>

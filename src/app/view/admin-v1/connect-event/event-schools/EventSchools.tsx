@@ -21,7 +21,7 @@ export default class EventSchool extends PureComponent<EventSchoolProps, EventSc
         return (
             < >
                 <Switch>
-                    <ErrorBoundaryRoute path={`${path}${routePath.SCHOOLS}/list`} component={EventSchoolList} />
+                    <ErrorBoundaryRoute path={`${path}/list`} component={EventSchoolList} />
                     <ErrorBoundaryRoute path={`${path}${routePath.JOBS}/list`} component={EventJobsList} />
                     <ErrorBoundaryRoute path={`${path}${routePath.JOBS}/create`} component={EventJobsCreate} />
                     <ErrorBoundaryRoute path={`${path}${routePath.JOBS}/fix/:id`} component={EventJobsCreate} />

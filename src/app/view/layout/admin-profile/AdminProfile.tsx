@@ -155,7 +155,7 @@ function AdminProfile(props: IAdminProfileProps) {
         )
     }
 
-    // Upload image to see 
+    // Tải ảnh lên image to see 
     function uploadImgToSee(file?: Blob, param?: string) {
         switch (param) {
             case "logoUrl":
@@ -205,7 +205,7 @@ function AdminProfile(props: IAdminProfileProps) {
         }
     }
 
-    // UploadData
+    // Tải ảnh lênData
     async function _onUpdateImgUrl(param?: string, type_path?: string, file?: Blob) {
         let formData = new FormData();
         await setLoading(true);
@@ -589,7 +589,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                             htmlFor="identityCardFrontImageUrl"
                                         >
                                             <Icon type="upload" />
-                                            Upload
+                                            Tải ảnh lên
                                         </label>
                                         <input
                                             id="identityCardFrontImageUrl"
@@ -639,7 +639,7 @@ function AdminProfile(props: IAdminProfileProps) {
                                             htmlFor="identityCardBackImageUrl"
                                         >
                                             <Icon type="upload" />
-                                            Upload
+                                            Tải ảnh lên
                                         </label>
                                         <input
                                             id="identityCardBackImageUrl"

@@ -128,13 +128,13 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     }
                 >
                     <Menu.Item key="event">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.SCHOOLS + routePath.LIST}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.LIST}>
                             <Icon type="alert" />
                             <span>Sự kiện </span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="connected">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.CONNECTED + routePath.LIST}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
                             <Icon type="api" />
                             <span>Kết nối</span>
                         </Link>

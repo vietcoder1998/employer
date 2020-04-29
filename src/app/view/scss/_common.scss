@@ -533,6 +533,21 @@ button {
   }
 }
 
+.noti-icon {
+  border-radius: 50%;
+  height: 35px;
+  margin-top: 6px;
+  margin-right: 5px;
+  transition: 0.25s;
+  padding-top: 2px;
+  cursor: pointer;
+  
+  background-color: rgba(109, 109, 109, 0.149);;
+  &:hover {
+    background-color: rgba(102, 102, 102, 0.442);
+  }
+}
+
 .ant-table-header-column {
   font-weight: 600;
 }

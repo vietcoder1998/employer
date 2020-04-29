@@ -72,6 +72,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
 
     async componentDidMount() {
         let { pageSize, pageIndex } = this.state;
+
         await this.props.getAdminProfile();
         await this.props.getListRegions();
         await this.props.getListJobNames();
@@ -184,28 +185,38 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     </>
                                 }
                                 placement="bottomRight"
-                                title={"Thông báo"}
+                                title={<p>Thông báo</p>}
                                 trigger="click"
                                 style={{
                                     padding: 0,
                                 }}
                                 onVisibleChange={(visible?: boolean) => { if (visible) { this.props.getListNoti() } }}
                             >
-                                <Badge
-                                    count={isNotRead  > 0 ? isNotRead : 0}
-                                    style={{ fontSize: 10, right: 12, top: 12 }} dot
-                                >
-                                    <Icon
-                                        type="notification"
+                                <div className="noti-icon">
+                                    <Badge
+                                        count={isNotRead > 0 ? isNotRead : 0}
                                         style={{
-                                            fontSize: 20,
-                                            color: "whitesmoke",
-                                            float: "right",
-                                            margin: 15,
-                                            cursor: "pointer"
+                                            fontSize: 6,
+                                            right: 12,
+                                            top: 8,
+                                            borderRadius: 15,
                                         }}
-                                    />
-                                </Badge>
+                                        dot
+                                    >
+                                        <Icon
+                                            type="bell"
+                                            style={{
+                                                fontSize: 16,
+                                                color: "whitesmoke",
+                                                float: "right",
+                                                margin: "8px 10px",
+                                                cursor: "pointer"
+                                            }}
+                                            theme={"filled"}
+                                        />
+                                    </Badge>
+                                </div>
+
                             </Popover>
                             <DropdownConfig
                                 param={
@@ -215,7 +226,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                             width: "30px",
                                             height: "30px",
                                             border: "solid #fff 2px",
-                                            margin: "0px 5px 0px 25px"
+                                            margin: "0px 12px 0px 4px",
+                                            position: "absolute",
+                                            top: 10
                                         }}
                                         src={localStorage.getItem('logoUrl')}
                                     />
