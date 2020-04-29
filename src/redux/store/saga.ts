@@ -1,4 +1,4 @@
-import { all } from 'redux-saga/effects';
+import { all, spawn } from 'redux-saga/effects';
 import { JobAnnouncementsWatcher } from '../sagas/job-announcements';
 import { EmBranchesWatcher } from '../sagas/em-branches';
 import { RegionsWatcher } from '../sagas/regions';
@@ -33,41 +33,45 @@ import { EventJobDetailWatcher } from '../sagas/event-job-detail';
 import { JobServiceEventWatcher } from '../sagas/job-service-event';
 
 export default function* rootSaga() {
+    const sagas = [
+        JobAnnouncementsWatcher,
+        EmBranchesWatcher,
+        RegionsWatcher,
+        JobNameWatcher,
+        AnnouncementsWatcher,
+        AnnouncementDetailWatcher,
+        AnnouCommentsWatcher,
+        AnnouTypesWatcher,
+        FindCandidateDetailWatcher,
+        FindCandidatesWatcher,
+        SavedCandidateProfilesWatcher,
+        SkillsWatcher,
+        JobAnnouncementDetailWatcher,
+        JobServiceWatcher,
+        LanguagesWatcher,
+        ConnectSchoolDetailWatcher,
+        ConnectSchoolsWatcher,
+        ApplyJobsWatcher,
+        AdminAccountWatcher,
+        PendingJobsWatcher,
+        PendingJobDetailWatcher,
+        NotisWatcher,
+        RatingsWatcher,
+        RatingUserWatcher,
+        AnnouCommentDetailWatcher,
+        SchoolDetailWatcher,
+        JobSuitableCandidatesWatcher,
+        EventSchoolsWatcher,
+        EventJobssWatcher,
+        EventDetailWatcher,
+        EventJobDetailWatcher,
+        JobServiceEventWatcher
+    ];
+
     try {
-        yield all([
-            JobAnnouncementsWatcher(),
-            EmBranchesWatcher(),
-            RegionsWatcher(),
-            JobNameWatcher(),
-            AnnouncementsWatcher(),
-            AnnouncementDetailWatcher(),
-            AnnouCommentsWatcher(),
-            AnnouTypesWatcher(),
-            FindCandidateDetailWatcher(),
-            FindCandidatesWatcher(),
-            SavedCandidateProfilesWatcher(),
-            SkillsWatcher(),
-            JobAnnouncementDetailWatcher(),
-            JobServiceWatcher(),
-            LanguagesWatcher(),
-            ConnectSchoolDetailWatcher(),
-            ConnectSchoolsWatcher(),
-            ApplyJobsWatcher(),
-            AdminAccountWatcher(),
-            PendingJobsWatcher(),
-            PendingJobDetailWatcher(),
-            NotisWatcher(),
-            RatingsWatcher(),
-            RatingUserWatcher(),
-            AnnouCommentDetailWatcher(),
-            SchoolDetailWatcher(),
-            JobSuitableCandidatesWatcher(),
-            EventSchoolsWatcher(),
-            EventJobssWatcher(),
-            EventDetailWatcher(),
-            EventJobDetailWatcher(),
-            JobServiceEventWatcher()
-        ])
+        yield all(
+            sagas.map(function* (saga) {yield spawn(saga) })
+        )
     } catch (err) {
         throw err;
     }

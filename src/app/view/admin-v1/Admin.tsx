@@ -53,6 +53,7 @@ interface IAdminProps extends StateProps, DispatchProps {
     getListJobService?: Function;
     getListLanguages?: Function;
     getListNoti?: Function;
+    getAdminProfile?: Function;
 }
 
 class Admin extends PureComponent<IAdminProps, IAdminState> {
@@ -71,6 +72,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
 
     async componentDidMount() {
         let { pageSize, pageIndex } = this.state;
+        await this.props.getAdminProfile();
         await this.props.getListRegions();
         await this.props.getListJobNames();
         await this.props.getListSkills();
@@ -110,7 +112,11 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     render() {
         let { dataBreakcumb, loading, pageSize, pageIndex } = this.state;
         let { path } = this.props.match;
-        let { totalNoti, listNoti } = this.props;
+        let { listNoti } = this.props;
+        let isNotRead = 0;
+        listNoti.forEach((item: INoti) => {
+            item.seen ? isNotRead += 0 : isNotRead += 1;
+        });
 
         return (
             <Layout>
@@ -164,7 +170,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                             />) : <NotUpdate msg="Không có thông báo" />
                                             }
                                         </div>
-
                                         <div
                                             className="a_c link-to"
                                             style={{ padding: 10 }}
@@ -187,7 +192,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 onVisibleChange={(visible?: boolean) => { if (visible) { this.props.getListNoti() } }}
                             >
                                 <Badge
-                                    count={totalNoti && totalNoti > 0 ? totalNoti : 0}
+                                    count={isNotRead  > 0 ? isNotRead : 0}
                                     style={{ fontSize: 10, right: 12, top: 12 }} dot
                                 >
                                     <Icon
@@ -288,6 +293,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
     getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI, pageIndex, pageSize }),
+    getAdminProfile: () => dispatch({ type: REDUX_SAGA.ADMIN_ACCOUNT.GET_ADMIN_ACCOUNT }),
     handleLoading: (loading?: boolean) => dispatch({ type: TYPE.HANDLE, loading })
 })
 
