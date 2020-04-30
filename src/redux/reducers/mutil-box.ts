@@ -60,6 +60,12 @@ export const MutilBox = (state: typeof initState = initState, action: any) => {
             };
 
         case REDUX.MAP.SET_MAP_STATE:
+            console.log(action.mapState)
+            if (action.mapState.marker) {
+                localStorage.setItem("lat", action.mapState.marker.lat);
+                localStorage.setItem("lon", action.mapState.marker.lng);
+                localStorage.setItem("location", action.mapState.location);
+            }
             return {
                 ...state,
                 mapState: {

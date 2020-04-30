@@ -16,15 +16,20 @@ interface IJobDetailProps {
     jid?: string,
     listJobNames?: Array<IJobName>
     jobDetail?: IJobDetail;
+    ns?: boolean;
 }
 
 export default function JobDetail(props: IJobDetailProps) {
     let { jobDetail } = props;
     let list_des = jobDetail && convertStringToArray(jobDetail.description);
-    let ex = null;
+    let allSkills = [];
 
-    if (props.jobDetail && props.jobDetail.requiredSkills && props.listSkills) {
-        ex = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
+    if (props.ns) {
+        allSkills = props.jobDetail.requiredSkills.map((item) => item.name);
+    } else {
+        if (props.jobDetail && props.jobDetail.requiredSkills && props.listSkills) {
+            allSkills = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
+        }
     }
 
     return (
@@ -145,7 +150,7 @@ export default function JobDetail(props: IJobDetailProps) {
                 <div className='skills-job-detail '>
                     <h6>KỸ NĂNG CÔNG VIỆC</h6>
                     <div>
-                        {ex ? ex.map(
+                        {allSkills ? allSkills.map(
                             (item: any, index: number) => (
                                 <label key={index} className='skills-detail'>{item}</label>
                             )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>

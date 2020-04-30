@@ -62,7 +62,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                     </div>
                     <div className={'name-school'}>
                         <div>
-                            {data && data.name ? data.name :     <NotUpdate />}
+                            {data && data.name ? data.name : <NotUpdate />}
                         </div>
                         <div>
                             {data && data.shortName ? `(${data.shortName})` : <NotUpdate />}
@@ -173,7 +173,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                         </Row>
                     </TabPane>
 
-                    <TabPane tab="Đào tạo (Sẽ cập nhật sớm)" key="3" disabled>
+                    <TabPane tab="Đào tạo (Sẽ cập nhật sớm)" key="3">
                         <Row>
                             <Col md={24} lg={14} xl={14} xxl={16}>
                                 <div className="description-info">
@@ -188,13 +188,13 @@ function SchoolInfo(props: ISchoolInfoProps) {
                             </Col>
                             {/* Front */}
                             <Col md={24} lg={10} xl={10} xxl={8}>
-                                <div className="description-info">
-                                    <IptLetterP value={"Mặt trước giấy phép kinh doanh"} style={{ marginBottom: 10 }} />
-                                </div>
+
                                 {/* Back Image */}
-                                <div className="description-info">
-                                    <IptLetterP value={"Ảnh văn phòng làm việc"} />
-                                </div>
+                                <Card title="Quy mô đào tạo">
+                                    <Card.Grid style={{width: "100%"}} >
+                                        { data.educatedScale}
+                                        </Card.Grid>
+                                </Card>
                             </Col>
                         </Row>
                     </TabPane>

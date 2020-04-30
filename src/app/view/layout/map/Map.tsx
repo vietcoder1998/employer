@@ -8,6 +8,7 @@ import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../models/mutil-box';
 import Autocomplete from 'react-google-autocomplete';
 import IApiMap from '../../../../models/google-map-api';
+import { notification } from 'antd';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
@@ -108,7 +109,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                                     lat: place.geometry.location.lat(),
                                     lng: place.geometry.location.lng(),
                                 }
-                            }) : alert("GoogleMap yêu cầu billing cho hoạt động này"); 
+                            }) : notification.warning({message: "Google Map thông báo", description: "We take your address"}); 
                         } catch(err) {
                             throw err
                         }

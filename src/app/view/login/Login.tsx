@@ -10,7 +10,7 @@ import { routeLink, routePath } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';
-import { Link } from 'react-router-dom';
+import { li } from 'react-router-dom';
 //@ts-ignore
 import BGIM from './../../../assets/image/bsn.jpg';
 //@ts-ignore
@@ -34,6 +34,7 @@ interface LoginState {
     state?: "LOGIN" | "REGISTER" | "FORGOT";
     confirm?: boolean;
     hp?: boolean;
+    showPw?: boolean;
 }
 
 interface LoginProps {
@@ -59,6 +60,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
             state: "LOGIN",
             confirm: false,
             hp: true,
+            showPw: false,
         }
     }
 
@@ -152,7 +154,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp, email } = this.state;
+        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp, email, showPw } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -232,8 +234,16 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                             size="large"
                                                             placeholder="Mật khẩu"
-                                                            type="password"
+                                                            type={showPw ? "text" : "password"}
                                                             maxLength={160}
+                                                            suffix={
+                                                                <div
+                                                                    className="c-btn"
+                                                                    onClick={() => this.setState({ showPw: !showPw })}
+                                                                >
+                                                                    <Icon type={showPw ? "eye" : "eye-invisible"} />
+                                                                </div>
+                                                            }
                                                             onChange={(event: any) => this.setState({ password: event.target.value })}
                                                             onPressEnter={
                                                                 (event) => { if (exactly) { this.handleSubmit(event, "LOGIN") } }
@@ -274,19 +284,20 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                             </Button>
                                         </p>
                                         <p className='p-t'>
-                                            <Link
-                                                className={'underline a_l'}
+                                            <li
+                                                className={'underline a_l asl'}
+                                                style={{ float: "left" }}
                                                 onClick={() => this.setState({ state: "FORGOT" })}
                                             >
                                                 Quên mật khẩu ?
-                                                </Link>
-                                            <Link
-                                                className={'underline'}
-                                                style={{ float: "right" }}
+                                                </li>
+                                            <li
+                                                className={'underline a_r asl'}
+                                                style={{ right: 0 }}
                                                 onClick={() => this.setState({ state: "REGISTER" })}
                                             >
                                                 Đăng ký <Icon type={"right"} />
-                                            </Link>
+                                            </li>
                                         </p>
 
                                     </div>
@@ -367,7 +378,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             size="large"
                                                             type={hp ? "password" : "text"}
                                                             placeholder="Chứa ít nhất 6 kí tự"
-                                                            suffix={<Icon type='eye' onClick={() => this.setState({ hp: !hp })} />}
+
                                                             onChange={
                                                                 (event: any) => this.setState({ password: event.target.value })
                                                             }
@@ -384,6 +395,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                             size="large"
                                                             placeholder="Nhập lại mật khẩu"
                                                             type="password"
+                                                            suffix={<Icon type="eye" onClick={() => this.setState({ hp: !hp })} />}
                                                             maxLength={160}
                                                             onChange={(event: any) => this.setState({ repassword: event.target.value })}
                                                             onKeyDown={(event) => {
@@ -430,13 +442,13 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                             </Button>
                                         </p>
                                         <p className='p-t'>
-                                            <Link
-                                                className={'underline'}
+                                            <li
+                                                className={'underline asl'}
                                                 style={{ float: "left" }}
                                                 onClick={() => this.setState({ state: "LOGIN" })}
                                             >
                                                 <Icon type={"left"} /> Đăng nhập
-                                            </Link>
+                                            </li>
                                         </p>
                                     </div>
                                 </TabPane>
@@ -455,6 +467,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                     <p className='normal'>
                                                         <Input
                                                             placeholder="Email"
+                                                            size="large"
                                                             prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                             suffix={
                                                                 <Tooltip title="Email của bạn">
@@ -471,12 +484,13 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                                     this.createRequest()
                                                                 }
                                                             }}
-                                                            type='text'
+                                                            type="text"
                                                         />
                                                     </p>
                                                     <p>
                                                         <Button
-                                                            type='primary'
+                                                            type="primary"
+                                                            size={"large"}
                                                             onClick={
                                                                 () => this.createRequest()
                                                             }
@@ -490,19 +504,20 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                             </div>
                                             {exactly ? "" : <p>{errMsg}</p>}
                                             <p className='p-t'>
-                                                <Link
-                                                    className={'underline a_l'}
+                                                <li
+                                                    className={'underline a_l asl'}
+                                                    style={{ left: 0 }}
                                                     onClick={() => this.setState({ state: "LOGIN" })}
                                                 >
                                                     <Icon type={"left"} /> Đăng nhập
-                                                    </Link>
-                                                <Link
-                                                    className={'underline'}
-                                                    style={{ float: "right" }}
+                                                    </li>
+                                                <li
+                                                    className={'underline a_r asl'}
+                                                    style={{ right: 0 }}
                                                     onClick={() => this.setState({ state: "REGISTER" })}
                                                 >
                                                     Đăng ký <Icon type={"right"} />
-                                                </Link>
+                                                </li>
                                             </p>
                                         </div>
                                     </div>

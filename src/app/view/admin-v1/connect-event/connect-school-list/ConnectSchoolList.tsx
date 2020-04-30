@@ -79,6 +79,7 @@ interface IConnectedSchoolsListState {
     replyMessage?: string;
     body?: IConnectSchoolsFilter;
     search?: any;
+    tabActive?: string;
 };
 
 class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, IConnectedSchoolsListState> {
@@ -310,30 +311,35 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             body[param] = value;
         } else {
             switch (event) {
-                case TYPE.TRUE:
+                case TYPE.RECEIVE_RQ:
                     body.hasRequest = true;
                     body.state = TYPE.PENDING;
                     body.owner = TYPE.SCHOOL;
+                    this.setState({ tabActive: TYPE.RECEIVE_RQ })
                     break;
-                case TYPE.FALSE:
+                case TYPE.SEND_RQ:
                     body.hasRequest = true;
                     body.state = TYPE.PENDING;
                     body.owner = TYPE.EMPLOYER;
+                    this.setState({ tabActive: TYPE.SEND_RQ })
                     break;
                 case TYPE.ACCEPTED:
                     body.hasRequest = true;
                     body.owner = null;
                     body.state = TYPE.ACCEPTED;
+                    this.setState({ tabActive: TYPE.ACCEPTED })
                     break;
                 case TYPE.REJECTED:
                     body.owner = null;
                     body.hasRequest = null;
                     body.state = TYPE.REJECTED;
+                    this.setState({ tabActive: TYPE.REJECTED })
                     break;
                 default:
                     body.hasRequest = false;
                     body.state = null;
                     body.owner = null;
+                    this.setState({ tabActive: TYPE.UNCONNECTED })
                     break;
             };
         }
@@ -424,7 +430,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
             replyMessage,
             dataSchool,
             loading,
-            body
+            body,
+            tabActive
         } = this.state;
 
         let {
@@ -511,7 +518,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 </Panel>
                                 <Panel
                                     header={dataSchool.owner !== TYPE.SCHOOL ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"}
-                                    key="2" style={{ display: !body.state ? "none" : undefined }}
+                                    key="2" style={{ display: !body.state || tabActive === TYPE.UNCONNECTED || tabActive === TYPE.SEND_RQ ? "none" : undefined }}
                                 >
                                     <TextArea
                                         value={replyMessage}
@@ -524,7 +531,6 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                         value={requestMessage}
                                         placeholder="Chưa có yêu cầu"
                                         rows={5}
-
                                         onChange={(event: any) => {
                                             this.setState({ requestMessage: event.target.value })
                                         }}
@@ -617,8 +623,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                             <Tabs onChange={(event) => this.onChangeType(event)}>
                                 <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED} />
                                 <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
-                                <TabPane tab="Yêu cầu kết nối" key={TYPE.TRUE} />
-                                <TabPane tab="Đã gửi yêu cầu" key={TYPE.FALSE} />
+                                <TabPane tab="Yêu cầu kết nối" key={TYPE.RECEIVE_RQ} />
+                                <TabPane tab="Đã gửi yêu cầu" key={TYPE.SEND_RQ} />
                                 <TabPane tab="Chưa kết nối" key={"none"} />
                             </Tabs>
                             {!loadingTable ? (listConnectSchools && listConnectSchools.length > 0 ?

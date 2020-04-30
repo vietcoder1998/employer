@@ -744,6 +744,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     <Row>
                         <Col span={14}>
                             <JobDetail
+                                ns={true}
                                 jobDetail={{
                                     jobName: jobDetail.jobName ? jobDetail.jobName.name : "",
                                     jobTitle: jobDetail.jobTitle,
@@ -754,7 +755,8 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     shifts: jobDetail.shifts,
                                     description: jobDetail.description,
                                     createdDate: jobDetail.createdDate,
-                                    employerBranch: jobDetail.employerBranchName
+                                    employerBranch: jobDetail.employerBranchName,
+                                    requiredSkills: jobDetail.requiredSkills
                                 }}
                             />
                         </Col>
