@@ -379,7 +379,8 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                         footer={[
                             <Button
                                 key="cancel"
-                                children="Hủy"
+                                type="danger"
+                                children="Đóng"
                                 onClick={() => {
                                     this.setState({
                                         message: null,
@@ -473,7 +474,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1260 }}
+                            scroll={{ x: 1150 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

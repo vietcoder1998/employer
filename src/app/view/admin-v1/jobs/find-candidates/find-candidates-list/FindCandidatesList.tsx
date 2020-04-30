@@ -231,7 +231,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     />
                 </a>
             </Tooltip>
-            <Tooltip placement="top" title={item.saved ? "Hủy lưu" : "Lưu lại"}>
+            <Tooltip placement="top" title={item.saved ? "Bỏ lưu" : "Lưu lại"}>
                 <Icon
                     className="f-ic"
                     style={{

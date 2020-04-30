@@ -9,6 +9,7 @@ import { ISkill } from '../../../../models/skills';
 import { IJobName } from '../../../../models/job-type';
 import IJobDetail from '../../../../models/job-detail';
 import { IShift } from '../../../../models/announcements';
+import findIdWithValue from '../../../../utils/findIdWithValue';
 
 interface IJobDetailProps {
     listSkills?: Array<ISkill>,
@@ -20,6 +21,11 @@ interface IJobDetailProps {
 export default function JobDetail(props: IJobDetailProps) {
     let { jobDetail } = props;
     let list_des = jobDetail && convertStringToArray(jobDetail.description);
+    let ex = null;
+
+    if (props.jobDetail && props.jobDetail.requiredSkills && props.listSkills) {
+        ex = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
+    }
 
     return (
         <>
@@ -139,12 +145,10 @@ export default function JobDetail(props: IJobDetailProps) {
                 <div className='skills-job-detail '>
                     <h6>KỸ NĂNG CÔNG VIỆC</h6>
                     <div>
-                        {jobDetail &&
-                            jobDetail.requiredSkills ?
-                            jobDetail.requiredSkills.map(
-                                (item: any, index: number) => (
-                                    <label key={index} className='skills-detail'>{item.name}</label>
-                                )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>
+                        {ex ? ex.map(
+                            (item: any, index: number) => (
+                                <label key={index} className='skills-detail'>{item}</label>
+                            )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>
                         }
                     </div>
                 </div>

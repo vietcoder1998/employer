@@ -8,8 +8,8 @@ export default interface IJobDetail {
     expriratedDate?: number;
     description?: string;
     shifts?: Array<IShiftDetail>;
-    requiredSkills?: Array<any>;
     employerUrl?: string;
     employerBranch?: string;
     repliedDate?: number;
+    requiredSkills?: Array<any>
 }

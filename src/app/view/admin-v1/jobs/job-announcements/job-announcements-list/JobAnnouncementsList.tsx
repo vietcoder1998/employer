@@ -877,7 +877,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         </Row>
                         <div style={{ padding: "40px 10px 20px ", width: "100%" }}>
                             <Button
-                                icon="close"
                                 type="danger"
                                 style={{
                                     float: "left"

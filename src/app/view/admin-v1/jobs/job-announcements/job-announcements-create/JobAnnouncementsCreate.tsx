@@ -199,7 +199,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
-        console.log(index);
         body.shifts[index] = event;
         this.setState({ body })
     };

@@ -28,13 +28,13 @@ const typeReturn = (type?: string) => {
     let result = <NotUpdate msg="Chưa phản hồi" />
     switch (type) {
         case TYPE.PENDING:
-            result = <span style={{color: "orange"}} >Đang chờ</span>
+            result = <span style={{ color: "orange" }} >Đang chờ</span>
             break;
         case TYPE.ACCEPTED:
-            result = <span style={{color: "green"}}>Chấp nhận</span>
+            result = <span style={{ color: "green" }}>Chấp nhận</span>
             break;
         case TYPE.REJECTED:
-            result = <span style={{color: "red"}}>Đã từ chối</span>
+            result = <span style={{ color: "red" }}>Đã từ chối</span>
             break;
         default:
             break;
@@ -297,7 +297,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         setTimeout(() => {
             this.props.getListConnectSchools(body, pageIndex, pageSize);
         }, 500);
-        
+
     };
 
     onChangeType = (event?: any, param?: string) => {
@@ -346,13 +346,17 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         let { listConnectSchools } = this.props;
         let filter_arr = listConnectSchools.filter((item: IConnectSchool) => item.id === id);
         let dataSchool = filter_arr[0];
+
+        console.log(dataSchool)
+
         this.props.handleDrawer({ openDrawer: true });
         await this.setState({ loading: true });
+
         setTimeout(() => {
             if (dataSchool.state) {
                 this.props.getConnectSchoolDetail(id);
             } else {
-                this.props.setConnectSchoolDetail({});
+                this.props.setConnectSchoolDetail(dataSchool);
             }
         }, 500);
         await this.setState({ loading: false });
@@ -461,41 +465,43 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                                 <li>
                                                     <IptLetter value="Trạng thái: " children={dataSchool && typeReturn(dataSchool.state)} />
                                                 </li>
-                                                <li>
-                                                    <IptLetter
-                                                        value="Ngày tạo lời mời: "
-                                                        children={
-                                                            dataSchool &&
-                                                                dataSchool.createdDate !== -1 ?
-                                                                timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
-                                                        } />
-                                                </li>
-                                                <li>
-                                                    <IptLetter
-                                                        value="Ngày phản hồi: "
-                                                        children={
-                                                            dataSchool &&
-                                                                dataSchool.createdDate !== -1 ?
-                                                                timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
-                                                        } />
-                                                </li>
-                                                <li>
-                                                    <IptLetter
-                                                        value="Phản hồi cuối: "
-                                                        children={
-                                                            dataSchool &&
-                                                                dataSchool.lastModified !== -1 ?
-                                                                timeConverter(dataSchool.lastModified, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
-                                                        } />
-                                                </li>
-                                                <li>
-                                                    <IptLetter
-                                                        value="Phía gửi yêu cầu : "
-                                                        children={
-                                                            dataSchool && dataSchool.owner ?
-                                                                (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
-                                                        } />
-                                                </li>
+                                                <div style={{ display: !body.state ? "none" : undefined }}>
+                                                    <li>
+                                                        <IptLetter
+                                                            value="Ngày tạo lời mời: "
+                                                            children={
+                                                                dataSchool &&
+                                                                    dataSchool.createdDate !== -1 ?
+                                                                    timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
+                                                            } />
+                                                    </li>
+                                                    <li>
+                                                        <IptLetter
+                                                            value="Ngày phản hồi: "
+                                                            children={
+                                                                dataSchool &&
+                                                                    dataSchool.createdDate !== -1 ?
+                                                                    timeConverter(dataSchool.createdDate, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
+                                                            } />
+                                                    </li>
+                                                    <li>
+                                                        <IptLetter
+                                                            value="Phản hồi cuối: "
+                                                            children={
+                                                                dataSchool &&
+                                                                    dataSchool.lastModified !== -1 ?
+                                                                    timeConverter(dataSchool.lastModified, 1000, "HH:mm - DD/MM/YYYY") : <NotUpdate msg="Chưa có" />
+                                                            } />
+                                                    </li>
+                                                    <li>
+                                                        <IptLetter
+                                                            value="Phía gửi yêu cầu : "
+                                                            children={
+                                                                dataSchool && dataSchool.owner ?
+                                                                    (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
+                                                            } />
+                                                    </li>
+                                                </div>
                                             </ul>
                                         </Col>
                                         <Col md={24} lg={12} xl={12} xxl={12}>
@@ -503,7 +509,10 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                         </Col>
                                     </Row>
                                 </Panel>
-                                <Panel header={dataSchool.owner !== TYPE.SCHOOL ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"} key="2" >
+                                <Panel
+                                    header={dataSchool.owner !== TYPE.SCHOOL ? "Phản hồi nhà trường" : "Lời mời từ nhà trường"}
+                                    key="2" style={{ display: !body.state ? "none" : undefined }}
+                                >
                                     <TextArea
                                         value={replyMessage}
                                         placeholder="Chưa có yêu cầu"
@@ -657,7 +666,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     handleMapState: (mapState?: IMapState) =>
         dispatch({ type: REDUX.MAP.SET_MAP_STATE, mapState }),
     setConnectSchoolDetail: (data: IConnectSchoolDetail) =>
-        dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL })
+        dispatch({ type: REDUX.CONNECT_SCHOOL.GET_CONNECT_SCHOOL_DETAIL, data })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

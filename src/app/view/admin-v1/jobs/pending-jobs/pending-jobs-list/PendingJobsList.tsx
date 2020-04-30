@@ -42,7 +42,7 @@ const Label = (props: any) => {
             value = "Thực tập sinh";
             break;
     }
-    return <label className={props.type ? props.type.toLowerCase(): "unlocked"}>{value}</label>
+    return <label className={props.type ? props.type.toLowerCase() : "unlocked"}>{value}</label>
 };
 
 interface IPendingJobListProps extends StateProps, DispatchProps {
@@ -162,7 +162,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             dataIndex: 'operation',
             fixed: 'right',
             className: 'action',
-            render:(data) => this.EditTool(data),
+            render: (data) => this.EditTool(data),
             width: 80
         },
     ];
@@ -295,14 +295,14 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
 
     render() {
         let { dataTable, loading, loadingTable, state, jid } = this.state;
-        let { totalItems, jobDetail, open_modal } = this.props;
+        let { totalItems, pendingJobDetail, open_modal } = this.props;
 
         return (
             <>
                 <Modal
                     visible={open_modal}
                     title={
-                        <div style={{ fontWeight: "bolder", textTransform: "capitalize" }}>{jobDetail.jobTitle}</div>
+                        <div style={{ fontWeight: "bolder", textTransform: "capitalize" }}>{pendingJobDetail.jobTitle}</div>
                     }
                     onCancel={() => this.props.handleModal({ open_modal: false })}
                     destroyOnClose={true}
@@ -311,6 +311,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     footer={[
                         <Button
                             type="danger"
+                            key="close"
                             loading={loading}
                             onClick={async () => this.props.handleModal({ open_modal: false })}
                         >
@@ -332,26 +333,27 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     ]}
                 >
                     {
-                        jobDetail ? <JobDetail
+                        pendingJobDetail ? <JobDetail
                             jobDetail={{
-                                jobName: jobDetail.jobName && jobDetail.jobName.name,
-                                jobTitle: jobDetail.data.jobTitle,
-                                employerName: jobDetail.employer.employerName,
-                                employerUrl: jobDetail.employer.logoUrl,
-                                employerBranch: jobDetail.employerBranchName,
-                                expriratedDate: jobDetail.data.expirationDate,
-                                jobType: jobDetail.data.jobType,
-                                shifts: jobDetail.data.shifts,
-                                description: jobDetail.data.description,
-                                requiredSkills: jobDetail.requiredSkills,
-                                createdDate: jobDetail.createdDate,
-                                repliedDate: jobDetail.repliedDate
+                                jobName: pendingJobDetail.jobName && pendingJobDetail.jobName.name,
+                                jobTitle: pendingJobDetail.data.jobTitle,
+                                employerName: pendingJobDetail.employer.employerName,
+                                employerUrl: pendingJobDetail.employer.logoUrl,
+                                employerBranch: pendingJobDetail.employerBranchName,
+                                expriratedDate: pendingJobDetail.data.expirationDate,
+                                jobType: pendingJobDetail.data.jobType,
+                                shifts: pendingJobDetail.data.shifts,
+                                description: pendingJobDetail.data.description,
+                                requiredSkills: pendingJobDetail.data.requiredSkillIDs,
+                                createdDate: pendingJobDetail.createdDate,
+                                repliedDate: pendingJobDetail.repliedDate
                             }}
+                            listSkills={this.props.listSkills}
                         /> : <Empty description={'Không có mô tả phù hợp'} />
                     }
 
                     {
-                        jobDetail && jobDetail.message ?
+                        pendingJobDetail && pendingJobDetail.message ?
                             <div
                                 style={{
                                     padding: "10px 25px",
@@ -360,7 +362,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                                     marginTop: 10
                                 }}
                             >
-                                LÝ DO TỪ CHỐI: <NotUpdate msg={jobDetail.message} />
+                                LÝ DO TỪ CHỐI: <NotUpdate msg={pendingJobDetail.message} />
                             </div> : ''
                     }
                 </Modal>
@@ -410,7 +412,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     listJobNames: state.JobNames.items,
     listSkills: state.Skills.items,
     modalState: state.MutilBox.modalState,
-    jobDetail: state.PendingJobDetail,
+    pendingJobDetail: state.PendingJobDetail,
     open_modal: state.MutilBox.modalState.open_modal,
     totalItems: state.PendingJobs.totalItems,
 });

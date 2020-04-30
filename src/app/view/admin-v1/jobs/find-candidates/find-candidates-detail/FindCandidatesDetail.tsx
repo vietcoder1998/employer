@@ -446,7 +446,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             icon={loading ? "loading" : "save"}
                             onClick={() => this.createRequest(TYPE.SAVE)}
                         >
-                            {body && body.saved ? "Hủy lưu" : "Lưu"}
+                            {body && body.saved ? "Bỏ lưu" : "Lưu"}
                         </Button>
                     </div>
                 </div >

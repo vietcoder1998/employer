@@ -187,7 +187,6 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                             key="cancel"
                             type="danger"
                             children="Đóng"
-                            icon="close"
                             onClick={() => {
                                 this.setState({
                                     loading: false,
