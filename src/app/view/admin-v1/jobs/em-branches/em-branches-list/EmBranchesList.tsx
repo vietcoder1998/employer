@@ -474,7 +474,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1150 }}
+                            scroll={{ x: 1250 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
