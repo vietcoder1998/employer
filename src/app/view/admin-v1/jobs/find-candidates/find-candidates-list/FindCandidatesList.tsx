@@ -38,7 +38,7 @@ let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: stri
     />
 };
 
-interface IFindCandidatesListProps extends StateProps, DispatchProps {
+interface IProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     handleModal: Function;
@@ -48,7 +48,7 @@ interface IFindCandidatesListProps extends StateProps, DispatchProps {
     getAnnoucementDetail: Function;
 };
 
-interface IFindCandidatesListState {
+interface IState {
     dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
@@ -70,7 +70,7 @@ interface IFindCandidatesListState {
     profileType?: "STUDENT" | "CANDIDATE"
 };
 
-class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFindCandidatesListState> {
+class FindCandidatesList extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -223,7 +223,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         return <>
             <Tooltip placement="top" title={"Xem chi tiết"}>
                 <a
-                    href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.id}`}
+                    href={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${item.id}?type=${profileType}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
@@ -233,11 +233,14 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     />
                 </a>
             </Tooltip>
-            <Tooltip placement="top" title={item.saved ? "Bỏ lưu" : "Lưu lại"}>
+            <Tooltip
+                placement="top"
+                title={item.saved ? "Bỏ lưu" : "Lưu lại"}
+            >
                 <Icon
                     className="f-ic"
                     style={{
-                        color: item.saved ? 'red' : 'black'
+                        color: item.saved ? 'red' : 'black',
                     }}
                     type="save"
                     onClick={async () => {
@@ -261,13 +264,11 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         </>
     };
 
-    static getDerivedStateFromProps(nextProps?: IFindCandidatesListProps, prevState?: IFindCandidatesListState) {
+    static getDerivedStateFromProps(nextProps?: IProps, prevState?: IState) {
         if (nextProps.listFindCandidates && nextProps.listFindCandidates !== prevState.listFindCandidates) {
-            let { pageIndex, pageSize } = prevState;
+            let { pageIndex, pageSize, profileType } = prevState;
             let dataTable = [];
             nextProps.listFindCandidates.forEach((item: IFindCandidate, index: number) => {
-
-
                 const Lock = () => (
                     <>
                         <Tooltip placement="top" title={item.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
@@ -293,6 +294,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             email={item.email}
                             gender={item.gender}
                             unlocked={item.unlocked}
+                            profileType={profileType}
                             children={(item.lastName ? item.lastName : "") + " " + (item.firstName ? item.firstName : "")}
                         />,
                     lookingForJob: item.lookingForJob ? "Đang tìm việc" : "Đã có việc",
@@ -353,7 +355,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         let value: any = event;
 
         if (param === TYPE.FIND_CANDIDATES_FILTER.profileType) {
-            this.setState({ profileType: event })
+            this.setState({ profileType: event });
         } else {
             listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
             switch (event) {

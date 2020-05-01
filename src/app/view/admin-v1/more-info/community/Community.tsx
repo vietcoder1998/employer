@@ -1,6 +1,6 @@
 import React from 'react'
 import './Community.scss';
-import { Carousel } from 'antd';
+import { Carousel, Icon } from 'antd';
 import { IAppState } from '../../../../../redux/store/reducer';
 import { connect } from 'react-redux';
 
@@ -30,17 +30,29 @@ function Community(props?: ICommunityProps) {
             <h5>App Mobile</h5>
             <div className='community' >
                 <p>
-                    <label>
-                        Sử dụng app
-                    </label>
+                    Sử dụng ứng dụng
+                    trên chợ để tận hưởng toàn bộ tiện ích của works.vn:
+                </p>
+                <p>
                     <a
-                        href='https://apps.apple.com/us/app/works-vn-tuy%E1%BB%83n-d%E1%BB%A5ng/id1486080602'
-                        target='_blank'
+                        href='https://play.google.com/store/apps/details?id=com.worksvn.employer&fbclid=IwAR3YXMGJeQ6IKgJgWM5DdI3xbt0DchlwHeF_iDi3OS56g3WFrSgueojTm50'
+
                         rel="noopener noreferrer"
                     >
-                        Employer
-                    </a>
-                    <label>trên chợ để tận hưởng toàn bộ tiện ích của works.vn</label>
+                        <Icon type="android" />
+                        App Addroid
+                     </a>
+                </p>
+                <p>
+                    <a
+                        target='_blank'
+                        href='https://apps.apple.com/us/app/works-vn-tuy%E1%BB%83n-d%E1%BB%A5ng/id1486080602'
+
+                        rel="noopener noreferrer"
+                    >
+                        <Icon type="apple" />
+                    App IOS
+                 </a>
                 </p>
                 <div>
                     <Carousel

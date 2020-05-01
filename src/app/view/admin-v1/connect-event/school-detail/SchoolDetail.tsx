@@ -15,8 +15,8 @@ interface IState {
 interface IProps extends StateProps, DispatchProps {
     match: Readonly<any>;
     getSchoolDetail: (id?: string) => any;
-    getSchoolBranches: Function;
-    setMapState: Function;
+    getSchoolBranches: (id?: string) => any;
+    setMapState: (mapState?: IMapState) => any;
 }
 
 class SchoolDetail extends PureComponent<IProps, IState> {

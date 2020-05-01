@@ -75,7 +75,11 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             nextProps.match.params.id !== prevState.id
         ) {
             let { id } = nextProps.match.params;
-            nextProps.getFindCandidateDetail(id);
+            let url_string = window.location.href;
+            let url = new URL(url_string);
+            let profileType = url.searchParams.get("type");
+
+            nextProps.getFindCandidateDetail(id, profileType);
             return {
                 id,
             }
@@ -456,8 +460,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
 }
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getFindCandidateDetail: (id?: string) =>
-        dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id }),
+    getFindCandidateDetail: (id?: string, profileType?: string) =>
+        dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id, profileType }),
     getJobService: () => dispatch({
         type: REDUX.JOB_SERVICE,
     }),

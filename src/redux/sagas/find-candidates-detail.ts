@@ -1,10 +1,12 @@
 import { IFindCandidateDetail } from '././../../models/find-candidates-detail';
 import { GET } from '../../const/method';
-import { FIND_CANDIDATE_DETAIL } from '../../services/api/private.api';
+import { ADMIN_ACCOUNT } from '../../services/api/private.api';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { EMPLOYER_HOST } from '../../environment/dev';
+import { TYPE } from '../../const/type';
+import { routePath } from '../../const/break-cumb';
 
 function* getListFindCandidateDetailData(action: any) {
     let res = yield call(callFindCandidateDetail, action);
@@ -82,7 +84,7 @@ function callFindCandidateDetail(action: any) {
         try {
             let res = _requestToServer(
                 GET,
-                FIND_CANDIDATE_DETAIL + `/${action.id}/profile`,
+                ADMIN_ACCOUNT + (action.profileType  ===TYPE.STUDENT ? routePath.STUDENT : routePath.CANDIDATE )+ `/${action.id}/profile`,
                 action.body ? action.body : null,
                 undefined,
                 undefined,

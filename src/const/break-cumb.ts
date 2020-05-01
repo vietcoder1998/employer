@@ -15,6 +15,8 @@ export const routePath = {
     UNCONNECT: '/unconnect',
     REJECTED: '/rejected',
     ACCEPTED: '/accepted',
+    STUDENT: '/students',
+    CANDIDATE: '/candidates',
 
     EM_BRANCHES: '/em-branches',
     SAVE_CANDIDATE: '/saved-candidate',
@@ -89,9 +91,14 @@ export const breakCumb = [
     { label: "find-candidates", name: "Hồ sơ ứng viên", icon: null, url: routeLink.FIND_CANDIDATES + routePath.LIST },
     { label: "saved-candidate", name: "Hồ sơ ứng viên đã lưu", icon: null, url: routeLink.SAVE_CANDIDATE + routePath.LIST },
     { label: "pending-jobs", name: "Bài đăng đang chờ", icon: null, url: routeLink.PENDING_JOBS + routePath.LIST },
+    { label: "candidate", name: "Ứng viên", icon: null, url: routeLink.FIND_CANDIDATES },
+    { label: "student", name: "Học sinh", icon: null, url: routeLink.FIND_CANDIDATES },
+
+
     // Connect School
     { label: "connect-schools", name: "Kết nối trường học", icon: null, url: routeLink.CONNECT_SCHOOLS + routePath.LIST },
     { label: "event", name: "Sự kiện", icon: null, url: routeLink.EVENT + routePath.LIST },
+
     // School 
     { label: "admin-account", name: "Hồ sơ nhà tuyển dụng", icon: null, url: routeLink.ADMIN_ACCOUNTS + routePath.LIST },
     { label: "user-controller", name: "Quản lý tài khoản", icon: null, url: routeLink.USER_CONTROLLER + routePath.LIST },
