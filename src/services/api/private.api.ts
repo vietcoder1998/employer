@@ -7,6 +7,7 @@ export const ANNOUNCEMENTS = '/api/employers/announcements';
 export const ANNOU_COMMENTS = '/api/employers/announcements';
 export const ANNOU_TYPES = '/api/employers/announcementTypes';
 export const FIND_CANDIDATES = '/api/employers/candidates/query';
+export const FIND_STUDENTS = '/api/employers/students/query';
 export const APPLY_JOB = '/api/employers/jobs';
 export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
 export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';

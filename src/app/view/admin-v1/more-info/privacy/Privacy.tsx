@@ -60,6 +60,10 @@ function Privacy(props?: IPrivacyProps) {
                         />
                     </Tooltip>
                 </div>
+                <div>
+                
+                
+                </div>
                 <iframe
                     title='Bản mẫu'
                     className='test'

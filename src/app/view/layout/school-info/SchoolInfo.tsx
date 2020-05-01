@@ -1,22 +1,25 @@
 import React from 'react'
-import { Icon, Avatar, Row, Col, Tabs, Card, Divider } from 'antd';
+import { Icon, Avatar, Row, Col, Tabs, Card, Divider, List } from 'antd';
 import './SchoolInfo.scss';
 // @ts-ignore
 import backGround from '../../../../assets/image/base-image.jpg';
 // @ts-ignore
 import avatar from '../../../../assets/image/test_avatar.jpg';
-import { NotUpdate, IptLetterP } from '../common/Common';
+import { NotUpdate } from '../common/Common';
 import { ISchoolDetail } from '../../../../models/school-detail';
+import { ISchoolBranch } from '../../../../models/school-branches';
+import MapContainer from '../map/Map';
 
 const { TabPane } = Tabs;
 const { Meta } = Card;
 
 interface ISchoolInfoProps {
     data?: ISchoolDetail,
+    schoolBranches?: Array<ISchoolBranch>
 };
 
 function SchoolInfo(props: ISchoolInfoProps) {
-    let { data } = props;
+    let { data, schoolBranches } = props;
 
     // Error loading 
     let [onErrLogo, setErrLogo] = React.useState(false);
@@ -82,7 +85,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             <Icon type='home' />
                                         }
                                         title="Tên trường"
-                                        description={props && props.data && props.data.name ? props.data.name : <NotUpdate />}
+                                        description={data && data.name ? data.name : <NotUpdate />}
                                     />
                                 </Card>
                             </Col>
@@ -93,7 +96,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             <Icon type="schedule" />
                                         }
                                         title="Loại hình đào tạo"
-                                        description={props && props.data && props.data.schoolType && props.data.schoolType.name ? props.data.schoolType.name : <NotUpdate />}
+                                        description={data && data.schoolType && data.schoolType.name ? data.schoolType.name : <NotUpdate />}
                                     />
                                 </Card>
                             </Col>
@@ -104,7 +107,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             <Icon type='mail' />
                                         }
                                         title="Thư điện tử"
-                                        description={props && props.data && props.data.email ? props.data.email : <NotUpdate />}
+                                        description={data && data.email ? data.email : <NotUpdate />}
                                     />
                                 </Card>
                             </Col>
@@ -115,7 +118,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             <Icon type='global' />
                                         }
                                         title="Trang web "
-                                        description={props && props.data && props.data.website ? props.data.website : <NotUpdate />}
+                                        description={data && data.website ? data.website : <NotUpdate />}
                                     />
                                 </Card>
                             </Col>
@@ -126,7 +129,7 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             <Icon type='phone' />
                                         }
                                         title="Số điện thoại"
-                                        description={props && props.data && props.data.phone ? props.data.phone : <NotUpdate />}
+                                        description={data && data.phone ? data.phone : <NotUpdate />}
                                     />
                                 </Card>
                             </Col>
@@ -134,10 +137,26 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                 <Card bordered={false}>
                                     <Meta
                                         avatar={
+                                            <Icon type='team' />
+                                        }
+                                        title="Quy mô đào tạo"
+                                        description={data && data.educatedScale ? data.educatedScale : <NotUpdate />}
+                                    />
+                                </Card>
+                            </Col>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card bordered={false}>
+                                    <Meta
+                                        avatar={
                                             <Icon type='environment' />
                                         }
-                                        title="Địa chỉ"
-                                        description={props && props.data && props.data.address ? props.data.address : <NotUpdate />}
+                                        title="Định vị"
+                                        description={
+                                            <>
+                                                {"Địa chỉ: " + data.address}
+                                                <MapContainer />
+                                            </>
+                                        }
                                     />
                                 </Card>
                             </Col>
@@ -173,31 +192,35 @@ function SchoolInfo(props: ISchoolInfoProps) {
                         </Row>
                     </TabPane>
 
-                    <TabPane tab="Đào tạo (Sẽ cập nhật sớm)" key="3">
+                    <TabPane tab="Đào tạo" key="3">
+                        {/* Back Image */}
                         <Row>
-                            <Col md={24} lg={14} xl={14} xxl={16}>
-                                <div className="description-info">
-                                    <IptLetterP value={"Mô tả"} />
-                                </div>
-                                <div id="abc" className="description-info">
-                                    <IptLetterP value={"Thông tin liên hệ"} />
-                                </div>
-                                <div className="description-info">
-                                    <IptLetterP value={"Vị trí trên bản đồ"} />
-                                </div>
-                            </Col>
-                            {/* Front */}
-                            <Col md={24} lg={10} xl={10} xxl={8}>
-
-                                {/* Back Image */}
-                                <Card title="Quy mô đào tạo">
-                                    <Card.Grid style={{width: "100%"}} >
-                                        { data.educatedScale}
-                                        </Card.Grid>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card bordered={false}>
+                                    <Meta
+                                        avatar={
+                                            <Icon type="experiment" />
+                                        }
+                                        title="Nhóm ngành đào tạo"
+                                        description={
+                                            <List
+                                                grid={{ gutter: 16, column: 8 }}
+                                                dataSource={schoolBranches}
+                                                renderItem={item => (
+                                                    <List.Item>
+                                                        <Card title={item.name} className="a_c">
+                                                            <Avatar src={item.imageUrl} icon="experiment" />
+                                                        </Card>
+                                                    </List.Item>
+                                                )}
+                                            />
+                                        }
+                                    />
                                 </Card>
                             </Col>
                         </Row>
                     </TabPane>
+                    <TabPane tab="Sự kiện gần đây(Sẽ sớm cập nhật)" key="4" disabled={true}></TabPane>
                 </Tabs>
             </div>
         </div >

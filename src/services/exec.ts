@@ -83,23 +83,23 @@ export const _requestToServer = async (
 };
 
 function logRequest(method: string, host: string | undefined, api: string, body?: any, params?: any, headers?: any) {
-    if (process.env.REACT_APP_ENABLE_LOGGING) {
-        console.log('REQUEST ' + method + ' ' + host + api, {
-            api: method + " " + host + api,
-            body: body,
-            params: params,
-            headers: headers
-        });
-    }
+    // if (process.env.REACT_APP_ENABLE_LOGGING) {
+    //     console.log('REQUEST ' + method + ' ' + host + api, {
+    //         api: method + " " + host + api,
+    //         body: body,
+    //         params: params,
+    //         headers: headers
+    //     });
+    // }
 }
 
 function logResponse(method: string, host: string | undefined, api: string, responseBody?: any, params?: any, headers?: any) {
-    if (process.env.REACT_APP_ENABLE_LOGGING) {
-        console.log('RESPONSE ' + method + ' ' + host + api, {
-            api: method + " " + host + api,
-            body: responseBody,
-            params: params,
-            headers: headers
-        });
-    }
+    // if (process.env.REACT_APP_ENABLE_LOGGING) {
+    //     console.log('RESPONSE ' + method + ' ' + host + api, {
+    //         api: method + " " + host + api,
+    //         body: responseBody,
+    //         params: params,
+    //         headers: headers
+    //     });
+    // }
 }

@@ -193,21 +193,21 @@ class AnnouncementsList extends PureComponent<IAnnouncementsListProps, IAnnounce
                         <div className="annou-list">
                             <Row>
                                 <Divider children={"Nổi bật"} orientation="left" />
-                                <Col sm={24} md={12} lg={12} xl={12} xxl={6}>
+                                <Col sm={24} md={24} lg={24} xl={12} xxl={12}>
                                     <FirstCard item={listAnnouncements[0]} loading={loading} />
                                 </Col>
-                                <Col sm={24} md={12} lg={12} xl={12} xxl={6}>
+                                <Col sm={24} md={24} lg={24} xl={12} xxl={12}>
                                     <Row>
-                                        <Col sm={24} md={24} lg={24} xl={12} xxl={6}>
+                                        <Col sm={24} md={12} lg={12} xl={12} xxl={12}>
                                             <MutilCard item={listAnnouncements[1]} loading={loading} />
                                         </Col>
-                                        <Col sm={24} md={24} lg={24} xl={12} xxl={6}>
+                                        <Col sm={24} md={12} lg={12} xl={12} xxl={12}>
                                             <MutilCard item={listAnnouncements[2]} loading={loading} />
                                         </Col>
-                                        <Col sm={24} md={12} lg={24} xl={12} xxl={6}>
+                                        <Col sm={24} md={12} lg={12} xl={12} xxl={12}>
                                             <MutilCard item={listAnnouncements[3]} loading={loading} />
                                         </Col>
-                                        <Col sm={24} md={12} lg={24} xl={12} xxl={6}>
+                                        <Col sm={24} md={12} lg={12} xl={12} xxl={12}>
                                             <MutilCard item={listAnnouncements[4]} loading={loading} />
                                         </Col>
                                     </Row>

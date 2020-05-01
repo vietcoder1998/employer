@@ -31,6 +31,7 @@ import { EventDetailWatcher } from '../sagas/event-detail';
 import { EventJobssWatcher } from '../sagas/event-jobs';
 import { EventJobDetailWatcher } from '../sagas/event-job-detail';
 import { JobServiceEventWatcher } from '../sagas/job-service-event';
+import { SchoolBranchsWatcher } from '../sagas/school-branches';
 
 export default function* rootSaga() {
     const sagas = [
@@ -65,7 +66,8 @@ export default function* rootSaga() {
         EventJobssWatcher,
         EventDetailWatcher,
         EventJobDetailWatcher,
-        JobServiceEventWatcher
+        JobServiceEventWatcher,
+        SchoolBranchsWatcher
     ];
 
     try {

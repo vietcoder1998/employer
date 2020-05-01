@@ -94,6 +94,7 @@ export const TYPE = {
         languageIDs: 'languageIDs',
         unlocked: 'unlocked',
         ids: 'ids',
+        profileType: 'profileType'
     },
 
     ANNONCEMENT_BODY: {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result } from 'antd';
+import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result, Card, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -18,6 +18,7 @@ import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import moment from 'moment';
 import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
+import { Link } from 'react-router-dom';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -297,8 +298,80 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             })
         }
 
-        
-        return {...newBody, id: undefined};
+
+        return { ...newBody, id: undefined };
+    }
+
+    ApplyCan = () => {
+        let { jobAnnouncementDetail } = this.props;
+
+        return (
+            <>
+                <Card title="Số lượng ứng tuyển">
+                    <Row>
+                        <Col span={8}>
+                            <Card
+                                type="inner"
+                                title="Ứng viên được chấp nhận"
+
+                                extra={
+                                    <Link
+                                        to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${jobAnnouncementDetail.id}?state=${TYPE.ACCEPTED}`}
+                                        style={{ display: jobAnnouncementDetail.appliedCount === 0 ? "none" : "" }}
+                                    >
+                                        Xem
+                                </Link>}
+                            >
+                                {jobAnnouncementDetail.appliedCount}
+                            </Card>
+                        </Col>
+                        <Col span={8}>
+                            <Card
+                                title="Ứng viên đang chờ"
+                                type="inner"
+                                extra={
+                                    <Link
+                                        to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${jobAnnouncementDetail.id}?state=${TYPE.PENDING}`}
+                                        style={{ display: jobAnnouncementDetail.pendingApplied === 0 ? "none" : "" }}
+                                    >
+                                        Xem
+                            </Link>
+                                }
+                            >
+                                {jobAnnouncementDetail.pendingApplied}
+                            </Card>
+                        </Col>
+                        <Col span={8}>
+                            <Card
+                                title="Ứng viên bị từ chối"
+                                type="inner"
+                                extra={
+                                    <Link
+                                        to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${jobAnnouncementDetail.id}?state=${TYPE.REJECTED}`}
+                                        style={{ display: jobAnnouncementDetail.rejectedApplied === 0 ? "none" : "" }}
+                                    >
+                                        Xem
+                                </Link>
+                                }
+                            >
+                                {jobAnnouncementDetail.rejectedApplied}
+                            </Card>
+                        </Col>
+                    </Row>
+
+
+                </Card>
+                <div style={{
+                    display:
+                        jobAnnouncementDetail.pendingApplied !== 0 ||
+                            jobAnnouncementDetail.pendingApplied !== 0 ||
+                            jobAnnouncementDetail.pendingApplied !== 0 ? "" : "none"
+                }}
+                >
+                    <NotUpdate warning={true} msg={`(Lưu ý: Bài đăng đã có ứng viên ứng tuyển, từ chối , đang chờ, hoặc đã hết hạn sẽ không thể sửa lại.)`} />
+                </div>
+            </>
+        );
     }
 
     render() {
@@ -374,6 +447,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 <h5>
                     {typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài(${normalQuantity ? normalQuantity : 0})`}
                 </h5>
+                {
+                    typeCpn === TYPE.FIX ? this.ApplyCan() : ""
+                }
                 <Divider orientation="left" >Nội dung bài đăng</Divider>
                 <div className="announcements-create-content">
                     <InputTitle
@@ -595,7 +671,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     margin: "10px 10px",
                                     float: "right"
                                 }}
-                                onClick={() => { this.props.history.push('/v1/admin/jobs/job-announcements/list') }}
+                                onClick={
+                                    () => { this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST) }
+                                }
                             >
                                 {ct_btn_ex}
                             </Button>

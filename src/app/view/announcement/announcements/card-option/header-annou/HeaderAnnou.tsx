@@ -16,7 +16,7 @@ interface IHeaderAnnou {
 
 export default function HeaderAnnou(props?: IHeaderAnnou) {
     return (
-        <div className='header-annou test'  >
+        <div className='header-annou'  >
             <Skeleton avatar active loading={props.loading}>
                 <div className='writor'>
                     <Avatar

@@ -34,12 +34,12 @@ interface IJobAnnouncementsApplyState {
     jobName?: string;
     address?: string;
     skills?: Array<string>
-    state?: string;
-    list_pending?: Array<IApplyJob>;
-    list_accepted?: Array<IApplyJob>;
-    list_rejected?: Array<IApplyJob>;
-    list_shifts?: Array<IShiftDetail>;
-    l_btn?: boolean;
+    stateApply?: string;
+    listPending?: Array<IApplyJob>;
+    listAccepted?: Array<IApplyJob>;
+    listRejected?: Array<IApplyJob>;
+    listShifts?: Array<IShiftDetail>;
+    lBtn?: boolean;
     defaultId?: string;
 };
 
@@ -66,12 +66,13 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             typeCpn: null,
             listApplyJobs: [],
             id: null,
-            list_pending: [],
-            list_accepted: [],
-            list_rejected: [],
-            list_shifts: [],
+            listPending: [],
+            listAccepted: [],
+            listRejected: [],
+            listShifts: [],
             defaultId: null,
-            l_btn: false
+            lBtn: false,
+            stateApply: null,
         };
     };
 
@@ -91,11 +92,12 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         ) {
             let listApplyJobs = props.listApplyJobs;
             const param = new URLSearchParams(props.location.search);
-            const state = param.get('state');
+            const stateApply = param.get('state');
+
             return {
                 id: props.match.params.id,
                 listApplyJobs,
-                state
+                stateApply,
             }
         }
 
@@ -104,32 +106,37 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             props.listApplyJobs !== state.listApplyJobs
         ) {
             let listApplyJobs = props.listApplyJobs;
-            let list_pending = [];
-            let list_accepted = [];
-            let list_rejected = [];
+            let listPending = [];
+            let listAccepted = [];
+            let listRejected = [];
+
             if (listApplyJobs && listApplyJobs.length > 0) {
                 listApplyJobs.forEach((item: IApplyJob, index: number) => {
                     switch (item.state) {
                         case TYPE.PENDING:
-                            list_pending.push(item);
+                            listPending.push(item);
                             break;
                         case TYPE.REJECTED:
-                            list_rejected.push(item);
+                            listRejected.push(item);
                             break;
                         case TYPE.ACCEPTED:
-                            list_accepted.push(item);
+                            listAccepted.push(item);
                             break;
 
                         default:
                             break;
                     }
+
+
                 })
+
+
             }
             return {
                 listApplyJobs,
-                list_pending,
-                list_rejected,
-                list_accepted,
+                listPending,
+                listRejected,
+                listAccepted,
             }
         }
 
@@ -137,19 +144,19 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
     }
 
     searchShift = (id?: string, type?: string, defaultId?: string) => {
-        let { listApplyJobs } = this.state;
         this.setState({ loading: true })
-        let list_shifts = [];
+        let { listApplyJobs } = this.state;
+        let listShifts = [];
         setTimeout(() => {
             if (id) {
                 listApplyJobs.forEach((item: IApplyJob) => {
                     if (id === item.candidate.id) {
-                        list_shifts = item.appliedShifts;
+                        listShifts = item.appliedShifts;
                     }
                 });
             }
 
-            this.setState({ list_shifts, loading: false })
+            this.setState({ listShifts, loading: false })
         }, 250);
 
         this.setState({ defaultId })
@@ -157,7 +164,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
     createRequest = async (cid?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => {
         let { id } = this.state;
-        await this.setState({ l_btn: true });
+        await this.setState({ lBtn: true });
         await _requestToServer(
             PUT,
             APPLY_JOB + `/${id}/apply/candidates/${cid}/state/${state}`,
@@ -173,19 +180,19 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 this.props.getApplyJobs(id);
             }
         })
-        await this.setState({ l_btn: false })
+        await this.setState({ lBtn: false })
     }
 
     render() {
         let {
-            state,
-            list_rejected,
-            list_accepted,
-            list_pending,
-            list_shifts,
+            stateApply,
+            listRejected,
+            listAccepted,
+            listPending,
+            listShifts,
             loading,
             defaultId,
-            l_btn
+            lBtn
         } = this.state;
 
         let {
@@ -202,27 +209,27 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                     <Row>
                         <Col xs={24} md={10} lg={12} xl={10} xxl={12}>
                             <Tabs
-                                activeKey={state}
+                                activeKey={stateApply}
                                 style={{ width: "100%" }}
-                                onChange={(state: string) => {
-                                    this.setState({ state })
+                                onChange={(stateApply: string) => {
+                                    this.setState({ stateApply })
                                 }}
                             >
                                 <TabPane
                                     tab={`Đang chờ`}
                                     key={TYPE.PENDING}
-                                    disabled={list_pending.length === 0}
+                                    disabled={listPending.length === 0}
                                     style={{ paddingRight: 10 }}
                                 >
                                     <div className="content-apply">
                                         {
-                                            list_pending.length === 0 ?
+                                            listPending.length === 0 ?
                                                 <Empty style={{ paddingTop: "5vh" }} description="Không có ứng viên đang chờ" />
-                                                : (list_pending.map((item: IApplyJob, index: number) =>
+                                                : (listPending.map((item: IApplyJob, index: number) =>
                                                     <ApplyJobItem
                                                         key={index}
                                                         type="PENDING"
-                                                        l_btn={l_btn}
+                                                        lBtn={lBtn}
                                                         data={item}
                                                         id={item.candidate.id}
                                                         defaultId={item.candidate.id === defaultId}
@@ -235,12 +242,12 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab={`Chấp nhận`} key={TYPE.ACCEPTED} disabled={list_accepted.length === 0}>
+                                <TabPane tab={`Chấp nhận`} key={TYPE.ACCEPTED} disabled={listAccepted.length === 0}>
                                     <div className="content-apply">
                                         {
-                                            list_accepted.length === 0 ?
+                                            listAccepted.length === 0 ?
                                                 <Empty style={{ paddingTop: "5vh" }} description="Không có ứng viên được chấp nhận" />
-                                                : (list_accepted.map((item: IApplyJob, index: number) =>
+                                                : (listAccepted.map((item: IApplyJob, index: number) =>
                                                     <ApplyJobItem
                                                         key={index}
                                                         type={"ACCEPTED"}
@@ -256,12 +263,12 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab={`Từ chối`} key={TYPE.REJECTED} disabled={list_rejected.length === 0} >
+                                <TabPane tab={`Từ chối`} key={TYPE.REJECTED} disabled={listRejected.length === 0} >
                                     <div className="content-apply">
                                         {
-                                            list_rejected.length === 0 ?
+                                            listRejected.length === 0 ?
                                                 <Empty style={{ paddingTop: "5vh" }} description="Không có ứng viên bị từ chối" />
-                                                : list_rejected.map(
+                                                : listRejected.map(
                                                     (item: IApplyJob, index: number) =>
                                                         <ApplyJobItem
                                                             type="REJECTED"
@@ -280,7 +287,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 </TabPane>
                             </Tabs>
                             {totalItems === 0 ?
-                                <Empty style={{marginTop: '5vh'}} description="Dữ liệu không tồn tại" /> : ""
+                                <Empty style={{ marginTop: '5vh' }} description="Dữ liệu không tồn tại" /> : ""
                             }
                         </Col>
                         <Col xs={24} md={14} lg={12} xl={14} xxl={12}>
@@ -295,9 +302,9 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                             {loading ? <Loading /> :
                                 <div className="job-announcements-apply">
                                     {
-                                        list_shifts &&
-                                            list_shifts.length > 0 ?
-                                            list_shifts.map(
+                                        listShifts &&
+                                            listShifts.length > 0 ?
+                                            listShifts.map(
                                                 (item: IShift, index: number) => {
                                                     if (item) {
                                                         return <ShiftContent key={index} id={item.id} shift={item} removeButton={false} disableChange={true} />

@@ -67,6 +67,7 @@ interface IFindCandidatesListState {
     body?: IFindCandidateFilter;
     openDrawer: boolean;
     typeView?: string;
+    profileType?: "STUDENT" | "CANDIDATE"
 };
 
 class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFindCandidatesListState> {
@@ -98,7 +99,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                 languageIDs: [],
                 unlocked: null,
             },
-            openDrawer: false
+            openDrawer: false,
+            profileType: "STUDENT"
         };
     }
 
@@ -217,7 +219,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     };
 
     EditToolTip = (item?: IFindCandidate) => {
-        let { body, pageIndex, pageSize } = this.state;
+        let { body, pageIndex, pageSize, profileType } = this.state;
         return <>
             <Tooltip placement="top" title={"Xem chi tiết"}>
                 <a
@@ -250,7 +252,7 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                             true,
                         ).then((res: any) => {
                             if (res) {
-                                this.props.getListFindCandidates(body, pageIndex, pageSize)
+                                this.props.getListFindCandidates(body, pageIndex, pageSize, profileType)
                             }
                         })
                     }}
@@ -330,8 +332,15 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
     };
 
     searchFindCandidate = async () => {
-        let { body, pageIndex, pageSize } = this.state;
-        await this.props.getListFindCandidates(body, pageIndex, pageSize);
+        let { body, pageIndex, pageSize, profileType } = this.state;
+        await this.setState({ loadingTable: true });
+        try {
+            this.props.getListFindCandidates(body, pageIndex, pageSize, profileType)
+        } finally {
+            setTimeout(() => {
+                this.setState({ loadingTable: false })
+            });
+        }
     };
 
     onCloseDrawer = () => {
@@ -342,20 +351,25 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
         let { body } = this.state;
         let { listRegions } = this.props;
         let value: any = event;
-        listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
-        switch (event) {
-            case TYPE.TRUE:
-                value = true;
-                break;
-            case TYPE.FALSE:
-                value = false;
-                break;
-            default:
-                break;
-        };
 
-        body[param] = value;
-        this.setState({ body });
+        if (param === TYPE.FIND_CANDIDATES_FILTER.profileType) {
+            this.setState({ profileType: event })
+        } else {
+            listRegions.forEach((item: IRegion) => { if (item.name === event) { value = item.id } });
+            switch (event) {
+                case TYPE.TRUE:
+                    value = true;
+                    break;
+                case TYPE.FALSE:
+                    value = false;
+                    break;
+                default:
+                    break;
+            };
+
+            body[param] = value;
+            this.setState({ body });
+        }
     };
 
     onCancelAdvancedFind = () => {
@@ -576,6 +590,18 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
                     <div className="table-operations">
                         <Row >
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Loại hồ sơ"} />
+                                <Select
+                                    showSearch
+                                    defaultValue="Sinh viên"
+                                    style={{ width: "100%" }}
+                                    onChange={(event: any) => this.onChangeType(event, TYPE.FIND_CANDIDATES_FILTER.profileType)}
+                                >
+                                    <Option value={TYPE.STUDENT}>Sinh viên</Option>
+                                    <Option value={TYPE.CANDIDATE}>Ứng viên</Option>
+                                </Select>
+                            </Col>
+                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái tìm việc"} />
                                 <Select
                                     showSearch
@@ -680,8 +706,8 @@ class FindCandidatesList extends React.Component<IFindCandidatesListProps, IFind
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListFindCandidates: (body: IFindCandidateFilter, pageIndex: number, pageSize: number) =>
-        dispatch({ type: REDUX_SAGA.FIND_CANDIDATES.GET_FIND_CANDIDATES, body, pageIndex, pageSize }),
+    getListFindCandidates: (body: IFindCandidateFilter, pageIndex: number, pageSize: number, profileType?: string) =>
+        dispatch({ type: REDUX_SAGA.FIND_CANDIDATES.GET_FIND_CANDIDATES, body, pageIndex, pageSize, profileType }),
     handleModal: (modalState: IModalState) =>
         dispatch({ type: REDUX.HANDLE_MODAL, modalState }),
     handleDrawer: (drawerState: IDrawerState) =>

@@ -15,7 +15,7 @@ interface IApplyJobItem {
     removeButton?: boolean;
     data?: IApplyJob;
     defaultId?: boolean;
-    l_btn?: boolean;
+    lBtn?: boolean;
     type?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
     onChangeType?: Function;
     onClick?: Function;
@@ -130,7 +130,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                             float: "right",
                             display: props.type !== TYPE.ACCEPTED ? "block" : "none"
                         }}
-                        loading={props.l_btn}
+                        loading={props.lBtn}
                         onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.ACCEPTED) : undefined}
                     />
                 </Tooltip>
@@ -146,7 +146,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                             float: "right",
                             display: props.type !== TYPE.REJECTED ? "block" : "none"
                         }}
-                        loading={props.l_btn}
+                        loading={props.lBtn}
                         onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.REJECTED) : undefined}
                     />
                 </Tooltip>
@@ -164,7 +164,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                             boxShadow: "orange",
                             display: props.type !== TYPE.PENDING ? "block" : "none"
                         }}
-                        loading={props.l_btn}
+                        loading={props.lBtn}
                         onClick={() => props.onChangeType ? props.onChangeType(props.id, TYPE.PENDING) : undefined}
                     />
                 </Tooltip>
