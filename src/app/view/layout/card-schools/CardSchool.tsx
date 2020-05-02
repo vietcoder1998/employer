@@ -8,6 +8,7 @@ import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
 import { Link } from 'react-router-dom';
+import { routeLink, routePath } from '../../../../const/break-cumb';
 
 interface ICardSchoolProps {
     item?: IConnectSchool;
@@ -108,7 +109,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         </p>
                     </div>
                 </div>
-                <Link to={`/v1/admin/connect-schools/school/${props.item.id}`} target='_blank'>
+                <Link to={routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`} target='_blank'>
                     <div
                         className="action-school"
                         style={{ textAlign: "center" }}

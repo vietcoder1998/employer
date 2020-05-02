@@ -19,6 +19,8 @@ import { timeConverter } from '../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../services/exec';
 import { POST, PUT } from '../../../../../const/method';
 import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
+import { Link } from 'react-router-dom';
+import { routeLink } from '../../../../../const/break-cumb';
 
 let { Option } = Select;
 const { Panel } = Collapse;
@@ -461,10 +463,19 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                         <Col md={24} lg={12} xl={12} xxl={12}>
                                             <ul>
                                                 <li>
-                                                    <IptLetter value="Tên trường: " children={dataSchool && dataSchool.name} />
+                                                    <IptLetter value="Tên trường: " children={
+                                                        <Link to={routeLink.CONNECT_SCHOOLS + `/school/${dataSchool.id}`} target='_blank'>
+                                                            {dataSchool && dataSchool.name}
+                                                        </Link>
+
+                                                    } />
                                                 </li>
                                                 <li>
-                                                    <IptLetter value="Tên rút gọn: " children={dataSchool && dataSchool.shortName} />
+                                                    <IptLetter value="Tên rút gọn: " children={
+                                                        <Link to={routeLink.CONNECT_SCHOOLS + `/school/${dataSchool.id}`} target='_blank'>
+                                                            {dataSchool && dataSchool.shortName}
+                                                        </Link>
+                                                    } />
                                                 </li>
                                                 <li>
                                                     <IptLetter value="Địa chỉ: " children={dataSchool && dataSchool.address} />
@@ -505,7 +516,10 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                                             value="Phía gửi yêu cầu : "
                                                             children={
                                                                 dataSchool && dataSchool.owner ?
-                                                                    (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" : `Trường ${dataSchool.shortName}`) : <NotUpdate msg="Chưa có" />
+                                                                    (dataSchool.owner === TYPE.EMPLOYER ? "Bạn" :
+                                                                        <Link to={routeLink.CONNECT_SCHOOLS + `/school/${dataSchool.id}`} target='_blank'>
+                                                                            {dataSchool && dataSchool.shortName}
+                                                                        </Link>) : <NotUpdate msg="Chưa có" />
                                                             } />
                                                     </li>
                                                 </div>
