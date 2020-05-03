@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './EventJobsList.scss';
 import { TYPE } from '../../../../../../const/type';
@@ -25,6 +25,7 @@ import { IEventJobsFilter, IEventJob } from '../../../../../../models/event-jobs
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
+const {TabPane} = Tabs;
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
 const viewCount = (
@@ -298,7 +299,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             className: 'action',
             dataIndex: 'operation',
             render: ({ hidden, id }) => this.EditToolTip(hidden, id),
-            width: 180,
+            width: 120,
         }
     ];
 
@@ -389,6 +390,21 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             twoToneColor="green"
                         />
                     </Link>
+                </Tooltip>
+                <Tooltip placement="topRight" title={"Xem tương thích"}>
+                    <Icon
+                        className="f-ic"
+                        type="solution"
+                        twoToneColor="purple"
+                        onClick={async () => {
+                            this.setState({ ojd: true });
+                            setTimeout(() => {
+                                this.props.getListJobSuitableCandidate(id, 0, 10, TYPE.STUDENT);
+                                this.props.getEventJobDetail(id, body.schoolEventID);
+                                this.setState({ jid: id })
+                            }, 300);
+                        }}
+                    />
                 </Tooltip>
                 <Tooltip placement="top" title={"Đăng bài tương tự"}>
                     <Link
@@ -801,12 +817,15 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             />
                         </Col>
                         <Col span={10}>
+                            <Tabs key={TYPE.STUDENT} >
+                                <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
+                            </Tabs>
                             <JobSuitableCandidate
                                 jobSuitableCandidates={jobSuitableCandidates.items}
                                 pageIndex={jobSuitableCandidates.pageIndex}
                                 pageSize={jobSuitableCandidates.pageSize}
                                 totalItems={jobSuitableCandidates.totalItems}
-                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize)}
+                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize, TYPE.STUDENT)}
                             />
                         </Col>
                     </Row>
@@ -847,7 +866,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     });
                                 }}
                             >
-                                {un_active_home ? "Đã kích hoạt" : "Kích hoạt"} 
+                                {un_active_home ? "Đã kích hoạt" : "Kích hoạt"}
                             </Button>
                         </IptLetterP>
                         <IptLetterP
@@ -876,7 +895,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     });
                                 }}
                             >
-                                {un_active_highlight ? "Đã kích hoạt" : "Kích hoạt"} 
+                                {un_active_highlight ? "Đã kích hoạt" : "Kích hoạt"}
                             </Button>
                         </IptLetterP>
                     </>
@@ -1103,7 +1122,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1660 }}
+                            scroll={{ x: 1600 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

@@ -155,15 +155,15 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Chi tiết gói</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="8">
+                    <Menu.Item key="percentage">
                         <Link to={routeLink.PROMOTION}>
                             <Icon type="percentage" />
                             <span>Khuyến mãi</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="8">
-                        <Link to={routeLink.PROMOTION}>
-                            <Icon type="percentage" />
+                    <Menu.Item key="in-event">
+                        <Link to={routeLink.IN_EVENT}>
+                            <Icon type="apartment" />
                             <span>Trong sự kiện</span>
                         </Link>
                     </Menu.Item>

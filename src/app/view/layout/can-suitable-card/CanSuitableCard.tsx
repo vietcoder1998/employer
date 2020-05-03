@@ -7,6 +7,7 @@ import baseImage from '../../../../assets/image/base-image.jpg';
 import { NotUpdate } from '../common/Common';
 import { Link } from 'react-router-dom';
 import { routeLink, routePath } from '../../../../const/break-cumb';
+import { TYPE } from '../../../../const/type';
 
 interface ICanProPop {
     children?: JSX.Element | any;
@@ -15,11 +16,12 @@ interface ICanProPop {
     id?: string;
     background?: string;
     handleUnlocked?: () => any;
+    profileType?: string;
 };
 
 export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
-    let { children, data, avatar, background, id } = props;
-    // const [loading, setLoading] = React.useState(false);
+    let { children, data, avatar, background, id, profileType } = props;
+    const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.STUDENT ? TYPE.STUDENT : TYPE.CANDIDATE}`;
 
     const content = (
         <div className='cpp-ct-card'>
@@ -41,7 +43,7 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                         height: 80
                     }}
                 />
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
+                <Link to={linkTo} target='_blank'>
                     <div style={{ color: background ? 'white' : '#168ECD', marginLeft: 5, fontWeight: 600, fontSize: 18 }}>
                         {children}
                     </div>
@@ -70,7 +72,7 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                 </div>
             </div>
             <div className='cpp-ct-ft'>
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target='_blank'>
+                <Link to={linkTo} target='_blank'>
                     <Tooltip title="Xem chi tiết">
                         <Button
                             icon="search"

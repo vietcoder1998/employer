@@ -8,7 +8,7 @@ import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
 import { Link } from 'react-router-dom';
-import { routeLink, routePath } from '../../../../const/break-cumb';
+import { routeLink } from '../../../../const/break-cumb';
 
 interface ICardSchoolProps {
     item?: IConnectSchool;

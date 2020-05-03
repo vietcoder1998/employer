@@ -22,6 +22,7 @@ code {
     monospace;
 }
 
+
 .not-found {
   position: fixed;
   top: 0px;
@@ -51,9 +52,12 @@ code {
 }
 
 .ant-modal-body {
-  max-height: 60vh;
+  max-height: 70vh;
   overflow: auto;
   background-color: #f1f1f1a7;
+  .ant-tabs-nav-scroll {
+    background-color: #ffffff;
+  }
 }
 
 * {

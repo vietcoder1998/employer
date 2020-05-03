@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './JobAnnouncementsList.scss';
 import { TYPE } from '../../../../../../const/type';
@@ -22,9 +22,11 @@ import { IDrawerState } from 'antd/lib/drawer';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import JobSuitableCandidate from '../../../../layout/job-suitable-candidate/JobSuitableCandidate';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
+import { IJobSuitableCandidate } from '../../../../../../models/job-suitable-candidate';
 
-let { Option } = Select;
-let CheckboxGroup = Checkbox.Group;
+const { Option } = Select;
+const { TabPane } = Tabs;
+const CheckboxGroup = Checkbox.Group;
 const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
 
 const viewCount = (id?: string | number, count?: string | number, color?: "red" | "#1687f2" | "orange", state?: string, icon?: "user" | "user-delete" | "user-add") => (
@@ -83,6 +85,7 @@ const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
 
 interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     match?: any;
+    history?: any;
     getListJobAnnouncements: Function;
     getListEmBranches: Function;
     getTypeManagement: Function;
@@ -91,6 +94,7 @@ interface IJobAnnouncementsListProps extends StateProps, DispatchProps {
     handleDrawer: Function;
     handleModal: Function;
     getListJobSuitableCandidate: Function;
+    setListJobSuitableCandidate: Function;
 };
 
 interface IJobAnnouncementsListState {
@@ -126,6 +130,8 @@ interface IJobAnnouncementsListState {
     typeModal: string;
     ojd?: boolean;
     jid?: string;
+    profileType?: string,
+    loadingApply: boolean;
 };
 
 
@@ -168,7 +174,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 jobShiftFilter: null,
                 jobLocationFilter: null
             },
-
+            profileType: TYPE.CANDIDATE,
             unCheckbox: false,
             listCheck: [],
             homePriority: null,
@@ -179,6 +185,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             typeModal: null,
             ojd: false,
             jid: null,
+            loadingApply: false,
         };
     }
 
@@ -276,7 +283,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             className: 'action',
             dataIndex: 'operation',
             render: ({ hidden, id }) => this.EditToolTip(hidden, id),
-            width: 200,
+            width: 120,
         }
     ];
 
@@ -309,11 +316,24 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
 
     onToggleModal = () => {
         let { showModal } = this.state;
+        if (showModal) {
+            this.props.setListJobSuitableCandidate({ pageIndex: 0, pageSize: 0, totalItems: 0, items: [] })
+        }
         this.setState({ showModal: !showModal });
     };
 
+    onChangeApplyType = async (key) => {
+        let { jid } = this.state;
+        this.setState({ profileType: key, loadingApply: true });
+        this.props.setListJobSuitableCandidate({ pageIndex: 0, pageSize: 0, totalItems: 0, items: [] })
+        this.props.getListJobSuitableCandidate(jid, 0, 10, key);
+        setTimeout(() => {
+            this.setState({ loadingApply: false })
+        }, 250);
+    }
+
     EditToolTip = (hidden?: boolean, id?: string) => {
-        let { body, pageIndex, pageSize } = this.state;
+        let { body, pageIndex, pageSize, profileType } = this.state;
         return (
             <>
                 <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
@@ -369,7 +389,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         />
                     </Link>
                 </Tooltip>
-                <Tooltip placement="topRight" title={"Xem ứng viên tương thích"}>
+                <Tooltip placement="topRight" title={"Xem tương thích"}>
                     <Icon
                         className="f-ic"
                         type="solution"
@@ -377,8 +397,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                         onClick={async () => {
                             this.setState({ ojd: true });
                             setTimeout(() => {
-                                this.props.getListJobSuitableCandidate(id, 0, 10);
+                                this.props.getListJobSuitableCandidate(id, 0, 10, profileType);
                                 this.props.getJobAnnouncementDetail(id);
+                                this.props.history.push(`?id=${id}`)
                                 this.setState({ jid: id })
                             }, 300);
                         }}
@@ -666,7 +687,9 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
             body,
             loading,
             ojd,
-            jid
+            jid,
+            profileType,
+            loadingApply,
         } = this.state;
 
         let {
@@ -723,7 +746,6 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                 <Modal
                     visible={ojd}
                     title={<div style={{ textTransform: "uppercase" }}>{jobDetail.jobTitle}</div>}
-                    destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
                     onCancel={() => {
@@ -732,17 +754,19 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                     footer={[
                         <Button
                             key="cancel"
-                            children="Hủy"
+                            children="Đóng"
+                            type={"danger"}
                             onClick={() => {
                                 this.setState({
                                     ojd: false,
+                                    profileType: TYPE.CANDIDATE
                                 });
                             }}
                         />
                     ]}
                 >
                     <Row>
-                        <Col span={14}>
+                        <Col span={14} >
                             <JobDetail
                                 ns={true}
                                 jobDetail={{
@@ -760,14 +784,21 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 }}
                             />
                         </Col>
-                        <Col span={10}>
+                        <Col span={10} className="b_l">
+                            <Tabs onChange={(event) => this.onChangeApplyType(event)} >
+                                <TabPane tab={"Ứng viên tương thích"} key={TYPE.CANDIDATE} />
+                                <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
+                            </Tabs>
                             <JobSuitableCandidate
+                                profileType={profileType}
+                                loading={loadingApply}
                                 jobSuitableCandidates={jobSuitableCandidates.items}
                                 pageIndex={jobSuitableCandidates.pageIndex}
                                 pageSize={jobSuitableCandidates.pageSize}
                                 totalItems={jobSuitableCandidates.totalItems}
-                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize)}
+                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize, profileType)}
                             />
+
                         </Col>
                     </Row>
                 </ Modal>
@@ -1068,7 +1099,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 columns={this.columns}
                                 loading={loadingTable}
                                 dataSource={dataTable}
-                                scroll={{ x: 1620 }}
+                                scroll={{ x: 1540 }}
                                 bordered
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"
@@ -1101,8 +1132,10 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getJobAnnouncementDetail: (id?: string) =>
         dispatch({ type: REDUX_SAGA.JOB_ANNOUNCEMENT_DETAIL.GET_JOB_ANNOUNCEMENT_DETAIL, id }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
-    getListJobSuitableCandidate: (jid?: string, pageIndex?: number, pageSize?: number) =>
-        dispatch({ type: REDUX_SAGA.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, jid, pageIndex, pageSize }),
+    getListJobSuitableCandidate: (jid?: string, pageIndex?: number, pageSize?: number, profileType?: string) =>
+        dispatch({ type: REDUX_SAGA.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, jid, pageIndex, pageSize, profileType }),
+    setListJobSuitableCandidate: (data?: IJobSuitableCandidate) =>
+        dispatch({ type: REDUX.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, data })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

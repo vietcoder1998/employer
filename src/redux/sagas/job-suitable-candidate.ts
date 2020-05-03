@@ -5,6 +5,7 @@ import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { EMPLOYER_HOST } from '../../environment/dev';
+import { TYPE } from '../../const/type';
 
 function* getListJobSuitableCandidatesData(action: any) {
     let res = yield call(callJobSuitableCandidates, action);
@@ -27,15 +28,11 @@ function* getListJobSuitableCandidatesData(action: any) {
 
 function callJobSuitableCandidates(action: any) {
     try {
-        let jid = '';
-
-        if (action.jid) {
-            jid = action.jid
-        };
+        let { profileType, jid } = action;
 
         let res = _requestToServer(
             POST,
-            JOB_ANNOUNCEMENTS + `/${jid}/candidates/recommended`,
+            JOB_ANNOUNCEMENTS + `/${jid + (profileType === TYPE.CANDIDATE ? '/candidates/recommended' : '/students/recommended')}`,
             action.body ? action.body : {},
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,

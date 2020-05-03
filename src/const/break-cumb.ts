@@ -37,7 +37,8 @@ export const routePath = {
     FEED_BACK: '/feed-back',
     PROMOTION: '/promotion',
     EVENT: '/event',
-    SCHOOLS: '/schools'
+    SCHOOLS: '/schools',
+    IN_EVENT: '/in-event'
 };
 
 export const routeLink = {
@@ -54,6 +55,8 @@ export const routeLink = {
     UNCONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.UNCONNECT,
     PENDING_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.PENDING,
     EVENT: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.EVENT,
+
+
     // User controller
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER,
     // Notification
@@ -61,6 +64,7 @@ export const routeLink = {
     // Convernient
     JOB_SERVICE: routePath.ADMIN + routePath.CONVERNIENT + routePath.JOB_SERVICE,
     PROMOTION: routePath.ADMIN + routePath.CONVERNIENT + routePath.PROMOTION,
+    IN_EVENT: routePath.ADMIN + routePath.CONVERNIENT + routePath.IN_EVENT,
     // More info
     COMMUNITY: routePath.ADMIN + routePath.MORE_INFO + routePath.COMMUNITY,
     GUIDE: routePath.ADMIN + routePath.MORE_INFO + routePath.GUIDE,

@@ -26,9 +26,7 @@ interface ICanProPop {
 
 export default function CanProPop(props?: ICanProPop): JSX.Element {
     let { children, avatar, background, id, unlocked, phone, email, region, gender , profileType } = props;
-
     const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.STUDENT ? TYPE.STUDENT : TYPE.CANDIDATE}`;
-    // const [loading, setLoading] = React.useState(false);
 
     const content = (
         <div className='cpp-ct'>

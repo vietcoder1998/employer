@@ -150,10 +150,10 @@ export default function JobDetail(props: IJobDetailProps) {
                 <div className='skills-job-detail '>
                     <h6>KỸ NĂNG CÔNG VIỆC</h6>
                     <div>
-                        {allSkills ? allSkills.map(
+                        {allSkills ? (allSkills.map(
                             (item: any, index: number) => (
                                 <label key={index} className='skills-detail'>{item}</label>
-                            )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>
+                            )) ): <p>Ứng viên không cần đòi hỏi chuyên môn</p>
                         }
                     </div>
                 </div>
