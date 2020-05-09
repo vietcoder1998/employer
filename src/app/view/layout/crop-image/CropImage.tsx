@@ -22,7 +22,7 @@ class CropImage extends PureComponent<IProps, IState> {
     crop: {
       unit: '%',
       width: 30,
-      aspect: 16 / 9,
+      aspect: 1480 / 690,
     },
     croppedImageUrl: null,
     fileUrl: null,

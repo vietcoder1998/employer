@@ -3,12 +3,12 @@ import { Promotion } from './promotion/Promotion';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 const Switch = require("react-router-dom").Switch;
 
-interface IMoreInfoProps {
+interface IProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-export default function MoreInfo(props?: IMoreInfoProps) {
+export default function MoreInfo(props?: IProps) {
     let { path } = props.match;
     return (
         < >

@@ -7,12 +7,12 @@ import FeedBack from './feed-back/FeedBack';
 import Privacy from './privacy/Privacy';
 const Switch = require("react-router-dom").Switch;
 
-interface IMoreInfoProps {
+interface IProps {
     match: Readonly<any>;
     getTypeManagement: Function;
 }
 
-export default function MoreInfo(props?: IMoreInfoProps) {
+export default function MoreInfo(props?: IProps) {
     let { path } = props.match;
     return (
         < >

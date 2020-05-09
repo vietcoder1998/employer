@@ -11,6 +11,7 @@ import ConvernientService from './convernient-service/ConvernientService';
 import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
 import Profile from './profile/Profile';
 import MoreInfo from './more-info/MoreInfo ';
+import Dashboard from './dashboard/index';
 
 import Loading from '../layout/loading/Loading';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
@@ -113,7 +114,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     render() {
         let { dataBreakcumb, loading, pageSize, pageIndex } = this.state;
         let { path } = this.props.match;
-        let { listNoti } = this.props;
+        let { listNoti, history } = this.props;
         let isNotRead = 0;
         listNoti.forEach((item: INoti) => {
             item.seen ? isNotRead += 0 : isNotRead += 1;
@@ -123,6 +124,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             <Layout>
                 <MenuNavigation
                     onCallLoading={() => this.handleLoading()}
+                    history={history}
                 />
                 <Layout>
                     <Header style={{ padding: 0, zIndex: 900 }}>
@@ -277,13 +279,14 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 <Col sm={1} md={1} lg={2}></Col>
                                 <Col sm={22} md={22} lg={20}>
                                     <Switch>
-                                        <ErrorBoundaryRoute path={`${path}/jobs`} component={Jobs} />
-                                        <ErrorBoundaryRoute path={`${path}/connect-schools`} component={ConnectEvent} />
-                                        <ErrorBoundaryRoute path={`${path}/convernient`} component={ConvernientService} />
-                                        <ErrorBoundaryRoute path={`${path}/more-info`} component={MoreInfo} />
-                                        <ErrorBoundaryRoute path={`${path}/profile`} component={Profile} />
-                                        <ErrorBoundaryRoute path={`${path}/noti`} component={Notitication} />
+                                        <ErrorBoundaryRoute path={path + routePath.JOBS} component={Jobs} />
+                                        <ErrorBoundaryRoute path={path + routePath.CONNECT_SCHOOLS} component={ConnectEvent} />
+                                        <ErrorBoundaryRoute path={path + routePath.CONVERNIENT} component={ConvernientService} />
+                                        <ErrorBoundaryRoute path={path+ routePath.MORE_INFO} component={MoreInfo} />
+                                        <ErrorBoundaryRoute path={path + routePath.PROFILE} component={Profile} />
+                                        <ErrorBoundaryRoute path={path + routePath.NOTI} component={Notitication} />
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
+                                        <ErrorBoundaryRoute path={path + routePath.DASHBOARD} component={Dashboard} />
                                     </Switch>
                                 </Col>
                                 <Col sm={1} md={1} lg={2}></Col>

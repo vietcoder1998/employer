@@ -17,6 +17,8 @@ export const routePath = {
     ACCEPTED: '/accepted',
     STUDENT: '/students',
     CANDIDATE: '/candidates',
+    DASHBOARD: '/dashboard',
+    NEW_INFO: '/new-info',
 
     EM_BRANCHES: '/em-branches',
     SAVE_CANDIDATE: '/saved-candidate',
@@ -38,10 +40,15 @@ export const routePath = {
     PROMOTION: '/promotion',
     EVENT: '/event',
     SCHOOLS: '/schools',
-    IN_EVENT: '/in-event'
+    IN_EVENT: '/in-event',
+    API: '/api'
 };
 
 export const routeLink = {
+    //Dashboard
+    NEW_INFO: routePath.ADMIN + routePath.DASHBOARD + routePath.NEW_INFO,
+    API: routePath.ADMIN + routePath.DASHBOARD + routePath.API,
+
     // Job
     PENDING_JOBS: routePath.ADMIN + routePath.JOBS + routePath.PENDING_JOBS,
     EM_BRANCHES: routePath.ADMIN + routePath.JOBS + routePath.EM_BRANCHES,
@@ -78,6 +85,11 @@ export const routeLink = {
 export const breakCumb = [
     // Dèault
     { label: "jobs", name: "Tuyển dụng", icon: null, url: "/jobs", disable: true },
+    { label: "dashboard", name: "Trang chủ", icon: null, url: "/dashboard", disable: true },
+    { label: "new-info", name: "Thông tin mới", icon: null, url: "/new-info", disable: true },
+    { label: "api", name: "Api", icon: null, url: "/api", disable: true },
+
+
     { label: "create", name: "Tạo mới", icon: null, url: "/create", disable: true },
     { label: "detail", name: "Chi tiết", icon: null, url: "/detail", disable: true },
     { label: "list", name: "Danh sách", icon: null, url: "/list", disable: true },

@@ -7,7 +7,7 @@ function cutLink(props: any) {
     let newLink = "";
 
     if (link && link.length > 0) {
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 8; i++) {
             newLink += link[i]
         }
         return newLink + "..."
@@ -48,12 +48,20 @@ function InEvent() {
             width: 150,
         },
         {
-            title: 'Doanh nghiệp hỗ trợ',
+            title: 'Doanh nghiệp đồng hành',
             dataIndex: 'supportBusiness',
             className: 'action',
             key: 'supportBusiness',
             width: 150,
         },
+        {
+            title: 'Doanh nghiệp khởi tạo',
+            dataIndex: 'startBusiness',
+            className: 'action',
+            key: 'startBusiness',
+            width: 150,
+        },
+        
         {
             title: 'Link ảnh hiển thị web',
             dataIndex: 'webView',
@@ -97,6 +105,7 @@ function InEvent() {
             beforeBusiness: "20 tin",
             effectBusiness: "10 tin",
             supportBusiness: "10 tin",
+            startBusiness: "10 tin",
         },
         {
             interest: "Banner hiển thị trên trang web/app tìm việc của sự kiện",
@@ -164,17 +173,11 @@ function InEvent() {
         },
         {
             interest: "GIÁ (Chưa gồm VAT)",
-            goldBusiness: "8.000.000 VND",
-            beforeBusiness: "4.800.000 VND",
-            effectBusiness: "3.000.000 VND",
+            goldBusiness: "15.000.000 VND",
+            beforeBusiness: "9.000.000 VND",
+            effectBusiness: "5.000.000 VND",
             supportBusiness: "2.000.000 VND",
-        },
-        {
-            interest: "Trích quỹ ủng hộ phòng trống COVID hoặc ...",
-            goldBusiness: "3.000.000 VND",
-            beforeBusiness: "1.500.000 VND",
-            effectBusiness: "800.000 VND",
-            supportBusiness: "200.000 VND",
+            startBusiness: "Miễn phí",
         },
     ];
 
@@ -217,7 +220,7 @@ function InEvent() {
                     // @ts-ignore
                     columns={columns01}
                     dataSource={dataTable01}
-                    scroll={{ x: 700 }}
+                    scroll={{ x: 850 }}
                     indentSize={600}
                     bordered
                     pagination={false}
