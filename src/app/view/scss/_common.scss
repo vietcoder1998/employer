@@ -15,6 +15,7 @@ body {
   font-family: $font_base, "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #314659
 }
 
 code {
@@ -551,6 +552,7 @@ button {
   margin-right: 5px;
   transition: 0.25s;
   padding-top: 2px;
+  position: relative;
   cursor: pointer;
 
   background-color: rgba(109, 109, 109, 0.149);

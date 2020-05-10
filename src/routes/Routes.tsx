@@ -33,6 +33,9 @@ export default function Routes(props) {
           <Route exact path='/register' component={Login} />
         </Suspense>
         <Suspense fallback={<FallBack />} >
+          <Route exact path='/forgot' component={Login} />
+        </Suspense>
+        <Suspense fallback={<FallBack />} >
           <Route path='/announcements' component={Announcements} />
         </Suspense>
         <Suspense fallback={<FallBack />} >

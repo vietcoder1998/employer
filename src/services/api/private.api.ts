@@ -11,6 +11,7 @@ export const FIND_STUDENTS = '/api/employers/students/query';
 export const APPLY_JOB = '/api/employers/jobs';
 export const FIND_CANDIDATE_DETAIL = '/api/employers/candidates';
 export const SAVED_CANDIDATE_PROFILES = '/api/employers/candidates';
+export const SAVED_PROFILE = (type?: string) => `/api/employers/${type}`;
 
 export const CONNECT_SCHOOL = '/api/employers/connections/schools';
 export const EVENT_SCHOOLS = '/api/employers/schools/events'

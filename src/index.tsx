@@ -16,8 +16,7 @@ import Routes from './routes/Routes';
 
 // using ES6 modules
 // import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import {pdfjs} from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
 
 
 require('dotenv').config();

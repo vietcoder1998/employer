@@ -71,7 +71,7 @@ function Privacy(props?: IPrivacyProps) {
                         width: '100%',
                         height: '100vh'
                     }}
-                    src=' https://works.vn/privacy-policy/'
+                    src=' https://about.works.vn/privacy'
                 />
             </div>
         </>

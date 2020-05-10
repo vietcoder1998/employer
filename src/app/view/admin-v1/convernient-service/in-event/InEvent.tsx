@@ -2,21 +2,6 @@ import React from 'react'
 import './InEvent.scss';
 import { Table, Divider } from 'antd';
 
-function cutLink(props: any) {
-    let { link } = props;
-    let newLink = "";
-
-    if (link && link.length > 0) {
-        for (let i = 0; i < 8; i++) {
-            newLink += link[i]
-        }
-        return newLink + "..."
-
-    }
-
-    else return "";
-}
-
 function InEvent() {
     const columns = [
         {
@@ -61,22 +46,22 @@ function InEvent() {
             key: 'startBusiness',
             width: 150,
         },
-        
+
         {
-            title: 'Link ảnh hiển thị web',
+            title: 'Hình ảnh minh họa web',
             dataIndex: 'webView',
             className: 'action',
             key: 'web-view',
-            width: 150,
-            render: (link) => <a href={link} className="link-to" target="_blank" children={cutLink({ link: link })}  rel="noopener noreferrer" />
+            width: 200,
+            render: (link) => link ? <a href={link} className="link-to" target="_blank" children={"Xem chi tiết"} rel="noopener noreferrer" /> : ""
         },
         {
-            title: 'Link ảnh hiển thị mobile',
+            title: 'Hình ảnh minh họa mobile',
             dataIndex: 'mobileView',
             className: 'action',
             key: 'mobile-view',
-            width: 150,
-            render: (link) => <a href={link} className="link-to" target="_blank" children={cutLink({ link: link })} rel="noopener noreferrer" />
+            width: 200,
+            render: (link) => link ? <a href={link} className="link-to" target="_blank" children={"Xem chi tiết"} rel="noopener noreferrer" /> : ""
         },
     ];
 
@@ -113,6 +98,7 @@ function InEvent() {
             beforeBusiness: "",
             effectBusiness: "",
             supportBusiness: "",
+            startBusiness: "",
             webView: "https://drive.google.com/file/d/1YuBgbt-v0jkz2uJ-mLmJBkIl8n-2IiIm/view",
             mobileView: "https://drive.google.com/file/d/1Ppt80u7fHpcPIMmr4q6IZGHrQjo45zve/view"
         },
@@ -122,6 +108,7 @@ function InEvent() {
             beforeBusiness: "02 vé",
             effectBusiness: "01 vé",
             supportBusiness: "01 vé",
+            startBusiness: "",
         },
         {
             interest: "Setup phỏng vấn tuyển dụng",
@@ -129,6 +116,7 @@ function InEvent() {
             beforeBusiness: "01 buổi",
             effectBusiness: "01 buổi",
             supportBusiness: "",
+            startBusiness: "",
         },
         {
             interest: "Tin đăng nằm vị trí Việc làm nổi bật ngày hội",
@@ -136,6 +124,7 @@ function InEvent() {
             beforeBusiness: "02 tin",
             effectBusiness: "02 tin",
             supportBusiness: "",
+            startBusiness: "",
             webView: "https://drive.google.com/file/d/1pOC2dvXZacSva9k7_Hx7DkOR0G_VSohj/view",
             mobileView: "https://drive.google.com/file/d/1VsZ-AbKMA_dKdfjEmq0XFNuvDUF50eYb/view"
         },
@@ -145,6 +134,7 @@ function InEvent() {
             beforeBusiness: "02 tin",
             effectBusiness: "05 tin",
             supportBusiness: "05 tin",
+            startBusiness: "",
             webView: "https://drive.google.com/file/d/12lmUeiK8Is7MerJYAp1hLviVnfWGkVEP/view",
             mobileView: "https://drive.google.com/file/d/1XZU2AbbvdoARUz_kkADbdt00yIZj-tiZ/view"
         },
@@ -154,6 +144,7 @@ function InEvent() {
             beforeBusiness: "120 hồ sơ",
             effectBusiness: "100 hồ sơ",
             supportBusiness: "",
+            startBusiness: "",
         },
 
         {
@@ -162,6 +153,7 @@ function InEvent() {
             beforeBusiness: "01 Logo",
             effectBusiness: "01 Logo",
             supportBusiness: "",
+            startBusiness: "",
             webView: "https://drive.google.com/file/d/137snQz2AMJYlcPfjSWqikHzsYdy_mvlN/view",
         },
         {
@@ -170,6 +162,7 @@ function InEvent() {
             beforeBusiness: "Giảm 20%",
             effectBusiness: "Giảm 15%",
             supportBusiness: "Giảm 15%",
+            startBusiness: "",
         },
         {
             interest: "GIÁ (Chưa gồm VAT)",
@@ -209,7 +202,7 @@ function InEvent() {
                     // @ts-ignore
                     columns={columns}
                     dataSource={dataTable}
-                    scroll={{ x: 800 }}
+                    scroll={{ x: 900 }}
                     bordered
                     pagination={false}
                 />

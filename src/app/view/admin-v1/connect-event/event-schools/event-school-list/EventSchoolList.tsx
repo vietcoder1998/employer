@@ -168,7 +168,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 >
                     <Icon
                         className="f-ic"
-                        style={{color: "green" }}
+                        style={{ color: "green" }}
                         type="file-search"
                     />
                 </Link>
@@ -178,7 +178,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     type={"tool"}
                     className="f-ic"
                     style={{
-                        
+
                         color: 'blue'
                     }}
                     onClick={() => this.setState({ modalType: "BANNER", openModal: true })}
@@ -346,7 +346,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 </Modal>
                 <div className="common-content">
                     <h5>
-                        Danh sách sự kiện {`(${totalItems})`}
+                        Sự kiện Ngày hội việc làm trực tuyến {`(${totalItems})`}
                         <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventSchool()}

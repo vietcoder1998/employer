@@ -58,11 +58,9 @@ export const routeLink = {
     ADMIN_ACCOUNTS: routePath.ADMIN + routePath.PROFILE + routePath.ADMIN_ACCOUNT,
     // Connect School
     CONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS,
-    CONNECTED_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.CONNECTED,
     UNCONNECT_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.UNCONNECT,
     PENDING_SCHOOLS: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.PENDING,
     EVENT: routePath.ADMIN + routePath.CONNECT_SCHOOLS + routePath.EVENT,
-
 
     // User controller
     USER_CONTROLLER: routePath.ADMIN + routePath.USER_CONTROLLER,

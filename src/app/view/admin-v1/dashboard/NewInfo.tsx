@@ -1,11 +1,10 @@
 import React from 'react'
-import ErrorBoundaryRoute from '../../../../routes/ErrorBoundaryRoute';
-import { Row, Col, Divider, Pagination } from 'antd';
+import { Row, Pagination } from 'antd';
 import { Document, Page } from 'react-pdf';
+import {pdfjs} from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 //@ts-ignore
 import FileShow from './../../../../assets/file/program-file.pdf';
-
-const Switch = require("react-router-dom").Switch;
 
 interface IProps {
     match: Readonly<any>;
@@ -13,9 +12,6 @@ interface IProps {
 }
 
 export default function NewInfo(props?: IProps) {
-    let { path } = props.match;
-
-    const [onDocumentLoadSuccess, setLoad] = React.useState(false);
     const [pageIndex, setPageIndex] = React.useState(1)
     return (
         <Row>

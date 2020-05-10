@@ -21,7 +21,7 @@ import avatar_men from './../../../../../../assets/image/no-avatar.png';
 import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
 import { _requestToServer } from './../../../../../../services/exec';
 import { POST, DELETE } from '../../../../../../const/method';
-import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+import { SAVED_PROFILE } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 
 let { Option } = Select;
@@ -246,7 +246,16 @@ class FindCandidatesList extends React.Component<IProps, IState> {
                     onClick={async () => {
                         await _requestToServer(
                             item.saved ? DELETE : POST,
-                            item.saved ? SAVED_CANDIDATE_PROFILES + `/saved` : SAVED_CANDIDATE_PROFILES + `/${item.id}/saved`,
+                            item.saved ?
+                                SAVED_PROFILE(
+                                    profileType === TYPE.STUDENT
+                                        ? "students" : "candidates"
+                                ) + `/saved` :
+                                SAVED_PROFILE(
+                                    profileType === TYPE.STUDENT
+                                        ? "students" : "candidates"
+                                ) +
+                                `/${item.id}/saved`,
                             item.saved ? [item.id] : undefined,
                             undefined,
                             undefined,

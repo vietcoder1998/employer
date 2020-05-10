@@ -10,11 +10,11 @@ import { routeLink, routePath } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';
-import { li } from 'react-router-dom';
 //@ts-ignore
 import BGIM from './../../../assets/image/bsn.jpg';
 //@ts-ignore
 import LG from './../../../logo-01.png';
+import Loading from '../layout/loading/Loading';
 
 const { TabPane } = Tabs;
 const cookies = new Cookies();
@@ -35,6 +35,7 @@ interface LoginState {
     confirm?: boolean;
     hp?: boolean;
     showPw?: boolean;
+    loadingCpn?: boolean;
 }
 
 interface LoginProps {
@@ -61,15 +62,16 @@ class Login extends PureComponent<LoginProps, LoginState> {
             confirm: false,
             hp: true,
             showPw: false,
+            loadingCpn: false
         }
     }
 
-    UNSAFE_componentWillMount() {
+    componentDidMount() {
         let is_authen = localStorage.getItem("ecr") ? true : false;
         if (is_authen) {
-            window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
+            this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {
-            let state = this.props.match.path.replace("/", "");
+            let state = this.props.match.path.replace("/", "")
             if (state) {
                 state = state.toUpperCase();
                 this.setState({ state })
@@ -77,12 +79,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
         }
     }
 
-    createRequest = async (type?: "LOGIN" | "REGISTER") => {
+    createRequest = async (type?: "LOGIN" | "REGISTER" | "FORGOT") => {
         let { password, username, employerName, email, phone } = this.state;
         let lat = localStorage.getItem("lat");
         let lon = localStorage.getItem("lon");
         this.setState({ loading: true })
-
         switch (type) {
             case "LOGIN":
                 await _requestToServer(
@@ -100,7 +101,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     if (res) {
                         message.success("Đăng nhập thành công");
                         setupLogin(res.data);
-                        window.location.assign(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST)
+                        window.location.assign(routeLink.EVENT + routePath.LIST)
                     }
                 }).finally(() => this.setState({ loading: false }))
                 break;
@@ -154,7 +155,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
     };
 
     render() {
-        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp, email, showPw } = this.state;
+        let { errMsg, password, username, openDrawer, state, repassword, confirm, loading, hp, email, showPw, loadingCpn } = this.state;
         const { getFieldDecorator } = this.props.form;
         let icon = {
             color: "red",
@@ -187,342 +188,355 @@ class Login extends PureComponent<LoginProps, LoginState> {
                         opensearch={true}
                         disableMarker={true}
                     />
+                    <div style={{ margin: 10 }}>
+                        <Button
+                            onClick={() =>
+                                this.setState({ openDrawer: false })}
+                            type={"primary"}
+                            style={{ float: "right" }}
+                        >
+                            Xác nhận
+                        </Button>
+                    </div>
                 </Drawer>
                 <div
                     className="login"
                 >
                     <Row>
                         <Col xs={24} sm={16} md={10} lg={10} xl={9} xxl={8} >
-                            <Tabs
-                                defaultActiveKey="LOGIN"
-                                activeKey={state}
-                                onChange={(event: "LOGIN" | "REGISTER") => this.setState({ state: event })}
-                            >
-                                <TabPane tab="Đăng nhập" key="LOGIN">
-                                    <div className="r-p-content">
-                                        <div className='msg-noti '>
-                                            <div className="a_c">
-                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
-                                            </div>
-                                            <h5 style={{ textAlign: "center" }}>ĐĂNG NHẬP</h5>
-                                            <Form onSubmit={this.handleSubmit} className="login-form">
-                                                <p className='p-t'>Tên đăng nhập</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('username', {
-                                                        rules: [{ required: state === "LOGIN", message: 'Vui lòng điền tên đăng nhập' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="user"
-                                                                style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            maxLength={160}
-                                                            size="large"
-                                                            type="text"
-                                                            placeholder="Tên đăng nhập"
-                                                            onChange={
-                                                                (event: any) => this.setState({ username: event.target.value })
-                                                            }
+                            {
+                                !loadingCpn ?
+                                    <Tabs
+                                        defaultActiveKey="LOGIN"
+                                        activeKey={state}
+                                        onChange={(event: "LOGIN" | "REGISTER") => this.setState({ state: event })}
+                                    >
+                                        <TabPane tab="Đăng nhập" key="LOGIN">
+                                            <div className="r-p-content">
+                                                <div className='msg-noti '>
+                                                    <div className="a_c">
+                                                        <Avatar src={LG} style={{ width: 240, height: 80 }} />
+                                                    </div>
+                                                    <h5 style={{ textAlign: "center" }}>ĐĂNG NHẬP</h5>
+                                                    <Form onSubmit={this.handleSubmit} className="login-form">
+                                                        <p className='p-t'>Tên đăng nhập</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('username', {
+                                                                rules: [{ required: state === "LOGIN", message: 'Vui lòng điền tên đăng nhập' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="user"
+                                                                        style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    maxLength={160}
+                                                                    size="large"
+                                                                    type="text"
+                                                                    placeholder="Tên đăng nhập"
+                                                                    onChange={
+                                                                        (event: any) => this.setState({ username: event.target.value })
+                                                                    }
 
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p className='p-t'>Mật khẩu </p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('password', {
-                                                        rules: [{ required: state === "LOGIN", message: 'Vui lòng điền mật khẩu ' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            size="large"
-                                                            placeholder="Mật khẩu"
-                                                            type={showPw ? "text" : "password"}
-                                                            maxLength={160}
-                                                            suffix={
-                                                                <div
-                                                                    className="c-btn"
-                                                                    onClick={() => this.setState({ showPw: !showPw })}
-                                                                >
-                                                                    <Icon type={showPw ? "eye" : "eye-invisible"} />
-                                                                </div>
-                                                            }
-                                                            onChange={(event: any) => this.setState({ password: event.target.value })}
-                                                            onPressEnter={
-                                                                (event) => { if (exactly) { this.handleSubmit(event, "LOGIN") } }
-                                                            }
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p style={{ margin: "20px 0px" }}>
-                                                    <Checkbox
-                                                        defaultChecked={cookies.get('atlg') === 'true'}
-                                                        onChange={
-                                                            (e: any) => cookies.set('atlg', e.target.checked)
-                                                        }
-                                                    >
-                                                        Tự động đăng nhập
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p className='p-t'>Mật khẩu </p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('password', {
+                                                                rules: [{ required: state === "LOGIN", message: 'Vui lòng điền mật khẩu ' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    size="large"
+                                                                    placeholder="Mật khẩu"
+                                                                    type={showPw ? "text" : "password"}
+                                                                    maxLength={160}
+                                                                    suffix={
+                                                                        <div
+                                                                            className="c-btn"
+                                                                            onClick={() => this.setState({ showPw: !showPw })}
+                                                                        >
+                                                                            <Icon type={showPw ? "eye" : "eye-invisible"} />
+                                                                        </div>
+                                                                    }
+                                                                    onChange={(event: any) => this.setState({ password: event.target.value })}
+                                                                    onPressEnter={
+                                                                        (event) => { if (exactly) { this.handleSubmit(event, "LOGIN") } }
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p style={{ margin: "20px 0px" }}>
+                                                            <Checkbox
+                                                                defaultChecked={cookies.get('atlg') === 'true'}
+                                                                onChange={
+                                                                    (e: any) => cookies.set('atlg', e.target.checked)
+                                                                }
+                                                            >
+                                                                Tự động đăng nhập
                                                         </Checkbox>
+                                                        </p>
+
+                                                    </Form>
+                                                    {exactly ? "" : <p>{errMsg}</p>}
+                                                </div>
+                                                <p className='a_c'
+                                                >
+                                                    <Button
+                                                        type="primary"
+                                                        htmlType="submit"
+                                                        size="large"
+                                                        className="login-form-button"
+                                                        style={{ width: "100%" }}
+                                                        onClick={(event: any) => this.handleSubmit(event, "LOGIN")}
+                                                        onKeyDown={(event) => {
+                                                            if (event.keyCode === 13) {
+                                                                this.createRequest("LOGIN")
+                                                            }
+                                                        }}
+                                                    >
+                                                        {loading ? <Icon type={'loading'} /> : 'Đăng nhập'}
+                                                    </Button>
+                                                </p>
+                                                <p className='p-t'>
+                                                    <li
+                                                        className={'underline a_l asl'}
+                                                        style={{ float: "left" }}
+                                                        onClick={() => this.props.history.push("/forgot")}
+                                                    >
+                                                        Quên mật khẩu ?
+                                                </li>
+                                                    <li
+                                                        className={'underline a_r asl'}
+                                                        style={{ right: 0 }}
+                                                        onClick={() => this.props.history.push("/register")}
+                                                    >
+                                                        Đăng ký <Icon type={"right"} />
+                                                    </li>
                                                 </p>
 
-                                            </Form>
-                                            {exactly ? "" : <p>{errMsg}</p>}
-                                        </div>
-                                        <p className='a_c'
-                                        >
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                size="large"
-                                                className="login-form-button"
-                                                style={{ width: "100%" }}
-                                                onClick={(event: any) => this.handleSubmit(event, "LOGIN")}
-                                                onKeyDown={(event) => {
-                                                    if (event.keyCode === 13) {
-                                                        this.createRequest("LOGIN")
-                                                    }
-                                                }}
-                                            >
-                                                {loading ? <Icon type={'loading'} /> : 'Đăng nhập'}
-                                            </Button>
-                                        </p>
-                                        <p className='p-t'>
-                                            <li
-                                                className={'underline a_l asl'}
-                                                style={{ float: "left" }}
-                                                onClick={() => this.setState({ state: "FORGOT" })}
-                                            >
-                                                Quên mật khẩu ?
-                                                </li>
-                                            <li
-                                                className={'underline a_r asl'}
-                                                style={{ right: 0 }}
-                                                onClick={() => this.setState({ state: "REGISTER" })}
-                                            >
-                                                Đăng ký <Icon type={"right"} />
-                                            </li>
-                                        </p>
-
-                                    </div>
-                                </TabPane>
-                                <TabPane tab="Đăng ký" key="REGISTER">
-                                    <div className="r-p-content ">
-                                        <div className='msg-noti '>
-                                            <div className="a_c">
-                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
                                             </div>
-                                            <h5 style={{ textAlign: "center" }}>ĐĂNG KÝ</h5>
-                                            <Form onSubmit={this.handleSubmit} className="login-form">
-                                                <p className='p-t'>Tên công ty/ tổ chức</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('employerName', {
-                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền Tên công ty/ tổ chức' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            size="large"
-                                                            placeholder="Tên viết có dấu, không có kí tự đặc biệt"
-                                                            type="text"
-                                                            maxLength={160}
-                                                            onChange={(event: any) => this.setState({ employerName: event.target.value })}
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p className='p-t'>Email</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('gmail', {
-                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền gmail' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            size="large"
-                                                            placeholder="ex: worksvn@gmail.com"
-                                                            type="text"
-                                                            maxLength={160}
-                                                            onChange={(event: any) => this.setState({ email: event.target.value })}
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p className='p-t'>Số điện thoại</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('phone', {
-                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền số điện thoại ' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            size="large"
-                                                            placeholder="ex: 0123456789"
-                                                            type="text"
-                                                            maxLength={160}
+                                        </TabPane>
+                                        <TabPane tab="Đăng ký" key="REGISTER">
+                                            <div className="r-p-content ">
+                                                <div className='msg-noti '>
+                                                    <div className="a_c">
+                                                        <Avatar src={LG} style={{ width: 240, height: 80 }} />
+                                                    </div>
+                                                    <h5 style={{ textAlign: "center" }}>ĐĂNG KÝ</h5>
+                                                    <Form onSubmit={this.handleSubmit} className="login-form">
+                                                        <p className='p-t'>Tên công ty/ tổ chức</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('employerName', {
+                                                                rules: [{ required: state === "REGISTER", message: 'Vui lòng điền Tên công ty/ tổ chức' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    size="large"
+                                                                    placeholder="Tên viết có dấu, không có kí tự đặc biệt"
+                                                                    type="text"
+                                                                    maxLength={160}
+                                                                    onChange={(event: any) => this.setState({ employerName: event.target.value })}
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p className='p-t'>Email</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('gmail', {
+                                                                rules: [{ required: state === "REGISTER", message: 'Vui lòng điền gmail' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    size="large"
+                                                                    placeholder="ex: worksvn@gmail.com"
+                                                                    type="text"
+                                                                    maxLength={160}
+                                                                    onChange={(event: any) => this.setState({ email: event.target.value })}
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p className='p-t'>Số điện thoại</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('phone', {
+                                                                rules: [{ required: state === "REGISTER", message: 'Vui lòng điền số điện thoại ' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    size="large"
+                                                                    placeholder="ex: 0123456789"
+                                                                    type="text"
+                                                                    maxLength={160}
 
-                                                            onChange={(event: any) => this.setState({ phone: event.target.value })}
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p className='p-t'>Địa chỉ trên bản đồ</p>
-                                                <Input
-                                                    prefix={<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                    size="large"
-                                                    placeholder="Định vị bản đồ"
-                                                    type="text"
-                                                    maxLength={240}
-                                                    value={localStorage.getItem("location")}
-                                                    onClick={() => { this.setState({ openDrawer: true }) }}
-                                                />
-                                                <p className='p-t'>Mật khẩu</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('password', {
-                                                        rules: [{ required: state === "REGISTER", message: 'Vui lòng điền mật khẩu' }],
-                                                    })(
+                                                                    onChange={(event: any) => this.setState({ phone: event.target.value })}
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p className='p-t'>Địa chỉ trên bản đồ</p>
                                                         <Input
-                                                            prefix={<Icon type="key"
-                                                                style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            maxLength={160}
+                                                            prefix={<Icon type="environment" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                                             size="large"
-                                                            type={hp ? "password" : "text"}
-                                                            placeholder="Chứa ít nhất 6 kí tự"
+                                                            placeholder="Định vị bản đồ"
+                                                            type="text"
+                                                            maxLength={240}
+                                                            value={localStorage.getItem("location")}
+                                                            onClick={() => { this.setState({ openDrawer: true }) }}
+                                                        />
+                                                        <p className='p-t'>Mật khẩu</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('password', {
+                                                                rules: [{ required: state === "REGISTER", message: 'Vui lòng điền mật khẩu' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="key"
+                                                                        style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    maxLength={160}
+                                                                    size="large"
+                                                                    type={hp ? "password" : "text"}
+                                                                    placeholder="Chứa ít nhất 6 kí tự"
 
-                                                            onChange={
-                                                                (event: any) => this.setState({ password: event.target.value })
-                                                            }
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p className='p-t'>Nhập lại mật khẩu</p>
-                                                <Form.Item>
-                                                    {getFieldDecorator('repassword', {
-                                                        rules: [{ required: state === "REGISTER" && password !== repassword, message: 'Mật khẩu điền lại bị sai ' }],
-                                                    })(
-                                                        <Input
-                                                            prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            size="large"
-                                                            placeholder="Nhập lại mật khẩu"
-                                                            type="password"
-                                                            suffix={<Icon type="eye" onClick={() => this.setState({ hp: !hp })} />}
-                                                            maxLength={160}
-                                                            onChange={(event: any) => this.setState({ repassword: event.target.value })}
-                                                            onKeyDown={(event) => {
-                                                                if (event.keyCode === 13) {
-                                                                    this.createRequest("REGISTER")
+                                                                    onChange={
+                                                                        (event: any) => this.setState({ password: event.target.value })
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p className='p-t'>Nhập lại mật khẩu</p>
+                                                        <Form.Item>
+                                                            {getFieldDecorator('repassword', {
+                                                                rules: [{ required: state === "REGISTER" && password !== repassword, message: 'Mật khẩu điền lại bị sai ' }],
+                                                            })(
+                                                                <Input
+                                                                    prefix={<Icon type="key" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    size="large"
+                                                                    placeholder="Nhập lại mật khẩu"
+                                                                    type="password"
+                                                                    suffix={<Icon type="eye" onClick={() => this.setState({ hp: !hp })} />}
+                                                                    maxLength={160}
+                                                                    onChange={(event: any) => this.setState({ repassword: event.target.value })}
+                                                                    onKeyDown={(event) => {
+                                                                        if (event.keyCode === 13) {
+                                                                            this.createRequest("REGISTER")
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </Form.Item>
+                                                        <p style={{ margin: "20px 0px" }}>
+                                                            <Checkbox
+                                                                onChange={
+                                                                    (event: any) => this.setState({ confirm: event.target.checked })
                                                                 }
-                                                            }}
-                                                        />
-                                                    )}
-                                                </Form.Item>
-                                                <p style={{ margin: "20px 0px" }}>
-                                                    <Checkbox
-                                                        onChange={
-                                                            (event: any) => this.setState({ confirm: event.target.checked })
-                                                        }
-                                                    >
-                                                        Đồng ý với
+                                                            >
+                                                                Đồng ý với
                                                         <a
-                                                            className='underline'
-                                                            href='https://works.vn/privacy'
-                                                            target='_blank'
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            điều khoản
+                                                                    className='underline'
+                                                                    href='https://works.vn/privacy'
+                                                                    target='_blank'
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    điều khoản
                                                         </a>
                                                         của chúng tôi
                                                     </Checkbox>
+                                                        </p>
+                                                    </Form>
+                                                    {exactly ? "" : <p>{errMsg}</p>}
+                                                </div>
+                                                <p className='a_c'
+                                                >
+                                                    <Button
+                                                        type="primary"
+                                                        htmlType="submit"
+                                                        size="large"
+                                                        className="login-form-button"
+                                                        style={{ width: "100%" }}
+                                                        onClick={(event: any) => this.handleSubmit(event, "REGISTER")}
+                                                        disabled={!confirm}
+                                                    >
+                                                        {loading ? <Icon type={'loading'} /> : 'Đăng ký'}
+                                                    </Button>
                                                 </p>
-                                            </Form>
-                                            {exactly ? "" : <p>{errMsg}</p>}
-                                        </div>
-                                        <p className='a_c'
-                                        >
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                size="large"
-                                                className="login-form-button"
-                                                style={{ width: "100%" }}
-                                                onClick={(event: any) => this.handleSubmit(event, "REGISTER")}
-                                                disabled={!confirm}
-                                            >
-                                                {loading ? <Icon type={'loading'} /> : 'Đăng ký'}
-                                            </Button>
-                                        </p>
-                                        <p className='p-t'>
-                                            <li
-                                                className={'underline asl'}
-                                                style={{ float: "left" }}
-                                                onClick={() => this.setState({ state: "LOGIN" })}
-                                            >
-                                                <Icon type={"left"} /> Đăng nhập
+                                                <p className='p-t'>
+                                                    <li
+                                                        className={'underline asl'}
+                                                        style={{ float: "left" }}
+                                                        onClick={() => this.props.history.push("/login")}
+                                                    >
+                                                        <Icon type={"left"} /> Đăng nhập
                                             </li>
-                                        </p>
-                                    </div>
-                                </TabPane>
-                                <TabPane tab="QUÊN MẬT KHẨU" key="FORGOT">
-                                    <div className="r-p-content">
-                                        <div className='msg-noti '>
-                                            <div className="a_c">
-                                                <Avatar src={LG} style={{ width: 240, height: 80 }} />
+                                                </p>
                                             </div>
-                                            <h5 style={{ textAlign: "center" }}>QUÊN MẬT KHẨU</h5>
-                                            <div className="forget-pw">
-                                                <div className="forgot-content">
-                                                    <p className='normal a_c'>
-                                                        Xác nhận mật khẩu qua email
+                                        </TabPane>
+                                        <TabPane tab="QUÊN MẬT KHẨU" key="FORGOT">
+                                            <div className="r-p-content">
+                                                <div className='msg-noti '>
+                                                    <div className="a_c">
+                                                        <Avatar src={LG} style={{ width: 240, height: 80 }} />
+                                                    </div>
+                                                    <h5 style={{ textAlign: "center" }}>QUÊN MẬT KHẨU</h5>
+                                                    <div className="forget-pw">
+                                                        <div className="forgot-content">
+                                                            <p className='normal a_c'>
+                                                                Xác nhận mật khẩu qua email
                                                      </p>
-                                                    <p className='normal'>
-                                                        <Input
-                                                            placeholder="Email"
-                                                            size="large"
-                                                            prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                                            suffix={
-                                                                <Tooltip title="Email của bạn">
-                                                                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
-                                                                </Tooltip>
-                                                            }
-                                                            value={email}
-                                                            onChange={(event) => {
-                                                                this.setState({ email: event.target.value })
-                                                            }
-                                                            }
-                                                            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-                                                                if (event.keyCode === 13) {
-                                                                    this.createRequest()
-                                                                }
-                                                            }}
-                                                            type="text"
-                                                        />
-                                                    </p>
-                                                    <p>
-                                                        <Button
-                                                            type="primary"
-                                                            size={"large"}
-                                                            onClick={
-                                                                () => this.createRequest()
-                                                            }
-                                                            block
-                                                        >
-                                                            {loading ? <Icon type={'loading'} /> : 'Gửi'}
-                                                        </Button>
-                                                    </p>
+                                                            <p className='normal'>
+                                                                <Input
+                                                                    placeholder="Email"
+                                                                    size="large"
+                                                                    prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                                                    suffix={
+                                                                        <Tooltip title="Email của bạn">
+                                                                            <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                                                                        </Tooltip>
+                                                                    }
+                                                                    value={email}
+                                                                    onChange={(event) => {
+                                                                        this.setState({ email: event.target.value })
+                                                                    }
+                                                                    }
+                                                                    onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+                                                                        if (event.keyCode === 13) {
+                                                                            this.createRequest()
+                                                                        }
+                                                                    }}
+                                                                    type="text"
+                                                                />
+                                                            </p>
+                                                            <p>
+                                                                <Button
+                                                                    type="primary"
+                                                                    size={"large"}
+                                                                    onClick={
+                                                                        () => this.createRequest()
+                                                                    }
+                                                                    block
+                                                                >
+                                                                    {loading ? <Icon type={'loading'} /> : 'Gửi'}
+                                                                </Button>
+                                                            </p>
 
+                                                        </div>
+                                                    </div>
+                                                    {exactly ? "" : <p>{errMsg}</p>}
+                                                    <p className='p-t'>
+                                                        <li
+                                                            className={'underline a_l asl'}
+                                                            style={{ left: 0 }}
+                                                            onClick={() => this.props.history.push("/login")}
+                                                        >
+                                                            <Icon type={"left"} /> Đăng nhập
+                                                    </li>
+                                                        <li
+                                                            className={'underline a_r asl'}
+                                                            style={{ right: 0 }}
+                                                            onClick={() => this.props.history.push("/register")}
+                                                        >
+                                                            Đăng ký <Icon type={"right"} />
+                                                        </li>
+                                                    </p>
                                                 </div>
                                             </div>
-                                            {exactly ? "" : <p>{errMsg}</p>}
-                                            <p className='p-t'>
-                                                <li
-                                                    className={'underline a_l asl'}
-                                                    style={{ left: 0 }}
-                                                    onClick={() => this.setState({ state: "LOGIN" })}
-                                                >
-                                                    <Icon type={"left"} /> Đăng nhập
-                                                    </li>
-                                                <li
-                                                    className={'underline a_r asl'}
-                                                    style={{ right: 0 }}
-                                                    onClick={() => this.setState({ state: "REGISTER" })}
-                                                >
-                                                    Đăng ký <Icon type={"right"} />
-                                                </li>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </TabPane>
-                            </Tabs>
+                                        </TabPane>
+                                    </Tabs>
+                                    : <Loading />}
                         </Col>
                         <Col xs={0} sm={8} md={14} lg={14} xl={15} xxl={16}>
                             <img src={BGIM} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8 }} alt={"bg"} />

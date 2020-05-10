@@ -1,13 +1,13 @@
 import React, { PureComponent, } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../const/actions';
-import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
+import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm, Row, Col, Select } from 'antd';
 import { timeConverter } from '../../../../../../utils/convertTime';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { ISavedCandidateProfile } from '../../../../../../models/saved-candidate-profiles';
 import { DELETE } from '../../../../../../const/method';
 import { _requestToServer } from '../../../../../../services/exec';
-import { SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+import { SAVED_PROFILE } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,10 @@ import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
 import avatar_men from './../../../../../../assets/image/no-avatar.png';
 //@ts-ignore
 import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
+import { TYPE } from '../../../../../../const/type';
+import { IptLetter } from '../../../../layout/common/Common';
+
+const { Option } = Select;
 
 let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: string }) => {
     const [err, setErr] = React.useState(false)
@@ -30,14 +34,14 @@ let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: stri
     />
 };
 
-interface SavedCandidateProfilesListProps extends StateProps, DispatchProps {
+interface IProps extends StateProps, DispatchProps {
     match?: any;
     history?: any;
     getListSavedCandidateProfiles: Function;
     getAnnoucementDetail: Function;
 };
 
-interface SavedCandidateProfilesListState {
+interface IStates {
     dataTable?: Array<any>;
     pageIndex?: number;
     pageSize?: number;
@@ -53,9 +57,10 @@ interface SavedCandidateProfilesListState {
     id?: string;
     loadingTable?: boolean;
     body: any;
+    profileType?: string;
 };
 
-class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesListProps, SavedCandidateProfilesListState> {
+class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
     constructor(props) {
         super(props);
         this.state = {
@@ -71,6 +76,7 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
             listFindCandidates: [],
             id: null,
             loadingTable: true,
+            profileType: TYPE.STUDENT,
             body: {
                 gender: null,
                 birthYearStart: null,
@@ -88,12 +94,12 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     }
 
     editToolAction = () => {
-        let { id } = this.state;
+        let { id, profileType } = this.state;
         return <>
             <Tooltip
                 title={"Xem chi tiết"}
             >
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}`} target="_blank">
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType}`} target="_blank">
                     <Icon
                         className="f-ic"
                         type="search"
@@ -210,15 +216,18 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.listFindCandidates && nextProps.listFindCandidates !== prevState.listFindCandidates) {
-            let { pageIndex, pageSize } = prevState;
+            let { pageIndex, pageSize, profileType } = prevState;
             let dataTable = [];
+            let type = profileType === TYPE.STUDENT ? "student" : "candidate"
+
             nextProps.listFindCandidates.forEach((item: ISavedCandidateProfile, index: number) => {
                 const Lock = () => (
                     <>
-                        <Tooltip placement="top" title={item.candidate.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
+                        <Tooltip
+                            placement="top" title={item[type] && item[type].unlocked ? "Đã mở khóa" : "Chưa mở khóa"}>
                             <Icon
-                                type={item.candidate.unlocked ? "unlock" : "lock"}
-                                style={{ padding: "5px 5px", color: item.candidate.unlocked ? "green" : "red" }}
+                                type={item[type] && item[type].unlocked ? "unlock" : "lock"}
+                                style={{ padding: "5px 5px", color: item[type] && item[type].unlocked ? "green" : "red" }}
                                 theme={"filled"}
                             />
                         </Tooltip>
@@ -226,28 +235,32 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                 );
 
                 dataTable.push({
-                    key: item.candidate.id,
+                    key: item[type] ? item[type].id : null,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    avatarUrl: <ImageRender src={item.candidate.avatarUrl} gender={item.candidate.gender} alt="Ảnh đại diện" />,
+                    avatarUrl:
+                        <ImageRender
+                            src={item[type] ?
+                                item[type].avatarUrl : ""} gender={item[type] ? item[type].gender : null} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
                     name:
-                        item && item.candidate ?
+                        item && item[type] ?
                             <CanProPop
-                                id={item.candidate.id}
-                                background={item.candidate.coverUrl}
-                                avatar={item.candidate.avatarUrl}
-                                unlocked={item.candidate.unlocked}
-                                email={item.candidate.email}
-                                gender={item.candidate.gender}
-                                phone={item.candidate.phone}
+                                id={item[type].id}
+                                background={item[type].coverUrl}
+                                avatar={item[type].avatarUrl}
+                                unlocked={item[type].unlocked}
+                                email={item[type].email}
+                                gender={item[type].gender}
+                                phone={item[type].phone}
+                                profileType={profileType}
                                 children={
-                                    (item.candidate.lastName ? item.candidate.lastName : "") + " " + (item.candidate.firstName ? item.candidate.firstName : "")
+                                    (item[type].lastName ? item[type].lastName : "") + " " + (item[type].firstName ? item[type].firstName : "")
                                 } /> : null
                     ,
-                    lookingForJob: item.candidate.lookingForJob ? "Đang tìm việc" : "Đã có việc",
-                    address: item.candidate.address ? item.candidate.address : "",
-                    region: item.candidate.region ? item.candidate.region.name : "",
-                    birthday: item.candidate.birthday !== -1 ? timeConverter(item.candidate.birthday, 1000) : null,
+                    lookingForJob: item[type] && item[type].lookingForJob ? "Đang tìm việc" : "Đã có việc",
+                    address: item[type] ? item[type].address : "",
+                    region: item[type] && item[type].region ? item[type].region.name : "",
+                    birthday: item[type] && item[type].birthday !== -1 ? timeConverter(item[type].birthday, 1000) : null,
                     createdDate: timeConverter(item.createdDate, 1000),
                 });
             })
@@ -275,15 +288,18 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
     };
 
     searchSavedCandidateProfiles = async () => {
-        let { pageIndex, pageSize } = this.state;
-        await this.props.getListSavedCandidateProfiles(pageIndex, pageSize);
+        let { pageIndex, pageSize, profileType } = this.state;
+        await this.props.getListSavedCandidateProfiles(pageIndex, pageSize, profileType);
     };
 
     createRequest = async (type?: string) => {
-        let { id } = this.state;
+        let { id, profileType } = this.state;
         await _requestToServer(
             DELETE,
-            SAVED_CANDIDATE_PROFILES + '/saved',
+            SAVED_PROFILE(
+                profileType === TYPE.STUDENT
+                    ? "students" : "candidates"
+            ) + '/saved',
             [id],
             undefined,
             undefined,
@@ -327,7 +343,36 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
                     </Modal>
                     <h5>
                         Danh sách ứng viên đã lưu {`(${totalItems})`}
+                        <Tooltip title="Lọc tìm kiếm" >
+                            <Button
+                                onClick={() => this.searchSavedCandidateProfiles()}
+                                type="primary"
+                                style={{
+                                    float: "right",
+                                    margin: "0px 10px",
+                                    padding: "10px",
+                                    borderRadius: "50%",
+                                    height: "45px",
+                                    width: "45px"
+                                }}
+                                icon={loadingTable ? "loading" : "filter"}
+                            />
+                        </Tooltip>
                     </h5>
+                    <Row>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            <IptLetter value={"Loại hồ sơ"} />
+                            <Select
+                                showSearch
+                                defaultValue="Sinh viên"
+                                style={{ width: "100%" }}
+                                onChange={(event: any) => this.setState({ profileType: event })}
+                            >
+                                <Option value={TYPE.STUDENT}>Sinh viên</Option>
+                                <Option value={TYPE.CANDIDATE}>Ứng viên</Option>
+                            </Select>
+                        </Col>
+                    </Row>
                     <div className="table-operations">
                         <Table
                             // @ts-ignore
@@ -357,8 +402,12 @@ class SavedCandidateProfilesList extends PureComponent<SavedCandidateProfilesLis
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getListSavedCandidateProfiles: (pageIndex: number, pageSize: number) =>
-        dispatch({ type: REDUX_SAGA.SAVED_CANDIDATE_PROFILES.GET_SAVED_CANDIDATE_PROFILES, pageIndex, pageSize }),
+    getListSavedCandidateProfiles: (
+        pageIndex: number,
+        pageSize: number,
+        profileType?: string
+    ) =>
+        dispatch({ type: REDUX_SAGA.SAVED_CANDIDATE_PROFILES.GET_SAVED_CANDIDATE_PROFILES, pageIndex, pageSize, profileType }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

@@ -71,7 +71,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 onClick={(event: any) => {
                     props.onCallLoading()
                 }}
-                defaultOpenKeys={["sub1", "sub2", "sub0"]}
+                defaultOpenKeys={["sub1", "sub0"]}
             >
                 <SubMenu
                     key="sub0"
@@ -82,16 +82,16 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
-                    <Menu.Item key="new-info">
-                        <Link to={routeLink.NEW_INFO}>
-                            <Icon type="notification" />
-                            <span>Thông tin mới</span>
+                    <Menu.Item key="event" style={{color: "#000000"}}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.LIST}>
+                            <Icon type="alert" />
+                            <span>Ngày hội việc làm </span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="api">
-                        <Link to={routeLink.API}>
-                            <Icon type="api" />
-                            <span>Danh sách api</span>
+                    <Menu.Item key="connected">
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
+                            <Icon type="apartment" />
+                            <span>Kết nối nhà trường</span>
                         </Link>
                     </Menu.Item>
                 </SubMenu>
@@ -141,7 +141,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </Link>
                     </Menu.Item>
                 </SubMenu>
-                <SubMenu
+                {/* <SubMenu
                     key="sub2"
                     title={
                         <span>
@@ -150,19 +150,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                         </span>
                     }
                 >
-                    <Menu.Item key="event">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.LIST}>
-                            <Icon type="alert" />
-                            <span>Sự kiện </span>
-                        </Link>
-                    </Menu.Item>
-                    <Menu.Item key="connected">
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.LIST}>
-                            <Icon type="apartment" />
-                            <span>Kết nối nhà trường</span>
-                        </Link>
-                    </Menu.Item>
-                </SubMenu>
+
+                </SubMenu> */}
                 <SubMenu
                     key="sub3"
                     title={
@@ -238,6 +227,18 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Bài viết</span>
                         </Link>
                     </Menu.Item> */}
+                    {/* <Menu.Item key="new-info">
+                        <Link to={routeLink.NEW_INFO}>
+                            <Icon type="notification" />
+                            <span>Thông tin mới</span>
+                        </Link> */}
+                    {/* </Menu.Item> */}
+                    <Menu.Item key="api">
+                        <Link to={routeLink.API}>
+                            <Icon type="api" />
+                            <span>Chức năng</span>
+                        </Link>
+                    </Menu.Item>
                     <Menu.Item key="9">
                         <Link to={routeLink.COMMUNITY}>
                             <Icon type="mobile" />

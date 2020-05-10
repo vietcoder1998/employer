@@ -155,6 +155,52 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     }
                                 </ClearCache>
                             </Tooltip>
+                            <Tooltip title={"Đăng bài"}>
+                                <div
+                                    className="noti-icon"
+                                    style={{ padding: 18 }}
+                                    onClick={
+                                        () => {
+                                            this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE);
+                                            this.handleLoading()
+                                        }
+                                    }
+                                >
+                                    <Icon
+                                        type="plus"
+                                        style={{
+                                            position: "absolute",
+                                            color: "white",
+                                            fontSize: 18,
+                                            left: 10,
+                                            top: 10
+                                        }}
+                                    />
+                                </div>
+                            </Tooltip>
+                            <Tooltip title={"Tìm ứng viên"}>
+                                <div
+                                    className="noti-icon"
+                                    style={{ padding: 18 }}
+                                    onClick={
+                                        () => {
+                                            this.props.history.push(routeLink.FIND_CANDIDATES + routePath.LIST);
+                                            this.handleLoading()
+                                        }
+                                    }
+                                >
+                                    <Icon
+                                        type="search"
+                                        style={{
+                                            position: "absolute",
+                                            color: "white",
+                                            fontSize: 18,
+                                            left: 10,
+                                            top: 10
+                                        }}
+                                    />
+                                </div>
+                            </Tooltip>
                             <Popover
                                 content={
                                     < >
@@ -218,7 +264,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         />
                                     </Badge>
                                 </div>
-
                             </Popover>
                             <DropdownConfig
                                 param={
@@ -282,7 +327,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={path + routePath.JOBS} component={Jobs} />
                                         <ErrorBoundaryRoute path={path + routePath.CONNECT_SCHOOLS} component={ConnectEvent} />
                                         <ErrorBoundaryRoute path={path + routePath.CONVERNIENT} component={ConvernientService} />
-                                        <ErrorBoundaryRoute path={path+ routePath.MORE_INFO} component={MoreInfo} />
+                                        <ErrorBoundaryRoute path={path + routePath.MORE_INFO} component={MoreInfo} />
                                         <ErrorBoundaryRoute path={path + routePath.PROFILE} component={Profile} />
                                         <ErrorBoundaryRoute path={path + routePath.NOTI} component={Notitication} />
                                         <ErrorBoundaryRoute exact path={`/`} component={NotFoundAdmin} />
