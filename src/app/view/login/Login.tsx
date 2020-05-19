@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification, Avatar, Tooltip } from 'antd';
+import { Col, Row, Icon, Form, Input, Button, Checkbox, Tabs, Drawer, message, notification, Avatar, Tooltip, Carousel } from 'antd';
 import { _requestToServer } from '../../../services/exec';
 import './Login.scss';
 import { POST } from '../../../const/method';
@@ -13,9 +13,11 @@ import Cookies from 'universal-cookie';
 //@ts-ignore
 import BGIM from './../../../assets/image/bsn.jpg';
 //@ts-ignore
+import BGIM2 from './../../../assets/image/bsn2.jpg';
+//@ts-ignore
 import LG from './../../../logo-01.png';
 import Loading from '../layout/loading/Loading';
-
+import ButtonDynamic from './ButtonDynamic';
 const { TabPane } = Tabs;
 const cookies = new Cookies();
 
@@ -37,6 +39,7 @@ interface LoginState {
     showPw?: boolean;
     loadingCpn?: boolean;
     linkWantToDirect?: string;
+    invite?: string
 }
 
 interface LoginProps {
@@ -64,31 +67,43 @@ class Login extends PureComponent<LoginProps, LoginState> {
             hp: true,
             showPw: false,
             loadingCpn: false,
-            linkWantToDirect: null
+            linkWantToDirect: null,
+            invite: 'Tham gia ngay'
         }
+        this.interval = null
     }
 
     componentDidMount() {
         let is_authen = localStorage.getItem("ecr") ? true : false;
-        
+
         if (is_authen) {
             this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {
             // console.log(window.location.href)
-            
+
             let state = this.props.match.path.replace("/", "")
             if (state === 'forgot' || state === 'register') {
                 state = state.toUpperCase();
                 this.setState({ state })
+            } else if(state === 'login') {
+                this.setState({ state: 'LOGIN' })
             } else {
                 this.setState({ state: 'LOGIN' })
+                this.setState({ linkWantToDirect: window.location.href })
             }
-            this.setState({linkWantToDirect: window.location.href})
-            
-            
         }
+        // this.interval = setInterval(() => {
+        //     // alert("Chào mừng bạn đến với freetuts.net");
+        //     if(this.state.invite === null) {
+        //         this.setState({invite: 'Tham gia ngay'})
+        //     } else {
+        //         this.setState({invite: null})
+        //     }
+        // }, 500);
     }
-
+    componentWillUnmount() {
+        // clearInterval(this.interval)
+    }
     createRequest = async (type?: "LOGIN" | "REGISTER" | "FORGOT") => {
         let { password, username, employerName, email, phone } = this.state;
         let lat = localStorage.getItem("lat");
@@ -111,9 +126,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     if (res) {
                         message.success("Đăng nhập thành công");
                         setupLogin(res.data);
-                        if(this.state.linkWantToDirect) {
+                        if (this.state.linkWantToDirect) {
+                            console.log('vao linkWantToDirect')
                             window.location.assign(this.state.linkWantToDirect)
                         } else {
+                            console.log('vao day')
                             window.location.assign(routeLink.EVENT + routePath.LIST)
                         }
                     }
@@ -448,7 +465,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                                                 >
                                                                     điều khoản
                                                         </a>
-                                                        của chúng tôi
+                                                                của chúng tôi
                                                     </Checkbox>
                                                         </p>
                                                     </Form>
@@ -553,7 +570,23 @@ class Login extends PureComponent<LoginProps, LoginState> {
                                     : <Loading />}
                         </Col>
                         <Col xs={0} sm={8} md={14} lg={14} xl={15} xxl={16}>
-                            <img src={BGIM} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8 }} alt={"bg"} />
+                            <Carousel autoplay effect="fade">
+                                <div onClick={() => { window.open('https://forms.gle/9ihSrQ9bVztRHBjs9') }} >
+                                    <img src={BGIM} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8, cursor: 'pointer'  }} alt="img4"  />
+                                </div>
+                                <div onClick={() => { window.open('https://forms.gle/9ihSrQ9bVztRHBjs9') }}>
+                                    <img src={BGIM2} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8 }} alt="img1" />
+                                </div>
+                            </Carousel>
+                            <ButtonDynamic />
+                            {/* <Button 
+                            type="danger" 
+                            style={{position: 'absolute', top: 105, right: 25, backgroundColor: '#ff6912', fontWeight: 'bold', minWidth: 122}} 
+                            onClick={() => {
+                                window.open('https://forms.gle/9ihSrQ9bVztRHBjs9')
+                            }}
+                            >{this.state.invite}</Button> */}
+                            {/* <img src={BGIM} style={{ width: '100%', height: '100vh', overflow: 'hidden', opacity: 0.8 }} alt={"bg"} /> */}
                         </Col>
                     </Row>
                 </div>
