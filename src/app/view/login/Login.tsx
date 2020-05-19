@@ -36,6 +36,7 @@ interface LoginState {
     hp?: boolean;
     showPw?: boolean;
     loadingCpn?: boolean;
+    linkWantToDirect?: string;
 }
 
 interface LoginProps {
@@ -62,20 +63,29 @@ class Login extends PureComponent<LoginProps, LoginState> {
             confirm: false,
             hp: true,
             showPw: false,
-            loadingCpn: false
+            loadingCpn: false,
+            linkWantToDirect: null
         }
     }
 
     componentDidMount() {
         let is_authen = localStorage.getItem("ecr") ? true : false;
+        
         if (is_authen) {
             this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {
+            // console.log(window.location.href)
+            
             let state = this.props.match.path.replace("/", "")
-            if (state) {
+            if (state === 'forgot' || state === 'register') {
                 state = state.toUpperCase();
                 this.setState({ state })
+            } else {
+                this.setState({ state: 'LOGIN' })
             }
+            this.setState({linkWantToDirect: window.location.href})
+            
+            
         }
     }
 
@@ -101,7 +111,11 @@ class Login extends PureComponent<LoginProps, LoginState> {
                     if (res) {
                         message.success("Đăng nhập thành công");
                         setupLogin(res.data);
-                        window.location.assign(routeLink.EVENT + routePath.LIST)
+                        if(this.state.linkWantToDirect) {
+                            window.location.assign(this.state.linkWantToDirect)
+                        } else {
+                            window.location.assign(routeLink.EVENT + routePath.LIST)
+                        }
                     }
                 }).finally(() => this.setState({ loading: false }))
                 break;

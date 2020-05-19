@@ -20,8 +20,9 @@ export default function Routes(props) {
         <Suspense fallback={<FallBack />} >
           <Route exact path='/login' component={Login} />
         </Suspense>
+        
         <Suspense fallback={<FallBack />} >
-          <Route path={'/v1/admin'} component={is_authen ? Admin : NotFound} />
+          <Route path={'/v1/admin'} component={is_authen ? Admin : Login} />
         </Suspense>
         <Suspense fallback={<FallBack />} >
           <Route exact path={'/404'} component={NotFound} />
