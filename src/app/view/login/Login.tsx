@@ -79,13 +79,15 @@ class Login extends PureComponent<LoginProps, LoginState> {
         if (is_authen) {
             this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
         } else {
-            // console.log(window.location.href)
 
             let state = this.props.match.path.replace("/", "")
+            
+
             if (state === 'forgot' || state === 'register') {
                 state = state.toUpperCase();
                 this.setState({ state })
-            } else if(state === 'login') {
+            } else if(state === 'login' || state === '') {
+                // console.log('state' + state)
                 this.setState({ state: 'LOGIN' })
             } else {
                 this.setState({ state: 'LOGIN' })
