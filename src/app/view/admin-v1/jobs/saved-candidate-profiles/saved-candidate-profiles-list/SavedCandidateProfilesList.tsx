@@ -381,6 +381,7 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
                             dataSource={dataTable}
                             scroll={{ x: 980 }}
                             bordered
+                            rowKey={"saveCandidate"}
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
                             onChange={this.setPageIndex}

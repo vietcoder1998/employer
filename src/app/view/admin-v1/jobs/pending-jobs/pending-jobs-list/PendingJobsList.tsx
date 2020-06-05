@@ -377,6 +377,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         dataSource={dataTable}
                         scroll={{ x: 1400 }}
                         bordered
+                        rowKey="pending-job"
                         pagination={{ total: totalItems, showSizeChanger: true }}
                         size="middle"
                         onChange={this.setPageIndex}

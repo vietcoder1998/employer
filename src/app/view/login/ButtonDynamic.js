@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Button } from 'antd'
 export default class ButtonDynamic extends React.Component {
     constructor(props) {

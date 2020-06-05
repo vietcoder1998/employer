@@ -415,6 +415,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                             loading={loadingTable}
                             dataSource={dataTable}
                             scroll={{ x: 880 }}
+                            rowKey={"event-school"}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

@@ -1123,6 +1123,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             loading={loadingTable}
                             dataSource={dataTable}
                             scroll={{ x: 1600 }}
+                            rowKey="event-job"
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"

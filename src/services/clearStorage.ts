@@ -9,11 +9,13 @@ export default async function clearStorage() {
     await cookies.remove("actk", { path: "/" });
     await cookies.remove("rftk", { path: "/" });
 
-    Swal.fire(
-        "Workvns thông báo",
-        "Bạn đã đăng xuất khỏi Worksvn",
-        "success"
-    )
-
-    await setTimeout(() => window.location.href = "/login", 2000)
+    Swal.fire({
+        title: "Workvns thông báo",
+        titleText: "Bạn đã đăng xuất khỏi Worksvn",
+        icon: "success",
+        onClose: () => {
+            localStorage.clear();
+            window.location.assign('/');
+        }
+    })
 }

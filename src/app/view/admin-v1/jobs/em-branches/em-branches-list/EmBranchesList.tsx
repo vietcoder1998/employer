@@ -478,6 +478,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
+                            rowKey={"em-branches"}
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {

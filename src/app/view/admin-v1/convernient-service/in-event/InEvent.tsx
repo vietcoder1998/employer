@@ -203,6 +203,7 @@ function InEvent() {
                     columns={columns}
                     dataSource={dataTable}
                     scroll={{ x: 900 }}
+                    rowKey="in-event"
                     bordered
                     pagination={false}
                 />
@@ -215,6 +216,7 @@ function InEvent() {
                     dataSource={dataTable01}
                     scroll={{ x: 850 }}
                     indentSize={600}
+                    rowKey="event-des"
                     bordered
                     pagination={false}
                 />

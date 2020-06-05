@@ -75,6 +75,7 @@ export default function* rootSaga() {
             sagas.map(function* (saga) {yield spawn(saga) })
         )
     } catch (err) {
+        
         throw err;
     }
 } 

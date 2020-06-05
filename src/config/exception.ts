@@ -11,11 +11,12 @@ import setupLogin from './setup-login';
 export const exceptionShowNoti = async (err: any) => {
     if (err && err && err.response && err.response.data) {
         let res = err.response.data;
-        if (res.code && res.code !== 4011) {
-            notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
+
+        if (res.code === 4016 || res.code === 4015 || res.code === 4017 || res.code === 4018) {
+            tkNotInvalid();
         }
-        
-        if  (res.code && res.code === 4011) {
+
+        if (res.code && (res.code === 4014)) {
             // @ts-ignore
             let cookies = new Cookies();
 
@@ -29,8 +30,8 @@ export const exceptionShowNoti = async (err: any) => {
                     },
                     undefined,
                     loginHeaders(
-                        process.env.REACT_APP_CLIENT_ID ? process.env.REACT_APP_CLIENT_ID : 'worksvn-employer-web',
-                        process.env.REACT_APP_CLIENT_SECRET ? process.env.REACT_APP_CLIENT_SECRET : 'worksvn-employer-web@works.vn'
+                        process.env.REACT_APP_CLIENT_ID,
+                        process.env.REACT_APP_CLIENT_SECRET
                     ),
                     OAUTH2_HOST,
                     false,
@@ -41,22 +42,25 @@ export const exceptionShowNoti = async (err: any) => {
                         window.location.reload(true);
                     }
                 )
-            } else
-                Swal.fire({
-                    titleText: 'Phiên đăng nhập đã hết hạn',
-                    icon: 'warning',
-                    onClose: () => {
-                        localStorage.clear();
-                        window.location.assign('/');
-                    },
-                    timer: 5000
-                })
+            } else {
+                tkNotInvalid();
+            }
         }
+        else
+            notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
 
-    } else {
-        if (err) {
-            notification.error({ description: `${"máy chủ gặp vấn đề hoặc kiểm tra lại kết nối của bạn"} (code=${500})`, message: "Worksvn thông báo" })
-        }
-    }
+    } else
+        notification.error({ description: `${"máy chủ gặp vấn đề hoặc kiểm tra lại kết nối của bạn"} (code=${500})`, message: "Worksvn thông báo" })
+}
 
+function tkNotInvalid() {
+    Swal.fire({
+        titleText: 'Phiên đăng nhập đã hết hạn',
+        icon: 'warning',
+        onClose: () => {
+            localStorage.clear();
+            window.location.assign('/');
+        },
+        timer: 5000
+    })
 }

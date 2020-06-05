@@ -1101,6 +1101,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 dataSource={dataTable}
                                 scroll={{ x: 1540 }}
                                 bordered
+                                rowKey={"job"}
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"
                                 onChange={this.setPageIndex}
