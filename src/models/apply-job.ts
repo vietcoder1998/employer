@@ -5,7 +5,7 @@ export interface IApplyJobFilter {
 };
 
 export interface IApplyJob {
-    candidate?: {
+    student?: {
         id?: string,
         firstName?: string,
         lastName?: string,

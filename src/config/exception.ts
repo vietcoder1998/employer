@@ -47,7 +47,7 @@ export const exceptionShowNoti = async (err: any) => {
             }
         }
         else
-            notification.error({ description: `${res.msg} (code=${res.code})`, message: "Có lỗi xảy ra" })
+            notification.error({ description: `${res.msg}`, message: "Có lỗi xảy ra" })
 
     } else
         notification.error({ description: `${"máy chủ gặp vấn đề hoặc kiểm tra lại kết nối của bạn"} (code=${500})`, message: "Worksvn thông báo" })

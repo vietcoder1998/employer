@@ -109,7 +109,8 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             let listPending = [];
             let listAccepted = [];
             let listRejected = [];
-
+            let listShifts = [];
+            let defaultId = null;
             if (listApplyJobs && listApplyJobs.length > 0) {
                 listApplyJobs.forEach((item: IApplyJob, index: number) => {
                     switch (item.state) {
@@ -126,17 +127,20 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                         default:
                             break;
                     }
-
-
                 })
-
-
+                if(listPending.length > 0) {
+                    // searchShift(listApplyJobs[0].student.id, TYPE.PENDING, listApplyJobs[0].student.id)
+                    listShifts = listPending[0].appliedShifts
+                    defaultId = listPending[0].student.id
+                }
             }
             return {
                 listApplyJobs,
                 listPending,
                 listRejected,
                 listAccepted,
+                listShifts,
+                defaultId
             }
         }
 
@@ -150,7 +154,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         setTimeout(() => {
             if (id) {
                 listApplyJobs.forEach((item: IApplyJob) => {
-                    if (id === item.candidate.id) {
+                    if (id === item.student.id) {
                         listShifts = item.appliedShifts;
                     }
                 });
@@ -167,7 +171,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         await this.setState({ lBtn: true });
         await _requestToServer(
             PUT,
-            APPLY_JOB + `/${id}/apply/candidates/${cid}/state/${state}`,
+            APPLY_JOB + `/${id}/apply/students/${cid}/state/${state}`,
             undefined,
             undefined,
             undefined,
@@ -179,10 +183,25 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 message.success("Thành công", 3)
                 this.props.getApplyJobs(id);
             }
+
         })
         await this.setState({ lBtn: false })
     }
-
+    selectShift(type) {
+        if(type === "ACCEPTED") {
+            if(this.state.listAccepted.length > 0) {
+                this.setState({listShifts: this.state.listAccepted[0].appliedShifts, defaultId: this.state.listAccepted[0].student.id })
+            }
+        } else if(type === "PENDING") {
+            if(this.state.listPending.length > 0) {
+                this.setState({listShifts: this.state.listPending[0].appliedShifts, defaultId: this.state.listPending[0].student.id })
+            }
+        } else if(type === "REJECTED") { 
+            if(this.state.listRejected.length > 0) {
+                this.setState({listShifts: this.state.listRejected[0].appliedShifts, defaultId: this.state.listRejected[0].student.id })
+            }
+        }
+    }
     render() {
         let {
             stateApply,
@@ -212,11 +231,12 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                 activeKey={stateApply}
                                 style={{ width: "100%" }}
                                 onChange={(stateApply: string) => {
+                                    // console.log(stateApply)
+                                    this.selectShift(stateApply)
                                     this.setState({ stateApply })
                                 }}
                             >
-                                <TabPane
-                                    tab={`Đang chờ`}
+                                <TabPane tab={`Đang chờ (${listPending.length})`}
                                     key={TYPE.PENDING}
                                     disabled={listPending.length === 0}
                                     style={{ paddingRight: 10 }}
@@ -231,18 +251,18 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                         type="PENDING"
                                                         lBtn={lBtn}
                                                         data={item}
-                                                        id={item.candidate.id}
-                                                        defaultId={item.candidate.id === defaultId}
+                                                        id={item.student.id}
+                                                        defaultId={item.student.id === defaultId}
                                                         onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                         onClick={
-                                                            (event: string) => this.searchShift(event, TYPE.PENDING, item.candidate.id)
+                                                            (event: string) => this.searchShift(event, TYPE.PENDING, item.student.id)
                                                         }
                                                     />
                                                 ))
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab={`Chấp nhận`} key={TYPE.ACCEPTED} disabled={listAccepted.length === 0}>
+                                <TabPane tab={`Chấp nhận (${listAccepted.length})`} key={TYPE.ACCEPTED} disabled={listAccepted.length === 0}>
                                     <div className="content-apply">
                                         {
                                             listAccepted.length === 0 ?
@@ -252,18 +272,18 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                         key={index}
                                                         type={"ACCEPTED"}
                                                         data={item}
-                                                        id={item.candidate.id}
-                                                        defaultId={item.candidate.id === defaultId}
+                                                        id={item.student.id}
+                                                        defaultId={item.student.id === defaultId}
                                                         onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                         onClick={
-                                                            (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.candidate.id)
+                                                            (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.student.id)
                                                         }
                                                     />
                                                 ))
                                         }
                                     </div>
                                 </TabPane>
-                                <TabPane tab={`Từ chối`} key={TYPE.REJECTED} disabled={listRejected.length === 0} >
+                                <TabPane tab={`Từ chối (${listRejected.length})`} key={TYPE.REJECTED} disabled={listRejected.length === 0} >
                                     <div className="content-apply">
                                         {
                                             listRejected.length === 0 ?
@@ -274,11 +294,11 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                             type="REJECTED"
                                                             key={index}
                                                             data={item}
-                                                            id={item.candidate.id}
-                                                            defaultId={item.candidate.id === defaultId}
+                                                            id={item.student.id}
+                                                            defaultId={item.student.id === defaultId}
                                                             onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                             onClick={
-                                                                (event: string) => this.searchShift(event, TYPE.REJECTED, item.candidate.id)
+                                                                (event: string) => this.searchShift(event, TYPE.REJECTED, item.student.id)
                                                             }
                                                         />
                                                 )
@@ -318,19 +338,6 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                             }
                         </Col>
                     </Row>
-                </div>
-                <div className="Announcements-Apply-content">
-                    <Button
-                        type="danger"
-                        prefix={"check"}
-                        style={{
-                            margin: "10px 10px",
-                        }}
-                        onClick={() => { this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST) }}
-                    >
-                        <Icon type="left" />
-                        Quay lại
-                    </Button>
                 </div>
 
             </div >

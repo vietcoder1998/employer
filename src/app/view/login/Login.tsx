@@ -81,8 +81,6 @@ class Login extends PureComponent<LoginProps, LoginState> {
         } else {
 
             let state = this.props.match.path.replace("/", "")
-            
-
             if (state === 'forgot' || state === 'register') {
                 state = state.toUpperCase();
                 this.setState({ state })
@@ -133,7 +131,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                             window.location.assign(this.state.linkWantToDirect)
                         } else {
                             console.log('vao day')
-                            window.location.assign(routeLink.EVENT + routePath.LIST)
+                            window.location.assign(routeLink.EVENT + '/jobs/list')
                         }
                     }
                 }).finally(() => this.setState({ loading: false }))

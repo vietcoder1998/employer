@@ -18,4 +18,8 @@ export default async function clearStorage() {
             window.location.assign('/');
         }
     })
+    setTimeout(() => {
+        localStorage.clear();
+        window.location.assign('/');
+    }, 1000)
 }

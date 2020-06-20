@@ -27,9 +27,13 @@ import { NotUpdate } from '../layout/common/Common';
 import Notitication from './notification/Notification';
 import ClearCache from 'react-clear-cache';
 import ConnectEvent from './connect-event/ConnectEvent';
-
+import Swal from 'sweetalert2';
+import { _requestToServer } from '../../../services/exec'
+import { GET } from '../../../const/method';
+import { PUBLIC_HOST } from '../../../environment/dev';
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
+
 
 interface IAdminState {
     to_logout: boolean;
@@ -41,6 +45,7 @@ interface IAdminState {
     pageSize?: number,
     pageIndex?: number,
     loadingNoti?: boolean;
+    resInfoEvent?: any
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
@@ -68,6 +73,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             pageSize: 10,
             pageIndex: 0,
             loadingNoti: false,
+            resInfoEvent: null
         };
     };
 
@@ -112,7 +118,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     }
 
     render() {
-        let { dataBreakcumb, loading, pageSize, pageIndex } = this.state;
+        let { dataBreakcumb, loading, pageSize, pageIndex, resInfoEvent } = this.state;
         let { path } = this.props.match;
         let { listNoti, history } = this.props;
         let isNotRead = 0;
@@ -155,6 +161,103 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     }
                                 </ClearCache>
                             </Tooltip>
+                            {/* <Tooltip title={"Tham gia sự kiện trường"}>
+                                <div
+                                    className="noti-icon"
+                                    style={{ padding: 18 }}
+                                    onClick={
+                                        () => {
+                                            Swal.queue([{
+                                                title: 'Tham gia sự kiện trường',
+                                                text: "Mã tham gia",
+                                                input: 'text',
+                                                inputPlaceholder: 'Nhập mã tham gia',
+                                                inputAttributes: {
+                                                    autocapitalize: 'off'
+                                                },
+                                                showCancelButton: true,
+                                                cancelButtonText: "Bỏ qua",
+                                                confirmButtonText: 'Xác nhận',
+                                                showLoaderOnConfirm: true,
+                                                allowOutsideClick: () => !Swal.isLoading(),
+                                                preConfirm: (code) => {
+                                                    return _requestToServer(
+                                                        GET,
+                                                        `/api/schools/events/simple?inviteCode=${code}&activeCheck=false`,
+                                                        null,
+                                                        undefined,
+                                                        {},
+                                                        PUBLIC_HOST,
+                                                        false,
+                                                        false
+                                                    ).then((res: any) => {
+                                                        console.log(res)
+                                                        this.setState({ resInfoEvent: res })
+                                                        if (res.code === 200) {
+                                                            Swal.insertQueueStep({
+                                                                title: 'Xác nhận tham gia sự kiện trường',
+                                                                icon: null,
+                                                                html:
+                                                                    `<img src="${res.data.bannerUrl}" width="100%">
+                                                                    <div>${res.data.name}</div>`,
+                                                                showCancelButton: true,
+                                                                cancelButtonText: "Bỏ qua",
+                                                                confirmButtonText: 'Xác nhận',
+                                                                showLoaderOnConfirm: true,
+                                                                allowOutsideClick: () => !Swal.isLoading(),
+                                                                preConfirm: () => {
+                                                                    return _requestToServer(
+                                                                        GET,
+                                                                        `/api/schools/events/simple?inviteCode=JKL-3840544074&activeCheck=false`,
+                                                                        null,
+                                                                        undefined,
+                                                                        {},
+                                                                        PUBLIC_HOST,
+                                                                        false,
+                                                                        false
+                                                                    ).then((res2: any) => {
+                                                                        // console.log(res)
+                                                                        if (res2.code === 200) {
+                                                                            Swal.insertQueueStep({
+                                                                                title: 'Thành công',
+                                                                                icon: 'success',
+                                                                                html:
+                                                                                    `<div>Bạn đã tham gia thành công vào sự kiện <b>${this.state.resInfoEvent.data.name}</b></div>
+                                                                                    <div>và kết nối với trường <b>${this.state.resInfoEvent.data.schoolName}</b></div>
+                                                                                    `,
+                                                                              
+                                                                                confirmButtonText: 'Đồng ý',
+                                                                                showLoaderOnConfirm: true,
+                                                                                allowOutsideClick: () => !Swal.isLoading(),
+                                                                            })
+                                                                        }
+                                                                    }).catch((e) => {
+                                                                        console.log(e);
+                                                                    });
+                                                                },
+                                                            })
+                                                        }
+                                                    }).catch((e) => {
+                                                        console.log(e);
+                                                    });
+                                                },
+                                            }])
+                                        }
+                                    }
+                                >
+                                    <Icon
+                                        type="qrcode"
+                                        style={{
+                                            position: "absolute",
+                                            color: "white",
+                                            fontSize: 18,
+                                            left: 10,
+                                            top: 10
+                                        }}
+                                    />
+                                </div>
+                            </Tooltip> */}
+
                             <Tooltip title={"Đăng bài"}>
                                 <div
                                     className="noti-icon"
@@ -321,8 +424,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                         </Breadcrumb>
                         {!loading ?
                             <Row>
-                                <Col sm={1} md={1} lg={2}></Col>
-                                <Col sm={22} md={22} lg={20}>
+                                {/* <Col sm={1} md={1} lg={2}></Col> */}
+                                <Col sm={24} md={24} lg={24}>
                                     <Switch>
                                         <ErrorBoundaryRoute path={path + routePath.JOBS} component={Jobs} />
                                         <ErrorBoundaryRoute path={path + routePath.CONNECT_SCHOOLS} component={ConnectEvent} />
@@ -334,7 +437,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={path + routePath.DASHBOARD} component={Dashboard} />
                                     </Switch>
                                 </Col>
-                                <Col sm={1} md={1} lg={2}></Col>
+                                {/* <Col sm={1} md={1} lg={2}></Col> */}
                             </Row>
                             : <Loading />}
                     </Content>

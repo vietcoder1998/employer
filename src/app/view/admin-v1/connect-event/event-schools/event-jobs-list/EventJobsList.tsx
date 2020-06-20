@@ -339,30 +339,6 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let { body, pageIndex, pageSize } = this.state;
         return (
             <>
-                <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
-                    <Icon
-                        className="f-ic"
-                        type={hidden ? "eye-invisible" : "eye"}
-                        style={{ color: hidden ? "black" : "gray" }}
-                        onClick={async () => await _requestToServer(
-                            PUT,
-                            EVENT_SCHOOLS + `/jobs/${id}/hidden/${!hidden}?schoolEventID=${body.schoolEventID}`,
-                            undefined,
-                            undefined,
-                            undefined,
-                            EMPLOYER_HOST,
-                            false,
-                            false
-                        ).then((res: any) => {
-                            if (res) {
-                                setTimeout(() => {
-                                    this.props.getListEventJobs(body, pageIndex, pageSize);
-                                }, 250);
-                                message.success("Thành công", 2);
-                            }
-                        })}
-                    />
-                </Tooltip>
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                     <Icon
                         className="f-ic"
