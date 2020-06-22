@@ -21,7 +21,7 @@ interface ICanProPop {
 
 export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
     let { children, data, avatar, background, id, profileType } = props;
-    const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.STUDENT ? TYPE.STUDENT : TYPE.CANDIDATE}`;
+    const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.CANDIDATE ? TYPE.CANDIDATE : TYPE.STUDENT }`;
 
     const content = (
         <div className='cpp-ct-card'>

@@ -26,7 +26,7 @@ function callEventDetail(action: any) {
     try {
         let res = _requestToServer(
             GET,
-            EVENT_SCHOOLS + `/${action.id}/info`,
+            EVENT_SCHOOLS + `/${action.id}/info?joinedCheck=false`,
             action.body ? action.body : null,
             undefined,
             undefined,

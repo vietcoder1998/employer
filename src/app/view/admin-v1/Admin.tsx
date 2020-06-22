@@ -29,8 +29,9 @@ import ClearCache from 'react-clear-cache';
 import ConnectEvent from './connect-event/ConnectEvent';
 import Swal from 'sweetalert2';
 import { _requestToServer } from '../../../services/exec'
-import { GET } from '../../../const/method';
-import { PUBLIC_HOST } from '../../../environment/dev';
+import { GET, POST } from '../../../const/method';
+import { PUBLIC_HOST, EMPLOYER_HOST } from '../../../environment/dev';
+import {timeConverter} from '../../../utils/convertTime'
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
 
@@ -45,7 +46,8 @@ interface IAdminState {
     pageSize?: number,
     pageIndex?: number,
     loadingNoti?: boolean;
-    resInfoEvent?: any
+    resInfoEvent?: any;
+    joinSucess?: boolean
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
@@ -73,7 +75,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             pageSize: 10,
             pageIndex: 0,
             loadingNoti: false,
-            resInfoEvent: null
+            resInfoEvent: null,
+            joinSucess: false
         };
     };
 
@@ -161,7 +164,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     }
                                 </ClearCache>
                             </Tooltip>
-                            {/* <Tooltip title={"Tham gia sự kiện trường"}>
+                            <Tooltip title={"Tham gia sự kiện trường"}>
                                 <div
                                     className="noti-icon"
                                     style={{ padding: 18 }}
@@ -189,17 +192,27 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                         {},
                                                         PUBLIC_HOST,
                                                         false,
-                                                        false
+                                                        false,
+                                                        true
                                                     ).then((res: any) => {
                                                         console.log(res)
                                                         this.setState({ resInfoEvent: res })
                                                         if (res.code === 200) {
                                                             Swal.insertQueueStep({
-                                                                title: 'Xác nhận tham gia sự kiện trường',
+                                                                title: 'Xác nhận tham gia',
                                                                 icon: null,
                                                                 html:
-                                                                    `<img src="${res.data.bannerUrl}" width="100%">
-                                                                    <div>${res.data.name}</div>`,
+                                                                    `
+                                                                    <img src="${res.data.bannerUrl}" width="100%">
+                                                                    <div style="font-weight: bold; font-size: 1.2em; margin: 10px 0">${res.data.name}</div>
+                                                                    <div style="display: flex;">
+                                                                        <img src="${res.data.schoolLogoUrl}" width="50px" height="50px" style="border-radius: 50%; border: solid 1px #8c8c8c;margin: 10px 10px 0; object-fit: cover;">
+                                                                        <div style="margin-top: 10px">
+                                                                            <div style="font-weight: bold; font-size: 1.1em;">${res.data.schoolName}</div>
+                                                                            <div style="text-align: left; font-size: 0.9em;">${timeConverter(res.data.createdDate, 1000) + " - " + timeConverter(res.data.finishedDate, 1000)}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                    `,
                                                                 showCancelButton: true,
                                                                 cancelButtonText: "Bỏ qua",
                                                                 confirmButtonText: 'Xác nhận',
@@ -207,41 +220,85 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                                                 allowOutsideClick: () => !Swal.isLoading(),
                                                                 preConfirm: () => {
                                                                     return _requestToServer(
-                                                                        GET,
-                                                                        `/api/schools/events/simple?inviteCode=JKL-3840544074&activeCheck=false`,
+                                                                        POST,
+                                                                        `/api/employers/schools/events/join?inviteCode=${code}&activeCheck=false`,
                                                                         null,
                                                                         undefined,
-                                                                        {},
-                                                                        PUBLIC_HOST,
+                                                                        undefined,
+                                                                        EMPLOYER_HOST,
                                                                         false,
-                                                                        false
+                                                                        false,
+                                                                        true
                                                                     ).then((res2: any) => {
                                                                         // console.log(res)
                                                                         if (res2.code === 200) {
+                                                                            this.setState({ joinSucess: true })
                                                                             Swal.insertQueueStep({
                                                                                 title: 'Thành công',
                                                                                 icon: 'success',
                                                                                 html:
-                                                                                    `<div>Bạn đã tham gia thành công vào sự kiện <b>${this.state.resInfoEvent.data.name}</b></div>
+                                                                                    `<div>Bạn đã tham gia thành công vào sự kiện</div>
+                                                                                    <div><b>${this.state.resInfoEvent.data.name}</b></div>
                                                                                     <div>và kết nối với trường <b>${this.state.resInfoEvent.data.schoolName}</b></div>
                                                                                     `,
-                                                                              
                                                                                 confirmButtonText: 'Đồng ý',
                                                                                 showLoaderOnConfirm: true,
                                                                                 allowOutsideClick: () => !Swal.isLoading(),
                                                                             })
+                                                                        } else {
+                                                                            Swal.insertQueueStep({
+                                                                                title: 'Lỗi',
+                                                                                icon: 'error',
+                                                                                text: res2.msg,
+                                                                                confirmButtonText: 'Đồng ý',
+                                                                            })
                                                                         }
-                                                                    }).catch((e) => {
-                                                                        console.log(e);
+                                                                    }).catch((err) => {
+                                                                        let msg;
+                                                                        if (err.response) {
+                                                                            let data = err.response.data;
+                                                                            if (data) {
+                                                                                msg = data.msg;
+                                                                            }
+                                                                        } else {
+                                                                            msg = err.message;
+                                                                        }
+                                                                        Swal.insertQueueStep({
+                                                                            title: 'Lỗi',
+                                                                            icon: 'error',
+                                                                            text: msg,
+                                                                            confirmButtonText: 'Đồng ý',
+                                                                        })
                                                                     });
                                                                 },
                                                             })
                                                         }
-                                                    }).catch((e) => {
-                                                        console.log(e);
+                                                    }).catch((err) => {
+                                                        let msg;
+                                                        if (err.response) {
+                                                            let data = err.response.data;
+                                                            if (data) {
+                                                                msg = data.msg;
+                                                            }
+                                                        } else {
+                                                            msg = err.message;
+                                                        }
+                                                        Swal.insertQueueStep({
+                                                            title: 'Lỗi',
+                                                            icon: 'error',
+                                                            text: msg,
+                                                            confirmButtonText: 'Đồng ý',
+                                                        })
                                                     });
                                                 },
-                                            }])
+                                            }]).then((value) => {
+                                                // console.log(value.value)
+                                                if (value.value && value.value.length >= 3 && value.value[2] && this.state.joinSucess) {
+                                                    // console.log("vao day");
+                                                    this.setState({ joinSucess: false })
+                                                    window.location.assign("/v1/admin/connect-schools/event/list")
+                                                }
+                                            })
                                         }
                                     }
                                 >
@@ -256,7 +313,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         }}
                                     />
                                 </div>
-                            </Tooltip> */}
+                            </Tooltip>
 
                             <Tooltip title={"Đăng bài"}>
                                 <div

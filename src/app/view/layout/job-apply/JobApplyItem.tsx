@@ -104,7 +104,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                 </Row>
             </div>
             <div>
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}`} target="_blank">
+                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}?type=STUDENT`} target="_blank">
                     <Tooltip title="Xem hồ sơ">
                         <Button
                             type={"primary"}
