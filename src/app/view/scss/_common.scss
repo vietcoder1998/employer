@@ -67,7 +67,7 @@ code {
 
 .ant-table-body {
   &::-webkit-scrollbar-thumb {
-    background: #555;
+    background:#a0a0a0;
   }
   /* width */
   &::-webkit-scrollbar {
@@ -80,12 +80,12 @@ code {
   }
 
   &::-webkit-scrollbar-thumb {
-    color: rgb(97, 97, 97);
+    color: #a0a0a0;
   }
 
   /* Handle */
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #757575;
   }
 }
 
@@ -285,12 +285,12 @@ ul {
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #a0a0a0;
   }
 
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #757575;
   }
 }
 

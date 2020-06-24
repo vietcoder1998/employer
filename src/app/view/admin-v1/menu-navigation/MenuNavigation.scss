@@ -12,3 +12,23 @@
 .ant-menu-item {
   color: #000000 !important
 }
+.title-bold {
+  font-weight: 500;
+  font-size: 1.05em;
+  // color: #1890ff;
+}
+div span i svg {
+  margin-bottom: 7px;
+}
+li a i svg {
+  margin-bottom: 6px;
+}
+.ant-menu-submenu-selected div span span {
+  font-weight: bold;
+  color: #1890ff;
+  transition: color 1s, font-weight 1s ;
+}
+.ant-menu{
+  // background: #fff;
+  
+}

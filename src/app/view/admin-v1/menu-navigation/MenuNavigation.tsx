@@ -72,13 +72,14 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     props.onCallLoading()
                 }}
                 defaultOpenKeys={["sub1", "sub0"]}
+                defaultSelectedKeys={["event"]}
             >
                 <SubMenu
                     key="sub0"
                     title={
                         <span>
                             <Icon type="home" />
-                            <span>Trang chủ</span>
+                            <span className="title-bold">Việc làm</span>
                         </span>
                     }
                 >
@@ -100,7 +101,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="form" />
-                            <span>Tuyển dụng</span>
+                            <span className="title-bold">Tuyển dụng</span>
                         </span>
                     }
                 >
@@ -157,7 +158,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="star" />
-                            <span>Tiện ích dịch vụ</span>
+                            <span className="title-bold">Tiện ích dịch vụ</span>
                         </span>
                     }
                 >
@@ -185,7 +186,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="bell" />
-                            <span>Thông báo</span>
+                            <span className="title-bold">Thông báo</span>
                         </span>
                     }
                 >
@@ -201,7 +202,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="profile" />
-                            <span>Hồ sơ NTD</span>
+                            <span className="title-bold">Hồ sơ NTD</span>
                         </span>
                     }
                 >
@@ -216,8 +217,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     key="sub4"
                     title={
                         <span>
-                            <Icon type="more" />
-                            <span>Thông tin khác</span>
+                            <Icon type="unordered-list" />
+                            <span className="title-bold">Thông tin khác</span>
                         </span>
                     }
                 >

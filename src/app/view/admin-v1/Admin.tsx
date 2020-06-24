@@ -458,7 +458,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             background: '#fff',
                         }}
                     >
-                        <Breadcrumb >
+                        {/* <Breadcrumb >
                             <Breadcrumb.Item >
                                 <a href='/v1/admin' >
                                     <Icon type="home" />
@@ -478,7 +478,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
 
                                 return newBreakCump
                             })}
-                        </Breadcrumb>
+                        </Breadcrumb> */}
                         {!loading ?
                             <Row>
                                 {/* <Col sm={1} md={1} lg={2}></Col> */}
@@ -499,9 +499,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             : <Loading />}
                     </Content>
                 </Layout>
-                <>
+                {/* <>
                     <BackTop />
-                </>
+                </> */}
             </Layout >
         )
     }
