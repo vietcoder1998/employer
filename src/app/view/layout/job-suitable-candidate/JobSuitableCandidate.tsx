@@ -1,5 +1,5 @@
 import React from 'react';
-import { Empty, Pagination } from "antd";
+import { Empty, Pagination, Spin } from "antd";
 import { IJobSuitableCandidate } from "../../../../models/job-suitable-candidate";
 import CanSuitableCard from '../can-suitable-card/CanSuitableCard';
 import Loading from '../loading/Loading';
@@ -29,7 +29,8 @@ export default function JobSuitableCandidate(props?: IProps) {
                             {item.lastName + " " + item.firstName}
                         </CanSuitableCard>
 
-                    )) : <Empty style={{padding: 30}} description={"Không tìm thấy ứng viên nào phù hợp"} />): <Loading />
+                    )) : <Empty style={{padding: 30}} description={"Không tìm thấy ứng viên nào phù hợp"} />): 
+                    <div style={{display: 'flex', justifyContent: 'center', minHeight: 80, alignItems: 'center'}}><Spin /></div>
             }
             <Pagination
                 pageSize={props.pageSize}
@@ -37,7 +38,8 @@ export default function JobSuitableCandidate(props?: IProps) {
                 style={{ textAlign: "center" }}
                 onChange={(page, pageSize) => {
                     props.onGetListJobSuitableCandidate(page - 1, pageSize);
-                    window.scroll(0, 0);
+                    // window.scroll(0, 0);
+                    window.location.assign('#scroll')
                 }}
             />
         </div>

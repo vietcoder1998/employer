@@ -8,7 +8,15 @@ import { EMPLOYER_HOST } from '../../environment/dev';
 import { TYPE } from '../../const/type';
 
 function* getListJobSuitableCandidatesData(action: any) {
+    yield put({
+        type: REDUX.JOB_SUITABLE_CANDIDATE.LOADING_JOB_SUITABLE_CANDIDATE,
+        loading: true
+    });
     let res = yield call(callJobSuitableCandidates, action);
+    yield put({
+        type: REDUX.JOB_SUITABLE_CANDIDATE.LOADING_JOB_SUITABLE_CANDIDATE,
+        loading: false
+    });
     let data: IJobSuitableCandidates = {
         items: [],
         pageIndex: 0,

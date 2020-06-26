@@ -66,3 +66,36 @@ export const NotUpdate = (props?: { msg?: any, children?: any, warning?: boolean
         {props.children ? props.children : (props.msg ? props.msg : "Chưa cập nhật")}
     </label>
 );
+export function JobType(props: {children?: any, width?: any, fontSize?: any}) {
+    let style: CSSProperties = {
+        color: 'black',
+        backgroundColor: 'white',
+        // borderRadius: 3,
+        padding: 3,
+        margin: '3px 0',
+        fontSize: props.fontSize ? props.fontSize : '0.8em',
+        textAlign: 'center',
+        width: props.width ? props.width : '70px',
+        display: 'inline-block'
+    }
+    switch (props.children) {
+        case 'FULLTIME':
+            style.color = 'white';
+            style.backgroundColor = '#06bbe4';
+            break;
+
+        case 'PARTTIME':
+            style.color = 'white';
+            style.backgroundColor = '#00b33c';
+            break;
+        case 'INTERNSHIP':
+            style.color = 'white';
+            style.backgroundColor = '#ff9933';
+            break;
+
+        default:
+            break;
+    }
+
+    return <div style={style}>{props.children}</div>
+}

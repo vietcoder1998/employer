@@ -316,9 +316,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             </Tooltip>
 
                             <Tooltip title={"Đăng bài"}>
-                                <div
-                                    className="noti-icon"
-                                    style={{ padding: 18 }}
+                                <span
+                                    className="plus-icon"
+                                    style={{bottom: 7}}
                                     onClick={
                                         () => {
                                             this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE);
@@ -329,16 +329,17 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <Icon
                                         type="plus"
                                         style={{
-                                            position: "absolute",
+                                            // position: "absolute",
                                             color: "white",
                                             fontSize: 18,
                                             left: 10,
                                             top: 10
                                         }}
                                     />
-                                </div>
+                                    <span style={{color: '#fff'}}> Đăng Bài</span>
+                                </span>
                             </Tooltip>
-                            <Tooltip title={"Tìm ứng viên"}>
+                            {/* <Tooltip title={"Tìm ứng viên"}>
                                 <div
                                     className="noti-icon"
                                     style={{ padding: 18 }}
@@ -361,6 +362,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     />
                                 </div>
                             </Tooltip>
+                             */}
                             <Popover
                                 content={
                                     < >

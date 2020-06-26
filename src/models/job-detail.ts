@@ -1,5 +1,6 @@
 import { IShiftDetail } from './job-annoucement-detail';
 export default interface IJobDetail {
+    isLoading?: boolean;
     jobTitle?: string;
     jobName?: string;
     employerName?: string;
@@ -11,5 +12,5 @@ export default interface IJobDetail {
     employerUrl?: string;
     employerBranch?: string;
     repliedDate?: number;
-    requiredSkills?: Array<any>
+    requiredSkills?: Array<any>;
 }

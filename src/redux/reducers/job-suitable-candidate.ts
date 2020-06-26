@@ -6,6 +6,7 @@ let initState: IJobSuitableCandidates = {
     pageIndex: 0,
     pageSize: 0,
     totalItems: 0,
+    loading: true
 }
 
 export const JobSuitableCandidates = (state: IJobSuitableCandidates = initState, action: any): IJobSuitableCandidates => {
@@ -14,7 +15,10 @@ export const JobSuitableCandidates = (state: IJobSuitableCandidates = initState,
             return {
                 ...action.data,
             }
-
+        case REDUX.JOB_SUITABLE_CANDIDATE.LOADING_JOB_SUITABLE_CANDIDATE:
+                return {
+                    ...state, loading: action.loading
+                }
         default:
             return state;
     }

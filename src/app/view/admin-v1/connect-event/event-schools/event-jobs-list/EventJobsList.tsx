@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs, Spin } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './EventJobsList.scss';
 import { TYPE } from '../../../../../../const/type';
@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../models/job-names';
+import { IEventSchoolFilter } from '../../../../../../models/event-schools';
+
 import { IEmBranch } from '../../../../../../models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IEventJobDetail } from '../../../../../../models/event-job-detail';
@@ -26,7 +28,7 @@ import { IEventJobsFilter, IEventJob } from '../../../../../../models/event-jobs
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
 const { TabPane } = Tabs;
-const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
+const plainOptions = ['Đang chờ', 'Chấp nhận'];
 const strForSearch = str => {
     return str
         ? str
@@ -35,32 +37,6 @@ const strForSearch = str => {
             .toLowerCase()
         : str;
 };
-const viewCount = (
-    id?: string | number,
-    count?: string | number,
-    color?: "red" | "#1687f2" | "orange",
-    state?: string,
-    icon?: "user" | "user-delete" | "user-add"
-) => (
-        <div
-            className="n-candidate"
-            style={{
-                pointerEvents: count === 0 ? 'none' : undefined
-            }}
-        >
-            <Tooltip title="Xem chi tiết">
-                <Link
-                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
-                    disabled={count === 0 ? true : false}
-                    target="_blank"
-                >
-                    <div style={{ color }}>
-                        {count} <Icon type={icon} />
-                    </div>
-                </Link>
-            </Tooltip>
-        </div>
-    );
 
 const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
     let { priority } = props;
@@ -113,6 +89,8 @@ interface IEventJobsListProps extends StateProps, DispatchProps {
     handleModal: Function;
     getListJobSuitableCandidate: Function;
     history: any;
+    getListEventSchools?: Function
+    listEventSchools: any
 };
 
 interface IEventJobsListState {
@@ -147,10 +125,13 @@ interface IEventJobsListState {
     homeExpired: boolean;
     searchExpired: boolean;
     eventJobDetail: IEventJobDetail;
+    listEventSchools?: Array<any>;
     typeModal: string;
     ojd?: boolean;
     jid?: string;
     eid?: string;
+    bodyListEventSchools?: any;
+    loadingDetailJob?: boolean;
 };
 
 
@@ -196,7 +177,14 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 jobShiftFilter: null,
                 jobLocationFilter: null
             },
-
+            bodyListEventSchools: {
+                schoolID: null,
+                createdDate: null,
+                startedDate: null,
+                finishedDate: null,
+                started: null,
+                finished: null
+            },
             unCheckbox: false,
             listCheck: [],
             homePriority: null,
@@ -210,6 +198,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             ojd: false,
             jid: null,
             eid: null,
+            listEventSchools: null,
+            loadingDetailJob: true
         };
     }
 
@@ -227,7 +217,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             width: 220,
             dataIndex: 'title',
             key: 'jobTitle',
-            fixed: 'left'
+            fixed: 'left',
+            render: ({ item }) => this.titleJob(item),
         },
         {
             title: 'Loại công việc',
@@ -247,38 +238,23 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             title: 'Chi nhánh',
             dataIndex: 'employerBranchName',
             key: 'employerBranchName',
-            width: 300,
+            // width: 200,
         },
         {
             title: 'Dịch vụ sử dụng',
             dataIndex: 'priority',
             className: 'action',
             key: 'priority',
-            // width: 190,
+            width: 190,
         },
         {
-            title: 'Trạng thái',
-            dataIndex: 'hidden',
-            className: 'action',
-            key: 'hidden',
-            // width: 120,
-        },
-        {
-            title: 'Ngày đăng',
+            title: 'Ngày đăng / Ngày hết hạn',
             dataIndex: 'createdDate',
             className: 'action',
             key: 'createdDate',
-            // width: 100,
-        },
-        {
-            title: 'Ngày hết hạn',
-            dataIndex: 'expirationDate',
-            className: 'action',
-            key: 'expirationDate',
-            // width: 100,
+            width: 120,
         },
 
-        
         {
             title: 'Thao tác',
             key: 'operation',
@@ -286,7 +262,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             className: 'action',
             dataIndex: 'operation',
             render: ({ hidden, id, schoolEventID }) => this.EditToolTip(hidden, id, schoolEventID),
-            width: 120,
+            width: 100,
         }
     ];
 
@@ -321,40 +297,46 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let { showModal } = this.state;
         this.setState({ showModal: !showModal });
     };
-
+    titleJob = (item) => {
+        return (
+            <div>
+                <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff' }} onClick={
+                    async () => {
+                        this.setState({ ojd: true, loadingDetailJob: true });
+                        setTimeout(() => {
+                            this.props.getListJobSuitableCandidate(item.id, 0, 10, TYPE.STUDENT);
+                            this.props.getEventJobDetail(item.id, item.schoolEventID);
+                            this.setState({ jid: item.id })
+                        }, 300);
+                    }
+                } target="_blank">{item.jobTitle}</a>
+                <div>{item.jobName ? item.jobName.name : ""}</div>
+            </div>
+        )
+    }
     EditToolTip = (hidden?: boolean, id?: string, schoolEventID?: string) => {
         let { body, pageIndex, pageSize } = this.state;
         return (
             <>
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                     <Icon
-                        className="f-ic"
+                        className="f-ic dollar"
                         type="dollar"
-                        style={{ color: "orange" }}
                         onClick={async () => {
                             await this.props.handleDrawer();
                             await setTimeout(() => { this.props.getEventJobDetail(id, schoolEventID) }, 400)
                         }} />
                 </Tooltip>
-                <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                    <Link
-                        to={
-                            routeLink.EVENT +
-                            routePath.JOBS +
-                            routePath.FIX +
-                            `/${id}?eid=${schoolEventID}`
-                        }
-                        target="_blank"
-                    >
-                        <Icon
-                            className="f-ic"
-                            type="edit"
-                            theme="twoTone"
-                            twoToneColor="green"
-                        />
-                    </Link>
+                <Tooltip placement="top" title={"Chỉnh sửa"}>
+                    <Icon
+                        className="f-ic edit"
+                        type="edit"
+                        onClick={() => {
+                            window.open(routeLink.EVENT + routePath.JOBS + routePath.FIX + `/${id}?eid=${schoolEventID}`)
+                        }}
+                    />
                 </Tooltip>
-                <Tooltip placement="topRight" title={"Xem tương thích"}>
+                {/* <Tooltip placement="topRight" title={"Xem tương thích"}>
                     <Icon
                         className="f-ic"
                         type="solution"
@@ -368,29 +350,20 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             }, 300);
                         }}
                     />
-                </Tooltip>
+                </Tooltip> */}
                 <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                    <Link
-                        to={
-                            routeLink.EVENT +
-                            routePath.JOBS +
-                            routePath.COPY +
-                            `/${id}?eid=${schoolEventID}`
-                        }
-                    >
-                        <Icon
-                            className="f-ic"
-                            type="copy"
-                            theme="twoTone"
-                        />
-                    </Link>
+                    <Icon
+                        className="f-ic copy"
+                        type="copy"
+                        onClick={() => {
+                            window.open(routeLink.EVENT + routePath.JOBS + routePath.COPY + `/${id}?eid=${schoolEventID}`)
+                        }}
+                    />
                 </Tooltip>
                 <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                     <Icon
-                        className="f-ic"
+                        className="f-ic delete"
                         type="delete"
-                        theme="twoTone"
-                        twoToneColor="red"
                         onClick={() => this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })}
                     />
                 </Tooltip>
@@ -412,15 +385,20 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             let url_string = window.location.href;
             let url = new URL(url_string);
             let eid = url.searchParams.get("eid");
+            let expiredJob = url.searchParams.get("expiredJob");
+
             let body = prevState.body;
+            if (expiredJob) {
+                body[TYPE.JOB_FILTER.expired] = expiredJob
+            }
             body.schoolEventID = eid;
             nextProps.getJobServiceEvent(eid);
-            let renderTitleJob = (item) => (
-                <div>
-                    <a style={{ fontWeight: "bold", fontSize: '1.12em' }} href={routeLink.EVENT + routePath.JOBS + routePath.FIX + `/${item.id}?eid=${item.schoolEventID}`} target="_blank">{item.jobTitle}</a>
-                    <div>{item.jobName ? item.jobName.name : ""}</div>
-                </div>
-            )
+            // let renderTitleJob = (item) => (
+            //     <div>
+            //         <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em' }} href={routeLink.EVENT + routePath.JOBS + routePath.FIX + `/${item.id}?eid=${item.schoolEventID}`} target="_blank">{item.jobTitle}</a>
+            //         <div>{item.jobName ? item.jobName.name : ""}</div>
+            //     </div>
+            // )
             let renderJobType = (item) => {
                 let colorJobType, nameJobType
                 if (item.jobType === 'PARTTIME') {
@@ -439,7 +417,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             }
             let renderCandidate = (item) => {
                 return (
-                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                         <div
                             className="n-candidate"
                             style={{
@@ -458,7 +436,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 </Link>
                             </Tooltip>
                         </div>
-                        <div style={{margin: '0 8px'}}> / </div>
+                        <div style={{ margin: '0 8px' }}> / </div>
                         <div
                             className="n-candidate"
                             style={{
@@ -482,28 +460,42 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
 
                 )
             }
+            let renderPriority = (item) => {
+                if (!item.priority.homePriority && !item.priority.searchPriority && !item.priority.highlight) {
+                    return (<div style={{ fontStyle: 'italic' }}>Chưa kích hoạt gói dịch vụ</div>)
+                } else {
+                    return (
+                        <>
+                            <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
+                            <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
+                            <ViewPriority priority={item.priority.highlight} timeLeft={item.priority.highlightTimeLeft} />
+                        </>
+                    )
+                }
+            }
+            let renderTime = (item) => (
+                <div style={{ justifyContent: 'center', display: 'flex' }}>
+                    <div style={{ textAlign: 'left' }}>
+                        <div><i class="fa fa-calendar-o" aria-hidden="true"></i> {timeConverter(item.createdDate, 1000)}</div>
+                        <div><i class="fa fa-calendar-times-o" aria-hidden="true"></i> {timeConverter(item.expirationDate, 1000)}</div>
+                    </div>
+                </div>
+            )
 
             nextProps.listEventJobs.forEach((item: IEventJob, index: number) => {
                 dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    title: renderTitleJob(item),
+                    title: { item },
                     // jobName: item.jobName ? item.jobName.name : "",
                     jobType: renderJobType(item),
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
-                    createdDate: timeConverter(item.createdDate, 1000),
-                    expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.id, item.acceptedApplied, "#1687f2", TYPE.ACCEPTED, "user-add"),
-                    rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED, "user-delete"),
+                    createdDate: renderTime(item),
+                    // expirationDate: timeConverter(item.expirationDate, 1000),
                     pendingApplied: renderCandidate(item),
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority:
-                        <>
-                            <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
-                            <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
-                            <ViewPriority priority={item.priority.highlight} timeLeft={item.priority.highlightTimeLeft} />
-                        </>,
-                    operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID}
+                    priority: renderPriority(item),
+                    operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID }
                 });
             })
 
@@ -521,6 +513,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             nextProps.eventJobDetail !== prevState.eventJobDetail
         ) {
             let { eventJobDetail } = nextProps;
+            // console.log(eventJobDetail);
             return {
                 homePriority: eventJobDetail.priority.homePriority,
                 highlight: eventJobDetail.priority.highlight,
@@ -528,20 +521,25 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 searchPriority: eventJobDetail.priority.searchPriority,
                 homeExpired: eventJobDetail.priority.homeExpired,
                 searchExpired: eventJobDetail.priority.searchExpired,
-                eventJobDetail
+                eventJobDetail,
+                loadingDetailJob: false
             }
         }
-
+        // if (nextProps.listEventSchools && nextProps.listEventSchools !== prevState.listEventSchools) {
+        //     console.log(nextProps.listEventSchools);
+        //     return null;
+        // }
         return null;
     };
 
     async componentDidMount() {
         await this.props.getListEmBranches();
+        await this.props.getListEventSchools(this.state.bodyListEventSchools, 0, 0);
         await this.searchEventJobs();
     };
 
     onChoseHomePriority = (event: any) => {
-        console.log(event)
+        // console.log(event)
         this.setState({ homePriority: event });
     };
 
@@ -596,10 +594,13 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             });
         }
 
-        this.setState({ body });
+        this.setState({ body }, () => {
+            this.searchEventJobs()
+        });
     };
 
     setPageIndex = async (event: any) => {
+        window.scrollTo({ top: 0});
         await this.setState({ pageIndex: event.current - 1, pageSize: event.pageSize });
         await this.searchEventJobs();
     };
@@ -628,6 +629,12 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     value = { distance: 1, lat: data[0].lat, lon: data[0].lon }
                 }
                 break;
+            case 'schoolEventID':
+                if (value) {
+                    value = value
+                } else {
+                    value = null
+                }
             default:
                 break;
         }
@@ -644,7 +651,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         }
 
         body[param] = value;
-        console.log(body);
+        // console.log(body);
         this.setState({ body }, () => {
             this.searchEventJobs()
         });
@@ -759,6 +766,16 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             return false;
         }
     }
+    searchWithUnicodeLabel = (input, option) => {
+        if (option.props.label) {
+            // console.log(option.props.label)
+            return strForSearch(option.props.label).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
     render() {
         let {
             dataTable,
@@ -785,6 +802,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             jobServiceEvent,
             modalState,
             jobSuitableCandidates,
+            listEventSchools
         } = this.props;
 
         let homeExpiration = eventJobDetail.priority.homeExpiration;
@@ -830,26 +848,20 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 />
                 <Modal
                     visible={ojd}
-                    title={<div style={{ textTransform: "uppercase" }}>{eventJobDetail.jobTitle}</div>}
+                    title={<div style={{ textTransform: "uppercase" }}>Chi tiết công việc</div>}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
                     onCancel={() => {
                         this.setState({ ojd: false, loading: false });
                     }}
-                    footer={[
-                        <Button
-                            key="cancel"
-                            type="danger"
-                            children="Đóng"
-                            onClick={() => {
-                                this.setState({
-                                    ojd: false,
-                                });
-                            }}
-                        />
-                    ]}
+                    footer={null}
                 >
+                    {this.state.loadingDetailJob ? 
+                    <div style={{display: 'flex', justifyContent: 'center', minHeight: 200, alignItems: 'center'}}>
+                        <Spin /> 
+                    </div>
+                    : 
                     <Row>
                         <Col span={14}>
                             <JobDetail
@@ -863,11 +875,13 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     shifts: eventJobDetail.shifts,
                                     description: eventJobDetail.description,
                                     createdDate: eventJobDetail.createdDate,
-                                    employerBranch: eventJobDetail.employerBranchName
+                                    employerBranch: eventJobDetail.employerBranchName,
+                                    requiredSkills: eventJobDetail.requiredSkills
                                 }}
                             />
                         </Col>
                         <Col span={10}>
+                            <div id="scroll"></div>
                             <Tabs key={TYPE.STUDENT} >
                                 <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
                             </Tabs>
@@ -876,10 +890,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 pageIndex={jobSuitableCandidates.pageIndex}
                                 pageSize={jobSuitableCandidates.pageSize}
                                 totalItems={jobSuitableCandidates.totalItems}
+                                loading={jobSuitableCandidates.loading}
                                 onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize, TYPE.STUDENT)}
                             />
                         </Col>
-                    </Row>
+                    </Row> }
                 </ Modal>
                 <DrawerConfig
                     title={"Kích hoạt gói dịch vụ tuyển dụng"}
@@ -995,8 +1010,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     </div>
                 </DrawerConfig>
                 <div className="common-content">
-                    <h5>
+                    {/* <h5>
                         Quản lý bài đăng sự kiện nhà trường {`(${totalItems})`}
+                    </h5> */}
                         {/* <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventJobs()}
@@ -1012,7 +1028,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 icon={loadingTable ? "loading" : "filter"}
                             />
                         </Tooltip> */}
-                        <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${eid}`} >
+                        {/* <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${eid}`} >
                             <Tooltip title="Tạo bài đăng mới" >
                                 <Button
                                     type="primary"
@@ -1027,26 +1043,39 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     icon={"plus"}
                                 />
                             </Tooltip>
-                        </Link>
-                    </h5>
+                        </Link> */}
+                    {/* </h5> */}
                     <div className="table-operations">
-                        <Row >
+                        <Row style={{marginBottom: 10}}>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái hoạt động"} />
+                                <IptLetterP value={"Sự kiện trường"} className="titleFilter" />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
-                                    filterOption={this.searchWithUnicode}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
+                                    optionFilterProp="label"
+                                    filterOption={this.searchWithUnicodeLabel}
+                                    onChange={(event: any) => this.onChangeType(event, 'schoolEventID')}
+                                    allowClear
                                 >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.FALSE}>Còn hạn</Option>
-                                    <Option value={TYPE.TRUE}>Hết hạn</Option>
+                                    <Option value={null} label={'Tất cả'}>Tất cả</Option>
+                                    {
+                                        listEventSchools &&
+                                        listEventSchools.map(
+                                            (item, index) =>
+                                                <Option key={index} value={item.id} label={item.name}>
+                                                    {item.name}
+                                                    <div style={{ color: '#1890ff', fontSize: '0.9em' }}>
+                                                        #{item.school.shortName}
+                                                    </div>
+
+                                                </Option>
+                                        )
+                                    }
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Tên việc đăng tuyển"} />
+                                <IptLetterP value={"Tên việc đăng tuyển"} className="titleFilter" />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
@@ -1054,6 +1083,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     style={{ width: "100%" }}
                                     filterOption={this.searchWithUnicode}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
+                                    allowClear
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -1065,7 +1095,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Chi nhánh"} />
+                                <IptLetterP value={"Chi nhánh"} className="titleFilter" />
                                 <Select
                                     showSearch
                                     placeholder="Tất cả"
@@ -1073,6 +1103,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     style={{ width: "100%" }}
                                     filterOption={this.searchWithUnicode}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobLocationFilter)}
+                                    allowClear
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -1083,8 +1114,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     }
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Loại công việc"} />
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Loại công việc"} className="titleFilter"/>
                                 <Select
                                     showSearch
                                     placeholder="Tất cả"
@@ -1098,8 +1129,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
                                     <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
                                 </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Gói dịch vụ"} />
                                 <Cascader
                                     placeholder="Không chọn gói"
@@ -1115,8 +1146,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                         }
                                     }
                                 />
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Hạn đang bài"} />
                                 <Select
                                     showSearch
@@ -1130,8 +1161,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.FALSE}>Còn hạn</Option>
                                     <Option value={TYPE.TRUE}>Hết hạn</Option>
                                 </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái ẩn/hiện"} />
                                 <Select
                                     showSearch
@@ -1144,32 +1175,42 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.TRUE}>Đang ẩn</Option>
                                     <Option value={TYPE.FALSE}>Đang hiện</Option>
                                 </Select>
-                            </Col>
+                            </Col> */}
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
-                                <Checkbox
-                                    indeterminate={unCheckbox}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event.target.checked);
-                                            this.setState({ unCheckbox: event.target.checked })
-                                        }
-                                    }
-                                >
-                                    Bất kì
+                                <div>
+
+                                    <div>
+                                        <Checkbox
+                                            indeterminate={unCheckbox}
+                                            onChange={
+                                                (event: any) => {
+                                                    this.handleCheckBox(event.target.checked);
+                                                    this.setState({ unCheckbox: event.target.checked })
+                                                    // console.log(unCheckbox)
+                                                    if(unCheckbox) {
+                                                        this.setState({listCheck: []})
+                                                    }
+                                                }
+                                            }
+                                        >
+                                            Bất kì
                                 </Checkbox>
-                                <hr />
-                                <CheckboxGroup
-                                    options={plainOptions}
-                                    value={listCheck}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event);
-                                            this.setState({ listCheck: event })
+                                    </div>
+
+                                    <hr />
+                                    <CheckboxGroup
+                                        options={plainOptions}
+                                        value={listCheck}
+                                        onChange={
+                                            (event: any) => {
+                                                this.handleCheckBox(event);
+                                                this.setState({ listCheck: event })
+                                            }
                                         }
-                                    }
-                                    disabled={unCheckbox}
-                                />
+                                        disabled={unCheckbox}
+                                    />
+                                </div>
                             </Col>
                         </Row>
                         <Table
@@ -1177,7 +1218,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1600 }}
+                            scroll={{ x: 1090 }}
                             rowKey="event-job"
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
@@ -1213,6 +1254,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_EVENT_JOB_SERVICE, id }),
     getListJobSuitableCandidate: (jid?: string, pageIndex?: number, pageSize?: number) =>
         dispatch({ type: REDUX_SAGA.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, jid, pageIndex, pageSize }),
+    getListEventSchools: (body: any, pageIndex: number, pageSize: number) =>
+        dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_LIST_EVENT_SCHOOLS, body, pageIndex, pageSize }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -1224,7 +1267,8 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     drawerState: state.MutilBox.drawerState,
     totalItems: state.EventJobs.totalItems,
     jobSuitableCandidates: state.JobSuitableCandidates,
-    eventJobDetail: state.EventJobDetail
+    eventJobDetail: state.EventJobDetail,
+    listEventSchools: state.EventSchools.items,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

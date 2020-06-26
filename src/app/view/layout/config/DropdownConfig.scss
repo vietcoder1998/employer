@@ -35,17 +35,20 @@
 .tg-dr-cf-main {
   margin-top: 6px;
   height: 38px;
-  width: 100px;
+  width: 60px;
   cursor: pointer;
   transition: 0.25s;
   border-radius: 18px;
-  background-color: rgba(109, 109, 109, 0.149);;
+  background-color: rgb(0, 120, 185);
 
   &:hover {
-    background-color: rgba(102, 102, 102, 0.442);
+    background-color: rgb(0, 104, 160);
   }
 }
-
+.anticon-caret-down, .anticon-caret-up {
+  right: 5px !important;
+  font-size: unset
+}
 .d-tg {
   width: 100%;
   position: absolute;
