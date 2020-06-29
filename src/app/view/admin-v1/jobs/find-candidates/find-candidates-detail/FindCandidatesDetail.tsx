@@ -142,7 +142,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             case TYPE.UNLOCK:
                 await _requestToServer(
                     PUT,
-                    FIND_CANDIDATE_DETAIL + `/${id}/unlocked`,
+                    '/api/employers/students' + `/${id}/unlocked`,
                     null,
                     null,
                     undefined,
@@ -162,7 +162,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             case TYPE.SAVE:
                 await _requestToServer(
                     body && body.saved ? DELETE : POST,
-                    SAVED_CANDIDATE_PROFILES + (body && body.saved ? '/saved' : `/${id}/saved`),
+                    '/api/employers/students' + (body && body.saved ? '/saved' : `/${id}/saved`),
                     body && body.saved ? [id] : undefined,
                     undefined,
                     undefined,

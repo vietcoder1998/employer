@@ -36,6 +36,9 @@
    display: -webkit-box;
    -webkit-line-clamp: 2; /* number of lines to show */
    -webkit-box-orient: vertical;
+   &:focus {
+    text-decoration: underline !important;
+   }
 }
 .dollar {
   // color: rgb(255, 145, 0);
