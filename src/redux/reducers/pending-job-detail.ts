@@ -23,7 +23,7 @@ let initState: IPendingJobDetail = {
     jobID: null,
     message: null,
     repliedDate: null,
-    state: null,
+    state: null
 };
 
 export const PendingJobDetail = (state: IPendingJobDetail = initState, action: any) => {

@@ -120,7 +120,7 @@ export default function NotiItem(props: INotiItemProps) {
     }
 
     return (
-        <div className='noti-info test'>
+        <div className='noti-info'>
             <div key={item.id}
                 className='li-info '
                 style={{ backgroundColor: seen ? 'white' : 'aliceblue' }}>

@@ -81,14 +81,15 @@ export default function JobDetail(props: IJobDetailProps) {
     let { jobDetail } = props;
     let list_des = jobDetail && convertStringToArray(jobDetail.description);
     let allSkills = [];
-
-    // if (props.ns) {
-    //     allSkills = props.jobDetail.requiredSkills.map((item) => item.name);
-    // } else {
-    //     if (props.jobDetail && props.jobDetail.requiredSkills && props.listSkills) {
-    //         allSkills = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
-    //     }
-    // }
+    
+    if (jobDetail.type !== 'pendingJob') {
+        allSkills = props.jobDetail.requiredSkills.map((item) => item.name);
+    } else {
+        if (props.jobDetail && props.jobDetail.requiredSkills && props.listSkills) {
+            allSkills = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
+        }
+    }
+    console.log(allSkills)
 
     return (
         <>
@@ -99,9 +100,8 @@ export default function JobDetail(props: IJobDetailProps) {
                         <Col xs={4} sm={8} md={4} lg={3} xl={4} className="a_c">
                             <Avatar src={jobDetail && jobDetail.employerUrl} icon="user" shape={'square'} size={70} />
                             <JobType>{jobDetail && jobDetail.jobType}</JobType>
-
                         </Col>
-                        <Col xs={20} sm={12} md={16} lg={17} xl={14}>
+                        <Col xs={20} sm={12} md={16} lg={17} xl={20}>
                             <div className="d_j_t">
                                 <Icon type="home" style={{ color: "#168ECD" }} />
                                 <label>
@@ -248,7 +248,8 @@ export default function JobDetail(props: IJobDetailProps) {
                                             <p style={{ color: 'black', fontSize: '1.1em', borderBottom: '1px solid rgb(119, 197, 255)', paddingBottom: 5, paddingLeft: '15px', backgroundColor: 'rgb(226, 242, 254)', margin: '0', paddingTop: 5 }}>
                                                 Ca số {index + 1}
                                             </p>
-                                            <p><Icon type="clock-circle" style={{ color: '#168ECD' }} />{' ' + item.startTime + '-' + item.endTime}</p>
+                                            {jobDetail.jobType !== 'INTERNSHIP' ? 
+                                            <p><Icon type="clock-circle" style={{ color: '#168ECD' }} />{' ' + item.startTime + '-' + item.endTime}</p> : null }
                                             <p><Icon type="dollar" style={{ color: '#168ECD' }} />
                                                 {convertSalary(item.minSalary, item.maxSalary, item.unit)}
                                             </p>
@@ -288,9 +289,8 @@ export default function JobDetail(props: IJobDetailProps) {
                 <div className='skills-job-detail '>
                     <h6>Kỹ năng công việc</h6>
                     <div>
-                        {jobDetail.requiredSkills && jobDetail.requiredSkills.length > 0 ?
-                            jobDetail.requiredSkills.map(
-                                (item, index) => { return <label key={index} className='skills-detail'>{item.name}</label> })
+                        {allSkills.length > 0 ? allSkills.map(
+                                (item, index) => { return <label key={index} className='skills-detail'>{item}</label> })
                             : <p>Ứng viên không đòi hỏi kỹ năng khác</p>
                         }
                     </div>

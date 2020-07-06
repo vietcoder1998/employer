@@ -72,8 +72,8 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
                 expirationDate: null,
                 shifts: [
                     {
-                        startTime: "00:00",
-                        endTime: "00:00",
+                        startTime: null,
+                        endTime: null,
                         minSalary: 0,
                         maxSalary: 0,
                         unit: 'ca',
@@ -367,7 +367,7 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
                 <h5>
                     {
                         typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING
-                            ? "Thông tin bài đăng sự kiện(sửa)" :
+                            ? "Thông tin bài đăng sự kiện (sửa)" :
                             `Đăng bài sự kiện (${normalQuantity ? normalQuantity : 0})`
                     }
                 </h5>
@@ -547,8 +547,7 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
 
                     (eventJobDetail.acceptedApplied === 0 &&
                         eventJobDetail.pendingApplied === 0 &&
-                        eventJobDetail.rejectedApplied === 0) ||
-                        (typeCpn !== TYPE.FIX) ?
+                        eventJobDetail.rejectedApplied === 0) ?
                         <div className="Announcements-create-content">
                             <Button
                                 type="primary"

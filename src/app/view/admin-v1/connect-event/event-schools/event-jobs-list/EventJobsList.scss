@@ -10,7 +10,7 @@
 
 .high_light{ color: white; background-color: rgb(255, 166, 0); padding: 10px 20px; margin: 5px; border-radius: 3px; height: auto;}
 .normal{color: rgb(41, 41, 41); background-color: rgb(159, 255, 245); padding: 10px 20px; margin: 5px; border-radius: 3px;}
-.in_day{color: rgb(54, 54, 54); background-color: rgb(105, 192, 255); padding: 10px 20px; margin: 5px; border-radius: 3px;}
+.in_day{color: white; background-color: rgb(105, 192, 255); padding: 10px 20px; margin: 5px; border-radius: 3px;}
 .top{color: #ffffff; background-color: #ff4f4f; padding: 10px 20px; margin: 5px; border-radius: 3px;}
 .title_highlight{color: #ffffff; background-color: rgba(0, 106, 255, 0.87); padding: 10px 20px; margin: 5px; border-radius: 3px;}
 
@@ -41,7 +41,7 @@
    }
 }
 .dollar {
-  // color: rgb(255, 145, 0);
+  background-color: #fff;
   &:hover{
     background-color: rgb(255, 145, 0);
     color: white;
@@ -50,6 +50,7 @@
 }
 .edit {
   // color: rgb(0, 179, 60);
+  background-color: #fff;
   &:hover{
     background-color: rgb(0, 179, 60);
     color: white;
@@ -58,6 +59,8 @@
 }
 .delete {
   // color: #ff4242;
+  background-color: #fff;
+
   &:hover{
     background-color: #ff4242;
     color: white;
@@ -66,6 +69,8 @@
 }
 .copy {
   // color: rgb(6, 187, 228);
+  background-color: #fff;
+
   &:hover{
     background-color: rgb(6, 187, 228);
     color: white;
@@ -116,4 +121,7 @@ hr {
 }
 .ant-modal-body {
   padding: 3px 15px !important;
+}
+.TitleJob {
+  margin-bottom: 10px !important;
 }

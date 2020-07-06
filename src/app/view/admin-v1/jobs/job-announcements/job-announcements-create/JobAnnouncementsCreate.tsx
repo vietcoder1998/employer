@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result, Card, Row, Col } from 'antd';
+import { Divider, Button, Input, DatePicker, Select, Tabs, message, Result, Card, Row, Col, Form } from 'antd';
 import { connect } from 'react-redux';
 import './JobAnnouncementsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -48,8 +48,16 @@ interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
     getJobAnnouncementDetail: Function;
     getListEmBranches: Function;
     getPendingJobDetail: (id?: string) => any;
+    form?: any;
 };
-
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
 class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJobAnnouncementsCreateState> {
     constructor(props) {
         super(props);
@@ -68,23 +76,23 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 employerBranchID: null,
                 description: null,
                 requiredSkillIDs: [],
-                jobType: null,
+                jobType: 'FULLTIME',
                 expirationDate: null,
                 shifts: [
                     {
-                        startTime: "00:00",
-                        endTime: "00:00",
+                        startTime: null,
+                        endTime: null,
                         minSalary: 0,
                         maxSalary: 0,
-                        unit: 'ca',
-                        mon: false,
-                        tue: false,
-                        wed: false,
-                        thu: false,
-                        fri: false,
-                        sat: false,
+                        unit: 'tháng',
+                        mon: true,
+                        tue: true,
+                        wed: true,
+                        thu: true,
+                        fri: true,
+                        sat: true,
                         sun: false,
-                        genderRequireds: null
+                        genderRequireds: [{ gender: 'BOTH', quantity: 1, id: null }]
                     },
                 ]
             },
@@ -255,9 +263,10 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     pretreatmentBody = (body: IAnnoucementBody, typeCpn: string) => {
         let newBody = body;
         this.setState({ notComplete: false });
-
         newBody.shifts.forEach((element: any, index: number) => {
+            console.log(element.genderRequireds)
             if (!element.genderRequireds || element.genderRequireds.length === 0) {
+
                 message.warning(`Ca cần thêm số lượng tuyển`);
                 this.setState({ notComplete: true })
             }
@@ -361,7 +370,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
 
                 </Card>
-                <div style={{
+                {/* <div style={{
                     display:
                         jobAnnouncementDetail.pendingApplied !== 0 ||
                             jobAnnouncementDetail.pendingApplied !== 0 ||
@@ -369,7 +378,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 }}
                 >
                     <NotUpdate warning={true} msg={`(Lưu ý: Bài đăng đã có ứng viên ứng tuyển, từ chối , đang chờ, hoặc đã hết hạn sẽ không thể sửa lại.)`} />
-                </div>
+                </div> */}
             </>
         );
     }
@@ -404,7 +413,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 break;
             case TYPE.CREATE:
                 ct_btn_ex = "Huỷ tạo";
-                ct_btn_nt = "Tạo mới";
+                ct_btn_nt = "Đăng bài";
                 break;
             default:
                 break;
@@ -444,9 +453,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
         return (
             <div className='common-content'>
-                <h5>
-                    {typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài(${normalQuantity ? normalQuantity : 0})`}
-                </h5>
+                <div style={{ alignItems: 'center', marginBottom: '2em' }}>
+                    <h5>
+                        {typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING ? "Thông tin bài đăng(sửa)" : `Đăng bài`}
+                    </h5>
+                    {!(typeCpn === TYPE.FIX || typeCpn === TYPE.PENDING) ?
+                        <span >(Số lượt đăng bài còn lại: <b>{normalQuantity ? normalQuantity : 0}</b>)</span> : null}
+                </div>
+
                 {
                     typeCpn === TYPE.FIX ? this.ApplyCan() : ""
                 }
@@ -503,22 +517,28 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         type="SWITCH"
                         widthLabel="150px"
                     >
-                        <DatePicker
-                            format={"DD/MM/YYYY"}
-                            style={{ width: '100%' }}
-                            placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
-                            defaultPickerValue={null}
-                            value={body.expirationDate ? moment(body.expirationDate) : null}
-                            onChange={
-                                (event?: any) => {
-                                    event ?
-                                        body.expirationDate = event.unix() * 1000 :
-                                        body.expirationDate = null;
-                                    this.setState({ body });
-                                }
-                            }
-                            disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
-                        />
+                        <Form style={{width: '100%'}}>
+                            <Form.Item  validateStatus={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'error' : null} help={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'Thời gian hết hạn quá dài, vui lòng chọn thời gian hết hạn trong vòng 90 ngày!' : ''} >
+                                    <DatePicker
+                                        format={"DD/MM/YYYY"}
+                                        style={{ width: '100%' }}
+                                        placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
+                                        defaultPickerValue={null}
+                                        value={body.expirationDate ? moment(body.expirationDate) : null}
+                                        onChange={
+                                            (event?: any) => {
+                                                event ?
+                                                    body.expirationDate = event.unix() * 1000 :
+                                                    body.expirationDate = null;
+                                                this.setState({ body });
+                                            }
+                                        }
+                                        disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
+                                    />
+                            
+                            </Form.Item>
+                        </Form>
+
                     </InputTitle>
                     <InputTitle
                         title="Chọn công việc"
@@ -561,6 +581,16 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             mode="multiple"
                             size="default"
                             placeholder="ex: Giao tiếp, Tiếng Anh"
+                            filterOption={(input, option) => {
+                                if (option.props.value) {
+                                    // console.log(option.props.value)
+                                    return strForSearch(option.props.children).includes(
+                                        strForSearch(input)
+                                    );
+                                } else {
+                                    return false;
+                                }
+                            }}
                             value={findIdWithValue(listSkills, body.requiredSkillIDs, "id", "name")}
                             onChange={
                                 (event: any) => {
@@ -578,7 +608,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 <Divider orientation="left" >Chọn loại công việc<Required /></Divider>
                 <div className="announcements-create-content">
                     <Tabs
-                        activeKey={body.jobType}
+                        activeKey={body.jobType ? body.jobType : TYPE.FULLTIME}
                         style={{ width: "100%" }}
                         onChange={(event: string) => {
                             body.jobType = event;
@@ -620,7 +650,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     </div>
                                 ))
                             }
-                            <Button type="primary" icon="plus" onClick={() => this.addShift()} >Thêm ca</Button>
+                            <Button type="primary" icon="plus" style={{ marginLeft: 10 }} onClick={() => this.addShift()} >Thêm ca</Button>
                         </TabPane>
                         <TabPane tab="Thực tập sinh" key={TYPE.INTERNSHIP} >
                             {body.shifts &&
@@ -642,9 +672,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             }
                         </TabPane>
                     </Tabs>
-                    <div>
+                    {/* <div>
                         <NotUpdate warning={true} msg={`(Lưu ý: Ngày thời gian bắt đầu phải lớn hơn thời gian kết thúc, số nhân viên ứng tuyển tối thiểu là 1)`} />
-                    </div>
+                    </div> */}
                 </div>
                 {
 
@@ -658,25 +688,16 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                 icon={loading ? 'loading' : "check"}
                                 style={{
                                     margin: "10px 10px",
-                                    float: "right"
+                                    float: "right",
+                                    fontSize: '1.1em',
+                                    paddingTop: 3
                                 }}
                                 onClick={() => this.createRequest()}
+                                value="large"
                             >
                                 {ct_btn_nt}
                             </Button>
-                            <Button
-                                type="danger"
-                                icon={'close'}
-                                style={{
-                                    margin: "10px 10px",
-                                    float: "right"
-                                }}
-                                onClick={
-                                    () => { this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.LIST) }
-                                }
-                            >
-                                {ct_btn_ex}
-                            </Button>
+
                         </div> : ""
                 }
             </div >

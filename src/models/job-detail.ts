@@ -13,4 +13,5 @@ export default interface IJobDetail {
     employerBranch?: string;
     repliedDate?: number;
     requiredSkills?: Array<any>;
+    type?: string
 }

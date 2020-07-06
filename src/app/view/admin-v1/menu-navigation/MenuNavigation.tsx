@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout, Menu, Icon } from 'antd';
 import './MenuNavigation.scss';
 // @ts-ignore
@@ -20,7 +20,26 @@ interface IMenuNavigationProps {
 
 export default function MenuNavigation(props: IMenuNavigationProps) {
     let [showMenu, setShowMenu] = React.useState(false);
+    let [key, setKey] = React.useState('event');
+    let [openKey, setOpenKey] = React.useState(["sub1", "sub0"]);
 
+    useEffect(() => {
+        console.log('change')
+        if(window.location.pathname === "/v1/admin/jobs/job-announcements/create") {
+            // console.log(window.location.pathname)
+            setKey("0")
+            setOpenKey(["sub1", "sub0", "sub2"])
+        } else if( window.location.pathname === '/v1/admin/noti/list') {
+            setKey("13")
+            setOpenKey(["sub5"])
+        } else if(window.location.pathname  === "/v1/admin/profile/admin-account") {
+            setKey("14")
+            setOpenKey(["sub6"])
+        } else if(window.location.pathname  === "/v1/admin/jobs/pending-jobs/list") {
+            setKey("12")
+            setOpenKey(["sub1", "sub0"])            
+        }
+    }, [window.location.href])
     return (
         <Sider
             trigger={null}
@@ -70,9 +89,15 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 }}
                 onClick={(event: any) => {
                     props.onCallLoading()
+                    // console.log(event);
+                    setKey(event.key)
                 }}
-                defaultOpenKeys={["sub1", "sub0"]}
-                defaultSelectedKeys={["event"]}
+                onOpenChange={(openKeys) => {
+                    setOpenKey(openKeys);
+                }}
+                openKeys={openKey}
+                // defaultSelectedKeys={[key]}
+                selectedKeys={[key]}
             >
                 <SubMenu
                     key="sub0"

@@ -45,7 +45,7 @@
   .description-job {
     padding: 5px 5px;
     margin: 10px 5px;
-    min-height: 212px;
+    // min-height: 212px;
 
     p {
       font-family: $font_base;
@@ -82,6 +82,7 @@
       }
 
       .time-span {
+        font-size: 0.9em;
         background-color: #31a3f9e3;
         color           : white;
         padding         : 6px;
@@ -91,18 +92,29 @@
               border-radius: 50%;
               width: 33px;
               height: 32px;
+              -webkit-user-select: none;
+              -khtml-user-select: none;
+              -moz-user-select: none;
+              -o-user-select: none;
+              user-select: none;
       }
       .time-span-unselected {
+        font-size: 0.9em;
         background-color: white;
         color           : #31a3f9e3;
-        padding         : 4px;
+        padding         : 6px;
         margin          : 5px;
         border-radius   : 3px;
         text-align      : center;
         border-radius: 50%;
-        width: 32px;
+        width: 33px;
         height: 32px;
         border: 1.3px solid;
+        -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      user-select: none;
       }
 
       .week-day {

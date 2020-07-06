@@ -73,7 +73,7 @@ export function JobType(props: {children?: any, width?: any, fontSize?: any}) {
         // borderRadius: 3,
         padding: 3,
         margin: '3px 0',
-        fontSize: props.fontSize ? props.fontSize : '0.8em',
+        fontSize: props.fontSize ? props.fontSize : '0.75em',
         textAlign: 'center',
         width: props.width ? props.width : '70px',
         display: 'inline-block'

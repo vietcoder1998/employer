@@ -97,18 +97,21 @@ textarea {
 
 .pending {
   padding: 5px 10px;
-  background-color: rgba(229, 255, 0, 0.346);
-  border: solid #f1e976bf 1px;
+  // background-color: rgba(229, 255, 0, 0.346);
+  border: solid #168dcd 1px;
   border-radius: 3px;
-  color: rgba(37, 37, 10, 0.584);
+  color: rgb(22, 141, 205);
+  margin-bottom: 0
 }
 
 .rejected {
   padding: 5px 10px;
-  background-color: rgb(254, 240, 255);
-  border: solid #e32977 1px;
+  // background-color: rgb(254, 240, 255);
+  border: solid #e01212 1px;
   border-radius: 3px;
-  color: #e32977;
+  color: #e01212;
+  margin-bottom: 0
+
 }
 
 .accpeted {

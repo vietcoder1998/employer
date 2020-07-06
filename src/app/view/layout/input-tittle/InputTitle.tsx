@@ -41,6 +41,14 @@ interface INewInput {
     widthInput?: string;
     onChange?: Function;
 }
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
 
 export const NewInput = (props: INewInput) => {
     let { defaultValue, value, placeholder, onChange, widthInput, disabled } = props;
@@ -59,6 +67,7 @@ export const NewInput = (props: INewInput) => {
 
 export const NewSelect = (props: INewSelect) => {
     let { placeholder, listValue, onChange, widthSelect, disabled, value } = props;
+
     return (
         <Select
             showSearch
@@ -68,6 +77,15 @@ export const NewSelect = (props: INewSelect) => {
             value={value}
             onChange={(event: any) => onChange(event)}
             disabled={disabled ? disabled : false}
+            filterOption={(input, option) => {
+                if (option.props.value) {
+                    // console.log(option.props.value)
+                    return strForSearch(option.props.children).includes(
+                        strForSearch(input)
+                    );
+                } else {
+                    return false;
+                }}}
         >
             {
                 listValue &&
@@ -136,8 +154,7 @@ export const InputTitle = (props: IInputitleProps) => {
                 <div
                     className="title-inside"
                     style={{
-                        fontWeight: 550,
-                        fontFamily: "IBMPlexSanLights",
+                        fontWeight: 500,
                         lineHeight: "30px",
                         minWidth: 116,
                         width: !props.widthLabel ? undefined : props.widthLabel

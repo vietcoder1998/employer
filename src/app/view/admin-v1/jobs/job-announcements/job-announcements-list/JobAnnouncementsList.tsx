@@ -888,6 +888,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     <span className="italic"> (Chưa kích hoạt gói dịch vụ)</span>
                             }
                         </div>
+                        
                         <hr />
                         <Row>
                             <Col md={12}>

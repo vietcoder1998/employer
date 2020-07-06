@@ -364,6 +364,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             </Tooltip>
                              */}
                             <Popover
+                                overlayClassName="Notification"
                                 content={
                                     < >
                                         <div className='list-noti'>
@@ -442,6 +443,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         src={localStorage.getItem('logoUrl')}
                                     />
                                 }
+                                className="notification"
                             >
                                 <Link to={routeLink.ADMIN_ACCOUNTS}>
                                     <OptionConfig icon="user" key="2" value="" label="Tài khoản" />
