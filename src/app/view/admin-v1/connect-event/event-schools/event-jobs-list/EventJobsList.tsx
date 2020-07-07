@@ -319,7 +319,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     }
     EditToolTip = (hidden?: boolean, id?: string, schoolEventID?: string, item?: any) => {
         let { body, pageIndex, pageSize } = this.state;
-        
+
         return (
             <>
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
@@ -824,7 +824,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let un_active_home_2 = homeExpiration !== -1 && !homeExpired;
         let un_active_highlight = eventJobDetail.priority.highlight !== null;
         let un_active_search = searchExpiration !== -1 && !searchExpired;
-        
+
         let url_string = window.location.href;
         let url = new URL(url_string);
         let expiredJob = url.searchParams.get("expiredJob");
@@ -1004,6 +1004,48 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 {/* <label className='top'>Gói tuyển dụng gấp: {listJobService.homeTopQuantiy}</label>
                                 <label className='in_day'>Gói tuyển dụng trong ngày: {listJobService.homeInDayQuantity}</label>
                                 <label className='high_light'>Gói tìm kiếm nổi bật:  {listJobService.searchHighLightQuantity}</label> */}
+                                <Row>
+                                    {eventJobDetail.priority.homePriority === TYPE.IN_DAY || eventJobDetail.priority.homePriority === TYPE.TOP ? 
+                                    <Col md={12}>
+                                        <div className={eventJobDetail.priority.homeExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                            <div className="service">
+                                                <div>Trang chủ</div>
+                                                {eventJobDetail.priority.homePriority === TYPE.TOP ? <div className="bold-value">TUYỂN GẤP</div> : null}
+                                                {eventJobDetail.priority.homePriority === TYPE.IN_DAY ? <div className="bold-value">TRONG NGÀY</div> : null}
+                                                {eventJobDetail.priority.homePriority !== TYPE.IN_DAY && eventJobDetail.priority.homePriority !== TYPE.TOP ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service-center">
+                                                {eventJobDetail.priority.homeExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                {eventJobDetail.priority.homeTimeLeft ? <div className="bold-value">{eventJobDetail.priority.homeTimeLeft}</div> : null}
+                                                {eventJobDetail.priority.homeExpiration < 0 && eventJobDetail.priority.homePriority ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                {eventJobDetail.priority.homeExpiration < 0 && !eventJobDetail.priority.homePriority ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service">
+                                                <div>Ngày hết hạn</div>
+                                                {eventJobDetail.priority.homeExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.homeExpiration, 1000)}</div> : <div>_</div> }
+                                            </div>
+                                        </div>
+                                    </Col> :  null}
+                                    {eventJobDetail.priority.searchPriority ? 
+                                    <Col md={12}>
+                                    <div className={eventJobDetail.priority.searchExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                            <div className="service">
+                                                <div>Bộ tìm kiếm</div>
+                                                {eventJobDetail.priority.searchPriority === TYPE.HIGHLIGHT ? <div className="bold-value">NỔI BẬT</div> : <div className="bold-value">_</div> }
+                                            </div>
+                                            <div className="service-center">
+                                                {eventJobDetail.priority.searchExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                {eventJobDetail.priority.searchTimeLeft ? <div className="bold-value">{eventJobDetail.priority.searchTimeLeft}</div> : null}
+                                                {eventJobDetail.priority.searchExpiration < 0 && eventJobDetail.priority.searchPriority ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                {eventJobDetail.priority.searchExpiration < 0 && !eventJobDetail.priority.searchPriority ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service">
+                                                <div>Ngày hết hạn</div>
+                                                {eventJobDetail.priority.searchExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.searchExpiration, 1000)}</div> : <div>_</div> }
+                                            </div>
+                                        </div>
+                                    </Col> : null}
+                                </Row>
                             </>
                             <hr />
                             <h6>Hãy chọn gói phù hợp cho bạn <Icon type="check" style={{ color: "green" }} /></h6>

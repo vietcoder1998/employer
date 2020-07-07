@@ -125,3 +125,32 @@ hr {
 .TitleJob {
   margin-bottom: 10px !important;
 }
+.service {
+  flex: 3;
+  text-align: center;
+}
+.service-center {
+  flex: 3;
+  text-align: center;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+.wapper-service {
+  box-shadow: 0 0 4px rgb(212, 212, 212);
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+}
+.wapper-service-unactive {
+  background-color: #ececec;
+  box-shadow: 0 0 4px rgb(212, 212, 212);
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  color: #868686;
+}
+.bold-value {
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 0.9em;
+}
