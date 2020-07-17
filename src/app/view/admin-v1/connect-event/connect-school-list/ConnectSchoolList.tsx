@@ -239,7 +239,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
             return {
                 connectSchoolsDetail: nextProps.connectSchoolsDetail,
-                loadingTable: false,
+                // loadingTable: false,
                 requestMessage: nextProps.connectSchoolsDetail.requestMessage,
                 replyMessage: nextProps.connectSchoolsDetail.replyMessage,
                 dataSchool: nextProps.connectSchoolsDetail
@@ -268,6 +268,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
     };
 
     async componentDidMount() {
+        // this.setState({loadingTable: true})
         await this.searchConnectSchools();
     };
 
@@ -350,25 +351,27 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.searchConnectSchools();
     };
 
-    onSetDataSchool = async (id?: string) => {
-        let { listConnectSchools } = this.props;
-        let filter_arr = listConnectSchools.filter((item: IConnectSchool) => item.id === id);
-        let dataSchool = filter_arr[0];
+    // onSetDataSchool = async (id?: string) => {
+    //     let { listConnectSchools } = this.props;
+    //     console.log(listConnectSchools)
 
-        console.log(dataSchool)
+    //     let filter_arr = listConnectSchools.filter((item) => item.school.id === id);
+    //     let dataSchool = filter_arr[0];
 
-        this.props.handleDrawer({ openDrawer: true });
-        await this.setState({ loading: true });
+    //     console.log(dataSchool)
 
-        setTimeout(() => {
-            if (dataSchool.state) {
-                this.props.getConnectSchoolDetail(id);
-            } else {
-                this.props.setConnectSchoolDetail(dataSchool);
-            }
-        }, 500);
-        await this.setState({ loading: false });
-    }
+    //     this.props.handleDrawer({ openDrawer: true });
+    //     await this.setState({ loading: true });
+
+    //     setTimeout(() => {
+    //         if (dataSchool.state) {
+    //             this.props.getConnectSchoolDetail(id);
+    //         } else {
+    //             this.props.setConnectSchoolDetail(dataSchool);
+    //         }
+    //     }, 500);
+    //     await this.setState({ loading: false });
+    // }
 
     createRequest = async (type?: string) => {
         let { requestMessage, dataSchool } = this.state;
@@ -636,14 +639,14 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                         <Row>
                             <Tabs onChange={(event) => this.onChangeType(event)}>
                                 <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED} />
-                                <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
-                                <TabPane tab="Yêu cầu kết nối" key={TYPE.RECEIVE_RQ} />
+                                {/* <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
+                                <TabPane tab="Yêu cầu kết nối" key={TYPE.RECEIVE_RQ} /> */}
                                 <TabPane tab="Đã gửi yêu cầu" key={TYPE.SEND_RQ} />
                                 <TabPane tab="Chưa kết nối" key={"none"} />
                             </Tabs>
                             {!loadingTable ? (listConnectSchools && listConnectSchools.length > 0 ?
                                 listConnectSchools.map(
-                                    (item: IConnectSchool, index: number) =>
+                                    (item, index: number) =>
                                         <Col
                                             xxl={6}
                                             xl={8}
@@ -651,7 +654,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             lg={8}
                                             key={index}
                                         >
-                                            <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
+                                            <CardSchool key={index} item={item.school}  />
                                         </Col>
                                 )
                                 : <Empty description="Không có trường phù hợp" />) : <Loading />}

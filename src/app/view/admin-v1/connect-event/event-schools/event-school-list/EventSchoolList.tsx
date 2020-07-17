@@ -12,10 +12,11 @@ import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import EventDetail from './EventDetail';
 import CropImage from '../../../../layout/crop-image/CropImage';
 import { _requestToServer } from '../../../../../../services/exec';
-import { PUT } from '../../../../../../const/method';
+import { PUT, GET } from '../../../../../../const/method';
 import { EVENT_SCHOOLS } from '../../../../../../services/api/private.api';
 import { sendFileHeader } from '../../../../../../services/auth';
 import { Link } from 'react-router-dom';
+
 
 let ImageRender = (src?: string) => {
     return <img src={src}
@@ -51,6 +52,8 @@ interface IEventSchoolsListState {
     typeView?: string;
     modalType?: "BANNER" | "DETAIL";
     newBanner?: any;
+    bannerUrlEmployer?: string;
+    loadingUploadBanner?: boolean
 };
 
 class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSchoolsListState> {
@@ -78,7 +81,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             },
             openDrawer: false,
             eid: null,
-            newBanner: null
+            newBanner: null,
+            bannerUrlEmployer: null,
+            loadingUploadBanner: false
         };
     }
 
@@ -105,33 +110,21 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             className: 'action',
             key: 'name',
             width: 140,
+            render: ({ item }) => this.renderName(item)
         },
         {
-            title: 'Ngày bắt đầu',
+            title: 'Ngày bắt đầu / kết thúc',
             dataIndex: 'startedDate',
             className: 'action',
             key: 'startedDate',
             width: 120,
+            render: ({ item }) => this.renderDate(item)
         },
         {
-            title: 'Ngày kết thúc',
-            dataIndex: 'finishedDate',
-            className: 'action',
-            key: 'finishedDate',
-            width: 120,
-        },
-        {
-            title: 'Địa chỉ',
+            title: 'Nơi tổ chức / Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 150,
-        },
-        {
-            title: 'Nơi tổ chức',
-            dataIndex: 'schoolName',
-            className: 'action',
-            key: 'schoolName',
-            width: 100,
+            render: ({ item }) => this.renderAddress(item)
         },
         {
             title: 'Thao tác',
@@ -151,17 +144,6 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
 
     EditToolTip = (item?: IEventSchool) => {
         return <>
-            <Tooltip placement="top" title={"Xem chi tiết"}>
-                <Icon
-                    className="f-ic"
-                    onClick={async () => {
-                        this.props.getEventSchoolDetail(item.id);
-                        this.setState({ modalType: "DETAIL" })
-                        this.onToggleModal();
-                    }}
-                    type="search"
-                />
-            </Tooltip>
             <Tooltip placement="top" title={"Xem bài đăng"}>
                 <Link
                     to={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
@@ -173,7 +155,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     />
                 </Link>
             </Tooltip>
-            <Tooltip placement="top" title={"Sửa Banner"}>
+            {/* <Tooltip placement="top" title={"Sửa Banner"}>
                 <Icon
                     type={"tool"}
                     className="f-ic"
@@ -183,8 +165,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     }}
                     onClick={() => this.setState({ modalType: "BANNER", openModal: true })}
                 />
-            </Tooltip>
-            <Tooltip title="Tạo bài đăng mới" >
+            </Tooltip> */}
+            {/* <Tooltip title="Tạo bài đăng mới" >
                 <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${item.id}`} >
                     <Icon
                         type={"plus"}
@@ -194,10 +176,49 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                         }}
                     />
                 </Link>
-            </Tooltip>
+            </Tooltip> */}
         </>
     }
-
+    renderName = (item) => {
+        return (<div>
+            <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff' }} onClick={
+                async () => {
+                    this.props.getEventSchoolDetail(item.id);
+                    this.reloadDetailEvent(item.id)
+                    this.onToggleModal();
+                }
+            } target="_blank">{item.name ? item.name : ""}</a>
+        </div>)
+    }
+    reloadDetailEvent(id) {
+        this.setState({bannerUrlEmployer: null})
+        _requestToServer(
+            GET,
+            EVENT_SCHOOLS + `/${id}/banner`,
+            undefined,
+            undefined,
+            sendFileHeader,
+            undefined,
+            false,
+            false
+        ).then(data => {
+            // console.log(data)
+            this.setState({bannerUrlEmployer: data.data && data.data.bannerUrl})
+        })
+        this.setState({ modalType: "DETAIL" })
+    }
+    renderDate = (item) => {
+        return (<div>
+            <div>{item.startedDate !== -1 ? timeConverter(item.createdDate, 1000) : ""}</div>
+            <div>{item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : ""}</div>
+        </div>)
+    }
+    renderAddress = (item) => {
+        return (<div>
+            <div style={{fontWeight: 600}}>{item.school && item.school.name ? item.school.name : ''}</div>
+            <div style={{fontStyle: 'italic'}}>{item.school && item.school.address ? item.school.address : ''}</div>
+        </div>)
+    }
     static getDerivedStateFromProps(nextProps?: IEventSchoolsListProps, prevState?: IEventSchoolsListState) {
         if (nextProps.listEventSchools && nextProps.listEventSchools !== prevState.listEventSchools) {
             let dataTable = [];
@@ -206,11 +227,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     id: item.school ? item.school.id : null,
                     index: index + 1,
                     bannerUrl: item.bannerUrl,
-                    schoolName: item.school && item.school.name ? item.school.name : '',
-                    address: item.school && item.school.address ? item.school.address : '',
-                    name: item.name ? item.name : '',
-                    startedDate: item.startedDate !== -1 ? timeConverter(item.createdDate, 1000) : "",
-                    finishedDate: item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "",
+                    address: {item},
+                    name: {item},
+                    startedDate: {item},
                     data: item,
                     eid: item.id
                 });
@@ -273,11 +292,13 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     uploadToServer = (event) => {
         console.log(event);
         this.setState({ newBanner: event.blobFile })
+        // this.forceUpdate()
     }
 
     uploadBanner = () => {
         let { newBanner, eid } = this.state;
         let formData = new FormData();
+        this.setState({loadingUploadBanner: true})
         formData.append("banner", newBanner, "banner.jpg");
 
         _requestToServer(
@@ -289,9 +310,12 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             undefined,
             false,
             true
-        )
+        ).finally(() => {
+            this.setState({loadingUploadBanner: false})
+            this.reloadDetailEvent(eid)
+        })
 
-        this.onToggleModal();
+        // this.onToggleModal();
     }
 
     render() {
@@ -315,11 +339,25 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             <>
                 <Modal
                     visible={openModal}
-                    onCancel={() => this.onToggleModal()}
+                    onCancel={() => {
+                        this.onToggleModal()
+                        this.setState({newBanner: null})
+                    }}
                     title={modalType === "BANNER" ? "CẬP NHẬT BANNER" : <div style={{ textTransform: "uppercase" }}>{eventDetail.name}</div>}
                     width={'50vw'}
                     bodyStyle={{ padding: 10 }}
                     footer={[
+                        modalType !== "BANNER" ? <Button
+                        key={"ok"}
+                        onClick={
+                            () => this.setState({modalType: 'BANNER'})
+                        }
+                        type={"primary"}
+                        icon={"upload"}
+                        children={
+                            "Tải lên banner"
+                        }
+                    />  : undefined,
                         <Button
                             key={"close"}
                             onClick={this.onToggleModal}
@@ -332,7 +370,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                 () => modalType === "BANNER" ? this.uploadBanner() : this.onToggleModal()
                             }
                             type={"primary"}
-                            icon={"tool"}
+                            icon={this.state.loadingUploadBanner ? 'loading' : "tool"}
                             children={
                                 "Cập nhật banner"
                             }
@@ -341,13 +379,13 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 >
                     {modalType === "BANNER" ?
                         <CropImage uploadToServer={this.uploadToServer} />
-                        : <EventDetail {...eventDetail} />}
+                        : <EventDetail {...eventDetail}  bannerUrlEmployer={this.state.bannerUrlEmployer}/>}
 
                 </Modal>
                 <div className="common-content">
-                    <h5>
+                    <h5 style={{marginBottom: 10}}>
                         Sự kiện Ngày hội việc làm trực tuyến {`(${totalItems})`}
-                        <Tooltip title="Lọc tìm kiếm" >
+                        {/* <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventSchool()}
                                 type="primary"
@@ -361,7 +399,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                 }}
                                 icon={loadingTable ? "loading" : "filter"}
                             />
-                        </Tooltip>
+                        </Tooltip> */}
                     </h5>
                     <div className="table-operations">
                         {/* <Row >
@@ -424,6 +462,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                 return {
                                     onClick: (event: any) => {
                                         this.setState({ eid: record.eid })
+                                        
                                     }, // click row
                                     onMouseEnter: () => {
                                     }, // mouse enter row

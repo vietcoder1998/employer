@@ -8,15 +8,19 @@
 }
 
 .content-apply {
-    max-height: calc(120vh - 320px);
+    max-height: calc(100vh - 234px);
     overflow-y: auto;
     position: relative;
 }
 
 .job-apply-item {
-    background-color: whitesmoke;
+    background-color: #fff;
     cursor: pointer;
     &:hover {
         background-color: aliceblue;
     }
+}
+h5 {
+    margin: 0px !important;
+    margin-bottom: 5px !important;
 }

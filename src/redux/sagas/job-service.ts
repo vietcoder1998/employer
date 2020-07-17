@@ -26,6 +26,7 @@ const callJobService = async (action: any) => {
             homeTopQuantiy: 0,
             searchHighLightQuantity: 0,
             unlockProfileQuantity: 0,
+            highLightQuantity: 0,
         }
 
         let res1 = await _requestToServer(
@@ -82,12 +83,23 @@ const callJobService = async (action: any) => {
             false,
             false
         )
+        let res6 = await _requestToServer(
+            GET,
+            '/api/employers/services/jobs/highlight/TITLE_HIGHLIGHT/quantity',
+            null,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            false,
+            false
+        )
 
         data.nomalQuantity = res1.data ? res1.data.quantity : 0;
         data.homeInDayQuantity = res2.data ? res2.data.quantity : 0;
         data.homeTopQuantiy = res3.data ? res3.data.quantity : 0;
         data.searchHighLightQuantity = res4.data ? res4.data.quantity : 0;
         data.unlockProfileQuantity = res5.data ? res5.data.quantity : 0;
+        data.highLightQuantity = res6.data ? res6.data.quantity : 0
         return data;
 
     } catch (error) {

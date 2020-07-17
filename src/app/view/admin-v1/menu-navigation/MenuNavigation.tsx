@@ -38,6 +38,22 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
         } else if(window.location.pathname  === "/v1/admin/jobs/pending-jobs/list") {
             setKey("12")
             setOpenKey(["sub1", "sub0"])            
+        } else if(window.location.pathname  === "/v1/admin/connect-schools/event/jobs/list") {
+            let url_string = window.location.href;
+            let url = new URL(url_string);
+            let expiredJob = url.searchParams.get("expiredJob");
+            if(expiredJob === 'true') {
+                setKey("jobExpired")
+            } else {
+                setKey("event")
+            }
+            setOpenKey(["sub1", "sub0"])            
+        } else if(window.location.pathname === "/v1/admin/connect-schools/event/list") {
+            setKey("pageSchool")
+            setOpenKey(["sub1", "sub0"])  
+        } else if(window.location.pathname === "/v1/admin/connect-schools/list" || window.location.pathname.includes("/v1/admin/connect-schools/school/")) {
+            setKey("connected")
+            setOpenKey(["sub1", "sub0"])  
         }
     }, [window.location.href])
     return (

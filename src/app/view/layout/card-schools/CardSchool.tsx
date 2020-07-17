@@ -47,15 +47,15 @@ export default function CardSchool(props?: ICardSchoolProps) {
         <div
             className='card-school'
             style={{
-                border: `solid ${color} 1px`
+                border: `solid #e4e4e4 1px`
             }}
         >
-            <div className="three-dot">
+            {/* <div className="three-dot">
                 <Badge status={props && props.item && props.item.state ? "processing" : "default"} color={color} />
                 <Badge status={props && props.item && props.item.state ? "processing" : "default"} color={color} />
                 <Badge status={props && props.item && props.item.state ? "processing" : "default"} color={color} />
                 <Badge status={"default"} color={color_me} style={{ marginLeft: 10 }} />
-            </div>
+            </div> */}
             {
                 props && props.item && props.item.region &&
                     props.item.region.name ?
@@ -73,7 +73,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         props.item.coverUrl : backGround
                 }
                 alt="background"
-                onClick={() => props.openDrawer(props.item.id)}
+                onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
             />
             <div
                 className="school-action"
@@ -86,7 +86,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         position: "relative",
                         padding: "0px 10px"
                     }}
-                    onClick={() => props.openDrawer(props.item.id)}
+                    onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
                 >
                     <div className="school">
                         <Avatar

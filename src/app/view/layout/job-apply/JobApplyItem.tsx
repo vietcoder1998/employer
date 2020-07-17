@@ -24,12 +24,14 @@ interface IApplyJobItem {
 
 export function ApplyJobItem(props: IApplyJobItem) {
     let { data } = props;
+    // console.log(data)
     return (
         <div
             className="job-apply-item"
             style={{
                 margin: "10px 0px",
-                border: `solid ${props.defaultId ? "#5dabea" : "gray"} 1px`,
+                border: `solid ${props.defaultId ? "#5dabea" : "#c7c7c7"} 1px`,
+                backgroundColor: props.defaultId ? '#91ceff47' : 'unset',
                 borderRadius: "5px",
                 padding: "0.2vw 0.5vw",
                 position: "relative",
@@ -43,7 +45,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
 
             <div
                 style={{
-                    border: "dashed gray 1px",
+                    borderBottom: "dashed gray 1px",
                     display: "inline-flex",
                     borderRadius: 5,
                     padding: 2,
@@ -65,7 +67,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 <Avatar style={{ width: "4vw", height: "4vw", margin: "0.2vw" }} shape="square" src={data.student.avatarUrl} alt="anh" icon="user" />
                             </div>
                             <div style={{ margin: "0px 15px" }}>
-                                <p style={{marginBottom: 5}}>
+                                <p style={{ marginBottom: 5 }}>
                                     {data ? data.student.lastName + " " + data.student.firstName : <NotUpdate />}
                                     {data && data.student.gender && data.student.gender === TYPE.MALE ? " (Nam)" : " (Nữ)"}
                                 </p>
@@ -76,19 +78,20 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 >
                                     {data && timeConverter(data.appliedDate, 1000, "HH:mm DD-MM-YY")}
                                 </span>
-                                <p style={{marginBottom: 5}}>
-                                    Lời nhắn: 
+                                <p style={{ marginBottom: 5 }}>
+                                    Lời nhắn:
+                                    <span style={{ fontStyle: "italic", padding: 5, width: '100%' }}>
+                                        {data ? data.message : <NotUpdate msg="Không có" />}
+                                    </span>
                                 </p>
-                                <div className="test" style={{ fontStyle: "italic", padding: '5px 10px', width: '100%' }}>
-                                    {data ? data.message : <NotUpdate msg="Không có" />}
-                                </div>
+
                             </div>
                         </div>
                     </Col>
                     <Col md={24} lg={24} xl={24}>
                         
                     </Col>
-                    <Col md={24} lg={24} xl={24}>
+                    {/* <Col md={24} lg={24} xl={24}>
                         <ul >
                             <li>
                                 <span>Thái độ</span>   <Rate disabled defaultValue={2} style={{ fontSize: 12, float: "right" }} />
@@ -100,11 +103,11 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 <span>Hài lòng</span>  <Rate disabled defaultValue={2} style={{ fontSize: 12, float: "right" }} />
                             </li>
                         </ul>
-                    </Col>
+                    </Col> */}
                 </Row>
             </div>
             <div>
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}?type=STUDENT`} target="_blank">
+                {/* <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${props.id}?type=STUDENT`} target="_blank">
                     <Tooltip title="Xem hồ sơ">
                         <Button
                             type={"primary"}
@@ -117,7 +120,7 @@ export function ApplyJobItem(props: IApplyJobItem) {
                                 borderRadius: "50%",
                             }} />
                     </Tooltip>
-                </Link>
+                </Link> */}
                 <Tooltip title='Chấp nhận'>
                     <Button
                         type={"primary"}

@@ -4,4 +4,5 @@ export interface IJobService {
     homeTopQuantiy: number;
     searchHighLightQuantity: number;
     unlockProfileQuantity: number;
+    highLightQuantity?: number;
 }
