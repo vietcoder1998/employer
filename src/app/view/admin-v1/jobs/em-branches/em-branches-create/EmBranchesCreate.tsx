@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Divider, Row, Col, Button, Input } from 'antd';
+import { Icon, Divider, Row, Col, Button, Input, Form } from 'antd';
 import { connect } from 'react-redux';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
@@ -13,6 +13,7 @@ import { POST, PUT } from '../../../../../../const/method';
 import { IEmBranch } from '../../../../../../models/em-branches';
 import { IMapState } from '../../../../../../models/mutil-box';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
+import { is } from 'core-js/fn/object';
 
 interface IEmBranchesCreateState {
     title?: string;
@@ -36,6 +37,7 @@ interface IEmBranchesCreateState {
         lon?: number
     }
     id?: string;
+    isCreate?: boolean
 }
 
 interface EmBranchesCreateProps extends StateProps, DispatchProps {
@@ -68,13 +70,14 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
             },
             typeCpn: TYPE.CREATE,
             id: null,
+            isCreate: false
         }
     }
 
     static getDerivedStateFromProps(nextProps: any, prevState: IEmBranchesCreateState) {
         if (
             (nextProps.match.params.id &&
-            nextProps.match.params.id !== prevState.id) || !prevState.body
+                nextProps.match.params.id !== prevState.id) || !prevState.body
         ) {
             let typeCpn = TYPE.CREATE;
             if (nextProps.match.url.includes("fix")) {
@@ -112,6 +115,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
         body.lat = mapState.marker.lat;
         body.lon = mapState.marker.lng;
         await this.setState({ loading: true });
+        this.setState({ isCreate: true })
         switch (typeCpn) {
             case TYPE.CREATE:
                 await _requestToServer(
@@ -151,6 +155,8 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
         }
     }
 
+
+
     render() {
         let { body, typeCpn, loading } = this.state;
 
@@ -160,77 +166,133 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
         if (typeCpn === TYPE.EDIT) {
             btnx = "Lưu lại"
         }
+
+        let showErrorBranchName
+        if (this.state.isCreate) {
+            if (body.branchName) {
+                showErrorBranchName = false
+            } else {
+                showErrorBranchName = true
+            }
+        } else {
+            showErrorBranchName = false
+        }
+
+        let showErrorContactEmail
+        if (this.state.isCreate) {
+            if (body.contactEmail) {
+                showErrorContactEmail = false
+            } else {
+                showErrorContactEmail = true
+            }
+        } else {
+            showErrorContactEmail = false
+        }
+
+        let showErrorContactPhone
+        if (this.state.isCreate) {
+            if (body.contactPhone) {
+                showErrorContactPhone = false
+            } else {
+                showErrorContactPhone = true
+            }
+        } else {
+            showErrorContactPhone = false
+        }
+
+        let showErrorMap
+        if (this.state.isCreate) {
+            if (this.props.mapState) {
+                showErrorMap = false
+            } else {
+                showErrorMap = true
+            }
+        } else {
+            showErrorMap = false
+        }
+
         return (
             <div className='common-content'>
                 <h5>
-                    {typeCpn === TYPE.EDIT ? "Thêm chi nhánh" : "Sửa chi nhánh"}
+                    {typeCpn === TYPE.EDIT ? "Sửa chi nhánh" : "Thêm chi nhánh"}
                 </h5>
                 <Row>
                     <Col xs={0} sm={1} md={2} lg={3} xl={3} xxl={4}></Col>
                     <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
                         <Divider orientation="left" >Thông tin chi nhánh</Divider>
                         <div className="announcements-create-content">
-                            <InputTitle style={{color: 'black',fontSize: 15}}
+                            <InputTitle style={{ color: 'black', fontSize: 15 }}
                                 type={TYPE.INPUT}
                                 title="Tên chi nhánh"
-                                widthLabel="200px"
+                                widthLabel="195px"
                                 children={
-                                   
-                                    <Input
-                                        value={body.branchName}
-                                        style={{ width: 550 }}
-                                        type="text"
-                                        maxLength={260}
-                                        prefix={<Icon type="shop" style={{ color: "gray", marginBottom: "-5px" }} />}
-                                        placeholder="ex: Công ty cổ phần công nghệ Worksvn JSC"
-                                        onChange={
-                                            (event: any) => {
-                                                body["branchName"] = event.target.value;
-                                                this.setState({ body });
-                                            }
-                                        }
-                                    />
+                                    <Form>
+                                        <Form.Item validateStatus={showErrorBranchName ? 'error' : null} help={showErrorBranchName ? 'Bạn chưa điền tên chi nhánh !' : ''}>
+                                            <Input
+                                                value={body.branchName}
+                                                style={{ width: 550 }}
+                                                type="text"
+                                                maxLength={260}
+                                                prefix={<Icon type="shop" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                                placeholder="ex: Công ty cổ phần công nghệ Worksvn JSC"
+                                                onChange={
+                                                    (event: any) => {
+                                                        body["branchName"] = event.target.value;
+                                                        this.setState({ body });
+                                                    }
+                                                }
+                                            />
+                                        </Form.Item>
+                                    </Form>
                                 }
                             />
                             <InputTitle
                                 title="Địa chỉ email"
-                                widthLabel="200px"
+                                widthLabel="195px"
                                 widthComponent="400px"
                             >
-                                <Input
-                                    style={{ width: 550 }}
-                                    maxLength={260}
-                                    type="email"
-                                    prefix={<Icon type="mail" style={{ color: "gray", marginBottom: "-5px" }} />}
-                                    placeholder="e.x: worksvn@gmail.com"
-                                    value={body.contactEmail}
-                                    onChange={
-                                        (event: any) => {
-                                            body["contactEmail"] = event.target.value;
-                                            this.setState({ body });
-                                        }
-                                    }
-                                />
+                                <Form>
+                                    <Form.Item validateStatus={showErrorContactEmail ? 'error' : null} help={showErrorContactEmail ? 'Bạn chưa nhập địa chỉ email !' : ''}>
+                                        <Input
+                                            style={{ width: 550 }}
+                                            maxLength={260}
+                                            type="email"
+                                            prefix={<Icon type="mail" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                            placeholder="e.x: worksvn@gmail.com"
+                                            value={body.contactEmail}
+                                            onChange={
+                                                (event: any) => {
+                                                    body["contactEmail"] = event.target.value;
+                                                    this.setState({ body });
+                                                }
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
                             </InputTitle>
                             <InputTitle
                                 title="Số điện thoại"
                                 type="text"
-                                widthLabel="200px"
+                                widthLabel="195px"
                                 children={
-                                    <Input
-                                        style={{ width: 550 }}
-                                        type="text"
-                                        maxLength={260}
-                                        prefix={<Icon type="phone" style={{ color: "gray", marginBottom: "-5px" }} />}
-                                        placeholder="ex: 0982398465"
-                                        value={body.contactPhone}
-                                        onChange={
-                                            (event: any) => {
-                                                body["contactPhone"] = event.target.value;
-                                                this.setState({ body });
-                                            }
-                                        }
-                                    />
+                                    <Form>
+                                        <Form.Item validateStatus={showErrorContactPhone ? 'error' : null} help={showErrorContactPhone ? 'Bạn chưa nhập số điện thoại !' : ''}>
+                                            <Input
+                                                style={{ width: 550 }}
+                                                type="text"
+                                                maxLength={260}
+                                                prefix={<Icon type="phone" style={{ color: "gray", marginBottom: "-5px" }} />}
+                                                placeholder="ex: 0982398465"
+                                                value={body.contactPhone}
+                                                onChange={
+                                                    (event: any) => {
+                                                        body["contactPhone"] = event.target.value;
+                                                        this.setState({ body });
+                                                    }
+                                                }
+                                            />
+                                        </Form.Item>
+                                    </Form>
                                 }
                             />
                             <InputTitle
@@ -238,10 +300,13 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                                 widthLabel="200px"
                                 placeholder="ex: Nhân viên văn phòng"
                                 children={
-                                    <Mapcontainer opensearch={true} />
+                                            <Mapcontainer opensearch={true} />
+                                      
+
                                 }
+
                             />
-                            
+
                             <div className="em-branches-create-content">
                                 <Button
                                     type="primary"

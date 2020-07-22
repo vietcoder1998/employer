@@ -153,7 +153,7 @@ export function ShiftContent(props: IShiftContent) {
                 {/* With Gender */}
                 <div style={{ display: typeGender ? 'flex' : 'none' }}>
                     <Form >
-                        <Form.Item validateStatus={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'error' : ''} help={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'Số lượng không được nhỏ hơn 1!' : ''}>
+                        <Form.Item validateStatus={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'error' : ''} help={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
                             <div style={{marginTop: '-5px', display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
 
                                 <InputNumber
@@ -213,7 +213,7 @@ export function ShiftContent(props: IShiftContent) {
                 {/* <Col xs={12} sm={12} md={12} lg={10} xl={12}> */}
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Form>
-                        <Form.Item validateStatus={valueBoth[0].quantity == 0 ? 'error' : ''} help={valueBoth[0].quantity == 0 ? 'Số lượng không được nhỏ hơn 1!' : ''}>
+                        <Form.Item validateStatus={valueBoth[0].quantity == 0 ? 'error' : ''} help={valueBoth[0].quantity == 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
                             <InputNumber
                                 min={0}
                                 max={10000}
@@ -355,7 +355,7 @@ export function ShiftContent(props: IShiftContent) {
                         </p>
                     </Col>
                     <Form>
-                        <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian kết thúc phải lớn hơn thời gian ban đầu!' : ''} style={{ marginLeft: '200px' }}>
+                        <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian kết thúc phải lớn hơn thời gian ban đầu !' : ''} style={{ marginLeft: '200px' }}>
                             <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
 
                                 <TimePicker
@@ -441,7 +441,7 @@ export function ShiftContent(props: IShiftContent) {
                         {!agreement ? "Theo thỏa thuận" : "Theo định mức"}
                     </Col>
                     <Form>
-                        <Form.Item validateStatus={props.shift.minSalary > props.shift.maxSalary ? 'error' : null} help={props.shift.minSalary > props.shift.maxSalary ? 'Lương tối đa phải lớn hơn lương tối thiểu!' : ''} >
+                        <Form.Item validateStatus={props.shift.minSalary > props.shift.maxSalary ? 'error' : null} help={props.shift.minSalary > props.shift.maxSalary ? 'Lương tối đa phải lớn hơn lương tối thiểu !' : ''} >
 
                             <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{width: '50%'}}>
                                 <IptLetterP value={"Tối thiểu(VND)"} style={{ marginTop: '-10px' }}>

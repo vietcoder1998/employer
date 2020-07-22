@@ -563,7 +563,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             }
                         /> */}
                         <Form style={{ width: '100%' }}>
-                            <Form.Item validateStatus={showErrorTitle ? 'error' : null} help={showErrorTitle ? 'Bạn chưa điền tiêu đề!' : ''}  >
+                            <Form.Item validateStatus={showErrorTitle ? 'error' : null} help={showErrorTitle ? 'Bạn chưa điền tiêu đề !' : ''}  >
                                 <TextArea
                                     style={{ width: '100%' }}
                                     maxLength={400}
@@ -600,7 +600,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             }
                         /> */}
                         <Form style={{ width: '100%' }}>
-                            <Form.Item validateStatus={showErrordescription ? 'error' : null} help={showErrordescription ? 'Bạn chưa điền nội dung!' : ''}  >
+                            <Form.Item validateStatus={showErrordescription ? 'error' : null} help={showErrordescription ? 'Bạn chưa điền nội dung !' : ''}  >
                                 <TextArea
                                     rows={15}
                                     style={{ width: '100%' }}
