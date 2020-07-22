@@ -23,7 +23,7 @@
 
     .cpp-if {
       min-height: 60px;
-      padding: 10px 10px 10px 100px;
+      padding: 0 10px 10px 100px;
       font-size: 12;
     }
 
@@ -38,4 +38,11 @@
   .ant-popover-inner-content {
     padding: 0px;
   }
+}
+.icon-suitable {
+  align-items: center;
+  display: flex;
+}
+.cpp-av span img {
+  object-fit: cover;
 }

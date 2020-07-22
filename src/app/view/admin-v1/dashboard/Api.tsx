@@ -269,7 +269,7 @@ export default function Api(props?: IProps) {
                     scroll={{ x: 550 }}
                     bordered
                     pagination={false}
-
+                    rowKey="api"
                 />
             </div>
         </Row>

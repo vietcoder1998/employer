@@ -24,7 +24,7 @@ function callConnectSchools(action: any) {
     try {
         let res = _requestToServer(
             POST,
-            CONNECT_SCHOOL + `/request/query`,
+            CONNECT_SCHOOL + `/query`,
             action.body,
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,

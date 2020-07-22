@@ -699,6 +699,7 @@ class FindCandidatesList extends React.Component<IProps, IState> {
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
                             onChange={this.setPageIndex}
+                            rowKey={"candidates"}
                             onRow={(record: any, rowIndex: any) => {
                                 return {
                                     onClick: (event: any) => {

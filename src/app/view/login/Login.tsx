@@ -77,12 +77,10 @@ class Login extends PureComponent<LoginProps, LoginState> {
         let is_authen = localStorage.getItem("ecr") ? true : false;
 
         if (is_authen) {
-            this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE)
+            this.props.history.push(routeLink.EVENT + '/jobs/list?expiredJob=false')
         } else {
 
             let state = this.props.match.path.replace("/", "")
-            
-
             if (state === 'forgot' || state === 'register') {
                 state = state.toUpperCase();
                 this.setState({ state })
@@ -133,7 +131,7 @@ class Login extends PureComponent<LoginProps, LoginState> {
                             window.location.assign(this.state.linkWantToDirect)
                         } else {
                             console.log('vao day')
-                            window.location.assign(routeLink.EVENT + routePath.LIST)
+                            window.location.assign(routeLink.EVENT + '/jobs/list?expiredJob=false')
                         }
                     }
                 }).finally(() => this.setState({ loading: false }))

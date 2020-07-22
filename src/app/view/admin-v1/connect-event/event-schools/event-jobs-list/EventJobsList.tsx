@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs, Spin } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './EventJobsList.scss';
 import { TYPE } from '../../../../../../const/type';
@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../models/job-names';
+import { IEventSchoolFilter } from '../../../../../../models/event-schools';
+
 import { IEmBranch } from '../../../../../../models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IEventJobDetail } from '../../../../../../models/event-job-detail';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST, DELETE, PUT } from '../../../../../../const/method';
-import { EVENT_SCHOOLS } from '../../../../../../services/api/private.api';
+import { EVENT_SCHOOLS, ADMIN_ACCOUNT } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
@@ -22,71 +24,54 @@ import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import JobSuitableCandidate from '../../../../layout/job-suitable-candidate/JobSuitableCandidate';
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IEventJobsFilter, IEventJob } from '../../../../../../models/event-jobs';
+import JobAnnouncementsApply from '../../../jobs/job-announcements/job-announcements-apply/JobAnnouncementsApply';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
-const {TabPane} = Tabs;
-const plainOptions = ['Đang chờ', 'Từ chối', 'Chấp nhận'];
-
-const viewCount = (
-    id?: string | number,
-    count?: string | number,
-    color?: "red" | "#1687f2" | "orange",
-    state?: string,
-    icon?: "user" | "user-delete" | "user-add"
-) => (
-        <div
-            className="n-candidate"
-            style={{
-                pointerEvents: count === 0 ? 'none' : undefined
-            }}
-        >
-            <Tooltip title="Xem chi tiết">
-                <Link
-                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${id}?state=${state}`}
-                    disabled={count === 0 ? true : false}
-                    target="_blank"
-                >
-                    <div style={{ color }}>
-                        {count} <Icon type={icon} />
-                    </div>
-                </Link>
-            </Tooltip>
-        </div>
-    );
+const { TabPane } = Tabs;
+const plainOptions = ['Đang chờ', 'Chấp nhận'];
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
 
 const ViewPriority = (props?: { priority?: string, timeLeft?: string }) => {
     let { priority } = props;
     switch (priority) {
+
         case TYPE.TOP:
             return (
-                <Tooltip title={"Gói tuyển dụng gấp"} placement="left">
+                <Tooltip title={props.timeLeft ? props.timeLeft : "Vô thời hạn"} placement="left">
                     <div className='top f-sm'>
-                        {props.timeLeft ? props.timeLeft : "Đến hết sự kiện"}
+                        {"Gói tuyển dụng gấp"}
                     </div>
                 </Tooltip>
             );
         case TYPE.HIGHLIGHT:
             return (
-                <Tooltip title={"Gói tuyển dụng nổi bật"} placement="left">
+                <Tooltip title={props.timeLeft ? props.timeLeft : "Vô thời hạn"} placement="left">
                     <div className='high_light f-sm'>
-                        {props.timeLeft ? props.timeLeft : "Đến hết sự kiện"}
+                        {"Gói tuyển dụng nổi bật"}
                     </div>
                 </Tooltip>
             );
         case TYPE.IN_DAY:
             return (
-                <Tooltip title={"Gói tuyển dụng trong ngày"} placement="left">
+                <Tooltip title={props.timeLeft ? props.timeLeft : "Vô thời hạn"} placement="left">
                     <div className='in_day f-sm'>
-                        {props.timeLeft ? props.timeLeft : "Đến hết sự kiện"}
+                        {"Gói tuyển dụng trong ngày"}
                     </div>
                 </Tooltip>
             );
         case TYPE.TITLE_HIGHLIGHT:
             return (
-                <Tooltip title={"Gói tiêu đề nổi bật"} placement="left">
+                <Tooltip title={props.timeLeft ? props.timeLeft : "Vô thời hạn"} placement="left">
                     <div className='title_highlight f-sm'>
-                        {props.timeLeft ? props.timeLeft : "Đến hết sự kiện"}
+                        {"Gói tiêu đề nổi bật"}
                     </div>
                 </Tooltip>
             );
@@ -106,6 +91,12 @@ interface IEventJobsListProps extends StateProps, DispatchProps {
     handleModal: Function;
     getListJobSuitableCandidate: Function;
     history: any;
+    getListEventSchools?: Function;
+    listEventSchools: any;
+    getListJobService: Function;
+    listJobService: any;
+    setEventJobDetail: any;
+    clearProfileStudent: any
 };
 
 interface IEventJobsListState {
@@ -140,10 +131,20 @@ interface IEventJobsListState {
     homeExpired: boolean;
     searchExpired: boolean;
     eventJobDetail: IEventJobDetail;
+    listEventSchools?: Array<any>;
     typeModal: string;
     ojd?: boolean;
     jid?: string;
     eid?: string;
+    bodyListEventSchools?: any;
+    loadingDetailJob?: boolean;
+    applyModal?: boolean;
+    applyId?: string;
+    stateApply?: string;
+    idSelected?: string;
+    pendingAppliedSelected?: string;
+    acceptedAppliedSelected?: string
+    
 };
 
 
@@ -189,7 +190,14 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 jobShiftFilter: null,
                 jobLocationFilter: null
             },
-
+            bodyListEventSchools: {
+                schoolID: null,
+                createdDate: null,
+                startedDate: null,
+                finishedDate: null,
+                started: null,
+                finished: null
+            },
             unCheckbox: false,
             listCheck: [],
             homePriority: null,
@@ -203,6 +211,15 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             ojd: false,
             jid: null,
             eid: null,
+            listEventSchools: null,
+            loadingDetailJob: true,
+            applyModal: false,
+            applyId: null,
+            stateApply: null,
+            idSelected: null,
+            pendingAppliedSelected: null,
+            acceptedAppliedSelected: null
+            
         };
     }
 
@@ -217,51 +234,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         },
         {
             title: 'Tiêu đề',
-            width: 200,
+            width: 220,
             dataIndex: 'title',
             key: 'jobTitle',
-            fixed: 'left'
-        },
-
-        {
-            title: 'Tên công việc',
-            dataIndex: 'jobName',
-            key: 'jobName',
-            width: 140,
-        },
-        {
-            title: 'Đang chờ',
-            dataIndex: 'pendingApplied',
-            className: 'action',
-            key: 'pendingApplied',
-            width: 100,
-        },
-        {
-            title: 'Chấp nhận',
-            dataIndex: 'acceptedApplied',
-            className: 'action',
-            key: 'acceptedApplied',
-            width: 100,
-        },
-        {
-            title: 'Từ chối',
-            dataIndex: 'rejectedApplied',
-            className: 'action',
-            key: 'rejectedApplied',
-            width: 100,
-        },
-        {
-            title: 'Chi nhánh',
-            dataIndex: 'employerBranchName',
-            key: 'employerBranchName',
-            width: 200,
-        },
-        {
-            title: 'Trạng thái',
-            dataIndex: 'hidden',
-            className: 'action',
-            key: 'hidden',
-            width: 120,
+            fixed: 'left',
+            render: ({ item }) => this.titleJob(item),
         },
         {
             title: 'Loại công việc',
@@ -271,20 +248,19 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             width: 110,
         },
         {
-            title: 'Ngày đăng',
-            dataIndex: 'createdDate',
+            title: 'Đang chờ / Chấp nhận',
+            dataIndex: 'pendingApplied',
             className: 'action',
-            key: 'createdDate',
-            width: 100,
+            key: 'pendingApplied',
+            render: ({ item }) => this.renderApply(item),
+            width: 110,
         },
         {
-            title: 'Ngày hết hạn',
-            dataIndex: 'expirationDate',
-            className: 'action',
-            key: 'expirationDate',
-            width: 100,
+            title: 'Chi nhánh',
+            dataIndex: 'employerBranchName',
+            key: 'employerBranchName',
+            // width: 200,
         },
-
         {
             title: 'Dịch vụ sử dụng',
             dataIndex: 'priority',
@@ -293,13 +269,21 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             width: 190,
         },
         {
+            title: 'Ngày đăng / Ngày hết hạn',
+            dataIndex: 'createdDate',
+            className: 'action',
+            key: 'createdDate',
+            width: 120,
+        },
+
+        {
             title: 'Thao tác',
             key: 'operation',
             fixed: 'right',
             className: 'action',
             dataIndex: 'operation',
-            render: ({ hidden, id }) => this.EditToolTip(hidden, id),
-            width: 120,
+            render: ({ hidden, id, schoolEventID, item }) => this.EditToolTip(hidden, id, schoolEventID, item),
+            width: 100,
         }
     ];
 
@@ -334,64 +318,102 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let { showModal } = this.state;
         this.setState({ showModal: !showModal });
     };
-
-    EditToolTip = (hidden?: boolean, id?: string) => {
+    titleJob = (item) => {
+        return (
+            <div>
+                <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff', textDecoration: this.state.idSelected === item.id ? 'underline' : 'unset' }} onClick={
+                    async () => {
+                        this.setState({ ojd: true, loadingDetailJob: true });
+                        setTimeout(() => {
+                            this.props.getListJobSuitableCandidate(item.id, 0, 10, TYPE.STUDENT);
+                            this.props.getEventJobDetail(item.id, item.schoolEventID);
+                            this.setState({ jid: item.id })
+                        }, 300);
+                        this.setState({idSelected: item.id, pendingAppliedSelected: null,acceptedAppliedSelected: null})
+                    }
+                    // window.open('https://www.w3schools.com/cssref/pr_text_text-decoration.asp')
+                } target="_blank">{item.jobTitle}</a>
+                <div>{item.jobName ? item.jobName.name : ""}</div>
+            </div>
+        )
+    }
+    renderApply = (item) => {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} className="pending-candidate">
+                <div
+                    className="n-candidate"
+                    style={{
+                        pointerEvents: item.pendingApplied === 0 ? 'none' : undefined
+                    }}
+                >
+                    <Tooltip title="Xem chi tiết">
+                        {/* <Link
+                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.PENDING}`}
+                                    disabled={item.pendingApplied === 0 ? true : false}
+                                    target="_blank"
+                                > */}
+                        <div style={{ color: 'orange', textDecoration:  this.state.pendingAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
+                            this.setState({ applyModal: true, applyId: item.id, stateApply: 'PENDING' })
+                            // this.setState({pendingAppliedSelected: '1', idSelected: null})
+                            this.setState({pendingAppliedSelected: item.id, idSelected: null,acceptedAppliedSelected: null})
+                        }}>
+                            {item.pendingApplied} <Icon type={'user'} />
+                        </div>
+                        {/* </Link> */}
+                    </Tooltip>
+                </div>
+                <div style={{ margin: '0 8px' }}> / </div>
+                <div
+                    className="n-candidate"
+                    style={{
+                        pointerEvents: item.acceptedApplied === 0 ? 'none' : undefined
+                    }}
+                >
+                    <Tooltip title="Xem chi tiết">
+                        {/* <Link
+                            to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.ACCEPTED}`}
+                            disabled={item.acceptedApplied === 0 ? true : false}
+                            target="_blank"
+                        > */}
+                            <div style={{ color: '#1687f2',textDecoration:  this.state.acceptedAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
+                            this.setState({ applyModal: true, applyId: item.id, stateApply: 'ACCEPTED' })
+                            this.setState({acceptedAppliedSelected: item.id, idSelected: null,pendingAppliedSelected: null})
+                        }}>
+                                {item.acceptedApplied} <Icon type={'user-add'} />
+                            </div>
+                        {/* </Link> */}
+                    </Tooltip>
+                </div>
+            </div>
+        )
+    }
+    EditToolTip = (hidden?: boolean, id?: string, schoolEventID?: string, item?: any) => {
         let { body, pageIndex, pageSize } = this.state;
+
         return (
             <>
-                <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"}>
-                    <Icon
-                        className="f-ic"
-                        type={hidden ? "eye-invisible" : "eye"}
-                        style={{ color: hidden ? "black" : "gray" }}
-                        onClick={async () => await _requestToServer(
-                            PUT,
-                            EVENT_SCHOOLS + `/jobs/${id}/hidden/${!hidden}?schoolEventID=${body.schoolEventID}`,
-                            undefined,
-                            undefined,
-                            undefined,
-                            EMPLOYER_HOST,
-                            false,
-                            false
-                        ).then((res: any) => {
-                            if (res) {
-                                setTimeout(() => {
-                                    this.props.getListEventJobs(body, pageIndex, pageSize);
-                                }, 250);
-                                message.success("Thành công", 2);
-                            }
-                        })}
-                    />
-                </Tooltip>
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                     <Icon
-                        className="f-ic"
+                        className="f-ic dollar"
                         type="dollar"
-                        style={{ color: "orange" }}
                         onClick={async () => {
+                            // console.log(item)
+                            // await this.props.getEventJobDetail(id, schoolEventID ? schoolEventID : null)
+                            this.props.setEventJobDetail(item)
                             await this.props.handleDrawer();
-                            await setTimeout(() => { this.props.getEventJobDetail(id, body.schoolEventID) }, 400)
                         }} />
                 </Tooltip>
-                <Tooltip placement="top" title={"Xem chi tiết(sửa)"}>
-                    <Link
-                        to={
-                            routeLink.EVENT +
-                            routePath.JOBS +
-                            routePath.FIX +
-                            `/${id}?eid=${body.schoolEventID}`
-                        }
-                        target="_blank"
-                    >
-                        <Icon
-                            className="f-ic"
-                            type="edit"
-                            theme="twoTone"
-                            twoToneColor="green"
-                        />
-                    </Link>
+                <Tooltip placement="top" title={"Chỉnh sửa"}>
+                    <Icon
+                        className="f-ic edit"
+                        type="edit"
+                        onClick={() => {
+
+                            window.open(routeLink.JOB_ANNOUNCEMENTS + routePath.FIX + `/${id}`)
+                        }}
+                    />
                 </Tooltip>
-                <Tooltip placement="topRight" title={"Xem tương thích"}>
+                {/* <Tooltip placement="topRight" title={"Xem tương thích"}>
                     <Icon
                         className="f-ic"
                         type="solution"
@@ -400,40 +422,32 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             this.setState({ ojd: true });
                             setTimeout(() => {
                                 this.props.getListJobSuitableCandidate(id, 0, 10, TYPE.STUDENT);
-                                this.props.getEventJobDetail(id, body.schoolEventID);
+                                this.props.getEventJobDetail(id, schoolEventID);
                                 this.setState({ jid: id })
                             }, 300);
                         }}
                     />
-                </Tooltip>
+                </Tooltip> */}
                 <Tooltip placement="top" title={"Đăng bài tương tự"}>
-                    <Link
-                        to={
-                            routeLink.EVENT +
-                            routePath.JOBS +
-                            routePath.COPY +
-                            `/${id}?eid=${body.schoolEventID}`
-                        }
-                    >
-                        <Icon
-                            className="f-ic"
-                            type="copy"
-                            theme="twoTone"
-                        />
-                    </Link>
+                    <Icon
+                        className="f-ic copy"
+                        type="copy"
+                        onClick={() => {
+                            window.open(routeLink.JOB_ANNOUNCEMENTS + routePath.COPY + `/${id}`)
+                        }}
+                    />
                 </Tooltip>
                 <Tooltip placement="topRight" title={"Xóa bài đăng"}>
                     <Icon
-                        className="f-ic"
+                        className="f-ic delete"
                         type="delete"
-                        theme="twoTone"
-                        twoToneColor="red"
                         onClick={() => this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })}
                     />
                 </Tooltip>
             </>
         )
     }
+
 
     static getDerivedStateFromProps(nextProps: IEventJobsListProps, prevState: IEventJobsListState) {
         if (
@@ -445,31 +459,122 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             let url_string = window.location.href;
             let url = new URL(url_string);
             let eid = url.searchParams.get("eid");
+            let expiredJob = url.searchParams.get("expiredJob");
+
             let body = prevState.body;
-            body.schoolEventID = eid;
-            nextProps.getJobServiceEvent(eid);
+            if (expiredJob) {
+                body[TYPE.JOB_FILTER.expired] = expiredJob
+            }
+            if (eid) {
+                body.schoolEventID = eid;
+                nextProps.getJobServiceEvent(eid);
+            }
+
+            // let renderTitleJob = (item) => (
+            //     <div>
+            //         <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em' }} href={routeLink.EVENT + routePath.JOBS + routePath.FIX + `/${item.id}?eid=${item.schoolEventID}`} target="_blank">{item.jobTitle}</a>
+            //         <div>{item.jobName ? item.jobName.name : ""}</div>
+            //     </div>
+            // )
+            let renderJobType = (item) => {
+                let colorJobType, nameJobType
+                if (item.jobType === 'PARTTIME') {
+                    colorJobType = 'rgb(0, 179, 60)'
+                    nameJobType = item.jobType
+                } else if (item.jobType === 'INTERNSHIP') {
+                    colorJobType = 'rgb(255, 153, 51)'
+                    nameJobType = 'Thực Tập'
+                } else {
+                    colorJobType = 'rgb(6, 187, 228)'
+                    nameJobType = item.jobType
+                }
+                return (
+                    <div style={{ backgroundColor: colorJobType, color: '#fff', fontSize: '0.9em', fontWeight: 'bold', padding: '3px 0', margin: '0 8px' }}>{nameJobType}</div>
+                )
+            }
+            let renderCandidate = (item) => {
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                        <div
+                            className="n-candidate"
+                            style={{
+                                pointerEvents: item.pendingApplied === 0 ? 'none' : undefined
+                            }}
+                        >
+                            <Tooltip title="Xem chi tiết">
+                                {/* <Link
+                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.PENDING}`}
+                                    disabled={item.pendingApplied === 0 ? true : false}
+                                    target="_blank"
+                                > */}
+                                <div style={{ color: 'orange' }} onClick={() => {
+
+                                }}>
+                                    {item.pendingApplied} <Icon type={'user'} />
+                                </div>
+                                {/* </Link> */}
+                            </Tooltip>
+                        </div>
+                        <div style={{ margin: '0 8px' }}> / </div>
+                        <div
+                            className="n-candidate"
+                            style={{
+                                pointerEvents: item.acceptedApplied === 0 ? 'none' : undefined
+                            }}
+                        >
+                            <Tooltip title="Xem chi tiết">
+                                <Link
+                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.ACCEPTED}`}
+                                    disabled={item.acceptedApplied === 0 ? true : false}
+                                    target="_blank"
+                                >
+                                    <div style={{ color: '#1687f2' }}>
+                                        {item.acceptedApplied} <Icon type={'user-add'} />
+                                    </div>
+                                </Link>
+                            </Tooltip>
+                        </div>
+                    </div>
+
+
+                )
+            }
+            let renderPriority = (item) => {
+                if (!item.priority.homePriority && !item.priority.searchPriority && !item.priority.highlight) {
+                    return (<div style={{ fontStyle: 'italic' }}>Chưa kích hoạt gói dịch vụ</div>)
+                } else {
+                    return (
+                        <>
+                            <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
+                            <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
+                            <ViewPriority priority={item.priority.highlight} timeLeft={item.priority.highlightTimeLeft} />
+                        </>
+                    )
+                }
+            }
+            let renderTime = (item) => (
+                <div style={{ justifyContent: 'center', display: 'flex' }}>
+                    <div style={{ textAlign: 'left' }}>
+                        <div><i class="fa fa-calendar-o" aria-hidden="true"></i> {timeConverter(item.createdDate, 1000)}</div>
+                        <div><i class="fa fa-calendar-times-o" aria-hidden="true"></i> {timeConverter(item.expirationDate, 1000)}</div>
+                    </div>
+                </div>
+            )
 
             nextProps.listEventJobs.forEach((item: IEventJob, index: number) => {
                 dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    title: item.jobTitle,
-                    jobName: item.jobName ? item.jobName.name : "",
-                    jobType: item.jobType,
+                    title: { item },
+                    // jobName: item.jobName ? item.jobName.name : "",
+                    jobType: renderJobType(item),
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
-                    createdDate: timeConverter(item.createdDate, 1000),
-                    expirationDate: timeConverter(item.expirationDate, 1000),
-                    acceptedApplied: viewCount(item.id, item.acceptedApplied, "#1687f2", TYPE.ACCEPTED, "user-add"),
-                    rejectedApplied: viewCount(item.id, item.rejectedApplied, "red", TYPE.REJECTED, "user-delete"),
-                    pendingApplied: viewCount(item.id, item.pendingApplied, "orange", TYPE.PENDING, "user"),
+                    createdDate: renderTime(item),
+                    // expirationDate: timeConverter(item.expirationDate, 1000),
+                    pendingApplied: { item },
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
-                    priority:
-                        <>
-                            <ViewPriority priority={item.priority.homePriority} timeLeft={item.priority.homeTimeLeft} />
-                            <ViewPriority priority={item.priority.searchPriority} timeLeft={item.priority.searchTimeLeft} />
-                            <ViewPriority priority={item.priority.highlight} timeLeft={item.priority.highlightTimeLeft} />
-                        </>,
-                    operation: { hidden: item.hidden, id: item.id }
+                    priority: renderPriority(item),
+                    operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID, item }
                 });
             })
 
@@ -487,6 +592,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             nextProps.eventJobDetail !== prevState.eventJobDetail
         ) {
             let { eventJobDetail } = nextProps;
+            // console.log(eventJobDetail);
             return {
                 homePriority: eventJobDetail.priority.homePriority,
                 highlight: eventJobDetail.priority.highlight,
@@ -494,20 +600,26 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 searchPriority: eventJobDetail.priority.searchPriority,
                 homeExpired: eventJobDetail.priority.homeExpired,
                 searchExpired: eventJobDetail.priority.searchExpired,
-                eventJobDetail
+                eventJobDetail,
+                loadingDetailJob: false
             }
         }
-
+        // if (nextProps.listEventSchools && nextProps.listEventSchools !== prevState.listEventSchools) {
+        //     console.log(nextProps.listEventSchools);
+        //     return null;
+        // }
         return null;
     };
 
     async componentDidMount() {
         await this.props.getListEmBranches();
+        await this.props.getListEventSchools(this.state.bodyListEventSchools, 0, 0);
         await this.searchEventJobs();
+        await this.props.getListJobService();
     };
 
     onChoseHomePriority = (event: any) => {
-        console.log(event)
+        // console.log(event)
         this.setState({ homePriority: event });
     };
 
@@ -562,16 +674,22 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             });
         }
 
-        this.setState({ body });
+        this.setState({ body }, () => {
+            this.searchEventJobs()
+        });
     };
 
     setPageIndex = async (event: any) => {
-        await this.setState({ pageIndex: event.current - 1, loadingTable: true, pageSize: event.pageSize });
+        window.scrollTo({ top: 0 });
+        // console.log(this.state.body)
+        await this.setState({ pageIndex: event.current - 1, pageSize: event.pageSize });
         await this.searchEventJobs();
     };
 
     searchEventJobs = async () => {
         let { body, pageIndex, pageSize } = this.state;
+        // console.log(body)
+        await this.setState({ loadingTable: true })
         await this.props.getListEventJobs(body, pageIndex, pageSize);
     };
 
@@ -581,7 +699,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let value: any = event;
         switch (param) {
             case TYPE.JOB_FILTER.jobNameIDs:
-                value = [value];
+                if (value) {
+                    value = [value];
+                } else {
+                    value = value
+                }
                 break;
             case TYPE.JOB_FILTER.jobLocationFilter:
                 if (value) {
@@ -589,6 +711,14 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     value = { distance: 1, lat: data[0].lat, lon: data[0].lon }
                 }
                 break;
+            case 'schoolEventID':
+                console.log(value)
+                if (value) {
+                    value = value
+                    this.props.getJobServiceEvent(value);
+                } else {
+                    value = null
+                }
             default:
                 break;
         }
@@ -605,7 +735,10 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         }
 
         body[param] = value;
-        this.setState({ body });
+        // console.log(body);
+        this.setState({ body, pageIndex: 0 }, () => {
+            this.searchEventJobs()
+        });
     };
 
     onChangeCreatedDate = (event) => {
@@ -656,8 +789,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             case TYPE.JOB_FILTER.highlight:
                 await _requestToServer(
                     POST,
-                    EVENT_SCHOOLS + `/${body.schoolEventID + routePath.JOBS}/${id}/highlight`,
-                    { highlight },
+                    ADMIN_ACCOUNT + `/jobs/${id}/priority/search`,
+                    { searchPriority: 'HIGHLIGHT' },
                     undefined,
                     undefined,
                     EMPLOYER_HOST,
@@ -672,12 +805,118 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         loading: false
                     })
                 );
+                await this.props.getListJobService();
                 break;
-
+            case 'HOME_TOP':
+                await _requestToServer(
+                    POST,
+                    ADMIN_ACCOUNT + `/jobs/${id}/priority/home`,
+                    { homePriority: 'TOP' },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
+                await this.props.getListJobService();
+                break;
+            case 'HOME_TOP_EVENT':
+                // console.log(body.schoolEventID)
+                await _requestToServer(
+                    POST,
+                    EVENT_SCHOOLS + `/${body.schoolEventID}/jobs/${id}/priority/home`,
+                    { homePriority: 'TOP' },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
+                await this.props.getJobServiceEvent(body.schoolEventID);
+                break;
+            case 'TITLE_HIGHLIGHT_EVENT':
+                await _requestToServer(
+                    POST,
+                    EVENT_SCHOOLS + `/${body.schoolEventID}/jobs/${id}/highlight`,
+                    { highlight: 'TITLE_HIGHLIGHT' },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
+                await this.props.getJobServiceEvent(body.schoolEventID);
+                break;
+            case 'TITLE_HIGHLIGHT':
+                await _requestToServer(
+                    POST,
+                    ADMIN_ACCOUNT + `/jobs/${id}/highlight`,
+                    { highlight: 'TITLE_HIGHLIGHT' },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
+                await this.props.getListJobService();
+                break;
+            case 'HOME_IN_DAY':
+                await _requestToServer(
+                    POST,
+                    ADMIN_ACCOUNT + `/jobs/${id}/priority/home`,
+                    { homePriority: 'IN_DAY' },
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res: any) => {
+                    if (res) {
+                        this.requeryData()
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                );
+                await this.props.getListJobService();
+                break;
             case TYPE.DELETE:
                 await _requestToServer(
                     DELETE,
-                    EVENT_SCHOOLS + `/${id}?schoolEventID=${body.schoolEventID}`,
+                    ADMIN_ACCOUNT + `/jobs/${id}`,
                     undefined,
                     undefined,
                     undefined,
@@ -701,13 +940,34 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     };
 
     requeryData = async () => {
-        let { id, eid } = this.state;
+        let { id, eid, body } = this.state;
+
         await this.searchEventJobs();
-        await this.props.getJobServiceEvent(eid);
-        await this.props.getEventJobDetail(id, eid);
+        // await this.props.getJobServiceEvent(eid);
+
+        await this.props.getEventJobDetail(id, body.schoolEventID);
         await this.props.handleModal();
     };
-
+    searchWithUnicode = (input, option) => {
+        if (option.props.value) {
+            // console.log(option.props.value)
+            return strForSearch(option.props.children).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
+    searchWithUnicodeLabel = (input, option) => {
+        if (option.props.label) {
+            // console.log(option.props.label)
+            return strForSearch(option.props.label).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
     render() {
         let {
             dataTable,
@@ -723,7 +983,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             loading,
             ojd,
             jid,
-            eid
+            eid,
+            searchPriority, applyModal
         } = this.state;
 
         let {
@@ -734,13 +995,41 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             jobServiceEvent,
             modalState,
             jobSuitableCandidates,
+            listEventSchools,
+            listJobService
         } = this.props;
 
-        let homeExpiration = eventJobDetail.priority.homeExpiration;
+        let homeExpiration = eventJobDetail.priority.homeExpiration
         let highlightExpiration = eventJobDetail.priority.highlightExpiration;
+        let searchExpiration = eventJobDetail.priority.searchExpiration;
         let un_active_home = eventJobDetail.priority.homePriority !== null;
+        let un_active_home_2 = homeExpiration !== -1 && !homeExpired;
         let un_active_highlight = eventJobDetail.priority.highlight !== null;
+        // let un_active_search = searchExpiration !== -1 && !searchExpired;
 
+        let url_string = window.location.href;
+        let url = new URL(url_string);
+        let expiredJob = url.searchParams.get("expiredJob");
+        let active_search = 0
+        if (!eventJobDetail.priority.searchPriority) {
+            active_search = 1
+        } else if (eventJobDetail.priority.searchPriority === 'HIGHLIGHT' && eventJobDetail.priority.searchExpired) {
+            active_search = 2
+        }
+        let active_home = 0
+        if (!eventJobDetail.priority.homePriority) {
+            active_home = 1
+        } else if (eventJobDetail.priority.homePriority === 'TOP' && eventJobDetail.priority.homeExpired) {
+            active_home = 2
+        } else if (eventJobDetail.priority.homePriority === 'IN_DAY' && eventJobDetail.priority.homeExpired) {
+            active_home = 3
+        }
+        let active_highlight = 0
+        if (!eventJobDetail.priority.highlight) {
+            active_highlight = 1
+        } else if (eventJobDetail.priority.highlight === 'TITLE_HIGHLIGHT' && eventJobDetail.priority.highlightExpired) {
+            active_highlight = 2
+        }
         return (
             <>
                 <Modal
@@ -779,227 +1068,478 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 />
                 <Modal
                     visible={ojd}
-                    title={<div style={{ textTransform: "uppercase" }}>{eventJobDetail.jobTitle}</div>}
+                    title={<div style={{ textTransform: "uppercase" }}>Chi tiết công việc</div>}
                     destroyOnClose={true}
                     onOk={this.createRequest}
                     width={'80vw'}
                     onCancel={() => {
                         this.setState({ ojd: false, loading: false });
                     }}
-                    footer={[
-                        <Button
-                            key="cancel"
-                            type="danger"
-                            children="Đóng"
-                            onClick={() => {
-                                this.setState({
-                                    ojd: false,
-                                });
-                            }}
-                        />
-                    ]}
+                    footer={null}
                 >
-                    <Row>
-                        <Col span={14}>
-                            <JobDetail
-                                jobDetail={{
-                                    jobName: eventJobDetail.jobName.name,
-                                    jobTitle: eventJobDetail.jobTitle,
-                                    employerName: eventJobDetail.employerName,
-                                    employerUrl: eventJobDetail.employerLogoUrl,
-                                    expriratedDate: eventJobDetail.expirationDate,
-                                    jobType: eventJobDetail.jobType,
-                                    shifts: eventJobDetail.shifts,
-                                    description: eventJobDetail.description,
-                                    createdDate: eventJobDetail.createdDate,
-                                    employerBranch: eventJobDetail.employerBranchName
-                                }}
-                            />
-                        </Col>
-                        <Col span={10}>
-                            <Tabs key={TYPE.STUDENT} >
-                                <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
-                            </Tabs>
-                            <JobSuitableCandidate
-                                jobSuitableCandidates={jobSuitableCandidates.items}
-                                pageIndex={jobSuitableCandidates.pageIndex}
-                                pageSize={jobSuitableCandidates.pageSize}
-                                totalItems={jobSuitableCandidates.totalItems}
-                                onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize, TYPE.STUDENT)}
-                            />
-                        </Col>
-                    </Row>
+                    {this.state.loadingDetailJob ?
+                        <div style={{ display: 'flex', justifyContent: 'center', minHeight: 200, alignItems: 'center' }}>
+                            <Spin />
+                        </div>
+                        :
+                        <Row>
+                            <Col span={16}>
+                                <JobDetail
+                                    jobDetail={{
+                                        jobName: eventJobDetail.jobName.name,
+                                        jobTitle: eventJobDetail.jobTitle,
+                                        employerName: eventJobDetail.employerName,
+                                        employerUrl: eventJobDetail.employerLogoUrl,
+                                        expriratedDate: eventJobDetail.expirationDate,
+                                        jobType: eventJobDetail.jobType,
+                                        shifts: eventJobDetail.shifts,
+                                        description: eventJobDetail.description,
+                                        createdDate: eventJobDetail.createdDate,
+                                        employerBranch: eventJobDetail.employerBranchName,
+                                        requiredSkills: eventJobDetail.requiredSkills
+                                    }}
+                                />
+                            </Col>
+                            <Col span={8}>
+                                <div id="scroll"></div>
+                                <Tabs key={TYPE.STUDENT} >
+                                    <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
+                                </Tabs>
+                                <JobSuitableCandidate
+                                    jobSuitableCandidates={jobSuitableCandidates.items}
+                                    pageIndex={jobSuitableCandidates.pageIndex}
+                                    pageSize={jobSuitableCandidates.pageSize}
+                                    totalItems={jobSuitableCandidates.totalItems}
+                                    loading={jobSuitableCandidates.loading}
+                                    onGetListJobSuitableCandidate={(pageIndex, pageSize) => this.props.getListJobSuitableCandidate(jid, pageIndex, pageSize, TYPE.STUDENT)}
+                                />
+                            </Col>
+                        </Row>}
                 </ Modal>
+                <Modal
+                    visible={applyModal}
+                    title={"Danh sách ứng viên công việc"}
+                    destroyOnClose={true}
+                    width={'80vw'}
+                    onCancel={() => {
+                        // console.log('vao day')
+                        // this.requeryData()
+
+                        this.setState({ applyModal: false });
+                        setTimeout(() => {
+                            this.props.clearProfileStudent()
+                        }, 500)
+                    }}
+                    footer={null}
+                >
+                    <JobAnnouncementsApply id={this.state.applyId} searchEventJobs={this.searchEventJobs} stateApply={this.state.stateApply} />
+                </Modal>
                 <DrawerConfig
-                    title={"Kích hoạt gói dịch vụ tuyển dụng"}
+                    title={"Gói dịch vụ ưu tiên"}
                     width={800}
                 >
-                    <h6>Các gói của bạn</h6>
-                    <label className='top'>Gói tuyển dụng gấp: {jobServiceEvent.homeTopQuantiy}</label>
-                    <label className='title_highlight'>Gói tiêu đề nổi bật:  {jobServiceEvent.highlightTitleQuantity}</label>
-                    <hr />
-                    <h6>Hãy chọn gói phù hợp cho bạn:</h6>
-                    <>
-                        <IptLetterP
-                            style={{ margin: "15px 5px" }}
-                            value={`Nhóm gói tuyển dụng ở trang chủ${homeExpiration !== -1 && homeExpired ? "(Hết hạn)" : ""}`}
-                        >
-                            <Radio.Group onChange={
-                                (event: any) => this.onChoseHomePriority(event.target.value)}
-                                value={homePriority}
-                                disabled={un_active_home}
-                            >
-                                <Radio value={TYPE.TOP}>Tuyển dụng gấp</Radio>
-                                {/* <Radio value={TYPE.IN_DAY}>Tuyển dụng trong ngày</Radio> */}
-                            </Radio.Group>
-                            <Button
-                                icon="check"
-                                type={un_active_home ? "ghost" : "primary"}
-                                style={{
-                                    float: "right"
-                                }}
-                                disabled={un_active_home}
-                                onClick={() => {
-                                    this.props.handleModal({
-                                        msg: "Bạn muốn kích hoạt gói dịch vụ tuyển gấp cho bài đăng này ?",
-                                        typeModal: TYPE.JOB_FILTER.homePriority
-                                    });
-                                }}
-                            >
-                                {un_active_home ? "Đã kích hoạt" : "Kích hoạt"}
-                            </Button>
-                        </IptLetterP>
-                        <IptLetterP
-                            style={{ margin: "15px 5px" }}
-                            value={`Nhóm gói tuyển dụng tiêu đề nổi bật ${highlightExpiration !== -1 && highlightExpired ? "(Hết hạn)" : ""}`}
-                        >
-                            <Radio.Group
-                                onChange={
-                                    (event: any) => this.onChoseHighLightPriority(event.target.value)}
-                                value={highlight}
-                                disabled={un_active_highlight}
-                            >
-                                <Radio value={TYPE.TITLE_HIGHLIGHT}>Tiêu đề nổi bật</Radio>
-                            </Radio.Group>
-                            <Button
-                                type={un_active_highlight ? "ghost" : "primary"}
-                                icon="check"
-                                style={{
-                                    float: "right"
-                                }}
-                                disabled={un_active_highlight}
-                                onClick={() => {
-                                    this.props.handleModal({
-                                        msg: "Bạn muốn kích hoạt gói tiêu đề nổi bật cho bài đăng này ?",
-                                        typeModal: TYPE.JOB_FILTER.highlight
-                                    });
-                                }}
-                            >
-                                {un_active_highlight ? "Đã kích hoạt" : "Kích hoạt"}
-                            </Button>
-                        </IptLetterP>
-                    </>
-                    <div style={{
-                        marginTop: "30px",
-                        textAlign: "center",
-                    }}
-                    >
-                        {
-                            (!homeExpired && homeExpiration !== -1) ||
-                                (!searchExpired && homeExpiration !== -1) ?
-                                <span className="italic">(Đang kích hoạt gói dịch vụ)</span> :
-                                <span className="italic"> (Chưa kích hoạt gói dịch vụ)</span>
-                        }
-                    </div>
-                    <hr />
-                    <Row>
-                        <Col md={12}>
-                            <div className="test" style={{ padding: "10px 15px" }}>
-                                <h6><Icon type="home" theme={"filled"} /> Gói dịch vụ ưu tiên trang chủ</h6>
+                    {body.schoolEventID ?
+                        <div>
+                            <h6>Gói dịch vụ sử dụng</h6>
+                            <Row>
+                                {eventJobDetail.priority.homePriority === TYPE.IN_DAY || eventJobDetail.priority.homePriority === TYPE.TOP ?
+                                    <Col md={12}>
+                                        <div className={eventJobDetail.priority.homeExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                            <div className="service">
+                                                <div>Trang chủ</div>
+                                                {eventJobDetail.priority.homePriority === TYPE.TOP ? <div className="bold-value">TUYỂN GẤP</div> : null}
+                                                {eventJobDetail.priority.homePriority === TYPE.IN_DAY ? <div className="bold-value">TRONG NGÀY</div> : null}
+                                                {eventJobDetail.priority.homePriority !== TYPE.IN_DAY && eventJobDetail.priority.homePriority !== TYPE.TOP ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service-center">
+                                                {eventJobDetail.priority.homeExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                {eventJobDetail.priority.homeTimeLeft ? <div className="bold-value">{eventJobDetail.priority.homeTimeLeft}</div> : null}
+                                                {eventJobDetail.priority.homeExpiration < 0 && eventJobDetail.priority.homePriority ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                {eventJobDetail.priority.homeExpiration < 0 && !eventJobDetail.priority.homePriority ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service">
+                                                <div>Ngày hết hạn</div>
+                                                {eventJobDetail.priority.homeExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.homeExpiration, 1000)}</div> : <div>_</div>}
+                                            </div>
+                                        </div>
+                                    </Col> : null}
+                                {eventJobDetail.priority.highlight ?
+                                    <Col md={12}>
+                                        <div className={eventJobDetail.priority.highlightExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                            <div className="service">
+                                                <div>Nổi bật tiêu đề</div>
+                                                {eventJobDetail.priority.highlight === 'TITLE_HIGHLIGHT' ? <div className="bold-value">NỔI BẬT TIÊU ĐỀ</div> : <div className="bold-value">_</div>}
+                                            </div>
+                                            <div className="service-center">
+                                                {eventJobDetail.priority.highlightExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                {eventJobDetail.priority.highlightTimeLeft ? <div className="bold-value">{eventJobDetail.priority.highlightTimeLeft}</div> : null}
+                                                {eventJobDetail.priority.highlightExpiration < 0 && eventJobDetail.priority.highlight ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                {eventJobDetail.priority.highlightExpiration < 0 && !eventJobDetail.priority.highlight ? <div className="bold-value">_</div> : null}
+                                            </div>
+                                            <div className="service">
+                                                <div>Ngày hết hạn</div>
+                                                {eventJobDetail.priority.highlightExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.highlightExpiration, 1000)}</div> : <div>_</div>}
+                                            </div>
+                                        </div>
+                                    </Col> : null}
+                                {!eventJobDetail.priority.homePriority && !eventJobDetail.priority.highlight ? <span className="italic"> (Chưa kích hoạt gói dịch vụ)</span> : null}
+                            </Row>
+                            {/* <label className='top'>Gói tuyển dụng gấp: {jobServiceEvent.homeTopQuantiy}</label>
+                            <label className='title_highlight'>Gói tiêu đề nổi bật:  {jobServiceEvent.highlightTitleQuantity}</label> */}
+                            <hr />
+                            {/* <>
+                                <IptLetterP
+                                    style={{ margin: "15px 5px" }}
+                                    value={`Nhóm gói tuyển dụng ở trang chủ${homeExpiration !== -1 && homeExpired ? "(Hết hạn)" : ""}`}
+                                >
+                                    <Radio.Group onChange={
+                                        (event: any) => this.onChoseHomePriority(event.target.value)}
+                                        value={homePriority}
+                                        disabled={un_active_home}
+                                    >
+                                        <Radio value={TYPE.TOP}>Tuyển dụng gấp</Radio>
+                                    </Radio.Group>
+                                    <Button
+                                        icon="check"
+                                        type={un_active_home ? "ghost" : "primary"}
+                                        style={{
+                                            float: "right"
+                                        }}
+                                        disabled={un_active_home}
+                                        onClick={() => {
+                                            this.props.handleModal({
+                                                msg: "Bạn muốn kích hoạt gói dịch vụ tuyển gấp cho bài đăng này ?",
+                                                typeModal: TYPE.JOB_FILTER.homePriority
+                                            });
+                                        }}
+                                    >
+                                        {un_active_home ? "Đã kích hoạt" : "Kích hoạt"}
+                                    </Button>
+                                </IptLetterP>
+                                <IptLetterP
+                                    style={{ margin: "15px 5px" }}
+                                    value={`Nhóm gói tuyển dụng tiêu đề nổi bật ${highlightExpiration !== -1 && highlightExpired ? "(Hết hạn)" : ""}`}
+                                >
+                                    <Radio.Group
+                                        onChange={
+                                            (event: any) => this.onChoseHighLightPriority(event.target.value)}
+                                        value={highlight}
+                                        disabled={un_active_highlight}
+                                    >
+                                        <Radio value={TYPE.TITLE_HIGHLIGHT}>Tiêu đề nổi bật</Radio>
+                                    </Radio.Group>
+                                    <Button
+                                        type={un_active_highlight ? "ghost" : "primary"}
+                                        icon="check"
+                                        style={{
+                                            float: "right"
+                                        }}
+                                        disabled={un_active_highlight}
+                                        onClick={() => {
+                                            this.props.handleModal({
+                                                msg: "Bạn muốn kích hoạt gói tiêu đề nổi bật cho bài đăng này ?",
+                                                typeModal: TYPE.JOB_FILTER.highlight
+                                            });
+                                        }}
+                                    >
+                                        {un_active_highlight ? "Đã kích hoạt" : "Kích hoạt"}
+                                    </Button>
+                                </IptLetterP>
+                            </> */}
+                            <h6><Icon type="home" style={{ verticalAlign: 3 }} /> Gói dịch vụ ưu tiên trang chủ</h6>
+                            <Row>
+                                <Col md={24}>
+                                    <div className="select-service">
+                                        <div>
+                                            <div className="title-caplock">TUYỂN GẤP</div>
+                                            <div className="description">Hiển thị bài đăng ở danh sách việc tuyển gấp trên trang chủ sự kiện</div>
+                                            <div className="bold-text description">Hiệu lực: 15 ngày</div>
+                                            <div className="bold-text description">Số lượt: {jobServiceEvent.homeTopQuantiy}</div>
+                                        </div>
+                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'IN_DAY') ?
+                                            <Button
+                                                type={active_home === 0 ? "ghost" : "primary"}
+                                                style={{
+                                                    float: "right",
+                                                    marginLeft: 10
+                                                }}
+                                                disabled={active_home === 0}
+                                                onClick={() => {
+                                                    this.props.handleModal({
+                                                        msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                                        typeModal: 'HOME_TOP_EVENT'
+                                                    });
+                                                }}
+                                            >
+                                                {active_home === 0 ? "Đã kích hoạt" : null}
+                                                {active_home === 1 ? "Kích hoạt" : null}
+                                                {active_home === 2 ? "Kích hoạt lại" : null}
+                                            </Button> : null}
+                                    </div>
+                                </Col>
+                            </Row>
+                            <h6 style={{ marginTop: 15 }}><Icon type="highlight" style={{ verticalAlign: 3 }} /> Gói dịch vụ nổi bật tiêu đề</h6>
+                            <div className="select-service-2">
                                 <div>
-                                    Hiển thị bài đăng ở danh sách việc tuyển gấp trên trang chủ sự kiện,
-                                    tăng lượt view, click.
+                                    <div className="title-caplock">NỔI BẬT TIÊU ĐỀ</div>
+                                    <div className="description">Hiển thị bài đăng với tiêu đề được bôi đậm đỏ</div>
+                                    <div className="bold-text description">Hiệu lực: 15 ngày</div>
+                                    <div className="bold-text description">Số lượt: {jobServiceEvent.highlightTitleQuantity}</div>
                                 </div>
+                                <Button
+                                    type={active_highlight === 0 ? "ghost" : "primary"}
+                                    style={{
+                                        float: "right"
+                                    }}
+                                    disabled={active_highlight === 0}
+                                    onClick={() => {
+                                        this.props.handleModal({
+                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                            typeModal: 'TITLE_HIGHLIGHT_EVENT'
+                                        });
+                                    }}
+                                >
+                                    {active_highlight === 0 ? "Đã kích hoạt" : null}
+                                    {active_highlight === 1 ? "Kích hoạt" : null}
+                                    {active_highlight === 2 ? "Kích hoạt lại" : null}
+
+                                </Button>
                             </div>
-                        </Col>
-                        <Col md={12}>
-                            <div className="test" style={{ padding: "10px 15px" }}>
-                                <h6><Icon type="star" theme={"filled"} /> Gói tiêu đề nổi bật</h6>
+
+                        </div>
+                        : <div>
+                            <h6>Gói dịch vụ sử dụng</h6>
+                            <>
+                                <Row>
+                                    {eventJobDetail.priority.homePriority === TYPE.IN_DAY || eventJobDetail.priority.homePriority === TYPE.TOP ?
+                                        <Col md={12}>
+                                            <div className={eventJobDetail.priority.homeExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                                <div className="service">
+                                                    <div>Trang chủ</div>
+                                                    {eventJobDetail.priority.homePriority === TYPE.TOP ? <div className="bold-value">TUYỂN GẤP</div> : null}
+                                                    {eventJobDetail.priority.homePriority === TYPE.IN_DAY ? <div className="bold-value">TRONG NGÀY</div> : null}
+                                                    {eventJobDetail.priority.homePriority !== TYPE.IN_DAY && eventJobDetail.priority.homePriority !== TYPE.TOP ? <div className="bold-value">_</div> : null}
+                                                </div>
+                                                <div className="service-center">
+                                                    {eventJobDetail.priority.homeExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                    {eventJobDetail.priority.homeTimeLeft ? <div className="bold-value">{eventJobDetail.priority.homeTimeLeft}</div> : null}
+                                                    {eventJobDetail.priority.homeExpiration < 0 && eventJobDetail.priority.homePriority ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                    {eventJobDetail.priority.homeExpiration < 0 && !eventJobDetail.priority.homePriority ? <div className="bold-value">_</div> : null}
+                                                </div>
+                                                <div className="service">
+                                                    <div>Ngày hết hạn</div>
+                                                    {eventJobDetail.priority.homeExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.homeExpiration, 1000)}</div> : <div>_</div>}
+                                                </div>
+                                            </div>
+                                        </Col> : null}
+                                    {eventJobDetail.priority.searchPriority ?
+                                        <Col md={12}>
+                                            <div className={eventJobDetail.priority.searchExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                                <div className="service">
+                                                    <div>Bộ tìm kiếm</div>
+                                                    {eventJobDetail.priority.searchPriority === TYPE.HIGHLIGHT ? <div className="bold-value">NỔI BẬT</div> : <div className="bold-value">_</div>}
+                                                </div>
+                                                <div className="service-center">
+                                                    {eventJobDetail.priority.searchExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                    {eventJobDetail.priority.searchTimeLeft ? <div className="bold-value">{eventJobDetail.priority.searchTimeLeft}</div> : null}
+                                                    {eventJobDetail.priority.searchExpiration < 0 && eventJobDetail.priority.searchPriority ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                    {eventJobDetail.priority.searchExpiration < 0 && !eventJobDetail.priority.searchPriority ? <div className="bold-value">_</div> : null}
+                                                </div>
+                                                <div className="service">
+                                                    <div>Ngày hết hạn</div>
+                                                    {eventJobDetail.priority.searchExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.searchExpiration, 1000)}</div> : <div>_</div>}
+                                                </div>
+                                            </div>
+                                        </Col> : null}
+
+                                    {eventJobDetail.priority.highlight ?
+                                        <Col md={12}>
+                                            <div className={eventJobDetail.priority.highlightExpired ? "wapper-service-unactive" : "wapper-service"}>
+                                                <div className="service">
+                                                    <div>Nổi bật tiêu đề</div>
+                                                    {eventJobDetail.priority.highlight === 'TITLE_HIGHLIGHT' ? <div className="bold-value">NỔI BẬT TIÊU ĐỀ</div> : <div className="bold-value">_</div>}
+                                                </div>
+                                                <div className="service-center">
+                                                    {eventJobDetail.priority.highlightExpired ? <div>Hết hạn</div> : <div>Hiệu lực</div>}
+                                                    {eventJobDetail.priority.highlightTimeLeft ? <div className="bold-value">{eventJobDetail.priority.highlightTimeLeft}</div> : null}
+                                                    {eventJobDetail.priority.highlightExpiration < 0 && eventJobDetail.priority.highlight ? <div className="bold-value">VÔ HẠN</div> : null}
+                                                    {eventJobDetail.priority.highlightExpiration < 0 && !eventJobDetail.priority.highlight ? <div className="bold-value">_</div> : null}
+                                                </div>
+                                                <div className="service">
+                                                    <div>Ngày hết hạn</div>
+                                                    {eventJobDetail.priority.highlightExpiration > 0 ? <div className="bold-value">{timeConverter(eventJobDetail.priority.highlightExpiration, 1000)}</div> : <div>_</div>}
+                                                </div>
+                                            </div>
+                                        </Col> : null}
+                                </Row>
+                            </>
+                            <hr />
+                            {/* <h6>Hãy chọn gói phù hợp cho bạn <Icon type="check" style={{ color: "green" }} /></h6> */}
+                            <h6><Icon type="home" theme={"filled"} /> Gói dịch vụ ưu tiên trang chủ</h6>
+                            <Row>
+                                <Col md={12}>
+                                    <div className="select-service">
+                                        <div>
+                                            <div className="title-caplock">TUYỂN GẤP</div>
+                                            <div className="description">Hiển thị bài đăng ở danh sách việc tuyển gấp trên trang chủ sự kiện</div>
+                                            <div className="bold-text description">Hiệu lực: 15 ngày</div>
+                                            <div className="bold-text description">Số lượt: {listJobService.homeTopQuantiy}</div>
+                                        </div>
+                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'IN_DAY') ?
+                                            <Button
+                                                type={active_home === 0 ? "ghost" : "primary"}
+                                                style={{
+                                                    float: "right",
+                                                    marginLeft: 10
+                                                }}
+                                                disabled={active_home === 0}
+                                                onClick={() => {
+                                                    this.props.handleModal({
+                                                        msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                                        typeModal: 'HOME_TOP'
+                                                    });
+                                                }}
+                                            >
+                                                {active_home === 0 ? "Đã kích hoạt" : null}
+                                                {active_home === 1 ? "Kích hoạt" : null}
+                                                {active_home === 2 ? "Kích hoạt lại" : null}
+                                            </Button> : null}
+                                    </div>
+                                </Col>
+                                <Col md={12}>
+                                    <div className="select-service">
+                                        <div>
+                                            <div className="title-caplock">TRONG NGÀY</div>
+                                            <div className="description">Hiển thị bài đăng ở danh sách việc trong ngày trên trang chủ</div>
+                                            <div className="bold-text description">Hiệu lực: 1 ngày</div>
+                                            <div className="bold-text description">Số lượt: {listJobService.homeInDayQuantity}</div>
+                                        </div>
+                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'TOP') ?
+                                            <Button
+                                                type={active_home === 0 ? "ghost" : "primary"}
+                                                style={{
+                                                    float: "right",
+                                                    marginLeft: 10
+                                                }}
+                                                disabled={active_home === 0}
+                                                onClick={() => {
+                                                    this.props.handleModal({
+                                                        msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                                        typeModal: 'HOME_IN_DAY'
+                                                    });
+                                                }}
+                                            >
+                                                {active_home === 0 ? "Đã kích hoạt" : null}
+                                                {active_home === 1 ? "Kích hoạt" : null}
+                                                {active_home === 3 ? "Kích hoạt lại" : null}
+                                            </Button> : null}
+                                    </div>
+                                </Col>
+                            </Row>
+
+
+                            <h6><Icon type="search" /> Gói dịch vụ ưu tiên tìm kiếm</h6>
+                            <div className="select-service-2">
                                 <div>
-                                    Làm nổi bật tiêu đề bài đăng, tăng tương tác( kích thích thị hiểu người dùng xem)
+                                    <div className="title-caplock">NỔI BẬT</div>
+                                    <div className="description">Hiển thị bài đăng tại vị trí đầu tiên trong danh sách kết quả tìm kiếm</div>
+                                    <div className="bold-text description">Hiệu lực: 15 ngày</div>
+                                    <div className="bold-text description">Số lượt: {listJobService.searchHighLightQuantity}</div>
                                 </div>
+                                <Button
+                                    type={active_search === 0 ? "ghost" : "primary"}
+                                    style={{
+                                        float: "right"
+                                    }}
+                                    disabled={active_search === 0}
+                                    onClick={() => {
+                                        this.props.handleModal({
+                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                            typeModal: TYPE.JOB_FILTER.highlight
+                                        });
+                                    }}
+                                >
+                                    {active_search === 0 ? "Đã kích hoạt" : null}
+                                    {active_search === 1 ? "Kích hoạt" : null}
+                                    {active_search === 2 ? "Kích hoạt lại" : null}
+                                </Button>
                             </div>
-                        </Col>
-                    </Row>
-                    <div style={{ padding: "40px 10px 20px ", width: "100%" }}>
-                        <Button
-                            type="danger"
-                            style={{
-                                float: "left"
-                            }}
-                            onClick={() => this.onCancelRegisterBenefit()}
-                        >
-                            Đóng
-                        </Button>
-                    </div>
+                            <h6><Icon type="highlight" /> Gói dịch vụ nổi bật tiêu đề</h6>
+                            <div className="select-service-2">
+                                <div>
+                                    <div className="title-caplock">NỔI BẬT TIÊU ĐỀ</div>
+                                    <div className="description">Hiển thị bài đăng với tiêu đề được bôi đậm đỏ</div>
+                                    <div className="bold-text description">Hiệu lực: 15 ngày</div>
+                                    <div className="bold-text description">Số lượt: {listJobService.highLightQuantity}</div>
+                                </div>
+                                <Button
+                                    type={active_highlight === 0 ? "ghost" : "primary"}
+                                    style={{
+                                        float: "right"
+                                    }}
+                                    disabled={active_highlight === 0}
+                                    onClick={() => {
+                                        this.props.handleModal({
+                                            msg: "Bạn muốn kích hoạt gói dịch vụ cho bài đăng này ?",
+                                            typeModal: 'TITLE_HIGHLIGHT'
+                                        });
+                                    }}
+                                >
+                                    {active_highlight === 0 ? "Đã kích hoạt" : null}
+                                    {active_highlight === 1 ? "Kích hoạt" : null}
+                                    {active_highlight === 2 ? "Kích hoạt lại" : null}
+
+                                </Button>
+                            </div>
+
+                        </div>}
+
+
                 </DrawerConfig>
                 <div className="common-content">
-                    <h5>
-                        Quản lý bài đăng sự kiện nhà trường {`(${totalItems})`}
-                        <Tooltip title="Lọc tìm kiếm" >
-                            <Button
-                                onClick={() => this.searchEventJobs()}
-                                type="primary"
-                                style={{
-                                    float: "right",
-                                    margin: "0px 10px",
-                                    padding: "10px",
-                                    borderRadius: "50%",
-                                    height: "45px",
-                                    width: "45px"
-                                }}
-                                icon={loadingTable ? "loading" : "filter"}
-                            />
-                        </Tooltip>
-                        <Link to={routeLink.EVENT + routePath.JOBS + routePath.CREATE + `?eid=${eid}`} >
-                            <Tooltip title="Tạo bài đăng mới" >
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        float: "right",
-                                        margin: "0px 10px",
-                                        padding: "10px",
-                                        borderRadius: "50%",
-                                        height: "45px",
-                                        width: "45px"
-                                    }}
-                                    icon={"plus"}
-                                />
-                            </Tooltip>
-                        </Link>
+                    <h5 className="TitleJob">
+                        {expiredJob === 'true' ? `Việc làm hết hạn (${totalItems})` : `Việc làm hoạt động (${totalItems})`}
                     </h5>
                     <div className="table-operations">
-                        <Row >
+                        <Row style={{ marginBottom: 10 }}>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Trạng thái hoạt động"} />
+                                <IptLetterP value={"Nhóm"} className="titleFilter" />
                                 <Select
                                     showSearch
-                                    defaultValue="Tất cả"
+                                    defaultValue="Tuyển dụng thường"
                                     style={{ width: "100%" }}
-                                    onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.expired)}
+                                    optionFilterProp="label"
+                                    filterOption={this.searchWithUnicodeLabel}
+                                    onChange={(event: any) => this.onChangeType(event, 'schoolEventID')}
+                                    allowClear
+                                    value={this.state.body.schoolEventID}
                                 >
-                                    <Option value={null}>Tất cả</Option>
-                                    <Option value={TYPE.FALSE}>Còn hạn</Option>
-                                    <Option value={TYPE.TRUE}>Hết hạn</Option>
+                                    <Option value={null} label={'Tuyển dụng thường'}>Tuyển dụng thường</Option>
+                                    {
+                                        listEventSchools &&
+                                        listEventSchools.map(
+                                            (item, index) =>
+                                                <Option key={index} value={item.id} label={item.name}>
+                                                    {item.name}
+                                                    <div style={{ color: '#1890ff', fontSize: '0.9em' }}>
+                                                        #{item.school.shortName}
+                                                    </div>
+
+                                                </Option>
+                                        )
+                                    }
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Tên việc đăng tuyển"} />
+                                <IptLetterP value={"Tên việc đăng tuyển"} className="titleFilter" />
                                 <Select
                                     showSearch
                                     defaultValue="Tất cả"
+                                    optionFilterProp="children"
                                     style={{ width: "100%" }}
+                                    filterOption={this.searchWithUnicode}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobNameIDs)}
+                                    allowClear
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -1011,13 +1551,15 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                 </Select>
                             </Col>
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Chi nhánh"} />
+                                <IptLetterP value={"Chi nhánh"} className="titleFilter" />
                                 <Select
                                     showSearch
                                     placeholder="Tất cả"
                                     optionFilterProp="children"
                                     style={{ width: "100%" }}
+                                    filterOption={this.searchWithUnicode}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.JOB_FILTER.jobLocationFilter)}
+                                    allowClear
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -1028,8 +1570,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     }
                                 </Select>
                             </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
-                                <IptLetterP value={"Loại công việc"} />
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                                <IptLetterP value={"Loại công việc"} className="titleFilter"/>
                                 <Select
                                     showSearch
                                     placeholder="Tất cả"
@@ -1043,8 +1585,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.PARTTIME}>Bán thời gian</Option>
                                     <Option value={TYPE.INTERNSHIP}>Thực tập sinh</Option>
                                 </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Gói dịch vụ"} />
                                 <Cascader
                                     placeholder="Không chọn gói"
@@ -1060,8 +1602,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                         }
                                     }
                                 />
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Hạn đang bài"} />
                                 <Select
                                     showSearch
@@ -1075,8 +1617,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.FALSE}>Còn hạn</Option>
                                     <Option value={TYPE.TRUE}>Hết hạn</Option>
                                 </Select>
-                            </Col>
-                            <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
+                            </Col> */}
+                            {/* <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Trạng thái ẩn/hiện"} />
                                 <Select
                                     showSearch
@@ -1089,32 +1631,43 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     <Option value={TYPE.TRUE}>Đang ẩn</Option>
                                     <Option value={TYPE.FALSE}>Đang hiện</Option>
                                 </Select>
-                            </Col>
+                            </Col> */}
                             <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                                 <IptLetterP value={"Chứa trạng thái ứng tuyển"} />
-                                <Checkbox
-                                    indeterminate={unCheckbox}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event.target.checked);
-                                            this.setState({ unCheckbox: event.target.checked })
-                                        }
-                                    }
-                                >
-                                    Bất kì
+                                <div>
+
+                                    <div>
+                                        <Checkbox
+                                            indeterminate={unCheckbox}
+                                            onChange={
+                                                (event: any) => {
+                                                    this.handleCheckBox(event.target.checked);
+                                                    this.setState({ unCheckbox: event.target.checked })
+                                                    // console.log(unCheckbox)
+                                                    if (unCheckbox) {
+                                                        this.setState({ listCheck: [] })
+                                                    }
+                                                }
+                                            }
+                                            style={{marginTop: '6px'}}
+                                        >
+                                            Bất kì
                                 </Checkbox>
-                                <hr />
-                                <CheckboxGroup
-                                    options={plainOptions}
-                                    value={listCheck}
-                                    onChange={
-                                        (event: any) => {
-                                            this.handleCheckBox(event);
-                                            this.setState({ listCheck: event })
+                                    </div>
+
+                                    <hr />
+                                    <CheckboxGroup
+                                        options={plainOptions}
+                                        value={listCheck}
+                                        onChange={
+                                            (event: any) => {
+                                                this.handleCheckBox(event);
+                                                this.setState({ listCheck: event })
+                                            }
                                         }
-                                    }
-                                    disabled={unCheckbox}
-                                />
+                                        disabled={unCheckbox}
+                                    />
+                                </div>
                             </Col>
                         </Row>
                         <Table
@@ -1122,9 +1675,10 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1600 }}
+                            scroll={{ x: 1090 }}
+                            rowKey="event-job"
                             bordered
-                            pagination={{ total: totalItems, showSizeChanger: true }}
+                            pagination={{ total: totalItems, showSizeChanger: true, current: this.state.pageIndex + 1 }}
                             size="middle"
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
@@ -1157,6 +1711,11 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_EVENT_JOB_SERVICE, id }),
     getListJobSuitableCandidate: (jid?: string, pageIndex?: number, pageSize?: number) =>
         dispatch({ type: REDUX_SAGA.JOB_SUITABLE_CANDIDATE.GET_JOB_SUITABLE_CANDIDATE, jid, pageIndex, pageSize }),
+    getListEventSchools: (body: any, pageIndex: number, pageSize: number) =>
+        dispatch({ type: REDUX_SAGA.EVENT_SCHOOLS.GET_LIST_EVENT_SCHOOLS, body, pageIndex, pageSize }),
+    getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
+    setEventJobDetail: (data) => dispatch({ type: REDUX.EVENT_SCHOOLS.GET_EVENT_JOB_DETAIL, data }),
+    clearProfileStudent: () => dispatch({ type: REDUX.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, data: null })
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -1168,7 +1727,9 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     drawerState: state.MutilBox.drawerState,
     totalItems: state.EventJobs.totalItems,
     jobSuitableCandidates: state.JobSuitableCandidates,
-    eventJobDetail: state.EventJobDetail
+    eventJobDetail: state.EventJobDetail,
+    listEventSchools: state.EventSchools.items,
+    listJobService: state.JobService,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

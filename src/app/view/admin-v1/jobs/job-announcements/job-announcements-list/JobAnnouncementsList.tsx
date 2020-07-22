@@ -888,6 +888,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                     <span className="italic"> (Chưa kích hoạt gói dịch vụ)</span>
                             }
                         </div>
+                        
                         <hr />
                         <Row>
                             <Col md={12}>
@@ -1101,6 +1102,7 @@ class JobAnnouncementsList extends PureComponent<IJobAnnouncementsListProps, IJo
                                 dataSource={dataTable}
                                 scroll={{ x: 1540 }}
                                 bordered
+                                rowKey={"job"}
                                 pagination={{ total: totalItems, showSizeChanger: true }}
                                 size="middle"
                                 onChange={this.setPageIndex}

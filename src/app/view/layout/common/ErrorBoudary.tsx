@@ -25,6 +25,7 @@ class ErrorBoundary extends React.PureComponent<IErrorBoundaryProps, IErrorBound
 
     render() {
         let { errorInfo, error } = this.state;
+        
         let { children } = this.props;
         if (errorInfo) {
             // Error path

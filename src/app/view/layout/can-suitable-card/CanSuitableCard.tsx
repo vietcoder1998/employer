@@ -21,7 +21,7 @@ interface ICanProPop {
 
 export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
     let { children, data, avatar, background, id, profileType } = props;
-    const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.STUDENT ? TYPE.STUDENT : TYPE.CANDIDATE}`;
+    const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType === TYPE.CANDIDATE ? TYPE.CANDIDATE : TYPE.STUDENT }`;
 
     const content = (
         <div className='cpp-ct-card'>
@@ -50,28 +50,29 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                 </Link>
             </div>
             <div className='cpp-if'>
-                {data && data.gender === "MALE" ? <div><Icon type="man" style={{ marginRight: 5 }} />Nam</div> : <div><Icon type="woman" style={{ marginRight: 5 }} />Nữ</div>}
-                {data && data.region && data.region.name ? <div><Icon type="environment" style={{ marginRight: 5 }} />Sống tại {data.region.name}</div> : ''}
-                {data && data.phone ? <div><Icon type={'phone'} /> {data.phone}</div> :
+                {data && data.gender === "MALE" ? 
+                <div className="icon-suitable"><Icon type="man" style={{ marginRight: 5, color: 'rgb(21, 148, 255)' }} />Nam</div> : <div className="icon-suitable"><Icon type="woman" style={{ marginRight: 5, color: 'rgb(255, 57, 92)' }} />Nữ</div>}
+                {data && data.region && data.region.name ? <div className="icon-suitable"><Icon type="environment" style={{ marginRight: 5 }} />Sống tại {data.region.name}</div> : ''}
+                {data && data.phone ? <div className="icon-suitable"><Icon type={'phone'} /> {data.phone}</div> :
                     (
                         data && data.unlocked ?
-                            <div><Icon type={'phone'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
-                            <div><Icon type={'phone'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
+                            <div className="icon-suitable"><Icon type={'phone'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
+                            <div className="icon-suitable"><Icon type={'phone'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
                     )
                 }
                 {data && data.email ? <div><Icon type={'mail'} style={{ marginRight: 5 }} /> {data.email}</div> :
                     (
                         data && data.unlocked ?
-                            <div><Icon type={'mail'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
-                            <div><Icon type={'mail'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
+                            <div className="icon-suitable"><Icon type={'mail'} style={{ marginRight: 5 }} /><NotUpdate /></div> :
+                            <div className="icon-suitable"><Icon type={'mail'} style={{ marginRight: 5 }} /><span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span></div>
                     )
                 }
-                <div>
+                <div className="icon-suitable">
                     <Icon type={data && data.unlocked ? 'unlock' : 'lock'} theme={'filled'} style={{ color: data && data.unlocked ? 'green' : '', marginRight: 5 }} />
                     {data && data.unlocked ? 'Đã mở khóa' : 'Chưa mở khóa'}
                 </div>
             </div>
-            <div className='cpp-ct-ft'>
+            {/* <div className='cpp-ct-ft'>
                 <Link to={linkTo} target='_blank'>
                     <Tooltip title="Xem chi tiết">
                         <Button
@@ -85,7 +86,7 @@ export default function CanSuitableCard(props?: ICanProPop): JSX.Element {
                     </Tooltip>
 
                 </Link>
-            </div>
+            </div> */}
         </div>
     )
 

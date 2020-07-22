@@ -1,5 +1,5 @@
 import { GET } from './../../const/method';
-import { EVENT_SCHOOLS } from './../../services/api/private.api';
+import { ADMIN_ACCOUNT } from './../../services/api/private.api';
 import { IEventJobDetail } from '../../models/event-job-detail';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
@@ -23,7 +23,7 @@ function callEventJobDetail(action: any) {
     try {
         let res = _requestToServer(
             GET,
-            EVENT_SCHOOLS + routePath.JOBS + `/${action.id}?schoolEventID=${action.schoolEventID}`,
+            action.schoolEventID ?  `${ADMIN_ACCOUNT}${routePath.JOBS}/${action.id}?schoolEventID=${action.schoolEventID}` : `${ADMIN_ACCOUNT}${routePath.JOBS}/${action.id}`,
             undefined,
             undefined,
             undefined,

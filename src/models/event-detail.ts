@@ -27,5 +27,6 @@ export default interface IEventDetail  {
     bannerUrl?: string,
     startedDate?: number,
     finishedDate?: number,
-    createdDate?: number
+    createdDate?: number,
+    bannerUrlEmployer?: number
   }

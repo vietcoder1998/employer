@@ -28,6 +28,15 @@ interface EmBranchesListProps extends StateProps, DispatchProps {
     getAnnoucementDetail: Function;
 };
 
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
+
 interface EmBranchesListState {
     dataTable?: Array<any>;
     pageIndex?: number;
@@ -92,9 +101,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     title="Xem chi tiết (sửa)"
                 >
                     <Icon
-                        className="f-ic"
+                        className="f-ic edit"
                         type="edit"
-                        theme="twoTone"
+                        theme="outlined"
                         onClick={() =>
                             this.props.history.push(
                                 routeLink.EM_BRANCHES + routePath.FIX + `/${id}`
@@ -106,9 +115,9 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     title="Xóa chi nhánh"
                 >
                     <Icon
-                        className="f-ic"
+                        className="f-ic delete"
                         type="delete"
-                        theme="twoTone"
+                        theme="outlined"
                         twoToneColor="red"
                         onClick={
                             () => this.deleteAnnoun()
@@ -138,20 +147,22 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             dataIndex: 'branchName',
             key: 'branchName',
             fixed: 'left',
+            render: ({item}) => {
+                return (
+                    <div style={{fontWeight: 'bold',
+                        fontSize: '1.12em',
+                        color: 'rgb(24, 144, 255)'}}>
+                        {item.branchName}
+                    </div>
+                )
+            } 
         },
 
         {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 250,
-        },
-        {
-            title: 'Chi nhánh chính',
-            dataIndex: 'headquarters',
-            className: 'action',
-            key: 'headquarters',
-            width: 100,
+            // width: 250,
         },
         {
             title: 'Số điện thoại',
@@ -173,6 +184,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             className: 'action',
             key: 'region',
             width: 100,
+            // render: (region) => {return <div>{region}</div>}
         },
         {
             title: 'Ngày tạo',
@@ -230,6 +242,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         this.setState({ showModal: !showModal });
     };
 
+    
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.typeMng !== prevState.typeMng) {
             return {
@@ -246,7 +259,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    branchName: item.branchName ? item.branchName : "",
+                    branchName: {item},
                     headquarters: item.headquarters ? "Có" : "Không",
                     address: item.address ? item.address : "",
                     contactPhone: item.contactPhone ? item.contactPhone : "",
@@ -352,6 +365,26 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         }
     }
 
+    searchWithUnicodeLabel = (input, option) => {
+        if (option.props.label) {
+            // console.log(option.props.label)
+            return strForSearch(option.props.label).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
+    searchWithUnicode = (input, option) => {
+        if (option.props.value) {
+            // console.log(option.props.value)
+            return strForSearch(option.props.children).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
     render() {
         let {
             dataTable,
@@ -445,6 +478,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.headquarters)}
+                                    filterOption={this.searchWithUnicode}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     <Option value={TYPE.EXIST}>Cơ sở chính</Option>
@@ -458,6 +492,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.EM_BRANCHES.regionID)}
+                                    filterOption={this.searchWithUnicode}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -474,10 +509,11 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                             columns={this.columns}
                             loading={loadingTable}
                             dataSource={dataTable}
-                            scroll={{ x: 1250 }}
+                            scroll={{ x: 1050 }}
                             bordered
                             pagination={{ total: totalItems, showSizeChanger: true }}
                             size="middle"
+                            rowKey={"em-branches"}
                             onChange={this.setPageIndex}
                             onRow={(record: any, rowIndex: any) => {
                                 return {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout, Menu, Icon } from 'antd';
 import './MenuNavigation.scss';
 // @ts-ignore
@@ -20,7 +20,42 @@ interface IMenuNavigationProps {
 
 export default function MenuNavigation(props: IMenuNavigationProps) {
     let [showMenu, setShowMenu] = React.useState(false);
+    let [key, setKey] = React.useState('event');
+    let [openKey, setOpenKey] = React.useState(["sub1", "sub0"]);
 
+    useEffect(() => {
+        console.log('change')
+        if(window.location.pathname === "/v1/admin/jobs/job-announcements/create") {
+            // console.log(window.location.pathname)
+            setKey("0")
+            setOpenKey(["sub1", "sub0", "sub2"])
+        } else if( window.location.pathname === '/v1/admin/noti/list') {
+            setKey("13")
+            setOpenKey(["sub5"])
+        } else if(window.location.pathname  === "/v1/admin/profile/admin-account") {
+            setKey("14")
+            setOpenKey(["sub6"])
+        } else if(window.location.pathname  === "/v1/admin/jobs/pending-jobs/list") {
+            setKey("12")
+            setOpenKey(["sub1", "sub0"])            
+        } else if(window.location.pathname  === "/v1/admin/connect-schools/event/jobs/list") {
+            let url_string = window.location.href;
+            let url = new URL(url_string);
+            let expiredJob = url.searchParams.get("expiredJob");
+            if(expiredJob === 'true') {
+                setKey("jobExpired")
+            } else {
+                setKey("event")
+            }
+            setOpenKey(["sub1", "sub0"])            
+        } else if(window.location.pathname === "/v1/admin/connect-schools/event/list") {
+            setKey("pageSchool")
+            setOpenKey(["sub1", "sub0"])  
+        } else if(window.location.pathname === "/v1/admin/connect-schools/list" || window.location.pathname.includes("/v1/admin/connect-schools/school/")) {
+            setKey("connected")
+            setOpenKey(["sub1", "sub0"])  
+        }
+    }, [window.location.href])
     return (
         <Sider
             trigger={null}
@@ -70,22 +105,60 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                 }}
                 onClick={(event: any) => {
                     props.onCallLoading()
+                    // console.log(event);
+                    setKey(event.key)
                 }}
-                defaultOpenKeys={["sub1", "sub0"]}
+                onOpenChange={(openKeys) => {
+                    setOpenKey(openKeys);
+                }}
+                openKeys={openKey}
+                // defaultSelectedKeys={[key]}
+                selectedKeys={[key]}
             >
                 <SubMenu
                     key="sub0"
                     title={
                         <span>
-                            <Icon type="home" />
-                            <span>Trang chủ</span>
+                            {/* <Icon type="home" /> */}
+                            <Icon type="file-text" />
+                            <span className="title-bold">Việc làm</span>
                         </span>
                     }
                 >
-                    <Menu.Item key="event" style={{color: "#000000"}}>
-                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.LIST}>
+                    <Menu.Item key="event" style={{ color: "#000000" }}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + '/jobs/list?expiredJob=false'}>
                             <Icon type="alert" />
-                            <span>Ngày hội việc làm </span>
+                            <span>Việc làm hoạt động </span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="jobExpired" style={{ color: "#000000" }}>
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + '/jobs/list?expiredJob=true'}>
+                            {/* <Icon type="alert" /> */}
+                            <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
+                            <span>Việc làm hết hạn </span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="12">
+                        <Link to={routeLink.PENDING_JOBS + routePath.LIST}>
+                            {/* <Icon type="highlight" /> */}
+                            <Icon type="clock-circle" />
+                            <span>Việc làm chờ duyệt</span>
+                        </Link>
+                    </Menu.Item>
+                </SubMenu>
+                <SubMenu
+                    key="sub1"
+                    title={
+                        <span>
+                            <Icon type="bank" />
+                            <span className="title-bold">Nhà trường</span>
+                        </span>
+                    }
+                >
+                    <Menu.Item key="pageSchool">
+                        <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + routePath.LIST}>
+                            <Icon type="read" />
+                            <span>Trang nhà trường</span>
                         </Link>
                     </Menu.Item>
                     <Menu.Item key="connected">
@@ -94,13 +167,14 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Kết nối nhà trường</span>
                         </Link>
                     </Menu.Item>
+
                 </SubMenu>
                 <SubMenu
-                    key="sub1"
+                    key="sub2"
                     title={
                         <span>
-                            <Icon type="form" />
-                            <span>Tuyển dụng</span>
+                            <Icon type="appstore" />
+                            <span>Quản lý</span>
                         </span>
                     }
                 >
@@ -110,54 +184,37 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Đăng bài</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="1">
+                    {/* <Menu.Item key="1">
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.LIST}>
                             <Icon type="carry-out" />
                             <span>Quản lý bài đăng</span>
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="2">
                         <Link to={routeLink.EM_BRANCHES + routePath.LIST}>
                             <Icon type="environment" />
                             <span>Quản lý chi nhánh</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="3">
+                    {/* <Menu.Item key="3">
                         <Link to={routeLink.FIND_CANDIDATES + routePath.LIST}>
                             <Icon type="user-add" />
                             <span>Tìm kiếm ứng viên</span>
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="4">
                         <Link to={routeLink.SAVE_CANDIDATE + routePath.LIST}>
                             <Icon type="idcard" />
                             <span>Hồ sơ đã lưu</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="12">
-                        <Link to={routeLink.PENDING_JOBS + routePath.LIST}>
-                            <Icon type="highlight" />
-                            <span>Bài đăng đang chờ</span>
-                        </Link>
-                    </Menu.Item>
                 </SubMenu>
-                {/* <SubMenu
-                    key="sub2"
-                    title={
-                        <span>
-                            <Icon type="share-alt" />
-                            <span>Trường học</span>
-                        </span>
-                    }
-                >
-
-                </SubMenu> */}
                 <SubMenu
                     key="sub3"
                     title={
                         <span>
                             <Icon type="star" />
-                            <span>Tiện ích dịch vụ</span>
+                            <span className="title-bold">Tiện ích dịch vụ</span>
                         </span>
                     }
                 >
@@ -185,7 +242,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="bell" />
-                            <span>Thông báo</span>
+                            <span className="title-bold">Thông báo</span>
                         </span>
                     }
                 >
@@ -201,7 +258,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     title={
                         <span>
                             <Icon type="profile" />
-                            <span>Hồ sơ NTD</span>
+                            <span className="title-bold">Hồ sơ NTD</span>
                         </span>
                     }
                 >
@@ -216,8 +273,8 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     key="sub4"
                     title={
                         <span>
-                            <Icon type="more" />
-                            <span>Thông tin khác</span>
+                            <Icon type="unordered-list" />
+                            <span className="title-bold">Thông tin khác</span>
                         </span>
                     }
                 >

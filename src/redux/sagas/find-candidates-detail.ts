@@ -84,7 +84,7 @@ function callFindCandidateDetail(action: any) {
         try {
             let res = _requestToServer(
                 GET,
-                ADMIN_ACCOUNT + (action.profileType  ===TYPE.STUDENT ? routePath.STUDENT : routePath.CANDIDATE )+ `/${action.id}/profile`,
+                ADMIN_ACCOUNT + (action.profileType  === TYPE.CANDIDATE ? routePath.CANDIDATE : routePath.STUDENT )+ `/${action.id}/profile`,
                 action.body ? action.body : null,
                 undefined,
                 undefined,

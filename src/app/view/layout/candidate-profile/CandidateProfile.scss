@@ -20,7 +20,9 @@
     span {
       letter-spacing: 0.5px;
     }
-
+    .ant-row {
+      background-color: #71717182;
+    }
     .hr-center {
       height: 1px;
       width: 100vw;
@@ -30,20 +32,23 @@
 
     .cover-image-profile {
       width: 100%;
-      opacity: 0.15;
+      // opacity: 0.15;
       z-index: 0;
       position: absolute;
       min-height: auto;
+      height: 100%;
+      object-fit: cover;
     }
 
     .header-content {
       top: 0px;
       right: 0px;
-      width: 100%;
-      min-height: 300px;
-      padding: 3vw 0px;
+      // width: 100%;
+      // min-height: 300px;
+      // padding: 3vw 0px;
       z-index: 2;
       display: flex;
+      object-fit: cover;
 
       li {
         font-size: 0.8rem;
@@ -51,11 +56,9 @@
       }
 
       .block-image {
-        min-height: 22vw;
+        // min-height: 22vw;
         width: 22vw;
-        border: solid $color_gray 1px;
-        background-color: rgba(255, 255, 255, 0.435);
-        margin: 2vw 0vw;
+        // margin: 2vw 0vw;
         padding: 2vw 10px;
         text-align: center;
         border-radius: 3px;
@@ -122,4 +125,33 @@
       }
     }
   }
+}
+.text-white {
+  color: #fff;
+}
+.skills-detail {
+  color: #fff;
+    background-color: rgba(49,163,249,.95);
+    padding: 5px 15px;
+    border-radius: 55px;
+    margin: 5px;
+}
+.ant-skeleton {
+  padding: 15px;
+}
+.ic{
+  height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+.unlock-state {
+  padding: 7px 15px;
+    // border: 1px solid #848484;
+    color: #ffffff;
+    font-weight: bold;
+    // background-color: #ff5252;
+    border-radius: 5px;
+}
+.ant-avatar > img {
+  object-fit: cover
 }

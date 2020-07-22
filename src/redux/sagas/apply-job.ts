@@ -31,7 +31,7 @@ function callApplyJobs(action: any) {
         try {
             let res = _requestToServer(
                 GET,
-                APPLY_JOB + (action.id ? `/${action.id}/apply/candidates` : undefined),
+                APPLY_JOB + (action.id ? `/${action.id}/apply/students` : undefined),
                 {
                     state: action.body ? action.body : null,
                 },

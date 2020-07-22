@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result, Rate } from 'antd';
+import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result, Rate, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { TYPE } from '../../../../../../const/type';
@@ -35,7 +35,8 @@ interface IFindCandidatesDetailState {
         skillRating?: number,
         jobAccomplishmentRating?: number,
         comment: string,
-    }
+    };
+    loadingProfile?: boolean
 }
 
 interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
@@ -46,6 +47,7 @@ interface IFindCandidatesDetailProps extends StateProps, DispatchProps {
     handleModal: Function;
     handleDrawer: (drawerState?: IDrawerState) => any;
     getRatingUser: (id?: string) => any;
+    sid?: string
 }
 
 class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, IFindCandidatesDetailState> {
@@ -64,14 +66,24 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 skillRating: 0,
                 jobAccomplishmentRating: 0,
                 comment: null,
-            }
+            },
+            loadingProfile: true
         }
     }
 
     move = true;
     static getDerivedStateFromProps(nextProps: IFindCandidatesDetailProps, prevState: IFindCandidatesDetailState) {
+        // console.log(nextProps.sid)
+        if(nextProps.sid && nextProps.sid !== prevState.id) {
+
+            nextProps.getFindCandidateDetail(nextProps.sid, 'STUDENT');
+            return {
+                id: nextProps.sid,
+                loadingProfile: true
+            }
+        }
         if (
-            nextProps.match.params.id &&
+            nextProps.match && nextProps.match.params && nextProps.match.params.id &&
             nextProps.match.params.id !== prevState.id
         ) {
             let { id } = nextProps.match.params;
@@ -83,20 +95,22 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             return {
                 id,
             }
-        }
+        }   
 
         if (
             nextProps.FindCandidateDetail &&
-            nextProps.FindCandidateDetail !== prevState.body
+            nextProps.FindCandidateDetail !== prevState.body && nextProps.FindCandidateDetail.id
         ) {
-
+            // console.log(prevState.body)
+            // console.log(nextProps.FindCandidateDetail)
             let body = nextProps.FindCandidateDetail;
             let process = body.unlocked;
             return {
                 body,
                 process,
-                loading: false,
-                fail: false
+                loadingProfile: false,
+                fail: false,
+                loading: false
             }
         }
 
@@ -118,6 +132,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         // let { 
         //     id 
         // } = this.props.match.params
+        this.setState({loading: true, loadingProfile: true})
         this.move = true;
         // @ts-ignore
         document.addEventListener("scroll", ((event: any) => {
@@ -128,6 +143,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             }
         }))
     };
+
 
     createRequest = async (type: string) => {
         let { id, body, ratingUser } = this.state;
@@ -142,7 +158,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             case TYPE.UNLOCK:
                 await _requestToServer(
                     PUT,
-                    FIND_CANDIDATE_DETAIL + `/${id}/unlocked`,
+                    '/api/employers/students' + `/${id}/unlocked`,
                     null,
                     null,
                     undefined,
@@ -162,7 +178,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
             case TYPE.SAVE:
                 await _requestToServer(
                     body && body.saved ? DELETE : POST,
-                    SAVED_CANDIDATE_PROFILES + (body && body.saved ? '/saved' : `/${id}/saved`),
+                    '/api/employers/students' + (body && body.saved ? '/saved' : `/${id}/saved`),
                     body && body.saved ? [id] : undefined,
                     undefined,
                     undefined,
@@ -228,7 +244,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     };
 
     render() {
-        let { body, visible, loading, fail, ratingUser } = this.state;
+        let { body, visible, loading, fail, ratingUser, loadingProfile } = this.state;
         let { unlockTurn, modalState } = this.props;
 
         if (fail) {
@@ -239,10 +255,14 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                 extra={<Button type="primary">Back Home</Button>}
             />
         }
-
+        if(loadingProfile) {
+            return <div style={{justifyContent: 'center', flex: 1, display: 'flex', marginTop: 70}}>
+                <Spin />
+            </div>
+        }
         return (
             <>
-                <div
+                {/* <div
                     className="top-dropdown test"
                     style={{
                         top: visible && body && !body.unlocked ? "0px" : "-110px"
@@ -279,7 +299,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                             Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
                         </button>
                     </div>
-                </div>
+                </div> */}
                 <Modal
                     title="Worksvn thông báo"
                     visible={modalState.open_modal}
@@ -355,8 +375,8 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     <hr />
                     <Button
                         type={"danger"}
-                        onClick={() =>{
-                            this.props.handleDrawer({openDrawer: false})
+                        onClick={() => {
+                            this.props.handleDrawer({ openDrawer: false })
                         }}
                     >
                         Đóng
@@ -371,7 +391,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     </Button>
                 </DrawerConfig>
                 <div className='common-content'>
-                    <h5>
+                    {/* <h5>
                         Tình trạng hồ sơ
                         <Tooltip
                             title={"Đánh giá ứng viên"}
@@ -409,50 +429,57 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                                 />
                             }
                         />
-                    </h5>
-                    <Progress status="active" percent={body && body.completePercent ? body.completePercent : 0} size="small" />
-                    <Tabs defaultActiveKey="1">
+                    </h5> */}
+                    {/* <Progress status="active" percent={body && body.completePercent ? body.completePercent : 0} size="small" /> */}
+                    {/* <Tabs defaultActiveKey="1">
                         <TabPane tab="Hồ sơ cá nhân" key="1">
-                            <CandidateProfile data={body} />
+                            
                         </TabPane>
                         <TabPane tab="Hồ sơ xác thực" key="2">
                             <VerifiedProfile data={body} />
                         </TabPane>
-                    </Tabs>
-                    <div className="find-candidate-create-content">
-                        <Button
+                    </Tabs> */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <h5>Hồ sơ cá nhân</h5>
+                        <div>
+                            <Button
+                                type="primary"
+                                prefix={"check"}
+                                style={{
+                                    float: "right"
+                                }}
+                                icon="unlock"
+                                disabled={body && body.unlocked}
+                                onClick={() => this.props.handleModal()}
+                            >
+                                Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
+                            </Button>
+                            <Button
+                                type={body && body.saved ? "danger" : "primary"}
+                                prefix={"check"}
+                                style={{
+                                    marginRight: 10,
+                                    float: "right"
+                                }}
+                                icon={loading ? "loading" : "save"}
+                                onClick={() => this.createRequest(TYPE.SAVE)}
+                            >
+                                {body && body.saved ? "Bỏ lưu" : "Lưu"}
+                            </Button>
+                        </div>
+                    </div>
+                    <CandidateProfile data={body} />
+                    {/* <div className="find-candidate-create-content"> */}
+                        {/* <Button
                             type="danger"
                             prefix={"check"}
                             icon="left"
                             onClick={() => this.turnBack()}
                         >
                             {"Quay lại"}
-                        </Button>
-                        <Button
-                            type="primary"
-                            prefix={"check"}
-                            style={{
-                                float: "right"
-                            }}
-                            icon="unlock"
-                            disabled={body && body.unlocked}
-                            onClick={() => this.props.handleModal()}
-                        >
-                            Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
-                        </Button>
-                        <Button
-                            type={body && body.saved ? "danger" : "primary"}
-                            prefix={"check"}
-                            style={{
-                                marginRight: 10,
-                                float: "right"
-                            }}
-                            icon={loading ? "loading" : "save"}
-                            onClick={() => this.createRequest(TYPE.SAVE)}
-                        >
-                            {body && body.saved ? "Bỏ lưu" : "Lưu"}
-                        </Button>
-                    </div>
+                        </Button> */}
+
+                    {/* </div> */}
                 </div >
             </>
         )

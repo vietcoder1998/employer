@@ -67,7 +67,7 @@ code {
 
 .ant-table-body {
   &::-webkit-scrollbar-thumb {
-    background: #555;
+    background:#a0a0a0;
   }
   /* width */
   &::-webkit-scrollbar {
@@ -80,12 +80,12 @@ code {
   }
 
   &::-webkit-scrollbar-thumb {
-    color: rgb(97, 97, 97);
+    color: #a0a0a0;
   }
 
   /* Handle */
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #757575;
   }
 }
 
@@ -97,18 +97,21 @@ textarea {
 
 .pending {
   padding: 5px 10px;
-  background-color: rgba(229, 255, 0, 0.346);
-  border: solid #f1e976bf 1px;
+  // background-color: rgba(229, 255, 0, 0.346);
+  border: solid #168dcd 1px;
   border-radius: 3px;
-  color: rgba(37, 37, 10, 0.584);
+  color: rgb(22, 141, 205);
+  margin-bottom: 0
 }
 
 .rejected {
   padding: 5px 10px;
-  background-color: rgb(254, 240, 255);
-  border: solid #e32977 1px;
+  // background-color: rgb(254, 240, 255);
+  border: solid #e01212 1px;
   border-radius: 3px;
-  color: #e32977;
+  color: #e01212;
+  margin-bottom: 0
+
 }
 
 .accpeted {
@@ -285,12 +288,12 @@ ul {
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #a0a0a0;
   }
 
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #757575;
   }
 }
 
@@ -522,12 +525,13 @@ button {
 }
 
 .test {
-  border: solid $color_border 1px;
+  // border: solid $color_border 1px;
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.03), 0 6px 20px 0 rgba(0, 0, 0, 0);
   border-radius: 3px;
   transition: 250ms;
 
   &:hover {
-    border: solid rgba(58, 58, 58, 0.326) 1px;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0);
   }
 }
 
@@ -555,9 +559,9 @@ button {
   position: relative;
   cursor: pointer;
 
-  background-color: rgba(109, 109, 109, 0.149);
+  background-color: rgb(0, 120, 185);
   &:hover {
-    background-color: rgba(102, 102, 102, 0.442);
+    background-color: rgb(0, 104, 160);
   }
 }
 
@@ -706,7 +710,7 @@ thead {
 .n-candidate {
   font-size: 0.9rem;
   text-align: center;
-
+  cursor: pointer;
   svg {
     margin-top: -8px;
   }
@@ -719,4 +723,23 @@ thead {
   i {
     color: white !important;
   }
+}
+
+.ant-form-item-children {
+  display: flex;
+  // margin-top: 28px
+
+}
+.ant-form ant-form-horizontal{
+
+}
+.ant-table-body{
+  text-align:  center;
+}
+.ant-select ant-select-disabled{
+  margin-top: 17px;
+}
+
+.ant-form-item{
+  margin-bottom: 0px !important ;
 }
