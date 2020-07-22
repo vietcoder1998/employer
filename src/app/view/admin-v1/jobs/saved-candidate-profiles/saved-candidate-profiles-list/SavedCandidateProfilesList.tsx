@@ -1,7 +1,7 @@
 import React, { PureComponent, } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../const/actions';
-import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm, Row, Col, Select } from 'antd';
+import { Button, Table, Icon, Modal, Avatar, Tooltip, Popconfirm } from 'antd';
 import { timeConverter } from '../../../../../../utils/convertTime';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { ISavedCandidateProfile } from '../../../../../../models/saved-candidate-profiles';
@@ -10,7 +10,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { SAVED_PROFILE } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 // import { TYPE } from '../../../../../../const/type';
 import CanProPop from '../../../../layout/can-pro-pop/CanProProp';
 //@ts-ignore
@@ -18,10 +18,10 @@ import avatar_men from './../../../../../../assets/image/no-avatar.png';
 //@ts-ignore
 import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
 import { TYPE } from '../../../../../../const/type';
-import { IptLetter } from '../../../../layout/common/Common';
-import CandidateProfile from '../../../../layout/candidate-profile/CandidateProfile';
+// import { IptLetter } from '../../../../layout/common/Common';
+// import CandidateProfile from '../../../../layout/candidate-profile/CandidateProfile';
 
-const { Option } = Select;
+// const { Option } = Select;
 
 let ImageRender = (props: { src?: string, gender?: "MALE" | "FEMALE", alt?: string }) => {
     const [err, setErr] = React.useState(false)

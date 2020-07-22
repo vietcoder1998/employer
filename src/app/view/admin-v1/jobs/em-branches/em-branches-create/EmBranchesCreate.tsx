@@ -13,7 +13,7 @@ import { POST, PUT } from '../../../../../../const/method';
 import { IEmBranch } from '../../../../../../models/em-branches';
 import { IMapState } from '../../../../../../models/mutil-box';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
-import { is } from 'core-js/fn/object';
+// import { is } from 'core-js/fn/object';
 
 interface IEmBranchesCreateState {
     title?: string;
@@ -200,16 +200,16 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
             showErrorContactPhone = false
         }
 
-        let showErrorMap
-        if (this.state.isCreate) {
-            if (this.props.mapState) {
-                showErrorMap = false
-            } else {
-                showErrorMap = true
-            }
-        } else {
-            showErrorMap = false
-        }
+        // let showErrorMap
+        // if (this.state.isCreate) {
+        //     if (this.props.mapState) {
+        //         showErrorMap = false
+        //     } else {
+        //         showErrorMap = true
+        //     }
+        // } else {
+        //     showErrorMap = false
+        // }
 
         return (
             <div className='common-content'>

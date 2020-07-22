@@ -2,7 +2,7 @@ import React from 'react';
 import './ConnectSchoolList.scss';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../const/actions';
-import { Button, Select, Row, Col, Tooltip, Pagination, Collapse, Empty, Icon, Input, Tabs, Drawer } from 'antd';
+import { Button, Select, Row, Col, Pagination, Collapse, Empty, Icon, Input, Tabs, Drawer } from 'antd';
 // import { timeConverter } from '../../../../../../utils/convertTime';
 import { TYPE } from '../../../../../const/type';
 import { IptLetter, IptLetterP, NotUpdate } from '../../../layout/common/Common';

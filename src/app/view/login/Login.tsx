@@ -6,7 +6,7 @@ import { POST } from '../../../const/method';
 import { OAUTH2_HOST, EMPLOYER_HOST } from '../../../environment/dev';
 import { OAUTH2_LOGIN, EMPLOYER_REGISTER, M_S } from '../../../services/api/public.api';
 import { loginHeaders, noInfoHeader } from '../../../services/auth';
-import { routeLink, routePath } from '../../../const/break-cumb';
+import { routeLink } from '../../../const/break-cumb';
 import MapContainer from '../layout/map/Map';
 import setupLogin from '../../../config/setup-login';
 import Cookies from 'universal-cookie';

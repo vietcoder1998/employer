@@ -2,7 +2,7 @@ import React from 'react';
 import { Empty, Pagination, Spin } from "antd";
 import { IJobSuitableCandidate } from "../../../../models/job-suitable-candidate";
 import CanSuitableCard from '../can-suitable-card/CanSuitableCard';
-import Loading from '../loading/Loading';
+// import Loading from '../loading/Loading';
 
 interface IProps {
     jobSuitableCandidates?: Array<IJobSuitableCandidate>,

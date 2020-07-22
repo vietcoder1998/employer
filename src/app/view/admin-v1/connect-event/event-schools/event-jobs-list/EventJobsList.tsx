@@ -1,21 +1,21 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col, Cascader, Checkbox, Tooltip, Radio, Modal, message, Tabs, Spin } from 'antd';
+import { Button, Table, Icon, Select, Row, Col,  Checkbox, Tooltip, Modal,  Tabs, Spin } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './EventJobsList.scss';
 import { TYPE } from '../../../../../../const/type';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { IptLetterP } from '../../../../layout/common/Common';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IJobName } from '../../../../../../models/job-names';
-import { IEventSchoolFilter } from '../../../../../../models/event-schools';
+// import { IEventSchoolFilter } from '../../../../../../models/event-schools';
 
 import { IEmBranch } from '../../../../../../models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IEventJobDetail } from '../../../../../../models/event-job-detail';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST, DELETE, PUT } from '../../../../../../const/method';
+import { POST, DELETE } from '../../../../../../const/method';
 import { EVENT_SCHOOLS, ADMIN_ACCOUNT } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../models/mutil-box';
@@ -388,7 +388,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         )
     }
     EditToolTip = (hidden?: boolean, id?: string, schoolEventID?: string, item?: any) => {
-        let { body, pageIndex, pageSize } = this.state;
+        // let { body, pageIndex, pageSize } = this.state;
 
         return (
             <>
@@ -492,53 +492,53 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     <div style={{ backgroundColor: colorJobType, color: '#fff', fontSize: '0.9em', fontWeight: 'bold', padding: '3px 0', margin: '0 8px' }}>{nameJobType}</div>
                 )
             }
-            let renderCandidate = (item) => {
-                return (
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                        <div
-                            className="n-candidate"
-                            style={{
-                                pointerEvents: item.pendingApplied === 0 ? 'none' : undefined
-                            }}
-                        >
-                            <Tooltip title="Xem chi tiết">
-                                {/* <Link
-                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.PENDING}`}
-                                    disabled={item.pendingApplied === 0 ? true : false}
-                                    target="_blank"
-                                > */}
-                                <div style={{ color: 'orange' }} onClick={() => {
+            // let renderCandidate = (item) => {
+            //     return (
+            //         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+            //             <div
+            //                 className="n-candidate"
+            //                 style={{
+            //                     pointerEvents: item.pendingApplied === 0 ? 'none' : undefined
+            //                 }}
+            //             >
+            //                 <Tooltip title="Xem chi tiết">
+            //                     {/* <Link
+            //                         to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.PENDING}`}
+            //                         disabled={item.pendingApplied === 0 ? true : false}
+            //                         target="_blank"
+            //                     > */}
+            //                     <div style={{ color: 'orange' }} onClick={() => {
 
-                                }}>
-                                    {item.pendingApplied} <Icon type={'user'} />
-                                </div>
-                                {/* </Link> */}
-                            </Tooltip>
-                        </div>
-                        <div style={{ margin: '0 8px' }}> / </div>
-                        <div
-                            className="n-candidate"
-                            style={{
-                                pointerEvents: item.acceptedApplied === 0 ? 'none' : undefined
-                            }}
-                        >
-                            <Tooltip title="Xem chi tiết">
-                                <Link
-                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.ACCEPTED}`}
-                                    disabled={item.acceptedApplied === 0 ? true : false}
-                                    target="_blank"
-                                >
-                                    <div style={{ color: '#1687f2' }}>
-                                        {item.acceptedApplied} <Icon type={'user-add'} />
-                                    </div>
-                                </Link>
-                            </Tooltip>
-                        </div>
-                    </div>
+            //                     }}>
+            //                         {item.pendingApplied} <Icon type={'user'} />
+            //                     </div>
+            //                     {/* </Link> */}
+            //                 </Tooltip>
+            //             </div>
+            //             <div style={{ margin: '0 8px' }}> / </div>
+            //             <div
+            //                 className="n-candidate"
+            //                 style={{
+            //                     pointerEvents: item.acceptedApplied === 0 ? 'none' : undefined
+            //                 }}
+            //             >
+            //                 <Tooltip title="Xem chi tiết">
+            //                     <Link
+            //                         to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.ACCEPTED}`}
+            //                         disabled={item.acceptedApplied === 0 ? true : false}
+            //                         target="_blank"
+            //                     >
+            //                         <div style={{ color: '#1687f2' }}>
+            //                             {item.acceptedApplied} <Icon type={'user-add'} />
+            //                         </div>
+            //                     </Link>
+            //                 </Tooltip>
+            //             </div>
+            //         </div>
 
 
-                )
-            }
+            //     )
+            // }
             let renderPriority = (item) => {
                 if (!item.priority.homePriority && !item.priority.searchPriority && !item.priority.highlight) {
                     return (<div style={{ fontStyle: 'italic' }}>Chưa kích hoạt gói dịch vụ</div>)
@@ -761,7 +761,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     };
 
     createRequest = async () => {
-        let { homePriority, id, body, highlight } = this.state;
+        let { homePriority, id, body } = this.state;
         let { modalState } = this.props;
         await this.setState({ loading: true });
         switch (modalState.typeModal) {
@@ -940,7 +940,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     };
 
     requeryData = async () => {
-        let { id, eid, body } = this.state;
+        let { id, body } = this.state;
 
         await this.searchEventJobs();
         // await this.props.getJobServiceEvent(eid);
@@ -974,17 +974,18 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             loadingTable,
             unCheckbox,
             listCheck,
-            homePriority,
-            highlight,
-            homeExpired,
-            highlightExpired,
-            searchExpired,
+            // homePriority,
+            // highlight,
+            // homeExpired,
+            // highlightExpired,
+            // searchExpired,
             body,
             loading,
             ojd,
             jid,
-            eid,
-            searchPriority, applyModal
+            // eid,
+            // searchPriority,
+             applyModal
         } = this.state;
 
         let {
@@ -999,12 +1000,12 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             listJobService
         } = this.props;
 
-        let homeExpiration = eventJobDetail.priority.homeExpiration
-        let highlightExpiration = eventJobDetail.priority.highlightExpiration;
-        let searchExpiration = eventJobDetail.priority.searchExpiration;
-        let un_active_home = eventJobDetail.priority.homePriority !== null;
-        let un_active_home_2 = homeExpiration !== -1 && !homeExpired;
-        let un_active_highlight = eventJobDetail.priority.highlight !== null;
+        // let homeExpiration = eventJobDetail.priority.homeExpiration
+        // let highlightExpiration = eventJobDetail.priority.highlightExpiration;
+        // let searchExpiration = eventJobDetail.priority.searchExpiration;
+        // let un_active_home = eventJobDetail.priority.homePriority !== null;
+        // let un_active_home_2 = homeExpiration !== -1 && !homeExpired;
+        // let un_active_highlight = eventJobDetail.priority.highlight !== null;
         // let un_active_search = searchExpiration !== -1 && !searchExpired;
 
         let url_string = window.location.href;

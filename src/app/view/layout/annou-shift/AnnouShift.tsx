@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Icon, Button, TimePicker, Radio, Input, Form } from 'antd';
-import { IptLetterP, IptLetter, Required } from '../common/Common';
+import { IptLetterP, Required } from '../common/Common';
 import randomID from '../../../../utils/randomID';
 import { IShift } from '../../../../models/announcements';
 import { TYPE } from '../../../../const/type';
@@ -69,7 +69,7 @@ export function ShiftContent(props: IShiftContent) {
     const [open, setOpen] = React.useState(false);
     const [openTimeEnd, setOpenTimeEnd] = React.useState(false);
 
-    const timeStartRef = useRef(null);
+    // const timeStartRef = useRef(null);
 
     let [valueGender, setValueGender] = React.useState([
         { gender: TYPE.MALE, quantity: 1, id: null },

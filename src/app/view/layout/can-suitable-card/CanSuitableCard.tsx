@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Icon, Button, Tooltip } from 'antd';
+import { Avatar, Icon} from 'antd';
 import './CanSuitableCard.scss';
 import { IFindCandidate } from '../../../../models/find-candidates';
 //@ts-ignore

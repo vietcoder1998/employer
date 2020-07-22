@@ -400,21 +400,21 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             normalQuantity
         } = this.props;
 
-        let ct_btn_ex = "Huỷ";
+        // let ct_btn_ex = "Huỷ";
         let ct_btn_nt = "Lưu lại";
 
         switch (typeCpn) {
             case TYPE.COPY:
-                ct_btn_ex = "Huỷ tạo";
+                // ct_btn_ex = "Huỷ tạo";
                 ct_btn_nt = "Tạo mới(bản sao)";
                 break;
 
             case TYPE.FIX:
-                ct_btn_ex = "Huỷ";
+                // ct_btn_ex = "Huỷ";
                 ct_btn_nt = "Lưu lại";
                 break;
             case TYPE.CREATE:
-                ct_btn_ex = "Huỷ tạo";
+                // ct_btn_ex = "Huỷ tạo";
                 ct_btn_nt = "Đăng bài";
                 break;
             default:
