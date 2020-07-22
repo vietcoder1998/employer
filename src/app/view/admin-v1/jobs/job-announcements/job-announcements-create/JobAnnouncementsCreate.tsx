@@ -40,6 +40,7 @@ interface IJobAnnouncementsCreateState {
     skills?: Array<string>
     notComplete?: boolean;
     jobAnnouncementDetail?: any;
+    isCreate?: boolean;
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
@@ -70,6 +71,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             valueAnnou: "",
             typeCpn: TYPE.CREATE,
             listEmBranches: [],
+            isCreate: false,
             body: {
                 jobTitle: null,
                 jobNameID: null,
@@ -239,7 +241,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let METHOD = typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY ? POST : PUT;
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
-
+        this.setState({ isCreate: true })
         await _requestToServer(
             METHOD,
             API + matching,
@@ -450,6 +452,82 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 color = "red"
             }
         }
+        let showErrorTitle
+        if (this.state.isCreate) {
+            if (body.jobTitle) {
+                showErrorTitle = false
+            } else {
+                showErrorTitle = true
+            }
+        } else {
+            showErrorTitle = false
+        }
+
+        let showErrordescription
+        if (this.state.isCreate) {
+            if (body.description) {
+                showErrordescription = false
+            } else {
+                showErrordescription = true
+            }
+        } else {
+            showErrordescription = false
+        }
+
+        let showErrorjobNameID
+        if (this.state.isCreate) {
+            if (body.jobNameID) {
+                showErrorjobNameID = false
+            } else {
+                showErrorjobNameID = true
+            }
+        } else {
+            showErrorjobNameID = false
+        }
+
+        let showErorremployerBranchID
+        if (this.state.isCreate) {
+            if (body.employerBranchID) {
+                showErorremployerBranchID = false
+            } else {
+                showErorremployerBranchID = true
+            }
+        } else {
+            showErorremployerBranchID = false
+        }
+
+        let showErorrSelectTime
+        if (this.state.isCreate) {
+            if ((body.shifts.map((a) => a.startTime)) < (body.shifts.map((a) => a.endTime))) {
+                showErorrSelectTime = false
+            } else {
+                showErorrSelectTime = true
+            }
+        } else {
+            showErorrSelectTime = false
+        }
+
+
+        let showErrorSalaryFulltime
+        if (this.state.isCreate) {
+            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))){
+                showErrorSalaryFulltime = false
+            } else {
+                showErrorSalaryFulltime = true
+            }
+        } else {
+            showErrorSalaryFulltime = false
+        }
+        let showErrorSalaryPartTtime
+        if (this.state.isCreate) {
+            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))){
+                showErrorSalaryPartTtime = false
+            } else {
+                showErrorSalaryPartTtime = true
+            }
+        } else {
+            showErrorSalaryPartTtime = false
+        }
 
         return (
             <div className='common-content'>
@@ -472,7 +550,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         required={true}
                         widthLabel="150px"
                     >
-                        <TextArea
+                        {/* <TextArea
                             style={{ width: '100%' }}
                             maxLength={400}
                             placeholder="ex: Tuyển nhân viên bán hàng (tối đa 400 kí tự)"
@@ -483,7 +561,24 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     this.setState({ body });
                                 }
                             }
-                        />
+                        /> */}
+                        <Form style={{ width: '100%' }}>
+                            <Form.Item validateStatus={showErrorTitle ? 'error' : null} help={showErrorTitle ? 'Bạn chưa điền tiêu đề!' : ''}  >
+                                <TextArea
+                                    style={{ width: '100%' }}
+                                    maxLength={400}
+                                    placeholder="ex: Tuyển nhân viên bán hàng (tối đa 400 kí tự)"
+                                    value={body.jobTitle}
+                                    onChange={
+                                        (event: any) => {
+                                            body.jobTitle = event.target.value;
+                                            this.setState({ body });
+                                        }
+                                    }
+
+                                />
+                            </Form.Item>
+                        </Form>
                     </InputTitle>
                     <InputTitle
                         title="Nội dung bài đăng"
@@ -491,7 +586,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         required={true}
                         widthComponent="400px"
                     >
-                        <TextArea
+                        {/* <TextArea
                             rows={15}
                             style={{ width: '100%' }}
                             maxLength={10000}
@@ -503,7 +598,24 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     this.setState({ body });
                                 }
                             }
-                        />
+                        /> */}
+                        <Form style={{ width: '100%' }}>
+                            <Form.Item validateStatus={showErrordescription ? 'error' : null} help={showErrordescription ? 'Bạn chưa điền nội dung!' : ''}  >
+                                <TextArea
+                                    rows={15}
+                                    style={{ width: '100%' }}
+                                    maxLength={10000}
+                                    placeholder="ex: Yêu cầu: giao tiếp tiếng Anh tốt (tối đa 10000 kí tự)"
+                                    value={body.description}
+                                    onChange={
+                                        (event: any) => {
+                                            body.description = event.target.value;
+                                            this.setState({ body });
+                                        }
+                                    }
+                                />
+                            </Form.Item>
+                        </Form>
                     </InputTitle>
                     <p className='a_c'>
                         <NotUpdate children={
@@ -517,25 +629,25 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         type="SWITCH"
                         widthLabel="150px"
                     >
-                        <Form style={{width: '100%'}}>
-                            <Form.Item  validateStatus={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'error' : null} help={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'Thời gian hết hạn quá dài, vui lòng chọn thời gian hết hạn trong vòng 90 ngày!' : ''} >
-                                    <DatePicker
-                                        format={"DD/MM/YYYY"}
-                                        style={{ width: '100%' }}
-                                        placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
-                                        defaultPickerValue={null}
-                                        value={body.expirationDate ? moment(body.expirationDate) : null}
-                                        onChange={
-                                            (event?: any) => {
-                                                event ?
-                                                    body.expirationDate = event.unix() * 1000 :
-                                                    body.expirationDate = null;
-                                                this.setState({ body });
-                                            }
+                        <Form style={{ width: '100%' }}>
+                            <Form.Item validateStatus={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'error' : null} help={moment(body.expirationDate).isAfter(moment().add(90, 'days')) ? 'Thời gian hết hạn quá dài, vui lòng chọn thời gian hết hạn trong vòng 90 ngày!' : ''}  >
+                                <DatePicker
+                                    format={"DD/MM/YYYY"}
+                                    style={{ width: '100%' }}
+                                    placeholder={'ex: ' + moment().format("DD/MM/YYYY")}
+                                    defaultPickerValue={null}
+                                    value={body.expirationDate ? moment(body.expirationDate) : null}
+                                    onChange={
+                                        (event?: any) => {
+                                            event ?
+                                                body.expirationDate = event.unix() * 1000 :
+                                                body.expirationDate = null;
+                                            this.setState({ body });
                                         }
-                                        disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
-                                    />
-                            
+                                    }
+                                    disabledDate={d => !d || d.isAfter(moment().add(90, 'days')) || d.isSameOrBefore(moment())}
+                                />
+
                             </Form.Item>
                         </Form>
 
@@ -555,7 +667,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         widthLabel="150px"
                         widthSelect="100%"
                         placeholder="ex: Nhân viên văn phòng"
-                    />
+                        showErrorSelected={showErrorjobNameID}
+
+                    >
+                    </InputTitle>
+
                     <InputTitle
                         title="Chọn chi nhánh "
                         required={true}
@@ -571,6 +687,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         widthLabel="150px"
                         widthSelect="100%"
                         placeholder="ex: Công ty abc"
+                        showErrorSelected={showErorremployerBranchID}
                     />
 
                     <InputTitle
@@ -616,22 +733,25 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             typeCpn === TYPE.CREATE && this.replaceShift();
                         }}
                     >
-                        <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME}>
+                        <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME} >
                             {body.shifts &&
                                 body.shifts.length > 0 &&
                                 body.shifts.map((item: any, index: number) => (
-                                    <div key={index}>
+                                    <div key={index} >
                                         <ShiftContent
                                             shift={item}
                                             type={TYPE.FULLTIME}
                                             removeButton={false}
                                             id={item.id}
                                             onChange={(event) => this.handleBodyShift(event, index)}
+                                            showErorrSelectTime={showErorrSelectTime}
+                                            showErrorSalary={showErrorSalaryFulltime}
                                         />
                                     </div>
 
                                 ))
                             }
+
                         </TabPane>
                         <TabPane tab="Bán thời gian" key={TYPE.PARTTIME}>
                             {body.shifts &&
@@ -646,6 +766,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                             removeButton={true}
                                             removeShift={(index: number) => this.removeShift(index)}
                                             onChange={(event: IShift) => this.handleBodyShift(event, index)}
+                                            showErorrSelectTime={showErorrSelectTime}
+                                            showErrorSalary={showErrorSalaryPartTtime}
                                         />
                                     </div>
                                 ))

@@ -170,11 +170,12 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                     <Col xs={0} sm={22} md={20} lg={18} xl={18} xxl={16}>
                         <Divider orientation="left" >Thông tin chi nhánh</Divider>
                         <div className="announcements-create-content">
-                            <InputTitle
+                            <InputTitle style={{color: 'black',fontSize: 15}}
                                 type={TYPE.INPUT}
                                 title="Tên chi nhánh"
                                 widthLabel="200px"
                                 children={
+                                   
                                     <Input
                                         value={body.branchName}
                                         style={{ width: 550 }}
@@ -240,7 +241,7 @@ class EmBranchesCreate extends React.Component<EmBranchesCreateProps, IEmBranche
                                     <Mapcontainer opensearch={true} />
                                 }
                             />
-                            <Divider orientation="left" >Hoàn tất</Divider>
+                            
                             <div className="em-branches-create-content">
                                 <Button
                                     type="primary"

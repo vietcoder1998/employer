@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { InputTitle } from '../input-tittle/InputTitle';
-import { InputNumber, Switch, Select, Row, Col, Icon, Button, TimePicker, Radio, Input } from 'antd';
+import { InputNumber, Switch, Select, Row, Col, Icon, Button, TimePicker, Radio, Input, Form } from 'antd';
 import { IptLetterP, IptLetter, Required } from '../common/Common';
 import randomID from '../../../../utils/randomID';
 import { IShift } from '../../../../models/announcements';
@@ -19,6 +19,9 @@ interface IShiftContent {
     onChange?: Function;
     removeShift?: Function;
     shift?: IShift;
+    showErorrSelectTime?: boolean
+    showErrorGenderRequireds?: boolean
+    showErrorSalary?: boolean
 }
 
 export function newShift(): IShift {
@@ -39,6 +42,7 @@ export function newShift(): IShift {
         genderRequireds: [
             { gender: 'BOTH', quantity: 1, id: null }
         ],
+
     };
 };
 
@@ -103,6 +107,8 @@ export function ShiftContent(props: IShiftContent) {
         setSun(props.shift.sun);
         setGenderRequireds(props.shift.genderRequireds)
 
+
+
         if (
             props.shift.genderRequireds &&
             props.shift.genderRequireds.length > 0
@@ -127,8 +133,6 @@ export function ShiftContent(props: IShiftContent) {
             });
         }
     }
-
-
     const target = () => {
         // if (props.shift.genderRequireds) {
         return (<div>
@@ -143,68 +147,93 @@ export function ShiftContent(props: IShiftContent) {
                 <Radio value={false}>Theo Số lượng</Radio>
                 <Radio value={true}>Theo giới tính</Radio>
             </Radio.Group>
+
+
             <div style={{ marginTop: 10, display: typeGender ? 'flex' : 'none' }}>
                 {/* With Gender */}
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
-                    <InputNumber
-                        min={0}
-                        max={10000}
-                        defaultValue={0}
-                        value={valueGender[0].quantity}
-                        onChange={
-                            (event: number) => {
-                                let newValueGender = valueGender;
-                                newValueGender[0].quantity = event;
-                                setValueGender([newValueGender[0], newValueGender[1]]);
-                                setGenderRequireds(valueGender)
-                            }
-                        }
-                    />
-                    <div style={{ margin: '0 5px' }}>Nam</div>
-                    {/* <Icon type="man" /> */}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <InputNumber
-                        min={0}
-                        max={10000}
-                        defaultValue={0}
-                        value={valueGender[1].quantity}
-                        onChange={
-                            (event: number) => {
-                                let newValueGender = valueGender;
-                                newValueGender[1].quantity = event;
-                                setValueGender([newValueGender[0], newValueGender[1]]);
-                                setGenderRequireds(valueGender)
-                            }
-                        }
-                    />
-                    <div style={{ margin: '0 5px' }}>Nữ</div>
-                    {/* <Icon type="woman" /> */}
-                </div>
-                {/* <Col xs={12} sm={12} md={12} lg={10} xl={24}>
+                <div style={{ display: typeGender ? 'flex' : 'none' }}>
+                    <Form >
+                        <Form.Item validateStatus={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'error' : ''} help={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'Số lượng không được nhỏ hơn 1!' : ''}>
+                            <div style={{marginTop: '-5px', display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
+
+                                <InputNumber
+                                    min={0}
+                                    max={10000}
+                                    defaultValue={0}
+                                    value={valueGender[0].quantity}
+                                    onChange={
+                                        (event: number) => {
+                                            let newValueGender = valueGender;
+                                            newValueGender[0].quantity = event;
+                                            setValueGender([newValueGender[0], newValueGender[1]]);
+                                            setGenderRequireds(valueGender)
+                                        }
+                                    }
+
+                                />
+
+                                <div style={{ margin: '0px 0px 0px 10px', }}>Nam</div>
+                                <Icon type="man" />
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center',marginTop: '-10px' }}>
+                                <Form>
+                                    <Form.Item >
+                                        <InputNumber
+                                            min={0}
+                                            max={10000}
+                                            defaultValue={0}
+                                            value={valueGender[1].quantity}
+                                            onChange={
+                                                (event: number) => {
+                                                    let newValueGender = valueGender;
+                                                    newValueGender[1].quantity = event;
+                                                    setValueGender([newValueGender[0], newValueGender[1]]);
+                                                    setGenderRequireds(valueGender)
+                                                }
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
+                                <div style={{ margin: '-22px 0px -22px 5px' }}>Nữ</div>
+                                <Icon type="woman" />
+                            </div>
+                            {/* <Col xs={12} sm={12} md={12} lg={10} xl={24}>
                     
                 </Col> */}
+                        </Form.Item>
+                    </Form>
+
+                </div>
             </div >
+
+
             {/* With Both */}
             <div style={{ marginTop: 10, display: !typeGender ? 'block' : 'none' }}>
                 {/* <Col xs={12} sm={12} md={12} lg={10} xl={12}> */}
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <InputNumber
-                        min={0}
-                        max={10000}
-                        defaultValue={0}
-                        value={valueBoth[0].quantity}
-                        onChange={
-                            (event: number) => {
-                                let newValueBoth = valueBoth[0];
-                                newValueBoth.quantity = event;
-                                setValueBoth([newValueBoth]);
-                                setGenderRequireds([newValueBoth]);
-                            }
-                        }
-                    />
-                    <div style={{ margin: '0 5px' }}>Người</div>
-                    {/* <Icon type="user" /> */}
+                    <Form>
+                        <Form.Item validateStatus={valueBoth[0].quantity == 0 ? 'error' : ''} help={valueBoth[0].quantity == 0 ? 'Số lượng không được nhỏ hơn 1!' : ''}>
+                            <InputNumber
+                                min={0}
+                                max={10000}
+                                defaultValue={0}
+                                value={valueBoth[0].quantity}
+                                onChange={
+                                    (event: number) => {
+                                        let newValueBoth = valueBoth[0];
+                                        newValueBoth.quantity = event;
+                                        setValueBoth([newValueBoth]);
+                                        setGenderRequireds([newValueBoth]);
+
+                                    }
+                                }
+
+                            />
+                        </Form.Item>
+                    </Form>
+                    <div style={{ margin: '0px 0px 0px 5px' }}>Người</div>
+                    <Icon type="user" />
 
                 </div>
                 {/* <IptLetterP value="Người" icon="team">
@@ -248,6 +277,7 @@ export function ShiftContent(props: IShiftContent) {
                     sat,
                     sun,
                     genderRequireds
+
                 });
             }
 
@@ -324,76 +354,81 @@ export function ShiftContent(props: IShiftContent) {
                             Chọn thời gian<Required />
                         </p>
                     </Col>
-                    <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
-                        <TimePicker
-                            open={open}
-                            onOpenChange={() => {
-                                // console.log(startTime)
-                                setOpen(!open)
-                                if (temptTimeStart) {
-                                    setStartTime(temptTimeStart)
-                                }
-                            }}
-                            key={128}
-                            placeholder="Bắt đầu"
-                            format={"HH:mm"}
-                            style={{ width: "100%" }}
-                            value={startTime ? moment(startTime, "HH:mm") : undefined}
-                            onChange={(time: any, timeString: string) => { temptTimeStart = timeString }}
-                            minuteStep={15}
-                            defaultOpenValue={moment('00:00', "HH:mm") }
-                            addon={() => (
-                                <Button size="small" type="primary" onClick={() => {
-                                    setOpen(false)
-                                    if (temptTimeStart) {
-                                        setStartTime(temptTimeStart)
-                                    }
-                                }}>
-                                    Ok
-                                </Button>
-                            )}
-                        />
-                    </Col>
-                    <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
-                        <TimePicker
-                            open={openTimeEnd}
-                            onOpenChange={() => {
-                                setOpenTimeEnd(!openTimeEnd)
-                                if (temptTimeEnd) {
-                                    setEndTime(temptTimeEnd)
-                                }
-                            }}
-                            key={randomID(8)}
-                            placeholder="Kết thúc"
-                            format={"HH:mm"}
-                            style={{ width: "100%" }}
-                            value={endTime ? moment(endTime, "HH:mm") : undefined}
-                            defaultOpenValue={moment('00:00', "HH:mm") }
-                            onChange={(time: any, timeString: string) => { temptTimeEnd = timeString }}
-                            minuteStep={15}
-                            addon={() => (
-                                <Button size="small" type="primary" onClick={() => {
-                                    setOpenTimeEnd(!openTimeEnd)
-                                    if (temptTimeEnd) {
-                                        setEndTime(temptTimeEnd)
-                                    }
-                                }}>
-                                    Ok
-                                </Button>
-                            )}
+                    <Form>
+                        <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian kết thúc phải lớn hơn thời gian ban đầu!' : ''} style={{ marginLeft: '200px' }}>
+                            <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
 
-                        />
-                    </Col>
+                                <TimePicker
+                                    open={open}
+                                    onOpenChange={() => {
+                                        // console.log(startTime)
+                                        setOpen(!open)
+                                        if (temptTimeStart) {
+                                            setStartTime(temptTimeStart)
+                                        }
+                                    }}
+                                    key={128}
+                                    placeholder="Bắt đầu"
+                                    format={"HH:mm"}
+                                    style={{ width: "100%" }}
+                                    value={startTime ? moment(startTime, "HH:mm") : undefined}
+                                    onChange={(time: any, timeString: string) => { temptTimeStart = timeString }}
+                                    minuteStep={15}
+                                    defaultOpenValue={moment('00:00', "HH:mm")}
+                                    addon={() => (
+                                        <Button size="small" type="primary" onClick={() => {
+                                            setOpen(false)
+                                            if (temptTimeStart) {
+                                                setStartTime(temptTimeStart)
+                                            }
+                                        }}>
+                                            Ok
+                                        </Button>
+                                    )}
+                                />
+                            </Col>
+                            <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
+                                <TimePicker
+                                    open={openTimeEnd}
+                                    onOpenChange={() => {
+                                        setOpenTimeEnd(!openTimeEnd)
+                                        if (temptTimeEnd) {
+                                            setEndTime(temptTimeEnd)
+                                        }
+                                    }}
+                                    key={randomID(8)}
+                                    placeholder="Kết thúc"
+                                    format={"HH:mm"}
+                                    style={{ width: "100%" }}
+                                    value={endTime ? moment(endTime, "HH:mm") : undefined}
+                                    defaultOpenValue={moment('00:00', "HH:mm")}
+                                    onChange={(time: any, timeString: string) => { temptTimeEnd = timeString }}
+                                    minuteStep={15}
+                                    addon={() => (
+                                        <Button size="small" type="primary" onClick={() => {
+                                            setOpenTimeEnd(!openTimeEnd)
+                                            if (temptTimeEnd) {
+                                                setEndTime(temptTimeEnd)
+                                            }
+                                        }}>
+                                            Ok
+                                        </Button>
+                                    )}
+
+                                />
+                            </Col>
+                        </Form.Item>
+                    </Form>
                 </Row>
             </div>
             <>
 
                 <Row style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                    <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
+                    <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} style={{marginTop: '20px'}}>
                         <InputTitle title="Mức lương" />
                         {/* </InputTitle> */}
                     </Col>
-                    <Col xs={24} sm={24} md={24} lg={5} xl={5} xxl={5} >
+                    <Col xs={24} sm={24} md={24} lg={5} xl={5} xxl={5} style={{marginTop: '20px'}}>
                         <Switch
                             defaultChecked={true}
                             style={{ marginRight: " 10px" }}
@@ -405,52 +440,60 @@ export function ShiftContent(props: IShiftContent) {
                         />
                         {!agreement ? "Theo thỏa thuận" : "Theo định mức"}
                     </Col>
-                    <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5}>
-                        <IptLetterP value={"Tối thiểu(VND)"} style={{ marginTop: -25 }}>
-                            <Input
-                                placeholder='ex: 5.000.000'
-                                value={minSalaryText}
-                                style={{ width: '100%', maxWidth: '200px' }}
-                                onChange={(event) => {
-                                    let newMinSalary = event.target.value.replace(/\./g, '');
-                                    if(reg.test(newMinSalary)) {
-                                        setMinsalary(parseInt(newMinSalary));
-                                        let newMinSalaryText = `${newMinSalary}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-                                        setMinSalaryText(newMinSalaryText);
-                                    }
-                                }}
-                                disabled={!agreement}
-                            />
-                        </IptLetterP>
-                    </Col>
-                    <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} >
-                        <IptLetterP value={"Tối đa(VND)"} style={{ marginTop: -25 }}>
-                            <Input
-                                value={maxSalaryText}
-                                placeholder='ex: 5.000.000'
-                                min={minSalary}
-                                style={{ width: '100%', maxWidth: '200px' }}
-                                step={1000}
-                                onChange={(event) => {
-                                    let newMaxSalary = event.target.value.replace(/\./g, '');
-                                    if(reg.test(newMaxSalary)) {
-                                        setMaxSalary(parseInt(newMaxSalary));
-                                        let newMaxSalaryText = `${newMaxSalary}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-                                        setMaxSalaryText(newMaxSalaryText);
-                                    }
-                                }}
-                                disabled={!agreement}
-                            />
-                        </IptLetterP>
-                    </Col>
-                    <Col xs={12} sm={12} md={12} lg={4} xl={4} xxl={4}>
-                        <IptLetterP value={"Theo"} style={{ marginTop: -25 }}>
+                    <Form>
+                        <Form.Item validateStatus={props.shift.minSalary > props.shift.maxSalary ? 'error' : null} help={props.shift.minSalary > props.shift.maxSalary ? 'Lương tối đa phải lớn hơn lương tối thiểu!' : ''} >
+
+                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{width: '50%'}}>
+                                <IptLetterP value={"Tối thiểu(VND)"} style={{ marginTop: '-10px' }}>
+
+                                    <Input
+                                        placeholder='ex: 5.000.000'
+                                        value={minSalaryText}
+                                        style={{ width: '100%', maxWidth: '200px' }}
+                                        onChange={(event) => {
+                                            let newMinSalary = event.target.value.replace(/\./g, '');
+                                            if (reg.test(newMinSalary)) {
+                                                setMinsalary(parseInt(newMinSalary));
+                                                let newMinSalaryText = `${newMinSalary}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                                                setMinSalaryText(newMinSalaryText);
+                                            }
+                                        }}
+                                        disabled={!agreement}
+                                    />
+
+                                </IptLetterP>
+                            </Col>
+                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{width: '50%'}}>
+                                <IptLetterP value={"Tối đa(VND)"} style={{ marginTop: '-10px' }}>
+                                    <Input
+                                        value={maxSalaryText}
+                                        placeholder='ex: 5.000.000'
+                                        min={minSalary}
+                                        style={{ width: '100%', maxWidth: '200px' }}
+                                        step={1000}
+                                        onChange={(event) => {
+                                            let newMaxSalary = event.target.value.replace(/\./g, '');
+                                            if (reg.test(newMaxSalary)) {
+                                                setMaxSalary(parseInt(newMaxSalary));
+                                                let newMaxSalaryText = `${newMaxSalary}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                                                setMaxSalaryText(newMaxSalaryText);
+                                            }
+                                        }}
+                                        disabled={!agreement}
+                                    />
+                                </IptLetterP>
+                            </Col>
+                        </Form.Item>
+                    </Form>
+                    <Col xs={12} sm={12} md={12} lg={4} xl={4} xxl={4} style={{marginTop: '13px'}}>
+                        <IptLetterP value={"Theo"} style={{ marginTop: '-15px' }}>
                             <Select
-                                style={{ width: "90px" }}
+                                style={{ width: "90px" , marginTop: '12px'}}
                                 value={unit ? unit : "tháng"}
                                 placeholder="ex: giờ"
                                 onChange={(value: string) => setUnit(value)}
                                 disabled={!agreement}
+                                
                             >
                                 <Option key={"4"} value={"tháng"} >Tháng</Option>
                                 <Option key={"1"} value={"ca"} >Ca</Option>
@@ -491,12 +534,16 @@ export function ShiftContent(props: IShiftContent) {
                 </Col>
             </Row>
             <Row>
-                <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
-                    <InputTitle title="Đối tượng" required={true} style={{ marginTop: 0 }} />
-                </Col>
-                <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} >
-                    {target()}
-                </Col>
+                <Form>
+                    <Form.Item validateStatus={props.showErrorGenderRequireds ? 'error' : null} help={props.showErrorGenderRequireds ? 'Số lượng ít nhất là 1!!!' : ''}>
+                        <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
+                            <InputTitle title="Đối tượng" required={true} style={{ marginTop: 0, marginBottom: 0 }} />
+                        </Col>
+                        <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} >
+                            {target()}
+                        </Col>
+                    </Form.Item>
+                </Form>
             </Row>
             <>
 

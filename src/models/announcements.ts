@@ -45,7 +45,10 @@ export interface IShift {
         gender?: 'MALE' | 'FEMALE' | 'BOTH',
         quantity?: number,
         applied?: number,
-    }>
+    }>,
+    showErorrSelectTime?:boolean,
+    showErrorGenderRequireds?: boolean
+
 }
 
 export interface IAnnoucementBody {
@@ -58,6 +61,7 @@ export interface IAnnoucementBody {
     jobType?: string,
     expirationDate?: number,
     shifts?: Array<IShift>
+    
 }
 
 export interface IAnnouncements {

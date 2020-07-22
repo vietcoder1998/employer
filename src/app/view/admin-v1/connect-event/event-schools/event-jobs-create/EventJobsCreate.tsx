@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Divider, Button, Input, Select, Tabs, message, Result } from 'antd';
+import { Divider, Button, Input, Select, Tabs, message, Result, Form } from 'antd';
 import { connect } from 'react-redux';
 import './EventJobsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';
@@ -219,7 +219,7 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
 
         let newBody = await this.pretreatmentBody(body, typeCpn);
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `/${eid}/jobs` : `/${eid}/jobs/${id}`;
-        let METHOD = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY )? POST : PUT;
+        let METHOD = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? POST : PUT;
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : EVENT_SCHOOLS;
 
         await this.setState({ loading: true });
@@ -379,18 +379,8 @@ class EventJobCreate extends Component<IEventJobssCreateProps, IEventJobssCreate
                         required={true}
                         widthLabel="150px"
                     >
-                        <TextArea
-                            style={{ width: '100%' }}
-                            maxLength={400}
-                            placeholder="ex: Tuyển nhân viên bán hàng (tối đa 400 kí tự)"
-                            value={body.jobTitle}
-                            onChange={
-                                (event: any) => {
-                                    body.jobTitle = event.target.value;
-                                    this.setState({ body });
-                                }
-                            }
-                        />
+
+                        
                     </InputTitle>
                     <InputTitle
                         title="Nội dung bài đăng"

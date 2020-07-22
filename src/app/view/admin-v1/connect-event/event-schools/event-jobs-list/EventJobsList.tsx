@@ -25,6 +25,7 @@ import JobSuitableCandidate from '../../../../layout/job-suitable-candidate/JobS
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IEventJobsFilter, IEventJob } from '../../../../../../models/event-jobs';
 import JobAnnouncementsApply from '../../../jobs/job-announcements/job-announcements-apply/JobAnnouncementsApply';
+
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
 const { TabPane } = Tabs;
@@ -139,7 +140,11 @@ interface IEventJobsListState {
     loadingDetailJob?: boolean;
     applyModal?: boolean;
     applyId?: string;
-    stateApply?: string
+    stateApply?: string;
+    idSelected?: string;
+    pendingAppliedSelected?: string;
+    acceptedAppliedSelected?: string
+    
 };
 
 
@@ -210,7 +215,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             loadingDetailJob: true,
             applyModal: false,
             applyId: null,
-            stateApply: null
+            stateApply: null,
+            idSelected: null,
+            pendingAppliedSelected: null,
+            acceptedAppliedSelected: null
+            
         };
     }
 
@@ -312,7 +321,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
     titleJob = (item) => {
         return (
             <div>
-                <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff' }} onClick={
+                <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff', textDecoration: this.state.idSelected === item.id ? 'underline' : 'unset' }} onClick={
                     async () => {
                         this.setState({ ojd: true, loadingDetailJob: true });
                         setTimeout(() => {
@@ -320,6 +329,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             this.props.getEventJobDetail(item.id, item.schoolEventID);
                             this.setState({ jid: item.id })
                         }, 300);
+                        this.setState({idSelected: item.id, pendingAppliedSelected: null,acceptedAppliedSelected: null})
                     }
                     // window.open('https://www.w3schools.com/cssref/pr_text_text-decoration.asp')
                 } target="_blank">{item.jobTitle}</a>
@@ -342,8 +352,10 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     disabled={item.pendingApplied === 0 ? true : false}
                                     target="_blank"
                                 > */}
-                        <div style={{ color: 'orange' }} onClick={() => {
+                        <div style={{ color: 'orange', textDecoration:  this.state.pendingAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
                             this.setState({ applyModal: true, applyId: item.id, stateApply: 'PENDING' })
+                            // this.setState({pendingAppliedSelected: '1', idSelected: null})
+                            this.setState({pendingAppliedSelected: item.id, idSelected: null,acceptedAppliedSelected: null})
                         }}>
                             {item.pendingApplied} <Icon type={'user'} />
                         </div>
@@ -363,8 +375,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             disabled={item.acceptedApplied === 0 ? true : false}
                             target="_blank"
                         > */}
-                            <div style={{ color: '#1687f2' }} onClick={() => {
+                            <div style={{ color: '#1687f2',textDecoration:  this.state.acceptedAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
                             this.setState({ applyModal: true, applyId: item.id, stateApply: 'ACCEPTED' })
+                            this.setState({acceptedAppliedSelected: item.id, idSelected: null,pendingAppliedSelected: null})
                         }}>
                                 {item.acceptedApplied} <Icon type={'user-add'} />
                             </div>
@@ -1070,7 +1083,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         </div>
                         :
                         <Row>
-                            <Col span={14}>
+                            <Col span={16}>
                                 <JobDetail
                                     jobDetail={{
                                         jobName: eventJobDetail.jobName.name,
@@ -1087,7 +1100,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     }}
                                 />
                             </Col>
-                            <Col span={10}>
+                            <Col span={8}>
                                 <div id="scroll"></div>
                                 <Tabs key={TYPE.STUDENT} >
                                     <TabPane tab={"Sinh viên tương thích"} key={TYPE.STUDENT} />
@@ -1636,6 +1649,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                                     }
                                                 }
                                             }
+                                            style={{marginTop: '6px'}}
                                         >
                                             Bất kì
                                 </Checkbox>

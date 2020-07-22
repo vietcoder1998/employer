@@ -26,6 +26,15 @@ let { Option } = Select;
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
 
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
+
 const typeReturn = (type?: string) => {
     let result = <NotUpdate msg="Chưa phản hồi" />
     switch (type) {
@@ -269,6 +278,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
     async componentDidMount() {
         // this.setState({loadingTable: true})
+        console.log("componentDidMount ConnectedSchoolsList")
         await this.searchConnectSchools();
     };
 
@@ -425,6 +435,16 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.setState({ loading: false })
     }
 
+    searchWithUnicode = (input, option) => {
+        if (option.props.value) {
+            // console.log(option.props.value)
+            return strForSearch(option.props.children).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
     render() {
         let {
             listConnectSchools,
@@ -579,7 +599,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                 <div className="common-content">
                     <h5>
                         Danh sách trường học
-                        <Tooltip title="Tìm kiếm trường học" >
+                        {/* <Tooltip title="Tìm kiếm trường học" >
                             <Button
                                 onClick={() => this.searchConnectSchools()}
                                 type="primary"
@@ -593,7 +613,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 }}
                                 icon={loadingTable ? "loading" : "filter"}
                             />
-                        </Tooltip>
+                        </Tooltip> */}
                     </h5>
                     <div className="table-operations">
                         <Row >
@@ -604,6 +624,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.regionID)}
+                                    filterOption={this.searchWithUnicode}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -622,6 +643,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     value={body.shortName}
                                     onChange={(event: any) => this.onChangeType(event.target.value, TYPE.CONNECT_SCHOOL.shortName)}
                                     onPressEnter={(event: any) => this.searchConnectSchools()}
+                                    filterOption={this.searchWithUnicode}
                                     suffix={
                                         body.shortName &&
                                             body.shortName.length > 0 ?

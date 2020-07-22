@@ -184,12 +184,12 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                             <span>Đăng bài</span>
                         </Link>
                     </Menu.Item>
-                    <Menu.Item key="1">
+                    {/* <Menu.Item key="1">
                         <Link to={routeLink.JOB_ANNOUNCEMENTS + routePath.LIST}>
                             <Icon type="carry-out" />
                             <span>Quản lý bài đăng</span>
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item key="2">
                         <Link to={routeLink.EM_BRANCHES + routePath.LIST}>
                             <Icon type="environment" />

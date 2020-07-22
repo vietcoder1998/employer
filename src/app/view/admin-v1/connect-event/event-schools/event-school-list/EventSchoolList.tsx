@@ -144,17 +144,22 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
 
     EditToolTip = (item?: IEventSchool) => {
         return <>
+
             <Tooltip placement="top" title={"Xem bài đăng"}>
-                <Link
-                    to={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
-                >
-                    <Icon
-                        className="f-ic"
-                        style={{ color: "green" }}
-                        type="file-search"
-                    />
-                </Link>
+                <div onClick={()=> window.open(routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`)}>
+                    {/* <Link
+                        to={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
+                    > */}
+                        <Icon
+                            className="f-ic copy"
+                            // style={{ color: "black" }}
+                            type="snippets"
+                            theme="outlined"
+                        />
+                    {/* </Link> */}
+                </div>
             </Tooltip>
+
             {/* <Tooltip placement="top" title={"Sửa Banner"}>
                 <Icon
                     type={"tool"}
@@ -191,7 +196,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
         </div>)
     }
     reloadDetailEvent(id) {
-        this.setState({bannerUrlEmployer: null})
+        this.setState({ bannerUrlEmployer: null })
         _requestToServer(
             GET,
             EVENT_SCHOOLS + `/${id}/banner`,
@@ -203,7 +208,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             false
         ).then(data => {
             // console.log(data)
-            this.setState({bannerUrlEmployer: data.data && data.data.bannerUrl})
+            this.setState({ bannerUrlEmployer: data.data && data.data.bannerUrl })
         })
         this.setState({ modalType: "DETAIL" })
     }
@@ -215,8 +220,8 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     }
     renderAddress = (item) => {
         return (<div>
-            <div style={{fontWeight: 600}}>{item.school && item.school.name ? item.school.name : ''}</div>
-            <div style={{fontStyle: 'italic'}}>{item.school && item.school.address ? item.school.address : ''}</div>
+            <div style={{ fontWeight: 600 }}>{item.school && item.school.name ? item.school.name : ''}</div>
+            <div style={{ fontStyle: 'italic' }}>{item.school && item.school.address ? item.school.address : ''}</div>
         </div>)
     }
     static getDerivedStateFromProps(nextProps?: IEventSchoolsListProps, prevState?: IEventSchoolsListState) {
@@ -227,9 +232,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     id: item.school ? item.school.id : null,
                     index: index + 1,
                     bannerUrl: item.bannerUrl,
-                    address: {item},
-                    name: {item},
-                    startedDate: {item},
+                    address: { item },
+                    name: { item },
+                    startedDate: { item },
                     data: item,
                     eid: item.id
                 });
@@ -298,7 +303,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
     uploadBanner = () => {
         let { newBanner, eid } = this.state;
         let formData = new FormData();
-        this.setState({loadingUploadBanner: true})
+        this.setState({ loadingUploadBanner: true })
         formData.append("banner", newBanner, "banner.jpg");
 
         _requestToServer(
@@ -311,7 +316,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
             false,
             true
         ).finally(() => {
-            this.setState({loadingUploadBanner: false})
+            this.setState({ loadingUploadBanner: false })
             this.reloadDetailEvent(eid)
         })
 
@@ -341,23 +346,23 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                     visible={openModal}
                     onCancel={() => {
                         this.onToggleModal()
-                        this.setState({newBanner: null})
+                        this.setState({ newBanner: null })
                     }}
                     title={modalType === "BANNER" ? "CẬP NHẬT BANNER" : <div style={{ textTransform: "uppercase" }}>{eventDetail.name}</div>}
                     width={'50vw'}
                     bodyStyle={{ padding: 10 }}
                     footer={[
                         modalType !== "BANNER" ? <Button
-                        key={"ok"}
-                        onClick={
-                            () => this.setState({modalType: 'BANNER'})
-                        }
-                        type={"primary"}
-                        icon={"upload"}
-                        children={
-                            "Tải lên banner"
-                        }
-                    />  : undefined,
+                            key={"ok"}
+                            onClick={
+                                () => this.setState({ modalType: 'BANNER' })
+                            }
+                            type={"primary"}
+                            icon={"upload"}
+                            children={
+                                "Tải lên banner"
+                            }
+                        /> : undefined,
                         <Button
                             key={"close"}
                             onClick={this.onToggleModal}
@@ -379,11 +384,11 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 >
                     {modalType === "BANNER" ?
                         <CropImage uploadToServer={this.uploadToServer} />
-                        : <EventDetail {...eventDetail}  bannerUrlEmployer={this.state.bannerUrlEmployer}/>}
+                        : <EventDetail {...eventDetail} bannerUrlEmployer={this.state.bannerUrlEmployer} />}
 
                 </Modal>
                 <div className="common-content">
-                    <h5 style={{marginBottom: 10}}>
+                    <h5 style={{ marginBottom: 10 }}>
                         Sự kiện Ngày hội việc làm trực tuyến {`(${totalItems})`}
                         {/* <Tooltip title="Lọc tìm kiếm" >
                             <Button
@@ -462,7 +467,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                                 return {
                                     onClick: (event: any) => {
                                         this.setState({ eid: record.eid })
-                                        
+
                                     }, // click row
                                     onMouseEnter: () => {
                                     }, // mouse enter row

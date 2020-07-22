@@ -19,6 +19,7 @@ import avatar_men from './../../../../../../assets/image/no-avatar.png';
 import avatar_women from './../../../../../../assets/image/women-no-avatar.jpg';
 import { TYPE } from '../../../../../../const/type';
 import { IptLetter } from '../../../../layout/common/Common';
+import CandidateProfile from '../../../../layout/candidate-profile/CandidateProfile';
 
 const { Option } = Select;
 
@@ -39,6 +40,7 @@ interface IProps extends StateProps, DispatchProps {
     history?: any;
     getListSavedCandidateProfiles: Function;
     getAnnoucementDetail: Function;
+    
 };
 
 interface IStates {
@@ -96,31 +98,46 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
     editToolAction = () => {
         let { id, profileType } = this.state;
         return <>
+            <div style={{display:'flex'}}>
             <Tooltip
                 title={"Xem chi tiết"}
             >
-                <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType}`} target="_blank">
+                {/* <Link to={routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType}`} target="_blank"> */}
+                   <div onClick={() => window.open(routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${profileType}`)} >
                     <Icon
-                        className="f-ic"
+                        className="f-ic edit"
                         type="search"
-                        twoToneColor="blue"
+                        // twoToneColor="black"
+                        theme="outlined"
                     />
-                </Link>
+                    </div>
+                {/* </Link> */}
             </Tooltip>
-            <Popconfirm
-                placement="topRight"
-                title={"Xóa khỏi danh sách"}
-                onConfirm={(event: any) => this.createRequest()}
-                okText="Xóa"
-                cancelText="Hủy"
-            >
-                <Icon
-                    className="f-ic"
-                    type="delete"
-                    theme="twoTone"
-                    twoToneColor="red"
-                />
-            </Popconfirm>
+
+            <Tooltip placement="topRight" title={"Xóa ứng viên"} >
+                <Popconfirm
+                    placement="topRight"
+                    title={"Xóa khỏi danh sách"}
+                    onConfirm={(event: any) => this.createRequest()}
+                    okText="Xóa"
+                    cancelText="Hủy"
+                    
+                >
+                    <div >
+                    <Icon
+                        className="f-ic delete"
+                        type="delete"
+                        theme="outlined"
+                        // twoToneColor="red"
+                    />
+                    </div>
+                </Popconfirm>
+                {/* <Icon
+                        className="f-ic delete"
+                        type="delete"
+                        onClick={() => this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })}
+                    /> */}
+            </Tooltip>
             {/* <Popconfirm
                 placement="topRight"
                 title={"Chặn người dùng này"}
@@ -130,6 +147,7 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
             >
                 <Icon style={{ padding: 5 }} type="stop" theme="twoTone" twoToneColor="red" />
             </Popconfirm> */}
+            </div>
         </>
     };
 
@@ -143,13 +161,22 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
             fixed: 'left',
         },
 
+        // {
+        //     title: 'Ảnh',
+        //     width: 30,
+        //     className: 'action',
+        //     dataIndex: 'avatarUrl',
+        //     key: 'avatarUrl',
+        //     fixed: 'left',
+        // },
         {
-            title: 'Ảnh',
-            width: 30,
+            title: 'Ứng viên',
+            dataIndex: 'name',
             className: 'action',
-            dataIndex: 'avatarUrl',
-            key: 'avatarUrl',
-            fixed: 'left',
+            key: 'name',
+            width: 150,
+            render: ({ item }) => this.renderCandidate(item)
+
         },
         {
             title: 'Mở khóa',
@@ -159,30 +186,24 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
             width: 80,
         },
         {
-            title: 'Ngày lưu',
-            dataIndex: 'createdDate',
+            title: 'Ngày sinh',
+            dataIndex: 'birthday',
             className: 'action',
-            key: 'createdDate',
+            key: 'birthday',
             width: 100,
         },
         {
             title: 'Trạng thái',
             dataIndex: 'lookingForJob',
             key: 'lookingForJob',
-            width: 100,
+            width: 110,
         },
-        {
-            title: 'Họ và tên',
-            dataIndex: 'name',
-            className: 'action',
-            key: 'name',
-            width: 100,
-        },
+
         {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-            width: 270,
+            width: 'auto',
         },
         {
             title: 'Tỉnh thành',
@@ -191,14 +212,14 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
             key: 'region',
             width: 100,
         },
+
         {
-            title: 'Ngày sinh',
-            dataIndex: 'birthday',
+            title: 'Ngày lưu',
+            dataIndex: 'createdDate',
             className: 'action',
-            key: 'birthday',
+            key: 'createdDate',
             width: 100,
         },
-
         {
             title: 'Thao tác',
             key: 'operation',
@@ -208,6 +229,33 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
             render: () => this.editToolAction()
         },
     ];
+
+    renderCandidate = (item) => {
+
+        return (
+            <div>
+                <ImageRender
+                    src={item.student ?
+                        item.student.avatarUrl : ""} gender={item.student ? item.student.gender : null} alt="Ảnh đại diện" />
+            {/* item && item[type] ? */}
+           
+                <CanProPop
+                    id={item.student.id}
+                    background={item.student.coverUrl}
+                    avatar={item.student.avatarUrl}
+                    unlocked={item.student.unlocked}
+                    email={item.student.email}
+                    gender={item.student.gender}
+                    phone={item.student.phone}
+                    // profileType={profileType}
+                    children={
+                        (item.student.lastName ? item.student.lastName : "") + " " + (item.student.firstName ? item.student.firstName : "")
+                    }
+                    
+                /> 
+            </div>
+        )
+    }
 
     onToggleModal = () => {
         let { showModal } = this.state;
@@ -242,21 +290,23 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
                             src={item[type] ?
                                 item[type].avatarUrl : ""} gender={item[type] ? item[type].gender : null} alt="Ảnh đại diện" />,
                     unlocked: <Lock />,
-                    name:
-                        item && item[type] ?
-                            <CanProPop
-                                id={item[type].id}
-                                background={item[type].coverUrl}
-                                avatar={item[type].avatarUrl}
-                                unlocked={item[type].unlocked}
-                                email={item[type].email}
-                                gender={item[type].gender}
-                                phone={item[type].phone}
-                                profileType={profileType}
-                                children={
-                                    (item[type].lastName ? item[type].lastName : "") + " " + (item[type].firstName ? item[type].firstName : "")
-                                } /> : null
-                    ,
+                    // name:
+                    //     item && item[type] ?
+                    //         <CanProPop
+                    //             id={item[type].id}
+                    //             background={item[type].coverUrl}
+                    //             avatar={item[type].avatarUrl}
+                    //             unlocked={item[type].unlocked}
+                    //             email={item[type].email}
+                    //             gender={item[type].gender}
+                    //             phone={item[type].phone}
+                    //             profileType={profileType}
+                    //             children={
+                    //                 (item[type].lastName ? item[type].lastName : "") + " " + (item[type].firstName ? item[type].firstName : "")
+                    //             } 
+
+                    //             /> : null
+                    name: item && item[type] ? { item } : null,
                     lookingForJob: item[type] && item[type].lookingForJob ? "Đang tìm việc" : "Đã có việc",
                     address: item[type] ? item[type].address : "",
                     region: item[type] && item[type].region ? item[type].region.name : "",
@@ -343,7 +393,7 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
                     </Modal>
                     <h5>
                         Danh sách ứng viên đã lưu {`(${totalItems})`}
-                        <Tooltip title="Lọc tìm kiếm" >
+                        {/* <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchSavedCandidateProfiles()}
                                 type="primary"
@@ -357,9 +407,9 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
                                 }}
                                 icon={loadingTable ? "loading" : "filter"}
                             />
-                        </Tooltip>
+                        </Tooltip> */}
                     </h5>
-                    <Row>
+                    {/* <Row>
                         <Col xs={24} sm={12} md={8} lg={6} xl={6} xxl={6} >
                             <IptLetter value={"Loại hồ sơ"} />
                             <Select
@@ -372,8 +422,8 @@ class SavedCandidateProfilesList extends PureComponent<IProps, IStates> {
                                 <Option value={TYPE.CANDIDATE}>Ứng viên</Option>
                             </Select>
                         </Col>
-                    </Row>
-                    <div className="table-operations">
+                    </Row> */}
+                    <div className="table-operations" style={{ textAlign: 'center' }}>
                         <Table
                             // @ts-ignore
                             columns={this.columns}
