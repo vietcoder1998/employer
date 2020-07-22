@@ -13,7 +13,7 @@ import { notification } from 'antd';
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
 const dfStyle: CSSProperties = {
-    width: 300,
+    width: '550px',
     height: 300,
 }
 
@@ -97,7 +97,9 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                         margin: '10px 0px',
                         display: opensearch ? 'block' : 'none',
                         padding: '5px 10px',
-                        borderRadius: '5px'
+                        borderRadius: '5px',
+                        border: '1px solid #e5e5e5'
+
                     }}
                     placeholder={'Nhập địa chỉ tìm kiếm'}
                     onPlaceSelected={(place?: IApiMap) => {

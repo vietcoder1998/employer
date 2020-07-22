@@ -710,7 +710,7 @@ thead {
 .n-candidate {
   font-size: 0.9rem;
   text-align: center;
-
+  cursor: pointer;
   svg {
     margin-top: -8px;
   }
@@ -723,4 +723,23 @@ thead {
   i {
     color: white !important;
   }
+}
+
+.ant-form-item-children {
+  display: flex;
+  // margin-top: 28px
+
+}
+.ant-form ant-form-horizontal{
+
+}
+.ant-table-body{
+  text-align:  center;
+}
+.ant-select ant-select-disabled{
+  margin-top: 17px;
+}
+
+.ant-form-item{
+  margin-bottom: 0px !important ;
 }

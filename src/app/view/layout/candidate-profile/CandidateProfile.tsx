@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Avatar, Row, Col, Progress, Tag, Rate } from 'antd';
+import { Icon, Avatar, Row, Col, Progress, Skeleton, Rate } from 'antd';
 import './CandidateProfile.scss';
 import { IFindCandidateDetail } from '../../../../models/find-candidates-detail';
 // @ts-ignore
@@ -66,50 +66,52 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     // @ts-ignore
                                     onError={() => setErrAvatar(true)}
                                 />
-                                <h4>
+                                <h4 className="text-white">
                                     {data ? data.lastName + " " + data.firstName : ""}
                                 </h4>
+                                <div>
+                                    <span className="unlock-state" style={{backgroundColor: data && data.unlocked ? 'rgb(22, 141, 205)' : '#ff5252'}}>{ data && data.unlocked ? 'Đã mở khoá' : 'Chưa mở khoá'}</span>
+                                </div>
                             </div>
                             <div className="description">
                                 <div className="profile-description">
-                                    <h6>
+                                    <h6 className="text-white">
                                         Thông tin liên hệ
                                      </h6>
-                                    <li>
-                                        <label className="block-span">Số điện thoại</label>
-                                        <label>
+                                    <div>
+                                        <label className="block-span text-white">Số điện thoại</label>
+                                        <label className="text-white">
                                             <strong>
                                                 {data && data.phone ? data.phone :
-                                                    (data && data.unlocked ? <NotUpdate /> : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>)
+                                                    (data && data.unlocked ? <NotUpdate /> : <span style={{ fontStyle: "italic" }}>Cần mở khóa để xem</span>)
                                                 }
                                             </strong>
                                         </label>
-                                    </li>
-                                    <li>
-                                        <label className="block-span">Thư điện tử</label>
-                                        <label>
+                                    </div>
+                                    <div>
+                                        <label className="block-span text-white">Thư điện tử</label>
+                                        <label className="text-white">
                                             <strong>
                                                 {data && data.email ?
-                                                    data.email : <span style={{ fontStyle: "italic", color: "red" }}>Cần mở khóa để xem</span>}
+                                                    data.email : <span style={{ fontStyle: "italic" }}>Cần mở khóa để xem</span>}
                                             </strong>
                                         </label>
-                                    </li>
+                                    </div>
 
                                 </div>
-                                <div className="hr-center" />
                                 <div className="info">
                                     <ul>
-                                        <li>
-                                            <label className="block-span">Giới tính</label>
-                                            {data && data.gender === TYPE.MALE ? <><Icon type="man" /> Nam giới</> : <><Icon type="woman" /> Nũ giới</>}
+                                        <li className="text-white">
+                                            <label className="block-span text-white">Giới tính</label>
+                                            {data && data.gender === TYPE.MALE ? <>Nam</> : <>Nữ</>}
                                         </li>
-                                        <li>
-                                            <label className="block-span">Ngày sinh</label>
+                                        <li className="text-white">
+                                            <label className="block-span text-white">Ngày sinh</label>
                                             <label>{data && data.birthday !== -1 ? timeConverter(data.birthday, 1000, "DD-MM-YYYY") : <NotUpdate />}</label>
                                         </li>
 
-                                        <li>
-                                            <label className="block-span">Địa chỉ</label>
+                                        <li className="text-white">
+                                            <label className="block-span text-white">Địa chỉ</label>
                                             <label>{data && data.address && data.address !== "" ? data.address : <NotUpdate />}</label>
                                         </li>
                                     </ul>
@@ -122,7 +124,34 @@ function CandidateProfile(props: ICandidateProfileProps) {
             </div>
             <div className="candidate-profile-body">
                 <Row >
-                    <Col md={12}>
+                    <Col md={24}>
+                        <div className="wrapper">
+                            <div style={{ display: 'flex' }}>
+                                <h6><Icon type="like" />Đánh giá của nhà tuyển dụng</h6>
+                                <label style={{ marginLeft: 10 }}>(Số lượt đánh giá {data && data.rating ? data.rating.ratingCount : null})</label>
+                            </div>
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
+                            <div >
+                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                                    <div style={{ flexDirection: 'column', display: 'flex' }}>
+                                        <label className="block-span">Thái độ </label>
+                                        <Rate disabled value={data && data.rating ? data.rating.jobAccomplishmentRating : 1} />
+                                    </div>
+                                    <div style={{ flexDirection: 'column', display: 'flex' }}>
+                                        <label className="block-span">Trách nghiệm</label>
+                                        <Rate disabled value={data && data.rating ? data.rating.attitudeRating : 1} />
+                                    </div>
+                                    <div style={{ flexDirection: 'column', display: 'flex' }}>
+                                        <label className="block-span">Kĩ năng</label>
+                                        <Rate disabled value={data && data.rating ? data.rating.skillRating : 1} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col md={24}>
                         <div className="wrapper">
                             <h6> <Icon type="read" />Học vấn</h6>
                             <div style={{ paddingLeft: "25px" }}>
@@ -147,13 +176,45 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 </ul>
                                             </TimeLineConfigItem>
                                         )
-                                        : <NotUpdate />
+                                        : <NotUpdate margin={true} />
                                     }
                                 </TimeLineConfig>
                             </div>
                         </div>
                     </Col>
-                    <Col md={12} >
+                    <Col md={24}>
+                        <div className="wrapper">
+                            <h6> <Icon type="read" />Ảnh xác thực</h6>
+                            <div style={{ paddingLeft: "25px" }}>
+                                <hr />
+                            </div>
+                            <div style={{ marginLeft: 20 }}>
+                                <div>Số chứng minh thư nhân dân:</div>
+                                <p style={{ color: "#1890ff" }}>
+                                    {data && data.identityCard ? data.identityCard : <NotUpdate />}
+                                </p>
+
+                            </div>
+                            <Row>
+                                <Col xs={24} md={12} lg={12} xl={12} xxl={24} >
+                                    <div className="ic-ct-img test">
+                                        <Skeleton avatar loading={data && data.identityCardBackImageUrl ? false : true} >
+                                            <img className='ic' src={data && data.identityCardFrontImageUrl ? data.identityCardFrontImageUrl : null} alt='front description' />
+                                        </Skeleton>
+                                    </div>
+
+                                </Col>
+                                <Col xs={24} md={12} lg={12} xl={12} xxl={24} >
+                                    <div className="ic-ct-img test">
+                                        <Skeleton avatar loading={data && data.identityCardBackImageUrl ? false : true} >
+                                            <img className='ic' src={data && data.identityCardBackImageUrl ? data.identityCardBackImageUrl : null} alt='front description' />
+                                        </Skeleton>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Col>
+                    <Col md={24} >
                         <div className="wrapper">
                             <h6> <Icon type="project" /> Kinh nghiệm</h6>
                             <div style={{ paddingLeft: "30px" }}>
@@ -178,7 +239,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 </ul>
                                             </TimeLineConfigItem>
                                         )
-                                        : <NotUpdate />
+                                        : <NotUpdate margin={true} />
                                     }
                                 </TimeLineConfig>
                             </div>
@@ -186,14 +247,14 @@ function CandidateProfile(props: ICandidateProfileProps) {
                     </Col>
                 </Row>
                 <Row >
-                    <Col md={12} >
+                    <Col md={24} >
                         <div className="wrapper">
                             <h6> <Icon type="message" /> Trình độ ngoại ngữ</h6>
                             <div style={{ paddingLeft: "25px" }}>
                                 <hr />
                             </div>
                             <div className="language-skills" >
-                                <div className="content-l-q">
+                                {/* <div className="content-l-q">
                                     {data &&
                                         data.languageSkills &&
                                         data.languageSkills.length > 0 ?
@@ -211,11 +272,32 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                                 </div>
                                             )
                                         ) : <NotUpdate />}
-                                </div>
+                                </div> */}
+                                {data &&
+                                    data.languageSkills &&
+                                    data.languageSkills.length > 0 ?
+                                    <div className="content-l-q">
+                                        {
+                                            data.languageSkills.map(
+                                                (item: any, index: number) => (
+                                                    <div key={index} style={{ padding: "10px" }}>
+                                                        <p>{item.language.level}</p>
+                                                        <Progress type="circle"
+                                                            width={80}
+                                                            // @ts-ignore
+                                                            percent={parseInt((item.score / 900) * 100)} format={percent => `${percent}%`} />
+                                                        <h5>
+                                                            {item.language.name + "(" + item.certificate + (item.score ? " - " + item.score : "") + ")"}
+                                                        </h5>
+                                                    </div>
+                                                )
+                                            )
+                                        }
+                                    </div> : <NotUpdate />}
                             </div>
                         </div>
                     </Col>
-                    <Col md={12}>
+                    <Col md={24}>
                         <div className="wrapper">
                             <h6><Icon type="heart" />Mô tả bản thân</h6>
                             <div style={{ paddingLeft: "25px" }}>
@@ -226,14 +308,14 @@ function CandidateProfile(props: ICandidateProfileProps) {
 
                                 </div>
                                 <p>
-                                    {data && data.description ? data.description : <NotUpdate />}
+                                    {data && data.description ? data.description : <NotUpdate margin />}
                                 </p>
                             </div>
                         </div>
                     </Col>
                 </Row>
                 <Row >
-                    <Col md={12} >
+                    <Col md={24} >
                         <div className="wrapper">
                             <h6> <Icon type="solution" />Kĩ năng </h6>
                             <div style={{ paddingLeft: "25px" }}>
@@ -244,36 +326,13 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     data.skills &&
                                     data.skills.length > 0 ?
                                     data.skills.map(
-                                        (item: any, index: number) => (<Tag key={index} color="geekblue" style={{ padding: "5px 10px", margin: 5 }}>{item.name}</Tag>)
-                                    ) : <NotUpdate />}
-                            </div>
-                        </div>
-                    </Col>
-                    <Col md={12}>
-                        <div className="wrapper">
-                            <h6><Icon type="like" />Đánh giá của nhà tuyển dụng</h6>
-                            <div style={{ paddingLeft: "25px" }}>
-                                <hr />
-                            </div>
-                            <div >
-                                <label className="block-span">Số lượt đánh giá</label>
-                                <label style={{ marginLeft: 10 }}> {data ? data.rating.ratingCount : "Chưa có đánh giá cụ thể"}</label>
-                                <div>
-                                    <label className="block-span">Thái độ </label>
-                                    <Rate disabled value={data ? data.rating.jobAccomplishmentRating : 1} />
-                                </div>
-                                <div>
-                                    <label className="block-span">Trách nghiệm</label>
-                                    <Rate disabled value={data ? data.rating.attitudeRating : 1} />
-                                </div>
-                                <div>
-                                    <label className="block-span">Kĩ năng</label>
-                                    <Rate disabled value={data ? data.rating.skillRating : 1} />
-                                </div>
+                                        (item: any, index: number) => (<label key={index} class="skills-detail" style={{ padding: "5px 10px", margin: 5 }}>{item.name}</label>)
+                                    ) : <NotUpdate margin />}
                             </div>
                         </div>
                     </Col>
                 </Row>
+
             </div>
         </div>
     )

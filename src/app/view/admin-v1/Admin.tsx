@@ -81,6 +81,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     };
 
     async componentDidMount() {
+        console.log("componentDidMount Admin")
         let { pageSize, pageIndex } = this.state;
 
         await this.props.getAdminProfile();

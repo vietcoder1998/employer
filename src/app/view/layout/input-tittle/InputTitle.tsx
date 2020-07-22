@@ -1,4 +1,4 @@
-import { Input, Select, } from "antd";
+import { Input, Select, Form } from "antd";
 import React from 'react';
 import { TYPE } from "../../../../const/type";
 import { Required } from "../common/Common";
@@ -21,6 +21,7 @@ interface IInputitleProps {
     disabled?: boolean;
     onChange?: Function;
     required?: boolean;
+    showErrorSelected?: boolean
 }
 
 interface INewSelect {
@@ -31,6 +32,7 @@ interface INewSelect {
     widthSelect?: string;
     disabled?: boolean;
     onChange?: Function;
+    showErrorSelected?: boolean
 }
 
 interface INewInput {
@@ -66,35 +68,40 @@ export const NewInput = (props: INewInput) => {
 }
 
 export const NewSelect = (props: INewSelect) => {
-    let { placeholder, listValue, onChange, widthSelect, disabled, value } = props;
+    let { placeholder, listValue, onChange, widthSelect, disabled, value, showErrorSelected, } = props;
 
     return (
-        <Select
-            showSearch
-            placeholder={placeholder}
-            optionFilterProp="children"
-            style={{ width: widthSelect ? widthSelect : "200px" }}
-            value={value}
-            onChange={(event: any) => onChange(event)}
-            disabled={disabled ? disabled : false}
-            filterOption={(input, option) => {
-                if (option.props.value) {
-                    // console.log(option.props.value)
-                    return strForSearch(option.props.children).includes(
-                        strForSearch(input)
-                    );
-                } else {
-                    return false;
-                }}}
-        >
-            {
-                listValue &&
-                    listValue.length > 0 ?
-                    listValue.map(
-                        (item, index) => <Option key={index} value={item.value}>{item.label}</Option>
-                    ) : null
-            }
-        </Select>
+        <Form style={{ width: '100%' }}>
+            <Form.Item validateStatus={showErrorSelected ? 'error' : null} help={showErrorSelected ? 'Bạn chưa chọn nội dung!' : ''}  >
+                <Select
+                    showSearch
+                    placeholder={placeholder}
+                    optionFilterProp="children"
+                    style={{ width: widthSelect ? widthSelect : "200px" }}
+                    value={value}
+                    onChange={(event: any) => onChange(event)}
+                    disabled={disabled ? disabled : false}
+                    filterOption={(input, option) => {
+                        if (option.props.value) {
+                            // console.log(option.props.value)
+                            return strForSearch(option.props.children).includes(
+                                strForSearch(input)
+                            );
+                        } else {
+                            return false;
+                        }
+                    }}
+                >
+                    {
+                        listValue &&
+                            listValue.length > 0 ?
+                            listValue.map(
+                                (item, index) => <Option key={index} value={item.value}>{item.label}</Option>
+                            ) : null
+                    }
+                </Select>
+            </Form.Item></Form>
+
     )
 }
 
@@ -110,6 +117,7 @@ export const InputTitle = (props: IInputitleProps) => {
         widthInput,
         widthSelect,
         required,
+        showErrorSelected
     } = props;
     let ComponentReturn;
     const defaultStyle = {
@@ -137,6 +145,7 @@ export const InputTitle = (props: IInputitleProps) => {
                     placeholder={placeholder}
                     onChange={(event: any) => onChange ? onChange(event) : () => { }}
                     widthSelect={widthSelect}
+                    showErrorSelected={showErrorSelected}
                 />
             );
             break;

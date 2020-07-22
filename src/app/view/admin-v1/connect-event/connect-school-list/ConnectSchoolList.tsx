@@ -26,6 +26,15 @@ let { Option } = Select;
 const { Panel } = Collapse;
 const { TabPane } = Tabs;
 
+const strForSearch = str => {
+    return str
+        ? str
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+        : str;
+};
+
 const typeReturn = (type?: string) => {
     let result = <NotUpdate msg="Chưa phản hồi" />
     switch (type) {
@@ -239,7 +248,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
 
             return {
                 connectSchoolsDetail: nextProps.connectSchoolsDetail,
-                loadingTable: false,
+                // loadingTable: false,
                 requestMessage: nextProps.connectSchoolsDetail.requestMessage,
                 replyMessage: nextProps.connectSchoolsDetail.replyMessage,
                 dataSchool: nextProps.connectSchoolsDetail
@@ -268,6 +277,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
     };
 
     async componentDidMount() {
+        // this.setState({loadingTable: true})
+        console.log("componentDidMount ConnectedSchoolsList")
         await this.searchConnectSchools();
     };
 
@@ -350,25 +361,27 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.searchConnectSchools();
     };
 
-    onSetDataSchool = async (id?: string) => {
-        let { listConnectSchools } = this.props;
-        let filter_arr = listConnectSchools.filter((item: IConnectSchool) => item.id === id);
-        let dataSchool = filter_arr[0];
+    // onSetDataSchool = async (id?: string) => {
+    //     let { listConnectSchools } = this.props;
+    //     console.log(listConnectSchools)
 
-        console.log(dataSchool)
+    //     let filter_arr = listConnectSchools.filter((item) => item.school.id === id);
+    //     let dataSchool = filter_arr[0];
 
-        this.props.handleDrawer({ openDrawer: true });
-        await this.setState({ loading: true });
+    //     console.log(dataSchool)
 
-        setTimeout(() => {
-            if (dataSchool.state) {
-                this.props.getConnectSchoolDetail(id);
-            } else {
-                this.props.setConnectSchoolDetail(dataSchool);
-            }
-        }, 500);
-        await this.setState({ loading: false });
-    }
+    //     this.props.handleDrawer({ openDrawer: true });
+    //     await this.setState({ loading: true });
+
+    //     setTimeout(() => {
+    //         if (dataSchool.state) {
+    //             this.props.getConnectSchoolDetail(id);
+    //         } else {
+    //             this.props.setConnectSchoolDetail(dataSchool);
+    //         }
+    //     }, 500);
+    //     await this.setState({ loading: false });
+    // }
 
     createRequest = async (type?: string) => {
         let { requestMessage, dataSchool } = this.state;
@@ -422,6 +435,16 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.setState({ loading: false })
     }
 
+    searchWithUnicode = (input, option) => {
+        if (option.props.value) {
+            // console.log(option.props.value)
+            return strForSearch(option.props.children).includes(
+                strForSearch(input)
+            );
+        } else {
+            return false;
+        }
+    }
     render() {
         let {
             listConnectSchools,
@@ -576,7 +599,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                 <div className="common-content">
                     <h5>
                         Danh sách trường học
-                        <Tooltip title="Tìm kiếm trường học" >
+                        {/* <Tooltip title="Tìm kiếm trường học" >
                             <Button
                                 onClick={() => this.searchConnectSchools()}
                                 type="primary"
@@ -590,7 +613,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                 }}
                                 icon={loadingTable ? "loading" : "filter"}
                             />
-                        </Tooltip>
+                        </Tooltip> */}
                     </h5>
                     <div className="table-operations">
                         <Row >
@@ -601,6 +624,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     defaultValue="Tất cả"
                                     style={{ width: "100%" }}
                                     onChange={(event: any) => this.onChangeType(event, TYPE.CONNECT_SCHOOL.regionID)}
+                                    filterOption={this.searchWithUnicode}
                                 >
                                     <Option value={null}>Tất cả</Option>
                                     {
@@ -619,6 +643,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                     value={body.shortName}
                                     onChange={(event: any) => this.onChangeType(event.target.value, TYPE.CONNECT_SCHOOL.shortName)}
                                     onPressEnter={(event: any) => this.searchConnectSchools()}
+                                    filterOption={this.searchWithUnicode}
                                     suffix={
                                         body.shortName &&
                                             body.shortName.length > 0 ?
@@ -636,14 +661,14 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                         <Row>
                             <Tabs onChange={(event) => this.onChangeType(event)}>
                                 <TabPane tab="Đã kết nối" key={TYPE.ACCEPTED} />
-                                <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
-                                <TabPane tab="Yêu cầu kết nối" key={TYPE.RECEIVE_RQ} />
+                                {/* <TabPane tab="Đã từ chối" key={TYPE.REJECTED} />
+                                <TabPane tab="Yêu cầu kết nối" key={TYPE.RECEIVE_RQ} /> */}
                                 <TabPane tab="Đã gửi yêu cầu" key={TYPE.SEND_RQ} />
                                 <TabPane tab="Chưa kết nối" key={"none"} />
                             </Tabs>
                             {!loadingTable ? (listConnectSchools && listConnectSchools.length > 0 ?
                                 listConnectSchools.map(
-                                    (item: IConnectSchool, index: number) =>
+                                    (item, index: number) =>
                                         <Col
                                             xxl={6}
                                             xl={8}
@@ -651,7 +676,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             lg={8}
                                             key={index}
                                         >
-                                            <CardSchool key={index} item={item} openDrawer={this.onSetDataSchool} />
+                                            <CardSchool key={index} item={item.school}  />
                                         </Col>
                                 )
                                 : <Empty description="Không có trường phù hợp" />) : <Loading />}

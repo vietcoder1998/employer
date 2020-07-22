@@ -300,7 +300,7 @@ export function ProfileApplyContent(props: IProfileApplyContent) {
                             />
                         </IptLetterP>
                     </Col>
-                    <Col xs={12} sm={12} md={8} lg={8} xl={8} >
+                    <Col xs={12} sm={12} md={8} lg={8} xl={8}  >
                         <IptLetterP value={"Theo"} >
                             <Select
                                 style={{ width: "90px" }}

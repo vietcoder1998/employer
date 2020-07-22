@@ -61,8 +61,8 @@ export function Timer(props?: ITimer) {
     )
 };
 
-export const NotUpdate = (props?: { msg?: any, children?: any, warning?: boolean }) => (
-    <label style={{ fontStyle: "italic", color: props.warning ? "red" : undefined }}>
+export const NotUpdate = (props?: { msg?: any, children?: any, warning?: boolean, margin?: boolean }) => (
+    <label style={{ fontStyle: "italic", color: props.warning ? "red" : undefined, marginLeft: props.margin ? 20 : 0 }}>
         {props.children ? props.children : (props.msg ? props.msg : "Chưa cập nhật")}
     </label>
 );
@@ -71,6 +71,7 @@ export function JobType(props: {children?: any, width?: any, fontSize?: any}) {
         color: 'black',
         backgroundColor: 'white',
         // borderRadius: 3,
+        // marginLeft: 20,
         padding: 3,
         margin: '3px 0',
         fontSize: props.fontSize ? props.fontSize : '0.75em',
