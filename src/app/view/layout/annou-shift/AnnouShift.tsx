@@ -154,7 +154,7 @@ export function ShiftContent(props: IShiftContent) {
                 <div style={{ display: typeGender ? 'flex' : 'none' }}>
                     <Form >
                         <Form.Item validateStatus={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'error' : ''} help={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
-                            <div style={{marginTop: '-5px', display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
+                            <div style={{ marginTop: '-5px', display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
 
                                 <InputNumber
                                     min={0}
@@ -176,7 +176,7 @@ export function ShiftContent(props: IShiftContent) {
                                 <Icon type="man" />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center',marginTop: '-10px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '-10px' }}>
                                 <Form>
                                     <Form.Item >
                                         <InputNumber
@@ -230,11 +230,11 @@ export function ShiftContent(props: IShiftContent) {
                                 }
 
                             />
+
+                            <div style={{ margin: '-5px 0px 0px 10px' }}>Người</div>
+                            <Icon type="user" style={{ margin: '6px 0px 0px 0px' }} />
                         </Form.Item>
                     </Form>
-                    <div style={{ margin: '0px 0px 0px 5px' }}>Người</div>
-                    <Icon type="user" />
-
                 </div>
                 {/* <IptLetterP value="Người" icon="team">
                             <InputNumber
@@ -348,7 +348,7 @@ export function ShiftContent(props: IShiftContent) {
 
             <div style={{ display: props.type === TYPE.INTERNSHIP ? 'none' : 'block', paddingTop: 10 }}>
                 <Row>
-                    <Col sm={24} md={24} lg={4} xl={4} xxl={4}>
+                    <Col sm={24} md={24} lg={4} xl={4} xxl={4} style={{marginTop: 15}}>
                         <p
                         >
                             Chọn thời gian<Required />
@@ -356,7 +356,7 @@ export function ShiftContent(props: IShiftContent) {
                     </Col>
                     <Form>
                         <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian kết thúc phải lớn hơn thời gian ban đầu !' : ''} style={{ marginLeft: '200px' }}>
-                            <Col sm={24} md={12} lg={5} xl={5} xxl={5}>
+                            <Col sm={24} md={12} lg={5} xl={5} xxl={5} style={{marginLeft: -13}}>
 
                                 <TimePicker
                                     open={open}
@@ -424,11 +424,11 @@ export function ShiftContent(props: IShiftContent) {
             <>
 
                 <Row style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-                    <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} style={{marginTop: '20px'}}>
+                    <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} style={{ marginTop: '20px' }}>
                         <InputTitle title="Mức lương" />
                         {/* </InputTitle> */}
                     </Col>
-                    <Col xs={24} sm={24} md={24} lg={5} xl={5} xxl={5} style={{marginTop: '20px'}}>
+                    <Col xs={24} sm={24} md={24} lg={5} xl={5} xxl={5} style={{ marginTop: '40px' }}>
                         <Switch
                             defaultChecked={true}
                             style={{ marginRight: " 10px" }}
@@ -443,7 +443,7 @@ export function ShiftContent(props: IShiftContent) {
                     <Form>
                         <Form.Item validateStatus={props.shift.minSalary > props.shift.maxSalary ? 'error' : null} help={props.shift.minSalary > props.shift.maxSalary ? 'Lương tối đa phải lớn hơn lương tối thiểu !' : ''} >
 
-                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{width: '50%'}}>
+                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{ width: '50%' }}>
                                 <IptLetterP value={"Tối thiểu(VND)"} style={{ marginTop: '-10px' }}>
 
                                     <Input
@@ -463,7 +463,7 @@ export function ShiftContent(props: IShiftContent) {
 
                                 </IptLetterP>
                             </Col>
-                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{width: '50%'}}>
+                            <Col xs={12} sm={12} md={12} lg={5} xl={5} xxl={5} style={{ width: '50%' }}>
                                 <IptLetterP value={"Tối đa(VND)"} style={{ marginTop: '-10px' }}>
                                     <Input
                                         value={maxSalaryText}
@@ -485,15 +485,15 @@ export function ShiftContent(props: IShiftContent) {
                             </Col>
                         </Form.Item>
                     </Form>
-                    <Col xs={12} sm={12} md={12} lg={4} xl={4} xxl={4} style={{marginTop: '13px'}}>
+                    <Col xs={12} sm={12} md={12} lg={4} xl={4} xxl={4} style={{ marginTop: '13px' }}>
                         <IptLetterP value={"Theo"} style={{ marginTop: '-15px' }}>
                             <Select
-                                style={{ width: "90px" , marginTop: '12px'}}
+                                style={{ width: "90px", marginTop: '12px' }}
                                 value={unit ? unit : "tháng"}
                                 placeholder="ex: giờ"
                                 onChange={(value: string) => setUnit(value)}
                                 disabled={!agreement}
-                                
+
                             >
                                 <Option key={"4"} value={"tháng"} >Tháng</Option>
                                 <Option key={"1"} value={"ca"} >Ca</Option>
@@ -509,7 +509,7 @@ export function ShiftContent(props: IShiftContent) {
                 <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
                     <InputTitle title="Ngày làm" required={true} style={{ marginTop: 10 }} />
                 </Col>
-                <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} >
+                <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} style={{marginLeft: -7}}>
                     <label key={2} className={mon ? 'time-span' : 'time-span-unselected'} onClick={() => setMon(!mon)}>
                         T2
                     </label>
@@ -537,7 +537,7 @@ export function ShiftContent(props: IShiftContent) {
                 <Form>
                     <Form.Item validateStatus={props.showErrorGenderRequireds ? 'error' : null} help={props.showErrorGenderRequireds ? 'Số lượng ít nhất là 1!!!' : ''}>
                         <Col xs={24} sm={24} md={24} lg={4} xl={4} xxl={4} >
-                            <InputTitle title="Đối tượng" required={true} style={{ marginTop: 0, marginBottom: 0 }} />
+                            <InputTitle title="Đối tượng" required={true} style={{ marginTop: 0, marginBottom: 0 ,marginLeft: -5}} />
                         </Col>
                         <Col xs={24} sm={24} md={24} lg={20} xl={20} xxl={20} >
                             {target()}

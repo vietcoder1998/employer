@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
-import { Button, Table, Icon, Select, Row, Col,  Checkbox, Tooltip, Modal,  Tabs, Spin } from 'antd';
+import { Button, Table, Icon, Select, Row, Col, Checkbox, Tooltip, Modal, Tabs, Spin } from 'antd';
 import { timeConverter, momentToUnix } from '../../../../../../utils/convertTime';
 import './EventJobsList.scss';
 import { TYPE } from '../../../../../../const/type';
@@ -15,8 +15,8 @@ import { IEmBranch } from '../../../../../../models/em-branches';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IEventJobDetail } from '../../../../../../models/event-job-detail';
 import { _requestToServer } from '../../../../../../services/exec';
-import { POST, DELETE } from '../../../../../../const/method';
-import { EVENT_SCHOOLS, ADMIN_ACCOUNT } from '../../../../../../services/api/private.api';
+import { POST, DELETE, PUT } from '../../../../../../const/method';
+import { EVENT_SCHOOLS, ADMIN_ACCOUNT, JOB_ANNOUNCEMENTS } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IModalState } from '../../../../../../models/mutil-box';
 import { IDrawerState } from 'antd/lib/drawer';
@@ -96,7 +96,9 @@ interface IEventJobsListProps extends StateProps, DispatchProps {
     getListJobService: Function;
     listJobService: any;
     setEventJobDetail: any;
-    clearProfileStudent: any
+    clearProfileStudent: any;
+    getListJobAnnouncements: Function;
+
 };
 
 interface IEventJobsListState {
@@ -144,7 +146,7 @@ interface IEventJobsListState {
     idSelected?: string;
     pendingAppliedSelected?: string;
     acceptedAppliedSelected?: string
-    
+    hiddenTilte?: boolean
 };
 
 
@@ -218,8 +220,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             stateApply: null,
             idSelected: null,
             pendingAppliedSelected: null,
-            acceptedAppliedSelected: null
-            
+            acceptedAppliedSelected: null,
+            hiddenTilte: false
         };
     }
 
@@ -235,10 +237,11 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         {
             title: 'Tiêu đề',
             width: 220,
-            dataIndex: 'title',
-            key: 'jobTitle',
+            dataIndex: 'item',
+            key: 'item',
             fixed: 'left',
-            render: ({ item }) => this.titleJob(item),
+            render: (item) => this.titleJob(item)
+
         },
         {
             title: 'Loại công việc',
@@ -318,25 +321,63 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         let { showModal } = this.state;
         this.setState({ showModal: !showModal });
     };
-    titleJob = (item) => {
-        return (
-            <div>
-                <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff', textDecoration: this.state.idSelected === item.id ? 'underline' : 'unset' }} onClick={
-                    async () => {
-                        this.setState({ ojd: true, loadingDetailJob: true });
-                        setTimeout(() => {
-                            this.props.getListJobSuitableCandidate(item.id, 0, 10, TYPE.STUDENT);
-                            this.props.getEventJobDetail(item.id, item.schoolEventID);
-                            this.setState({ jid: item.id })
-                        }, 300);
-                        this.setState({idSelected: item.id, pendingAppliedSelected: null,acceptedAppliedSelected: null})
-                    }
-                    // window.open('https://www.w3schools.com/cssref/pr_text_text-decoration.asp')
-                } target="_blank">{item.jobTitle}</a>
-                <div>{item.jobName ? item.jobName.name : ""}</div>
-            </div>
-        )
+    getTextDecoration(item) {
+        // let textDecoration, textDecorationColor, Tooltip
+        if (item.hidden === false) {
+            if (this.state.idSelected === item.id) {
+                return 'underline'
+
+            }
+            else {
+                return 'unset'
+            }
+        } else if (item.hidden === true) {
+            if (this.state.idSelected === item.id) {
+                return 'underline line-through'
+
+            }
+            else {
+                return 'line-through'
+                // textDecorationColor = 'red'
+
+            }
+        } else {
+            return 'unset'
+        }
     }
+    titleJob = (item) =>
+
+
+        (
+            <Tooltip title={item.hidden ? "Bài đăng đã bị ẩn" : ""} placement={"topLeft"}>
+                <div>
+                    <a
+                        className="titleJob"
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: '1.12em',
+                            color: '#1890ff',
+                            textDecoration: this.getTextDecoration(item),
+                            // textDecorationColor: textDecorationColor
+                        }}
+                        onClick={
+                            async () => {
+                                this.setState({ ojd: true, loadingDetailJob: true });
+                                setTimeout(() => {
+                                    this.props.getListJobSuitableCandidate(item.id, 0, 10, TYPE.STUDENT);
+                                    this.props.getEventJobDetail(item.id, item.schoolEventID);
+                                    this.setState({ jid: item.id })
+                                }, 300);
+                                this.setState({ idSelected: item.id, pendingAppliedSelected: null, acceptedAppliedSelected: null })
+                            }
+                            // window.open('https://www.w3schools.com/cssref/pr_text_text-decoration.asp')target="_blank"
+                        } >{item.jobTitle}</a>
+                    <div>{item.jobName ? item.jobName.name : ""}</div>
+                </div>
+            </Tooltip>
+
+        )
+
     renderApply = (item) => {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} className="pending-candidate">
@@ -352,10 +393,10 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     disabled={item.pendingApplied === 0 ? true : false}
                                     target="_blank"
                                 > */}
-                        <div style={{ color: 'orange', textDecoration:  this.state.pendingAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
+                        <div style={{ color: 'orange', textDecoration: this.state.pendingAppliedSelected === item.id ? 'underline' : 'unset' }} onClick={() => {
                             this.setState({ applyModal: true, applyId: item.id, stateApply: 'PENDING' })
                             // this.setState({pendingAppliedSelected: '1', idSelected: null})
-                            this.setState({pendingAppliedSelected: item.id, idSelected: null,acceptedAppliedSelected: null})
+                            this.setState({ pendingAppliedSelected: item.id, idSelected: null, acceptedAppliedSelected: null })
                         }}>
                             {item.pendingApplied} <Icon type={'user'} />
                         </div>
@@ -375,12 +416,12 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             disabled={item.acceptedApplied === 0 ? true : false}
                             target="_blank"
                         > */}
-                            <div style={{ color: '#1687f2',textDecoration:  this.state.acceptedAppliedSelected=== item.id ? 'underline' : 'unset' }} onClick={() => {
+                        <div style={{ color: '#1687f2', textDecoration: this.state.acceptedAppliedSelected === item.id ? 'underline' : 'unset' }} onClick={() => {
                             this.setState({ applyModal: true, applyId: item.id, stateApply: 'ACCEPTED' })
-                            this.setState({acceptedAppliedSelected: item.id, idSelected: null,pendingAppliedSelected: null})
+                            this.setState({ acceptedAppliedSelected: item.id, idSelected: null, pendingAppliedSelected: null })
                         }}>
-                                {item.acceptedApplied} <Icon type={'user-add'} />
-                            </div>
+                            {item.acceptedApplied} <Icon type={'user-add'} />
+                        </div>
                         {/* </Link> */}
                     </Tooltip>
                 </div>
@@ -388,22 +429,61 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
         )
     }
     EditToolTip = (hidden?: boolean, id?: string, schoolEventID?: string, item?: any) => {
-        // let { body, pageIndex, pageSize } = this.state;
+        let { body, pageIndex, pageSize } = this.state;
 
         return (
             <>
+
+                {this.state.body.schoolEventID === null ?
+                    <Tooltip placement="topLeft" title={hidden ? "Hiện bài đăng" : "Ẩn bài đăng"} >
+                        <Icon
+                            className="f-ic eye"
+                            type={hidden ? "eye-invisible" : "eye"}
+                            style={{ color: hidden ? "" : "" }}
+                            // theme="twoTone"
+                            // twoToneColor="Black"
+                            onClick={async () =>
+                                await _requestToServer(
+                                    PUT,
+                                    JOB_ANNOUNCEMENTS + `/${id}/hidden/${!hidden}`,
+                                    undefined,
+                                    undefined,
+                                    undefined,
+                                    EMPLOYER_HOST,
+                                    false,
+                                    false,
+
+                                ).then((res: any) => {
+                                    console.log(res)
+                                    if (res) {
+                                        // setTimeout(() => {
+                                        //     this.props.getListJobAnnouncements(body, pageIndex, pageSize);
+                                        // }, 250);
+                                        // this.searchEventJobs();
+                                        let { body, pageIndex, pageSize } = this.state;
+                                        // console.log(body)
+                                        // await this.setState({ loadingTable: true })
+                                        this.props.getListEventJobs(body, pageIndex, pageSize);
+                                        // message.success("Thành công", 2);
+                                    }
+                                })}
+                        />
+                        {/* {hidden ? this.setState({hiddenTilte: hidden}) : null} */}
+                    </Tooltip>
+                    : null}
+
                 <Tooltip placement="topRight" title={"Kích hoạt gói dịch vụ"}>
                     <Icon
                         className="f-ic dollar"
                         type="dollar"
                         onClick={async () => {
-                            // console.log(item)
-                            // await this.props.getEventJobDetail(id, schoolEventID ? schoolEventID : null)
+                            console.log(item)
+                            await this.props.getEventJobDetail(id, schoolEventID ? schoolEventID : null)
                             this.props.setEventJobDetail(item)
                             await this.props.handleDrawer();
                         }} />
                 </Tooltip>
-                <Tooltip placement="top" title={"Chỉnh sửa"}>
+                <Tooltip placement="leftBottom" title={"Chỉnh sửa"}>
                     <Icon
                         className="f-ic edit"
                         type="edit"
@@ -418,6 +498,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         className="f-ic"
                         type="solution"
                         twoToneColor="purple"
+
                         onClick={async () => {
                             this.setState({ ojd: true });
                             setTimeout(() => {
@@ -427,8 +508,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                             }, 300);
                         }}
                     />
+
                 </Tooltip> */}
-                <Tooltip placement="top" title={"Đăng bài tương tự"}>
+                <Tooltip placement="bottom" title={"Đăng bài tương tự"}>
                     <Icon
                         className="f-ic copy"
                         type="copy"
@@ -437,7 +519,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                         }}
                     />
                 </Tooltip>
-                <Tooltip placement="topRight" title={"Xóa bài đăng"}>
+                <Tooltip placement="bottom" title={"Xóa bài đăng"}>
                     <Icon
                         className="f-ic delete"
                         type="delete"
@@ -565,7 +647,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    title: { item },
+                    item: item,
                     // jobName: item.jobName ? item.jobName.name : "",
                     jobType: renderJobType(item),
                     employerBranchName: item.employerBranchName ? item.employerBranchName : "",
@@ -575,6 +657,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: renderPriority(item),
                     operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID, item }
+
                 });
             })
 
@@ -985,7 +1068,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             jid,
             // eid,
             // searchPriority,
-             applyModal
+            applyModal
         } = this.state;
 
         let {
@@ -1650,7 +1733,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                                     }
                                                 }
                                             }
-                                            style={{marginTop: '6px'}}
+                                            style={{ marginTop: '6px' }}
                                         >
                                             Bất kì
                                 </Checkbox>

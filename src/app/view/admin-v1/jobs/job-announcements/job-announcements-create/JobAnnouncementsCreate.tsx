@@ -658,6 +658,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         type={TYPE.SELECT}
                         listValue={list_job_name_options}
                         value={findIdWithValue(listJobNames, body.jobNameID, "id", "name")}
+                        
                         onChange={
                             (event: any) => {
                                 body.jobNameID = event;
@@ -692,7 +693,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
                     <InputTitle
                         title="Yêu cầu khác"
-                        widthLabel="150px"
+                        widthLabel="155px"
                     >
                         <Select
                             mode="multiple"

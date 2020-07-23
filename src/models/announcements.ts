@@ -60,7 +60,8 @@ export interface IAnnoucementBody {
     requiredSkillIDs?: Array<any>,
     jobType?: string,
     expirationDate?: number,
-    shifts?: Array<IShift>
+    shifts?: Array<IShift>,
+    requiredLanguageIDs?: number
     
 }
 

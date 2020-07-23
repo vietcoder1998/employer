@@ -1,4 +1,4 @@
-import React, { PureComponent,  } from 'react'
+import React, { PureComponent, } from 'react'
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { Button, Table, Icon, Select, Row, Col, Modal, Tooltip } from 'antd';
@@ -147,15 +147,17 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             dataIndex: 'branchName',
             key: 'branchName',
             fixed: 'left',
-            render: ({item}) => {
+            render: ({ item }) => {
                 return (
-                    <div style={{fontWeight: 'bold',
+                    <div style={{
+                        fontWeight: 'bold',
                         fontSize: '1.12em',
-                        color: 'rgb(24, 144, 255)'}}>
+                        color: 'rgb(24, 144, 255)'
+                    }}>
                         {item.branchName}
                     </div>
                 )
-            } 
+            }
         },
 
         {
@@ -242,7 +244,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
         this.setState({ showModal: !showModal });
     };
 
-    
+
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.typeMng !== prevState.typeMng) {
             return {
@@ -259,7 +261,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 dataTable.push({
                     key: item.id,
                     index: (index + (pageIndex ? pageIndex : 0) * (pageSize ? pageSize : 10) + 1),
-                    branchName: {item},
+                    branchName: { item },
                     headquarters: item.headquarters ? "Có" : "Không",
                     address: item.address ? item.address : "",
                     contactPhone: item.contactPhone ? item.contactPhone : "",
@@ -345,12 +347,14 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 await _requestToServer(
                     DELETE,
                     EM_BRANCHES_API,
-                    [localStorage.getItem('id_em_branches')],
+                    [localStorage.getItem('employerBranchIDs')],
                     undefined,
                     undefined,
+
                     EMPLOYER_HOST,
                     true,
                     false
+
                 ).then((res) => {
                     if (res) {
                         this.setState({ loading: false });
