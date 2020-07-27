@@ -92,6 +92,7 @@ export const TYPE = {
         jobNameIDs: 'jobNameIDs',
         skillIDs: 'skillIDs',
         languageIDs: 'languageIDs',
+        workingToolIDs: 'workingToolIDs',
         unlocked: 'unlocked',
         ids: 'ids',
         profileType: 'profileType'

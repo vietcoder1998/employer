@@ -11,12 +11,16 @@ import IJobDetail from '../../../../models/job-detail';
 import { IShift } from '../../../../models/announcements';
 import findIdWithValue from '../../../../utils/findIdWithValue';
 import { convertSalary } from '../../../../utils/convertNumber'
+import { ILanguage } from '../../../../models/languages';
+import { IWorkingTool } from '../../../../models/working-tools';
 interface IJobDetailProps {
     listSkills?: Array<ISkill>,
     jid?: string,
     listJobNames?: Array<IJobName>
     jobDetail?: IJobDetail;
     ns?: boolean;
+    listLanguages?: Array<ILanguage>;
+    listWorkingTools?: Array<IWorkingTool>;
 
 }
 
@@ -81,6 +85,8 @@ export default function JobDetail(props: IJobDetailProps) {
     let { jobDetail } = props;
     let list_des = jobDetail && convertStringToArray(jobDetail.description);
     let allSkills = [];
+    let allLanguages = [];
+    let allWorkingTools = [];
     
     if (jobDetail.type !== 'pendingJob') {
         allSkills = props.jobDetail.requiredSkills.map((item) => item.name);
@@ -89,7 +95,31 @@ export default function JobDetail(props: IJobDetailProps) {
             allSkills = props.jobDetail.requiredSkills.map(item => (findIdWithValue(props.listSkills, item, "id", "name")));
         }
     }
-    console.log(allSkills)
+
+    if (jobDetail.type !== 'pendingJob') {
+        // allLanguages = props.jobDetail.requiredLanguages.map((item) => item.name);
+        if (props.jobDetail && props.jobDetail.requiredLanguages && props.listLanguages) {
+            allLanguages = props.jobDetail.requiredLanguages.map(item => (findIdWithValue(props.listLanguages, item, "id", "name")));
+        }
+    } else {
+        if (props.jobDetail && props.jobDetail.requiredLanguages && props.listLanguages) {
+            allLanguages = props.jobDetail.requiredLanguages.map(item => (findIdWithValue(props.listLanguages, item, "id", "name")));
+        }
+    }
+
+    if (jobDetail.type !== 'pendingJob') {
+        // allWorkingTools = props.jobDetail.requiredWorkingTools.map((item) => item.name);
+        if (props.jobDetail && props.jobDetail.requiredWorkingTools && props.listWorkingTools) {
+            allWorkingTools = props.jobDetail.requiredWorkingTools.map(item => (findIdWithValue(props.listWorkingTools, item, "id", "name")));
+        }
+    } else {
+        if (props.jobDetail && props.jobDetail.requiredWorkingTools && props.listWorkingTools) {
+            allWorkingTools = props.jobDetail.requiredWorkingTools.map(item => (findIdWithValue(props.listWorkingTools, item, "id", "name")));
+        }
+    }
+    console.log(allWorkingTools)
+    console.log(props.jobDetail)
+    console.log(jobDetail)
 
     return (
         <>
@@ -292,6 +322,26 @@ export default function JobDetail(props: IJobDetailProps) {
                         {allSkills.length > 0 ? allSkills.map(
                                 (item, index) => { return <label key={index} className='skills-detail'>{item}</label> })
                             : <p>Ứng viên không đòi hỏi kỹ năng khác</p>
+                        }
+                    </div>
+                </div>
+
+                <div className='skills-job-detail '>
+                    <h6>Ngôn ngữ</h6>
+                    <div>
+                        {allLanguages.length > 0 ? allLanguages.map(
+                                (item, index) => { return <label key={index} className='skills-detail'>{item}</label> })
+                            : <p>Ứng viên không đòi hỏi ngôn ngữ khác</p>
+                        }
+                    </div>
+                </div>
+
+                <div className='skills-job-detail '>
+                    <h6>Công cụ chuyên môn</h6>
+                    <div>
+                        {allWorkingTools.length > 0 ? allWorkingTools.map(
+                                (item, index) => { return <label key={index} className='skills-detail'>{item}</label> })
+                            : <p>Ứng viên không đòi hỏi công cụ khác</p>
                         }
                     </div>
                 </div>

@@ -25,7 +25,7 @@ interface ICanProPop {
 };
 
 export default function CanProPop(props?: ICanProPop): JSX.Element {
-    let { children, avatar, background, id, unlocked, phone, email, region, gender , profileType } = props;
+    let { children, avatar, background, id, unlocked, phone, email, region, gender  } = props;
     const linkTo = routeLink.FIND_CANDIDATES + routePath.DETAIL + `/${id}?type=${TYPE.STUDENT}`;
 
     const content = (

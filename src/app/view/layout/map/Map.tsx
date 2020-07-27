@@ -8,7 +8,7 @@ import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../models/mutil-box';
 import Autocomplete from 'react-google-autocomplete';
 import IApiMap from '../../../../models/google-map-api';
-import { notification } from 'antd';
+import { notification, Form } from 'antd';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
@@ -91,6 +91,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         let { location } = mapState;
         return (
             <>
+           
                 <Autocomplete
                     style={{
                         width: '100%',
@@ -120,6 +121,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                     types={['geocode']}
                     componentRestrictions={{ country: "vn" }}
                 />
+               
                 <div className='map-wraper' style={style ? style : dfStyle} >
                     <Map
                         google={window["google"]}

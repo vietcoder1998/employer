@@ -3,7 +3,7 @@ import './CardSchool.scss';
 // @ts-ignore
 import backGround from './../../../../assets/image/base-image.jpg';
 // @ts-ignore
-import { Avatar, Icon, Badge } from 'antd';
+import { Avatar, Icon } from 'antd';
 import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
@@ -32,17 +32,17 @@ export default function CardSchool(props?: ICardSchoolProps) {
             break;
     }
 
-    let color_me = "gray";
-    switch (props.item.owner) {
-        case TYPE.EMPLOYER:
-            color_me = "#168ECD";
-            break;
-        case TYPE.SCHOOL:
-            color_me = "#ffc107";
-            break;
-        default:
-            break;
-    }
+    // // let color_me = "gray";
+    // switch (props.item.owner) {
+    //     case TYPE.EMPLOYER:
+    //         color_me = "#168ECD";
+    //         break;
+    //     case TYPE.SCHOOL:
+    //         color_me = "#ffc107";
+    //         break;
+    //     default:
+    //         break;
+    // }
     return (
         <div
             className='card-school'

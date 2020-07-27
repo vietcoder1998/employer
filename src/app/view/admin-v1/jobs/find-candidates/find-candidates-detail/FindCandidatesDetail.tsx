@@ -1,24 +1,24 @@
 import React from 'react'
-import { Icon, Button, Avatar, Tabs, Progress, Tooltip, Modal, Steps, Result, Rate, Spin } from 'antd';
+import { Icon, Button,  Modal, Steps, Result, Rate, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA, REDUX } from '../../../../../../const/actions';
 import { TYPE } from '../../../../../../const/type';
 import { _requestToServer } from '../../../../../../services/exec';
-import { FIND_CANDIDATE_DETAIL, SAVED_CANDIDATE_PROFILES } from '../../../../../../services/api/private.api';
+import { FIND_CANDIDATE_DETAIL} from '../../../../../../services/api/private.api';
 import { POST, PUT, DELETE, GET } from '../../../../../../const/method';
 import { IAppState } from '../../../../../../redux/store/reducer';
 import { IMapState, IDrawerState } from '../../../../../../models/mutil-box';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IFindCandidateDetail } from '../../../../../../models/find-candidates-detail';
 import CandidateProfile from '../../../../layout/candidate-profile/CandidateProfile';
-import { VerifiedProfile } from '../../../../layout/verified-profile/VerifiedProfile';
+// import { VerifiedProfile } from '../../../../layout/verified-profile/VerifiedProfile';
 import './FindCandidatesDetail.scss';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 // import Loading from '../../../../layout/loading/Loading';
 import DrawerConfig from '../../../../layout/config/DrawerConfig';
 import { IptLetterP } from '../../../../layout/common/Common';
 import TextArea from 'antd/lib/input/TextArea';
-const { TabPane } = Tabs;
+// const { TabPane } = Tabs;
 const { Step } = Steps;
 
 interface IFindCandidatesDetailState {
@@ -244,7 +244,7 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
     };
 
     render() {
-        let { body, visible, loading, fail, ratingUser, loadingProfile } = this.state;
+        let { body, loading, fail, ratingUser, loadingProfile } = this.state;
         let { unlockTurn, modalState } = this.props;
 
         if (fail) {

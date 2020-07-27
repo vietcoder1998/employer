@@ -1,10 +1,10 @@
 import React from 'react';
-import { Row, Col, Button, Avatar, Tooltip, Rate } from 'antd';
+import { Row, Col, Button, Avatar, Tooltip } from 'antd';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
 import { IApplyJob } from '../../../../models/apply-job';
-import { Link } from 'react-router-dom';
-import { routeLink, routePath } from '../../../../const/break-cumb';
+// import { Link } from 'react-router-dom';
+// import { routeLink, routePath } from '../../../../const/break-cumb';
 import { timeConverter } from '../../../../utils/convertTime';
 import './JobApplyItem.scss';
 

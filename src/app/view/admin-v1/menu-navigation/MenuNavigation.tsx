@@ -28,16 +28,16 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
         if(window.location.pathname === "/v1/admin/jobs/job-announcements/create") {
             // console.log(window.location.pathname)
             setKey("0")
-            setOpenKey(["sub1", "sub0", "sub2"])
+            setOpenKey([ "sub2","sub1"])
         } else if( window.location.pathname === '/v1/admin/noti/list') {
             setKey("13")
-            setOpenKey(["sub5"])
+            setOpenKey(["sub5","sub3"])
         } else if(window.location.pathname  === "/v1/admin/profile/admin-account") {
             setKey("14")
-            setOpenKey(["sub6"])
+            setOpenKey(["sub6","sub5"])
         } else if(window.location.pathname  === "/v1/admin/jobs/pending-jobs/list") {
             setKey("12")
-            setOpenKey(["sub1", "sub0"])            
+            setOpenKey([ "sub0"])            
         } else if(window.location.pathname  === "/v1/admin/connect-schools/event/jobs/list") {
             let url_string = window.location.href;
             let url = new URL(url_string);
@@ -47,14 +47,45 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
             } else {
                 setKey("event")
             }
-            setOpenKey(["sub1", "sub0"])            
+            setOpenKey([ "sub0"])            
         } else if(window.location.pathname === "/v1/admin/connect-schools/event/list") {
             setKey("pageSchool")
-            setOpenKey(["sub1", "sub0"])  
+            setOpenKey(["sub1","sub0"])  
         } else if(window.location.pathname === "/v1/admin/connect-schools/list" || window.location.pathname.includes("/v1/admin/connect-schools/school/")) {
             setKey("connected")
-            setOpenKey(["sub1", "sub0"])  
+            setOpenKey(["sub1","sub0"])  
+        } else if(window.location.pathname === "/v1/admin/convernient/job-service"){
+            setKey("7")
+            setOpenKey(["sub3","sub2"])
+        } else if(window.location.pathname === "/v1/admin/convernient/promotion"){
+            setKey("percentage")
+            setOpenKey(["sub3","sub2"])
+        } else if (window.location.pathname === "/v1/admin/convernient/in-event"){
+            setKey("in-event")
+            setOpenKey(["sub3","sub2"])
+        } else if (window.location.pathname === "/v1/admin/jobs/em-branches/list"){
+            setKey("2")
+            setOpenKey(["sub2","sub1"])
+        } else if (window.location.pathname === "/v1/admin/jobs/saved-candidate/list"){
+            setKey("4")
+            setOpenKey(["sub2","sub1"])
+        } else if (window.location.pathname === "/v1/admin/dashboard/api"){
+            setKey("api")
+            setOpenKey(["sub4","sub6"])
+        } else if (window.location.pathname === "/v1/admin/more-info/community"){
+            setKey("9")
+            setOpenKey(["sub4","sub6"])
+        } else if (window.location.pathname === "/v1/admin/more-info/guide"){
+            setKey("10")
+            setOpenKey(["sub4","sub6"])
+        } else if (window.location.pathname === "/v1/admin/more-info/privacy"){
+            setKey("25")
+            setOpenKey(["sub4","sub6"])
+        } else if (window.location.pathname === "/v1/admin/more-info/feed-back"){
+            setKey("26")
+            setOpenKey(["sub4","sub6"])
         }
+        
     }, [window.location.href])
     return (
         <Sider
@@ -134,7 +165,7 @@ export default function MenuNavigation(props: IMenuNavigationProps) {
                     <Menu.Item key="jobExpired" style={{ color: "#000000" }}>
                         <Link to={routeLink.CONNECT_SCHOOLS + routePath.EVENT + '/jobs/list?expiredJob=true'}>
                             {/* <Icon type="alert" /> */}
-                            <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
+                            <i className="fa fa-calendar-times-o" aria-hidden="true"></i>
                             <span>Việc làm hết hạn </span>
                         </Link>
                     </Menu.Item>

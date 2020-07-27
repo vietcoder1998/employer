@@ -15,7 +15,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { PUT, GET } from '../../../../../../const/method';
 import { EVENT_SCHOOLS } from '../../../../../../services/api/private.api';
 import { sendFileHeader } from '../../../../../../services/auth';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 
 let ImageRender = (src?: string) => {

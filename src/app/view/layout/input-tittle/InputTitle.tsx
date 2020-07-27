@@ -72,7 +72,7 @@ export const NewSelect = (props: INewSelect) => {
 
     return (
         <Form style={{ width: '100%' }}>
-            <Form.Item validateStatus={showErrorSelected ? 'error' : null} help={showErrorSelected ? 'Bạn chưa chọn nội dung!' : ''}  >
+            <Form.Item validateStatus={showErrorSelected ? 'error' : null} help={showErrorSelected ? 'Bạn chưa chọn nội dung !' : ''}  >
                 <Select
                     showSearch
                     placeholder={placeholder}

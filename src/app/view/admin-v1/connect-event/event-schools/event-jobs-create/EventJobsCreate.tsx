@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Divider, Button, Input, Select, Tabs, message, Result, Form } from 'antd';
+import { Divider, Button, Input, Select, Tabs, message, Result } from 'antd';
 import { connect } from 'react-redux';
 import './EventJobsCreate.scss';
 import { InputTitle } from '../../../../layout/input-tittle/InputTitle';

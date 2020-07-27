@@ -15,6 +15,7 @@ export interface IPendingJobDetail {
         jobType?: string,
         requiredSkillIDs?: [],
         shifts?: Array<IShift>,
+        requiredLanguageIDs: [],
     },
     id?: string,
     jobID?: string,

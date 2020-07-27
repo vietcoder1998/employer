@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Icon, Divider, Row, Col, Spin, Tabs, message, Empty } from 'antd';
+import { Row, Col, Spin, Tabs, message, Empty } from 'antd';
 import { connect } from 'react-redux';
 import { REDUX_SAGA } from '../../../../../../const/actions';
 import { TYPE } from '../../../../../../const/type';
 import { IAppState } from '../../../../../../redux/store/reducer';
-import { IShift } from '../../../../../../models/announcements';
-import { ShiftContent } from '../../../../layout/annou-shift/AnnouShift';
+// import { IShift } from '../../../../../../models/announcements';
+// import { ShiftContent } from '../../../../layout/annou-shift/AnnouShift';
 import { IEmBranch } from '../../../../../../models/em-branches';
 import { _requestToServer } from '../../../../../../services/exec';
 import { PUT } from '../../../../../../const/method';
@@ -13,7 +13,7 @@ import { APPLY_JOB } from '../../../../../../services/api/private.api';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
 import { IApplyJob } from '../../../../../../models/apply-job';
 import { ApplyJobItem } from '../../../../layout/job-apply/JobApplyItem';
-import { routeLink, routePath } from '../../../../../../const/break-cumb';
+// import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import './JobAnnouncementsApply.scss';
 import { IShiftDetail } from '../../../../../../models/job-annoucement-detail';
 // import Loading from '../../../../layout/loading/Loading';
@@ -255,7 +255,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             listRejected,
             listAccepted,
             listPending,
-            listShifts,
+            // listShifts,
             loading,
             defaultId,
             lBtn

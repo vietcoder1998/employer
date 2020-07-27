@@ -1,15 +1,15 @@
 import { noInfoHeader } from '../../services/auth';
-import { ILanguages } from './../../models/languages';
+import { IWorkingTools } from '../../models/working-tools';
 import { GET } from '../../const/method';
 import { takeEvery, put, call, } from 'redux-saga/effects';
 import { _requestToServer } from '../../services/exec';
 import { REDUX_SAGA, REDUX } from '../../const/actions'
 import { PUBLIC_HOST } from '../../environment/dev';
-import { LANGUAGES } from '../../services/api/public.api';
+import { WORKINGTOOLS } from '../../services/api/public.api';
 
-function* getListLanguagesData(action) {
-    let res = yield call(callLanguages, action);
-    let data: ILanguages = {
+function* getListWorkingToolsData(action) {
+    let res = yield call(callWorkingTools, action);
+    let data: IWorkingTools = {
         items: [],
         pageIndex: 0,
         pageSize: 0,
@@ -19,18 +19,20 @@ function* getListLanguagesData(action) {
     if (res) {
         data = res.data;
     }
-   
+    console.log('data')
+    console.log(data);
+    
     yield put({
-        type: REDUX.LANGUAGES.GET_LANGUAGES,
+        type: REDUX.WORKINGTOOLS.GET_WORKINGTOOLS,
         data
     });
 }
 
-function callLanguages(action) {
+function callWorkingTools(action) {
     try {
         let res = _requestToServer(
             GET,
-            LANGUAGES,
+            WORKINGTOOLS,
             undefined,
             {
                 pageIndex: action.pageIndex ? action.pageIndex : 0,
@@ -43,14 +45,15 @@ function callLanguages(action) {
         )
 
         return res;
+       
     } catch (error) {
         throw error;
     }
 }
 
-export function* LanguagesWatcher() {
+export function* workingtoolsWatcher() {
     yield takeEvery(
-        REDUX_SAGA.LANGUAGES.GET_LANGUAGES,
-        getListLanguagesData
+        REDUX_SAGA.WORKINGTOOLS.GET_WORKINGTOOLS,
+        getListWorkingToolsData
     )
 }

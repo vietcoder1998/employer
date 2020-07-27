@@ -48,6 +48,17 @@
     border-color: rgb(255, 145, 0);
   }
 }
+.eye{
+  
+    background-color: white; 
+    &:hover{
+      background-color: #868686;
+      color: white;
+      border-color: #868686;
+      
+    }
+  
+}
 .edit {
   // color: rgb(0, 179, 60);
   background-color: #fff;

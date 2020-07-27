@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Breadcrumb, BackTop, Row, Col, Badge, Popover, Tooltip } from 'antd';
+import { Layout, Icon, Avatar, Row, Col, Badge, Popover, Tooltip } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
-import { breakCumb, routeLink, routePath } from '../../../const/break-cumb';
+import { routeLink, routePath } from '../../../const/break-cumb';
 
 import Jobs from './jobs/Jobs';
 import ConvernientService from './convernient-service/ConvernientService';
@@ -32,6 +32,7 @@ import { _requestToServer } from '../../../services/exec'
 import { GET, POST } from '../../../const/method';
 import { PUBLIC_HOST, EMPLOYER_HOST } from '../../../environment/dev';
 import {timeConverter} from '../../../utils/convertTime'
+import Item from 'antd/lib/list/Item';
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
 
@@ -62,6 +63,7 @@ interface IAdminProps extends StateProps, DispatchProps {
     getListLanguages?: Function;
     getListNoti?: Function;
     getAdminProfile?: Function;
+    getListWorkingTools?: Function;
 }
 
 class Admin extends PureComponent<IAdminProps, IAdminState> {
@@ -90,8 +92,11 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.getListSkills();
         await this.props.getListJobService();
         await this.props.getListLanguages();
+        await this.props.getListWorkingTools();
         await this.props.getListNoti(pageIndex, pageSize);
         await this.setState({ loading: false });
+        
+        
     }
 
     static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
@@ -517,10 +522,16 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
+    getListWorkingTools: () => dispatch({type: REDUX_SAGA.WORKINGTOOLS.GET_WORKINGTOOLS}),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
     getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI, pageIndex, pageSize }),
     getAdminProfile: () => dispatch({ type: REDUX_SAGA.ADMIN_ACCOUNT.GET_ADMIN_ACCOUNT }),
-    handleLoading: (loading?: boolean) => dispatch({ type: TYPE.HANDLE, loading })
+    handleLoading: (loading?: boolean) => dispatch({ type: TYPE.HANDLE, loading }),
+    
+   
+   
+    
+    
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
