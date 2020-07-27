@@ -18,6 +18,7 @@ let initState: IPendingJobDetail = {
         jobType: null,
         requiredSkillIDs: [],
         shifts: [],
+        requiredLanguageIDs: [],
     },
     id: null,
     jobID: null,

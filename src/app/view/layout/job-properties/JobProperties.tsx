@@ -131,6 +131,22 @@ export default class JobProperties extends PureComponent<IJobPropertiesProps,IJo
                         }
                     </div>
                 </div>
+
+                {/* <div className='skills-job-detail '>
+                    <h6>Ngôn ngữ</h6>
+                    <div>
+                        {jobDetail &&
+                            jobDetail.requiredSkills &&
+                            jobDetail.requiredSkills.length > 0 ?
+                            jobDetail.requiredSkills.map(
+                                (item, index) => (
+                                    <label key={index} className='skills-detail'>{item.name}</label>
+                                )) : <p>Ứng viên không cần đòi hỏi chuyên môn</p>
+                        }
+                    </div>
+                </div> */}
+
+                
             </div >
         )
     }

@@ -25,6 +25,7 @@ function* getListPendingJobDetailData(action: any) {
             jobType: null,
             requiredSkillIDs: [],
             shifts: [],
+            requiredLanguageIDs: [],
         },
         id: null,
         jobID: null,

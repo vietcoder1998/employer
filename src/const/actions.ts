@@ -30,6 +30,9 @@ export const REDUX = {
     LANGUAGES: {
         GET_LANGUAGES: "GET_LANGUAGES"
     },
+    WORKINGTOOLS: {
+        GET_WORKINGTOOLS: "GET_WORKINGTOOLS"
+    },
     REGIONS: {
         GET_REGIONS: "GET_REGIONS"
     },
@@ -139,6 +142,9 @@ export const REDUX_SAGA = {
     },
     LANGUAGES: {
         GET_LANGUAGES: "GET_LANGUAGES_DATA"
+    },
+    WORKINGTOOLS: {
+        GET_WORKINGTOOLS: "GET_WORKINGTOOLS_DATA"
     },
     REGIONS: {
         GET_REGIONS: "GET_REGIONS_DATA"

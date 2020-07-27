@@ -14,6 +14,7 @@ import { SkillsWatcher } from '../sagas/skills';
 import { JobAnnouncementDetailWatcher } from '../sagas/job-announcement-detail';
 import { JobServiceWatcher } from '../sagas/job-service';
 import { LanguagesWatcher } from '../sagas/languages';
+import { workingtoolsWatcher} from '../sagas/working-tools'
 import { ConnectSchoolDetailWatcher } from '../sagas/connect-school-detail';
 import { ConnectSchoolsWatcher } from '../sagas/connect-schools';
 import { ApplyJobsWatcher } from '../sagas/apply-job';
@@ -32,6 +33,7 @@ import { EventJobssWatcher } from '../sagas/event-jobs';
 import { EventJobDetailWatcher } from '../sagas/event-job-detail';
 import { JobServiceEventWatcher } from '../sagas/job-service-event';
 import { SchoolBranchsWatcher } from '../sagas/school-branches';
+import { from } from 'core-js/fn/array';
 
 export default function* rootSaga() {
     const sagas = [
@@ -50,6 +52,7 @@ export default function* rootSaga() {
         JobAnnouncementDetailWatcher,
         JobServiceWatcher,
         LanguagesWatcher,
+        workingtoolsWatcher,
         ConnectSchoolDetailWatcher,
         ConnectSchoolsWatcher,
         ApplyJobsWatcher,

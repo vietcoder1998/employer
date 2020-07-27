@@ -19,6 +19,9 @@ import moment from 'moment';
 import { NotUpdate, Required } from '../../../../layout/common/Common';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { Link } from 'react-router-dom';
+// import { iterator } from 'core-js/fn/symbol';
+import { ILanguage } from '../../../../../../models/languages';
+import { IWorkingTool } from '../../../../../../models/working-tools';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -32,7 +35,7 @@ interface IJobAnnouncementsCreateState {
     loading: boolean;
     valueAnnou: string;
     typeCpn: string;
-    listEmBranches: Array<IEmBranch>;
+    // listEmBranches: Array<IEmBranch>;
     body: IAnnoucementBody;
     id?: string;
     jobName?: string;
@@ -70,7 +73,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             loading: false,
             valueAnnou: "",
             typeCpn: TYPE.CREATE,
-            listEmBranches: [],
+            // listEmBranches: [],
             isCreate: false,
             body: {
                 jobTitle: null,
@@ -104,7 +107,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
     async componentDidMount() {
         if (this.props.match.params.id) {
-
+            console.log()
         };
 
         this.props.getListEmBranches();
@@ -143,13 +146,15 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             let body = state.body;
             let id = state.body.id;
             let requiredSkillIDs = [];
+            let requiredWorkingToolIDs = [];
 
             if (props.match.url.includes("pending")) {
                 typeCpn = TYPE.PENDING;
                 id = props.pendingJobDetail.id;
                 jobAnnouncementDetail = props.pendingJobDetail.data;
                 jobID = jobAnnouncementDetail.jobNameID;
-                requiredSkillIDs = jobAnnouncementDetail.requiredSkillIDs
+                requiredSkillIDs = jobAnnouncementDetail.requiredSkillIDs;
+                requiredWorkingToolIDs = jobAnnouncementDetail.requiredWorkingToolIDs;
             };
 
             if (props.match.url.includes("fix")) {
@@ -158,7 +163,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 jobAnnouncementDetail = props.jobAnnouncementDetail;
                 jobID = jobAnnouncementDetail.jobName && jobAnnouncementDetail.jobName.id;
                 requiredSkillIDs = jobAnnouncementDetail.requiredSkills && jobAnnouncementDetail.requiredSkills.length &&
-                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id)
+                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id);
+                requiredWorkingToolIDs = jobAnnouncementDetail.requiredWorkingTools && jobAnnouncementDetail.requiredWorkingTools.length &&
+                    jobAnnouncementDetail.requiredWorkingTools.map((item: any) => item.id);
             };
 
             if (props.match.url.includes("copy")) {
@@ -167,7 +174,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 jobAnnouncementDetail = props.jobAnnouncementDetail;
                 jobID = jobAnnouncementDetail.jobName && jobAnnouncementDetail.jobName.id;
                 requiredSkillIDs = jobAnnouncementDetail.requiredSkills && jobAnnouncementDetail.requiredSkills.length &&
-                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id)
+                    jobAnnouncementDetail.requiredSkills.map((item: any) => item.id);
+                requiredWorkingToolIDs = jobAnnouncementDetail.requiredWorkingTools && jobAnnouncementDetail.requiredWorkingTools.length &&
+                    jobAnnouncementDetail.requiredWorkingTools.map((item: any) => item.id);
             };
 
             console.log(jobAnnouncementDetail);
@@ -183,7 +192,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                     body.description = jobAnnouncementDetail.description;
                     body.expirationDate = jobAnnouncementDetail.expirationDate;
                     body.shifts = jobAnnouncementDetail.shifts;
-                    body.requiredSkillIDs = requiredSkillIDs
+                    body.requiredSkillIDs = requiredSkillIDs;
+                    body.requiredWorkingToolIDs = requiredWorkingToolIDs;
                 };
             };
 
@@ -234,7 +244,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         this.setState({ body });
     };
 
-    createRequest = async () => {
+    createRequest = async (valid) => {
         let { body, typeCpn, id } = this.state;
         let newBody = await this.pretreatmentBody(body, typeCpn);
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `` : `/${id}`;
@@ -242,24 +252,31 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
         this.setState({ isCreate: true })
-        await _requestToServer(
-            METHOD,
-            API + matching,
-            newBody,
-            null,
-            undefined,
-            EMPLOYER_HOST,
-            true,
-            false,
-        ).then((res: any) => {
-            if (res) {
-                setTimeout(() => {
-                    this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
-                }, 500);
-            }
-        }).finally(() => {
+        console.log(valid)
+        if (valid) {
+            await _requestToServer(
+                METHOD,
+                API + matching,
+                newBody,
+                null,
+                undefined,
+                EMPLOYER_HOST,
+                true,
+                false,
+            ).then((res: any) => {
+                if (res) {
+                    setTimeout(() => {
+                        this.props.history.push(routeLink.PENDING_JOBS + routePath.LIST);
+                    }, 500);
+                }
+            }).finally(() => {
+                this.setState({ loading: false })
+            })
+            // console.log(this.state.body)
+        } else{
+            console.log("invalid")
             this.setState({ loading: false })
-        })
+        }
     }
 
     pretreatmentBody = (body: IAnnoucementBody, typeCpn: string) => {
@@ -397,7 +414,9 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             listEmBranches,
             listSkills,
             jobAnnouncementDetail,
-            normalQuantity
+            normalQuantity,
+            listLanguages,
+            listWorkingTools
         } = this.props;
 
         // let ct_btn_ex = "Huỷ";
@@ -424,6 +443,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let list_job_name_options = listJobNames.map((item: IJobName) => ({ label: item.name, value: item.id }));
         let listEmBranches_options = listEmBranches.map((item: any) => ({ label: item.branchName, value: item.id }));
         let list_skill_options = listSkills.map((item: IJobName, index: number) => (<Option key={index} value={item.name} children={item.name} />));
+        let list_Languages_options = listLanguages.map((item: ILanguage, index: number) => (<option key={index} value={item.name} children={item.name} />))
+        let list_WorkingTools_options = listWorkingTools.map((item: IWorkingTool, index: number) => (<option key={index} value={item.name} children={item.name} />))
 
         if (
             !jobAnnouncementDetail && jobAnnouncementDetail.id
@@ -495,13 +516,14 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         } else {
             showErorremployerBranchID = false
         }
-
+        
         let showErorrSelectTime
         if (this.state.isCreate) {
             if ((body.shifts.map((a) => a.startTime)) < (body.shifts.map((a) => a.endTime))) {
                 showErorrSelectTime = false
             } else {
                 showErorrSelectTime = true
+                
             }
         } else {
             showErorrSelectTime = false
@@ -510,7 +532,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
         let showErrorSalaryFulltime
         if (this.state.isCreate) {
-            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))){
+            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))) {
                 showErrorSalaryFulltime = false
             } else {
                 showErrorSalaryFulltime = true
@@ -520,7 +542,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         }
         let showErrorSalaryPartTtime
         if (this.state.isCreate) {
-            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))){
+            if ((body.shifts.map((a) => a.minSalary)) < (body.shifts.map((a) => a.maxSalary))) {
                 showErrorSalaryPartTtime = false
             } else {
                 showErrorSalaryPartTtime = true
@@ -658,7 +680,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         type={TYPE.SELECT}
                         listValue={list_job_name_options}
                         value={findIdWithValue(listJobNames, body.jobNameID, "id", "name")}
-                        
+
                         onChange={
                             (event: any) => {
                                 body.jobNameID = event;
@@ -690,6 +712,87 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                         placeholder="ex: Công ty abc"
                         showErrorSelected={showErorremployerBranchID}
                     />
+                    {/* 
+                    <InputTitle
+                        title="Chọn ngôn ngữ "
+                        required={true}
+                        type={TYPE.SELECT}
+                        listValue={listLanguages_options}
+                        value={findIdWithValue(listLanguages, body.requiredLanguageIDs, "id", "name")}
+                        onChange={
+                            (event: any) => {
+                                body.requiredLanguageIDs = event;
+                                this.setState({ body });
+                            }
+                        }
+                        widthLabel="150px"
+                        widthSelect="100%"
+                        placeholder="ex: English"
+                        showErrorSelected={showErorremployerBranchID}
+                    /> */}
+                    <InputTitle
+                        title="Chọn ngôn ngữ"
+                        widthLabel="155px"
+                    >
+                        <Select
+                            mode="multiple"
+                            size="default"
+                            placeholder="ex: English, Vietnamese"
+                            filterOption={(input, option) => {
+                                if (option.props.value) {
+                                    // console.log(option.props.value)
+                                    return strForSearch(option.props.children).includes(
+                                        strForSearch(input)
+                                    );
+                                } else {
+                                    return false;
+                                }
+                            }}
+                            value={findIdWithValue(listLanguages, body.requiredLanguageIDs, "id", "name")}
+                            onChange={
+                                (event: any) => {
+                                    let listData = findIdWithValue(listLanguages, event, "name", "id")
+                                    body.requiredLanguageIDs = listData;
+                                    this.setState({ body })
+                                }
+                            }
+                            style={{ width: '100%' }}
+                        >
+                            {list_Languages_options}
+                        </Select>
+                    </InputTitle>
+
+                    <InputTitle
+                        title="Chọn công cụ "
+                        widthLabel="155px"
+                    >
+                        <Select
+                            mode="multiple"
+                            size="default"
+                            placeholder="ex: Unity, Microsoft Excel"
+                            filterOption={(input, option) => {
+                                if (option.props.value) {
+                                    // console.log(option.props.value)
+                                    return strForSearch(option.props.children).includes(
+                                        strForSearch(input)
+                                    );
+                                } else {
+                                    return false;
+                                }
+                            }}
+                            value={findIdWithValue(listWorkingTools, body.requiredWorkingToolIDs, "id", "name")}
+                            onChange={
+                                (event: any) => {
+                                    let listData = findIdWithValue(listWorkingTools, event, "name", "id")
+                                    body.requiredWorkingToolIDs = listData;
+                                    this.setState({ body })
+                                }
+                            }
+                            style={{ width: '100%' }}
+                        >
+                            {list_WorkingTools_options}
+                        </Select>
+                    </InputTitle>
 
                     <InputTitle
                         title="Yêu cầu khác"
@@ -815,7 +918,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     fontSize: '1.1em',
                                     paddingTop: 3
                                 }}
-                                onClick={() => this.createRequest()}
+
+                                onClick={() => this.createRequest(showErorrSelectTime)}
                                 value="large"
                             >
                                 {ct_btn_nt}
@@ -840,7 +944,9 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     pendingJobDetail: state.PendingJobDetail,
     listSkills: state.Skills.items,
     listEmBranches: state.EmBranches.items,
-    normalQuantity: state.JobService.nomalQuantity
+    normalQuantity: state.JobService.nomalQuantity,
+    listLanguages: state.Languages.items,
+    listWorkingTools: state.WorkingTools.items
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

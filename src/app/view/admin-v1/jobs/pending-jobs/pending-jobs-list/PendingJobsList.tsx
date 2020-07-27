@@ -400,11 +400,14 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                                     shifts: pendingJobDetail.data.shifts,
                                     description: pendingJobDetail.data.description,
                                     requiredSkills: pendingJobDetail.data.requiredSkillIDs,
+                                    requiredLanguages: pendingJobDetail.data.requiredLanguageIDs,
                                     createdDate: pendingJobDetail.createdDate,
                                     repliedDate: pendingJobDetail.repliedDate,
-                                    type: 'pendingJob'
+                                    type: 'pendingJob',
+                                    
                                 }}
                                 listSkills={this.props.listSkills}
+                                listLanguages = {this.props.listLanguages}
                             /> : <Empty description={'Không có mô tả phù hợp'} />
                         }
                     </div> }
@@ -459,6 +462,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     pendingJobDetail: state.PendingJobDetail,
     open_modal: state.MutilBox.modalState.open_modal,
     totalItems: state.PendingJobs.totalItems,
+    listLanguages: state.Languages.items
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
