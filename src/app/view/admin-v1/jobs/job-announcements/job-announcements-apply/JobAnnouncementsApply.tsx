@@ -170,6 +170,13 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                             break;
                     }
                 })
+                if(!stateApply) {
+                    if(listPending && listPending.length > 0) {
+                        stateApply = "PENDING"
+                    } else if(listAccepted.length > 0) {
+                        stateApply = "ACCEPTED"
+                    }
+                }
                 if (listPending && listPending.length > 0 && stateApply === 'PENDING') {
                     // if(stateApply === 'PENDING'){
                     // searchShift(listApplyJobs[0].student.id, TYPE.PENDING, listApplyJobs[0].student.id)
@@ -178,15 +185,18 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                     defaultId = listPending[0].student.id
                     // }
 
+                    // if (stateApply === 'PENDING') {
+                    //     defaultId = listPending[0].student.id
+                    // }
 
-                    console.log(listPending[0].appliedShifts)
-                    console.log(defaultId)
+                    // console.log(listPending[0].appliedShifts)
+                    // console.log(defaultId)
                     // console.log(listPending[0].appliedShifts)
                 }
-                //  else if (listAccepted.length > 0 && stateApply === 'ACCEPTED') {
-                //     defaultId = listAccepted[0].student.id
-                // }
-               
+                 else if (listAccepted.length > 0 && stateApply === 'ACCEPTED') {
+                    defaultId = listAccepted[0].student.id
+                }
+                // stateApply= TYPE.PENDING
             }
             return {
                 listApplyJobs,
@@ -195,7 +205,8 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                 listAccepted,
                 listShifts,
                 defaultId,
-                loading: false
+                loading: false,
+                stateApply
             }
         }
 
@@ -204,21 +215,21 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
     searchShift = (id?: string, type?: string, defaultId?: string) => {
         // this.setState({ loading: true })
-        // let { listApplyJobs } = this.state;
-        // let listShifts = [];
-        // setTimeout(() => {
-        //     if (id) {
-        //         listApplyJobs.forEach((item: IApplyJob) => {
-        //             if (id === item.student.id) {
-        //                 listShifts = item.appliedShifts;
-        //             }
-        //         });
-        //     }
+        let { listApplyJobs } = this.state;
+        let listShifts = [];
+        setTimeout(() => {
+            if (id) {
+                listApplyJobs.forEach((item: IApplyJob) => {
+                    if (id === item.student.id) {
+                        listShifts = item.appliedShifts;
+                    }
+                });
+            }
 
-        //     this.setState({ listShifts, loading: false })
-        // }, 250);
+            this.setState({ listShifts, loading: false })
+        }, 250);
 
-        // this.setState({ defaultId })
+        this.setState({ defaultId })
     }
 
     createRequest = async (cid?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => {

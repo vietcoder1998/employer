@@ -145,7 +145,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                     <Header style={{ padding: 0, zIndex: 900 }}>
                         <div className="avatar-header" >
                             <Tooltip title={"Cập nhật phiên bản"}>
-                                <ClearCache>
+                                <ClearCache auto={true} duration={10000}>
                                     {({ isLatestVersion, emptyCacheStorage }) =>
                                         <div>
                                             {!isLatestVersion && (
