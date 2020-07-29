@@ -262,44 +262,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
         }
         return (
             <>
-                {/* <div
-                    className="top-dropdown test"
-                    style={{
-                        top: visible && body && !body.unlocked ? "0px" : "-110px"
-                    }}
-                >
-                    <div className="quick-info">
-                        <Avatar
-                            src={body && body.avatarUrl ? body.avatarUrl : ""}
-                            style={{
-                                width: 40,
-                                height: 40
-                            }}
-                            icon="user"
-                        />
-                        <ul className="name-h">
-                            <li>
-                                <h6>
-                                    {body ? body.lastName + " " + body.firstName : ""}
-                                </h6>
-                            </li>
-                            <li>
-                                {body && body.educations && body.educations.length > 0 ? body.educations[0].school : ""}
-                            </li>
-                        </ul>
-                        <button
-                            className="unlock-btn"
-                            prefix={"check"}
-                            style={{
-                                float: "right"
-                            }}
-                            onClick={() => this.props.handleModal()}
-                        >
-                            <Icon type="unlock" />
-                            Mở khóa {unlockTurn ? `(${unlockTurn})` : null}
-                        </button>
-                    </div>
-                </div> */}
                 <Modal
                     title="Worksvn thông báo"
                     visible={modalState.open_modal}
@@ -391,54 +353,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                     </Button>
                 </DrawerConfig>
                 <div className='common-content'>
-                    {/* <h5>
-                        Tình trạng hồ sơ
-                        <Tooltip
-                            title={"Đánh giá ứng viên"}
-                            children={
-                                <Icon
-                                    type={"edit"}
-                                    style={{ marginLeft: 15 }}
-                                    onClick={() => {
-                                        this.getRating();
-                                        this.props.handleDrawer({ openDrawer: true });
-                                    }}
-                                />
-                            }
-                        />
-                        <Tooltip
-                            placement="topRight"
-                            title={body && body.unlocked ? "Đã mở khóa" : "Chưa mở khóa"}
-                            children={
-                                <Icon
-                                    type={body &&
-                                        body.unlocked ? "unlock" : "lock"
-                                    }
-                                    style={{ float: "right", padding: 5 }}
-                                />
-                            }
-                        />
-                        <Tooltip
-                            placement="top"
-                            title={body && body.saved ? "Đã lưu" : "Chưa lưu"}
-                            children={
-                                <Icon
-                                    type="save"
-                                    style={{ color: body && body.saved ? "green" : "red", float: "right", padding: 5 }}
-                                    onClick={() => this.createRequest(TYPE.SAVE)}
-                                />
-                            }
-                        />
-                    </h5> */}
-                    {/* <Progress status="active" percent={body && body.completePercent ? body.completePercent : 0} size="small" /> */}
-                    {/* <Tabs defaultActiveKey="1">
-                        <TabPane tab="Hồ sơ cá nhân" key="1">
-                            
-                        </TabPane>
-                        <TabPane tab="Hồ sơ xác thực" key="2">
-                            <VerifiedProfile data={body} />
-                        </TabPane>
-                    </Tabs> */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                         <h5>Hồ sơ cá nhân</h5>
                         <div>
@@ -469,17 +383,6 @@ class FindCandidatesDetail extends React.Component<IFindCandidatesDetailProps, I
                         </div>
                     </div>
                     <CandidateProfile data={body} />
-                    {/* <div className="find-candidate-create-content"> */}
-                        {/* <Button
-                            type="danger"
-                            prefix={"check"}
-                            icon="left"
-                            onClick={() => this.turnBack()}
-                        >
-                            {"Quay lại"}
-                        </Button> */}
-
-                    {/* </div> */}
                 </div >
             </>
         )

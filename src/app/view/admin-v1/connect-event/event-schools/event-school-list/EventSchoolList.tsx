@@ -146,7 +146,9 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
         return <>
 
             <Tooltip placement="top" title={"Xem bài đăng"}>
-                <div onClick={()=> window.open(routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`)}>
+                <div 
+                onClick={()=> window.open(routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`)}
+                >
                     {/* <Link
                         to={routeLink.EVENT + routePath.JOBS + `/list?eid=${item.id}`}
                     > */}

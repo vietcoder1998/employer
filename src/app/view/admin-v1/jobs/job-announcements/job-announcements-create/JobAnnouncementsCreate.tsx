@@ -44,6 +44,7 @@ interface IJobAnnouncementsCreateState {
     notComplete?: boolean;
     jobAnnouncementDetail?: any;
     isCreate?: boolean;
+    valid?: boolean
 };
 
 interface IJobAnnouncementsCreateProps extends StateProps, DispatchProps {
@@ -75,6 +76,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             typeCpn: TYPE.CREATE,
             // listEmBranches: [],
             isCreate: false,
+            valid: false,
             body: {
                 jobTitle: null,
                 jobNameID: null,
@@ -102,6 +104,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 ]
             },
             id: null,
+           
         };
     };
 
@@ -221,9 +224,23 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
         body.shifts[index] = event;
+        // console.log(event);
+        // if(timeToSecond)
+        if(event.startTime && event.endTime) {
+            if(this.timeToSecond(event.startTime) > this.timeToSecond(event.endTime)) {
+                this.setState({valid: false})
+            } else {
+                this.setState({valid: true})
+            }
+        }
+        
         this.setState({ body })
     };
-
+    timeToSecond(ms) {
+        var a = ms.split(':');
+        var seconds = (+a[0]) * 60 + (+a[1]); 
+        return seconds
+    }
     replaceShift = () => {
         let { body } = this.state;
         body.shifts = [];
@@ -244,7 +261,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         this.setState({ body });
     };
 
-    createRequest = async (valid) => {
+    createRequest = async () => {
         let { body, typeCpn, id } = this.state;
         let newBody = await this.pretreatmentBody(body, typeCpn);
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `` : `/${id}`;
@@ -252,8 +269,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
         this.setState({ isCreate: true })
-        console.log(valid)
-        if (valid) {
+        if(this.state.valid){
             await _requestToServer(
                 METHOD,
                 API + matching,
@@ -273,8 +289,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                 this.setState({ loading: false })
             })
             // console.log(this.state.body)
-        } else{
-            console.log("invalid")
+        } else {
             this.setState({ loading: false })
         }
     }
@@ -335,7 +350,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
 
         return (
             <>
-                <Card title="Số lượng ứng tuyển">
+                <Card title={jobAnnouncementDetail.appliedCount > 0 || jobAnnouncementDetail.pendingApplied > 0 || jobAnnouncementDetail.rejectedApplied > 0
+                    ? <p style={{ color: 'red', fontSize: 20 }}>Không thể sửa khi có người ứng tuyển</p>
+                    : "Thông tin ứng tuyển"}
+                // style={{color: 'red',fontSize: 100}}
+                >
                     <Row>
                         <Col span={8}>
                             <Card
@@ -516,17 +535,20 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         } else {
             showErorremployerBranchID = false
         }
-        
+        // let valid  = this.state
         let showErorrSelectTime
         if (this.state.isCreate) {
             if ((body.shifts.map((a) => a.startTime)) < (body.shifts.map((a) => a.endTime))) {
                 showErorrSelectTime = false
+               
+                
             } else {
                 showErorrSelectTime = true
-                
+              
             }
         } else {
             showErorrSelectTime = false
+
         }
 
 
@@ -835,6 +857,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             body.jobType = event;
                             this.setState({ body });
                             typeCpn === TYPE.CREATE && this.replaceShift();
+                            if(event === TYPE.INTERNSHIP) {
+                                this.setState({valid: true})
+                            } else {
+                                this.setState({valid: false})
+                            }
                         }}
                     >
                         <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME} >
@@ -919,7 +946,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                                     paddingTop: 3
                                 }}
 
-                                onClick={() => this.createRequest(showErorrSelectTime)}
+                                onClick={() => this.createRequest()}
                                 value="large"
                             >
                                 {ct_btn_nt}

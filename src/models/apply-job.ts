@@ -51,7 +51,7 @@ export class ApplyJobsDto {
     private _ApplyJob: IApplyJob;
     constructor() {
         this._ApplyJob = {
-            candidate: {
+            student: {
                 id: null,
                 firstName: null,
                 lastName: null,
@@ -78,7 +78,7 @@ export class ApplyJobsDto {
                     jobAccomplishmentRating: null,
                     ratingCount: null
                 }
-            },
+            }
 
         }
     }

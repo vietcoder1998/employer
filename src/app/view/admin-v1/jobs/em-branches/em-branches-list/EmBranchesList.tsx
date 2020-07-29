@@ -26,6 +26,7 @@ interface EmBranchesListProps extends StateProps, DispatchProps {
     getTypeManagement: Function;
     getAnnoucements: Function;
     getAnnoucementDetail: Function;
+    selected?: string
 };
 
 const strForSearch = str => {
@@ -60,6 +61,7 @@ interface EmBranchesListState {
     id?: string;
     loadingTable?: boolean;
     body: IEmBranchesFilter;
+    selected?: string
 };
 
 class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListState> {
@@ -89,12 +91,14 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
             body: {
                 regionID: null,
                 headquarters: null,
-            }
+            },
+            selected: null
         };
     }
 
     editToolAction = () => {
         let { id } = this.state;
+       
         return (
             <>
                 <Tooltip
@@ -121,15 +125,26 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                         twoToneColor="red"
                         onClick={
                             () => this.deleteAnnoun()
+                            
+                           
                         }
+                        
                     />
+                      
                 </Tooltip>
             </>
         )
     };
 
     deleteAnnoun = async () => {
-        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE });
+        
+        // this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE });
+       
+      
+    //    this.state.selected == item.id ?  this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE }) : null
+       
+        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE })
+       
     };
 
     columns = [
@@ -269,6 +284,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                     region: item.region ? item.region.name : "",
                     createdDate: timeConverter(item.createdDate, 1000),
                     totalJob: item.totalJob ? item.totalJob : "",
+                    operation: {item}
                 });
             })
             return {
@@ -338,7 +354,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
 
         this.setState({ hidden });
     };
-
+     
     createRequest = async () => {
         let { modalState } = this.props;
         this.setState({ loading: true })
@@ -347,20 +363,21 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                 await _requestToServer(
                     DELETE,
                     EM_BRANCHES_API,
-                    [localStorage.getItem('employerBranchIDs')],
+                    [this.state.id],
                     undefined,
                     undefined,
-
                     EMPLOYER_HOST,
                     true,
-                    false
-
+                    false,
+                  
                 ).then((res) => {
                     if (res) {
                         this.setState({ loading: false });
                         this.searchEmBranch();
                         this.props.handleModal();
+                        
                     }
+                //    console.log( [localStorage.getItem('employerBranchIDs')])
                 })
                 break;
 
@@ -433,7 +450,7 @@ class EmBranchesList extends PureComponent<EmBranchesListProps, EmBranchesListSt
                                 icon={modalState.typeModal === TYPE.DELETE ? "delete" : "check"}
                                 loading={loading}
                                 children={modalState.typeModal === TYPE.DELETE ? "Xóa" : "Xác nhận"}
-                                onClick={async () => this.createRequest()}
+                                onClick={async () =>  this.createRequest()}
                             />
                         ]}
                         children={modalState.msg}
