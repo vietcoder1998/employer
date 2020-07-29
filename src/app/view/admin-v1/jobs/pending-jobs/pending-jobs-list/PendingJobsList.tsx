@@ -8,8 +8,8 @@ import { timeConverter } from '../../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../const/method';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
-
-import { PENDING_JOBS } from '../../../../../../services/api/private.api';
+import { DELETE } from '../../../../../../const/method';
+import { PENDING_JOBS, ADMIN_ACCOUNT } from '../../../../../../services/api/private.api';
 import { TYPE } from '../../../../../../const/type';
 // import { IptLetter } from '../../../../layout/common/Common';
 import { IPendingJob } from '../../../../../../models/pending-jobs';
@@ -18,6 +18,9 @@ import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IModalState } from '../../../../../../models/mutil-box';
 import { Link } from 'react-router-dom';
 import { NotUpdate } from '../../../../layout/common/Common';
+import { PendingJobDetail } from '../../../../../../redux/reducers/pending-job-detail';
+import { EMPLOYER_HOST } from '../../../../../../environment/dev';
+import { string } from 'prop-types';
 
 // let { Option } = Select;
 const Label = (props: any) => {
@@ -51,6 +54,7 @@ interface IPendingJobListProps extends StateProps, DispatchProps {
     getPendingJobDetail: (id?: string) => any;
     handleModal: (modalState?: IModalState) => any;
     getPendingJobs: Function,
+    getListEventJobs: Function;
 }
 
 interface IPendingJobListState {
@@ -72,7 +76,9 @@ interface IPendingJobListState {
     jid?: string;
     body?: any;
     loadingDetailJob?: any;
-    pendingJobDetail?: any
+    pendingJobDetail?: any;
+    id?: string;
+    modalDelete?: boolean
 }
 
 class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobListState> {
@@ -94,7 +100,9 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
             body: {},
             loadingDetailJob: true,
             pendingJobDetail: null,
-            listJobs: []
+            listJobs: [],
+            modalDelete: false,
+            id: null
         }
     }
 
@@ -183,22 +191,83 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     EditTool = (item?: IPendingJob) => {
+       
         return (
-            <Tooltip title="Chỉnh sửa">
-                <Icon type="edit"
-                    className={"f-ic edit"}
-                    style={{ padding: "5px" }}
-                    onClick={
-                        async () => {
-                            // this.props.handleModal({ open_modal: true });
-                            // this.props.getPendingJobDetail(item.id);
-                            window.open(routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${item.id}`, '_blank');
+            <div>
+                <Tooltip title="Chỉnh sửa">
+                    <Icon type="edit"
+                        className={"f-ic edit"}
+                        style={{ padding: "5px" }}
+                        onClick={
+                            async () => {
+                                // this.props.handleModal({ open_modal: true });
+                                // this.props.getPendingJobDetail(item.id);
+                                window.open(routeLink.JOB_ANNOUNCEMENTS + routePath.PENDING + `/${item.id}`, '_blank');
+                            }
                         }
-                    }
-                />
-            </Tooltip>
+                    />
+                </Tooltip>
+
+                {item.message ?
+                    <Tooltip title="Xóa bài đăng ">
+                        <Icon type="delete"
+                            className={"f-ic delete"}
+                            style={{ padding: "5px" }}
+                            onClick={ async ()  => 
+                                // this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })
+                                // this.deleteAnnoun()
+                                this.setState({modalDelete: true, id: item.id})
+                                
+                            }
+
+                        />
+                    </Tooltip> : null}
+            </div>
         )
     }
+
+    deleteAnnoun = async () => {
+        
+        // this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE });
+       
+      
+    //    this.state.selected == item.id ?  this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE }) : null
+       
+        this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa bài viết này ?", typeModal: TYPE.DELETE })
+       
+    };
+
+
+    createRequest = async () => {
+        let { id } = this.state;
+        
+        let { modalState } = this.props;
+        await this.setState({ loading: true });
+        
+                await _requestToServer(
+                    DELETE,
+                    PENDING_JOBS + `/${id}`,
+                    undefined,
+                    undefined,
+                    undefined,
+                    EMPLOYER_HOST,
+                    true,
+                    false
+                ).then((res) => {
+                    if (res) {
+                        // this.searchEventJobs();
+                        // this.props.handleModal();
+                    }
+                }).finally(
+                    () => this.setState({
+                        loading: false
+                    })
+                )
+           
+            
+        
+    }
+
 
     titleJob = (item) => {
         return (
@@ -206,7 +275,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 <a className="titleJob" style={{ fontWeight: "bold", fontSize: '1.12em', color: '#1890ff' }} onClick={
                     async () => {
                         this.props.handleModal({ open_modal: true });
-                        this.setState({loadingDetailJob: true})
+                        this.setState({ loadingDetailJob: true })
                         this.props.getPendingJobDetail(item.id);
                     }
                 } target="_blank">{item.jobTitle}</a>
@@ -328,12 +397,57 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
         await this.queryPendingJob();
     };
 
+    searchEventJobs = async () => {
+        let { body, pageIndex, pageSize } = this.state;
+        // console.log(body)
+        await this.setState({ loadingTable: true })
+        await this.props.getListEventJobs(body, pageIndex, pageSize);
+    };
+
+
     render() {
-        let { dataTable, loading, loadingTable, state, jid } = this.state;
-        let { totalItems, pendingJobDetail, open_modal } = this.props;
+        let { dataTable, loading, loadingTable, state, jid ,modalDelete} = this.state;
+        let { totalItems, pendingJobDetail, open_modal, modalState } = this.props;
+
 
         return (
             <>
+                <Modal
+                    visible={modalDelete}
+                    title={"Workvn thông báo"}
+                    destroyOnClose={true}
+                    onOk={this.createRequest}
+                    onCancel={() => {
+                        this.setState({ message: null, loading: false });
+                        // this.props.handleModal();
+                        this.setState({modalDelete: false})
+                    }}
+                    footer={[
+                        <Button
+                            key="cancel"
+                            type="danger"
+                            children="Đóng"
+                            onClick={() => {
+                                this.setState({
+                                    message: null,
+                                    loading: false
+                                });
+
+                                // this.props.handleModal()
+                                this.setState({modalDelete: false})
+                            }}
+                        />,
+                        <Button
+                            key="ok"
+                            type={ "danger"}
+                            icon={"delete"}
+                            loading={loading}
+                            children={"Xóa"}
+                            onClick={async () => this.createRequest()}
+                        />
+                    ]}
+                    children={"Bạn có chắc muốn xóa bài đăng này"}
+                />
                 <Modal
                     visible={open_modal}
                     title={
@@ -371,46 +485,46 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         <div style={{ display: 'flex', justifyContent: 'center', minHeight: 200, alignItems: 'center' }}>
                             <Spin />
                         </div>
-                    :
-                    <div>
-                        {
-                            pendingJobDetail && pendingJobDetail.message ?
-                                <div
-                                    style={{
-                                        padding: "10px 25px",
-                                        color: "red",
-                                        backgroundColor: "white",
-                                        marginTop: 5,
-                                        marginBottom: 7
+                        :
+                        <div>
+                            {
+                                pendingJobDetail && pendingJobDetail.message ?
+                                    <div
+                                        style={{
+                                            padding: "10px 25px",
+                                            color: "red",
+                                            backgroundColor: "white",
+                                            marginTop: 5,
+                                            marginBottom: 7
+                                        }}
+                                    >
+                                        LÝ DO TỪ CHỐI: <NotUpdate msg={pendingJobDetail.message} />
+                                    </div> : ''
+                            }
+                            {
+                                pendingJobDetail ? <JobDetail
+                                    jobDetail={{
+                                        jobName: pendingJobDetail.jobName && pendingJobDetail.jobName.name,
+                                        jobTitle: pendingJobDetail.data.jobTitle,
+                                        employerName: pendingJobDetail.employer.employerName,
+                                        employerUrl: pendingJobDetail.employer.logoUrl,
+                                        employerBranch: pendingJobDetail.employerBranchName,
+                                        expriratedDate: pendingJobDetail.data.expirationDate,
+                                        jobType: pendingJobDetail.data.jobType,
+                                        shifts: pendingJobDetail.data.shifts,
+                                        description: pendingJobDetail.data.description,
+                                        requiredSkills: pendingJobDetail.data.requiredSkillIDs,
+                                        requiredLanguages: pendingJobDetail.data.requiredLanguageIDs,
+                                        createdDate: pendingJobDetail.createdDate,
+                                        repliedDate: pendingJobDetail.repliedDate,
+                                        type: 'pendingJob',
+
                                     }}
-                                >
-                                    LÝ DO TỪ CHỐI: <NotUpdate msg={pendingJobDetail.message} />
-                                </div> : ''
-                        }
-                        {
-                            pendingJobDetail ? <JobDetail
-                                jobDetail={{
-                                    jobName: pendingJobDetail.jobName && pendingJobDetail.jobName.name,
-                                    jobTitle: pendingJobDetail.data.jobTitle,
-                                    employerName: pendingJobDetail.employer.employerName,
-                                    employerUrl: pendingJobDetail.employer.logoUrl,
-                                    employerBranch: pendingJobDetail.employerBranchName,
-                                    expriratedDate: pendingJobDetail.data.expirationDate,
-                                    jobType: pendingJobDetail.data.jobType,
-                                    shifts: pendingJobDetail.data.shifts,
-                                    description: pendingJobDetail.data.description,
-                                    requiredSkills: pendingJobDetail.data.requiredSkillIDs,
-                                    requiredLanguages: pendingJobDetail.data.requiredLanguageIDs,
-                                    createdDate: pendingJobDetail.createdDate,
-                                    repliedDate: pendingJobDetail.repliedDate,
-                                    type: 'pendingJob',
-                                    
-                                }}
-                                listSkills={this.props.listSkills}
-                                listLanguages = {this.props.listLanguages}
-                            /> : <Empty description={'Không có mô tả phù hợp'} />
-                        }
-                    </div> }
+                                    listSkills={this.props.listSkills}
+                                    listLanguages={this.props.listLanguages}
+                                /> : <Empty description={'Không có mô tả phù hợp'} />
+                            }
+                        </div>}
                 </Modal>
                 <div className="common-content">
                     <h5 style={{ marginBottom: 15 }}>
@@ -463,6 +577,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     open_modal: state.MutilBox.modalState.open_modal,
     totalItems: state.PendingJobs.totalItems,
     listLanguages: state.Languages.items
+    
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

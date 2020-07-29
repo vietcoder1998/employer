@@ -224,8 +224,8 @@ export default function JobDetail(props: IJobDetailProps) {
                         list_des !== [] ?
                         list_des.map(
                             (item: any) => (<p key={item.index}>
-                                {item.value[0] === '+' || item.value[0] === '\n' ||
-                                    item.value[0] === '-' || item.value[0] === '=' ? "" : '-'}
+                                {/* {item.value[0] === '+' || item.value[0] === '\n' ||
+                                    item.value[0] === '-' || item.value[0] === '=' ? "" : '-'} */}
                                 {item.value}</p>)) :
                         <p>Vui lòng liên hệ chi tiết với nhà tuyển dụng</p>
                     }

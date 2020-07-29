@@ -31,7 +31,7 @@ import Swal from 'sweetalert2';
 import { _requestToServer } from '../../../services/exec'
 import { GET, POST } from '../../../const/method';
 import { PUBLIC_HOST, EMPLOYER_HOST } from '../../../environment/dev';
-import {timeConverter} from '../../../utils/convertTime'
+import { timeConverter } from '../../../utils/convertTime'
 import Item from 'antd/lib/list/Item';
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
@@ -95,8 +95,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         await this.props.getListWorkingTools();
         await this.props.getListNoti(pageIndex, pageSize);
         await this.setState({ loading: false });
-        
-        
+
+
     }
 
     static getDerivedStateFromProps(nextProps?: IAdminProps, prevState?: IAdminState) {
@@ -324,7 +324,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             <Tooltip title={"Đăng bài"}>
                                 <span
                                     className="plus-icon"
-                                    style={{bottom: 7}}
+                                    style={{ bottom: 7 }}
                                     onClick={
                                         () => {
                                             this.props.history.push(routeLink.JOB_ANNOUNCEMENTS + routePath.CREATE);
@@ -342,7 +342,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                             top: 10
                                         }}
                                     />
-                                    <span style={{color: '#fff'}}> Đăng Bài</span>
+                                    <span style={{ color: '#fff' }}> Đăng Bài</span>
                                 </span>
                             </Tooltip>
                             {/* <Tooltip title={"Tìm ứng viên"}>
@@ -435,6 +435,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                 </div>
                             </Popover>
                             <DropdownConfig
+                                className="notification"
                                 param={
                                     <Avatar
                                         icon="user"
@@ -449,7 +450,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         src={localStorage.getItem('logoUrl')}
                                     />
                                 }
-                                className="notification"
+
                             >
                                 <Link to={routeLink.ADMIN_ACCOUNTS}>
                                     <OptionConfig icon="user" key="2" value="" label="Tài khoản" />
@@ -522,16 +523,16 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
     getListSkills: () => dispatch({ type: REDUX_SAGA.SKILLS.GET_SKILLS }),
     getListLanguages: () => dispatch({ type: REDUX_SAGA.LANGUAGES.GET_LANGUAGES }),
-    getListWorkingTools: () => dispatch({type: REDUX_SAGA.WORKINGTOOLS.GET_WORKINGTOOLS}),
+    getListWorkingTools: () => dispatch({ type: REDUX_SAGA.WORKINGTOOLS.GET_WORKINGTOOLS }),
     getListJobService: () => dispatch({ type: REDUX_SAGA.JOB_SERVICE.GET_JOB_SERVICE }),
     getListNoti: (pageIndex?: number, pageSize?: number) => dispatch({ type: REDUX_SAGA.NOTI.GET_NOTI, pageIndex, pageSize }),
     getAdminProfile: () => dispatch({ type: REDUX_SAGA.ADMIN_ACCOUNT.GET_ADMIN_ACCOUNT }),
     handleLoading: (loading?: boolean) => dispatch({ type: TYPE.HANDLE, loading }),
-    
-   
-   
-    
-    
+
+
+
+
+
 })
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({

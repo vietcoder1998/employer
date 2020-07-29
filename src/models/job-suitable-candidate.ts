@@ -34,4 +34,5 @@ export interface IJobSuitableCandidates {
     pageIndex?: number;
     pageSize?: number;
     totalItems?: number;
+    loading?: boolean;
 }

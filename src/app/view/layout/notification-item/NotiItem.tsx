@@ -29,8 +29,8 @@ export default function NotiItem(props: INotiItemProps) {
     let color_icon_state = "#168ECD";
     let state = item.data.state;
 
-    let [seen, setSeenHere] = React.useState(props && props.item && props.item.seen );
-  
+    let [seen,setSeenHere] = React.useState(props && props.item && props.item.seen);
+
 
     switch (item.data.state) {
         case TYPE.PENDING:
@@ -103,6 +103,7 @@ export default function NotiItem(props: INotiItemProps) {
     }
 
     async function createRequest() {
+
         await _requestToServer(
             PUT,
             NOTI + `/${item.id}/seen/${!item.seen}`,
@@ -115,15 +116,17 @@ export default function NotiItem(props: INotiItemProps) {
         ).then(
             (res: any) => {
                 setSeenHere(!seen);
+
             }
         )
     }
 
     return (
-        <div className='noti-info'>
+        <div className='noti-info' >
+
             <div key={item.id}
                 className='li-info '
-                style={{ backgroundColor: seen ? 'white' : 'aliceblue' }}>
+                style={{ backgroundColor: seen ? 'white' : 'aliceblue' }} >
                 {
                     avatar_to ? <Link to={avatar_to} target="_blank">
                         <div className='img-logo-noti'>
@@ -135,7 +138,7 @@ export default function NotiItem(props: INotiItemProps) {
                         </div>
                 }
 
-                <div className='data-noti'>
+                <div className='data-noti'  onClick={()=> seen ? null : createRequest()}>
                     <div><IptLetter value={item.title} style={{ padding: 0 }} /></div>
                     {link_to ?
                         <Link to={link_to} target="_blank">
@@ -151,14 +154,20 @@ export default function NotiItem(props: INotiItemProps) {
                     <Icon type={icon_state} theme="filled" style={{ color: color_icon_state }} />
                     <Timer style={{ margin: 0, padding: 0 }} value={item.createdDate} />
                 </div>
-                <Tooltip
-                    title={
-                        !seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc'
-                    }
-                >
-                    <CBtn type={!seen ? 'eye' : 'eye-invisible'} onClick={() => createRequest()}/>
+                <Tooltip title={!seen ? "Đánh dấu là đã đọc" : "Đánh dấu là chưa đọc"} >
+                    <div>
+                        <CBtn type={!seen ? 'eye' : 'eye-invisible'} onClick={() => createRequest()}/>
+                    </div>
                 </Tooltip>
+                    {/* <Tooltip  title= { !seen ? 'Đánh dấu là đã đọc' : 'Đánh dấu là chưa đọc' }
+                            placement="bottom"
+                            
+                >
+                    <CBtn type={!seen ? 'eye' : 'eye-invisible'} onClick={() => createRequest()} />
+                </Tooltip> */}
+                
             </div>
-        </div>
+
+            </div>
     )
 }
