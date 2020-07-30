@@ -255,12 +255,15 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     false
                 ).then((res) => {
                     if (res) {
-                        // this.searchEventJobs();
+                        // this.searchPendingJobs();
                         // this.props.handleModal();
+                        this.setState({loadingTable: true})
+                        this.queryPendingJob();
                     }
                 }).finally(
                     () => this.setState({
-                        loading: false
+                        loading: false,
+                        modalDelete: false
                     })
                 )
            
@@ -397,11 +400,11 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
         await this.queryPendingJob();
     };
 
-    searchEventJobs = async () => {
+    searchPendingJobs = async () => {
         let { body, pageIndex, pageSize } = this.state;
         // console.log(body)
         await this.setState({ loadingTable: true })
-        await this.props.getListEventJobs(body, pageIndex, pageSize);
+        await this.props.getPendingJobs(body, pageIndex, pageSize);
     };
 
 
@@ -558,6 +561,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         type: REDUX_SAGA.PENDING_JOBS.GET_PENDING_JOBS,
         body
     }),
+    
     getPendingJobDetail: (id?: string) =>
         dispatch({
             type: REDUX_SAGA.PENDING_JOB_DETAIL.GET_PENDING_JOB_DETAIL,
