@@ -76,6 +76,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             typeCpn: TYPE.CREATE,
             // listEmBranches: [],
             isCreate: false,
+            valid: false,
             body: {
                 jobTitle: null,
                 jobNameID: null,
@@ -223,9 +224,23 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     handleBodyShift = (event: any, index: number | string) => {
         let { body } = this.state;
         body.shifts[index] = event;
+        // console.log(event);
+        // if(timeToSecond)
+        if(event.startTime && event.endTime) {
+            if(this.timeToSecond(event.startTime) > this.timeToSecond(event.endTime)) {
+                this.setState({valid: false})
+            } else {
+                this.setState({valid: true})
+            }
+        }
+        
         this.setState({ body })
     };
-
+    timeToSecond(ms) {
+        var a = ms.split(':');
+        var seconds = (+a[0]) * 60 + (+a[1]); 
+        return seconds
+    }
     replaceShift = () => {
         let { body } = this.state;
         body.shifts = [];
@@ -246,7 +261,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         this.setState({ body });
     };
 
-    createRequest = async (valid) => {
+    createRequest = async () => {
         let { body, typeCpn, id } = this.state;
         let newBody = await this.pretreatmentBody(body, typeCpn);
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `` : `/${id}`;
@@ -254,7 +269,7 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;
         await this.setState({ loading: true })
         this.setState({ isCreate: true })
-        if(valid){
+        if(this.state.valid){
             await _requestToServer(
                 METHOD,
                 API + matching,
@@ -275,7 +290,6 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
             })
             // console.log(this.state.body)
         } else {
-            console.log("invalid")
             this.setState({ loading: false })
         }
     }
@@ -843,6 +857,11 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
                             body.jobType = event;
                             this.setState({ body });
                             typeCpn === TYPE.CREATE && this.replaceShift();
+                            if(event === TYPE.INTERNSHIP) {
+                                this.setState({valid: true})
+                            } else {
+                                this.setState({valid: false})
+                            }
                         }}
                     >
                         <TabPane tab="Toàn thời gian" key={TYPE.FULLTIME} >

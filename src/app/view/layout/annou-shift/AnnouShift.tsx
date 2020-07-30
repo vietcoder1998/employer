@@ -355,7 +355,7 @@ export function ShiftContent(props: IShiftContent) {
                         </p>
                     </Col>
                     <Form>
-                        <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian kết thúc phải lớn hơn thời gian ban đầu !' : ''} style={{ marginLeft: '200px' }}>
+                        <Form.Item validateStatus={props.showErorrSelectTime ? 'error' : null} help={props.showErorrSelectTime ? 'Thời gian Kết Thúc phải lớn hơn thời gian Bắt Đầu !' : ''} style={{ marginLeft: '200px' }}>
                             <Col sm={24} md={12} lg={5} xl={5} xxl={5} style={{marginLeft: -13}}>
 
                                 <TimePicker
