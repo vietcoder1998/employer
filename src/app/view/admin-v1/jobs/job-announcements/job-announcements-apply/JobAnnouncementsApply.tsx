@@ -196,6 +196,9 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                  else if (listAccepted.length > 0 && stateApply === 'ACCEPTED') {
                     defaultId = listAccepted[0].student.id
                 }
+                else if(listRejected.length > 0 && stateApply === "REJECTED" ){
+                    defaultId = listRejected[0].student.id
+                }
                 // stateApply= TYPE.PENDING
             }
             return {

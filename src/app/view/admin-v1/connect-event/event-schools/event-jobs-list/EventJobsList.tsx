@@ -403,7 +403,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                     target="_blank"
                                 > */}
                         <div style={{ color: 'red', textDecoration: this.state.RejectSelected === item.id ? 'underline' : 'unset' }} onClick={() => {
-                            this.setState({ applyModal: true, applyId: item.id, stateApply: 'REJECT' })
+                            this.setState({ applyModal: true, applyId: item.id, stateApply: 'REJECTED' })
                             // this.setState({pendingAppliedSelected: '1', idSelected: null})
                             this.setState({ RejectSelected: item.id, idSelected: null, acceptedAppliedSelected: null, pendingAppliedSelected: null })
                         }}>
