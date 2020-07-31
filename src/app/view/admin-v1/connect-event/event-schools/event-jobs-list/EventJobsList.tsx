@@ -1524,7 +1524,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                             >
                                                 {active_home === 0 ? "Đã kích hoạt" : null}
                                                 {active_home === 1 ? "Kích hoạt" : null}
-                                                {active_home === 2 ? "Kích hoạt lại" : null}
+                                                {active_home === 3 ? "Kích hoạt lại" : null}
                                             </Button> : null}
                                     </div>
                                 </Col>
