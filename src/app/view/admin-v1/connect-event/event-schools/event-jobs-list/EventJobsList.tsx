@@ -266,7 +266,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             className: 'action',
             key: 'Reject',
             render: ({ item }) => this.renderReject(item),
-            width: 110,
+            width: 70,
         },
         {
             title: 'Chi nhánh',
@@ -393,7 +393,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                 <div
                     className="n-candidate"
                     style={{
-                        pointerEvents: item.Reject === 0 ? 'none' : undefined
+                        pointerEvents: item.rejectedApplied === 0 ? 'none' : undefined
                     }}
                 >
                     <Tooltip title="Xem chi tiết">
