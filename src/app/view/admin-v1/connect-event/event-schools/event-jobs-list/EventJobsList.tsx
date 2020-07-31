@@ -25,6 +25,7 @@ import JobSuitableCandidate from '../../../../layout/job-suitable-candidate/JobS
 import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IEventJobsFilter, IEventJob } from '../../../../../../models/event-jobs';
 import JobAnnouncementsApply from '../../../jobs/job-announcements/job-announcements-apply/JobAnnouncementsApply';
+import { rejects } from 'assert';
 
 let { Option } = Select;
 let CheckboxGroup = Checkbox.Group;
@@ -147,6 +148,7 @@ interface IEventJobsListState {
     pendingAppliedSelected?: string;
     acceptedAppliedSelected?: string
     hiddenTilte?: boolean
+    RejectSelected?: string
 };
 
 
@@ -256,6 +258,14 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             className: 'action',
             key: 'pendingApplied',
             render: ({ item }) => this.renderApply(item),
+            width: 110,
+        },
+        {
+            title: 'Từ chối',
+            dataIndex: 'Reject',
+            className: 'action',
+            key: 'Reject',
+            render: ({ item }) => this.renderReject(item),
             width: 110,
         },
         {
@@ -377,7 +387,35 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
             </Tooltip>
 
         )
-
+    renderReject = (item) => {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} className="pending-candidate">
+                <div
+                    className="n-candidate"
+                    style={{
+                        pointerEvents: item.Reject === 0 ? 'none' : undefined
+                    }}
+                >
+                    <Tooltip title="Xem chi tiết">
+                        {/* <Link
+                                    to={routeLink.JOB_ANNOUNCEMENTS + routePath.APPLY + `/${item.id}?state=${TYPE.PENDING}`}
+                                    disabled={item.pendingApplied === 0 ? true : false}
+                                    target="_blank"
+                                > */}
+                        <div style={{ color: 'red', textDecoration: this.state.RejectSelected === item.id ? 'underline' : 'unset' }} onClick={() => {
+                            this.setState({ applyModal: true, applyId: item.id, stateApply: 'REJECTED' })
+                            // this.setState({pendingAppliedSelected: '1', idSelected: null})
+                            this.setState({ RejectSelected: item.id, idSelected: null, acceptedAppliedSelected: null, pendingAppliedSelected: null })
+                        }}>
+                            {item.rejectedApplied} <Icon type="user-delete" />
+                        </div>
+                        {/* </Link> */}
+                    </Tooltip>
+                </div>
+                
+            </div>
+        )
+    }
     renderApply = (item) => {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} className="pending-candidate">
@@ -656,8 +694,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                     pendingApplied: { item },
                     hidden: `${!item.hidden ? "Hiện" : "Ẩn"}, ${!item.expired ? "Còn hạn" : "Hết hạn"}`,
                     priority: renderPriority(item),
-                    operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID, item }
-
+                    operation: { hidden: item.hidden, id: item.id, schoolEventID: item.schoolEventID, item },
+                    Reject : {item }
                 });
             })
 
