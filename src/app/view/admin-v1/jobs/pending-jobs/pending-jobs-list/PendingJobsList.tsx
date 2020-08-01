@@ -531,7 +531,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                 </Modal>
                 <div className="common-content">
                     <h5 style={{ marginBottom: 15 }}>
-                        Danh sách bài đăng đang chờ {`(${totalItems})`}
+                        Việc làm chờ duyệt {`(${totalItems})`}
                     </h5>
                     <Table
                         // @ts-ignore
