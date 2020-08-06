@@ -1394,8 +1394,9 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                                 }}
                                             >
                                                 {active_home === 0 ? "Đã kích hoạt" : null}
+                                           
                                                 {active_home === 1 ? "Kích hoạt" : null}
-                                                {active_home === 2 ? "Kích hoạt lại" : null}
+                                                {active_home === 3 ? "Kích hoạt lại" : null}
                                             </Button> : null}
                                     </div>
                                 </Col>
@@ -1507,7 +1508,8 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                             <div className="bold-text description">Hiệu lực: 15 ngày</div>
                                             <div className="bold-text description">Số lượt: {listJobService.homeTopQuantiy}</div>
                                         </div>
-                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'IN_DAY') ?
+                                        
+                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'TOP') ?
                                             <Button
                                                 type={active_home === 0 ? "ghost" : "primary"}
                                                 style={{
@@ -1524,19 +1526,19 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                             >
                                                 {active_home === 0 ? "Đã kích hoạt" : null}
                                                 {active_home === 1 ? "Kích hoạt" : null}
-                                                {active_home === 3 ? "Kích hoạt lại" : null}
+                                                {active_home === 2 ? "Kích hoạt lại" : null}
                                             </Button> : null}
                                     </div>
                                 </Col>
                                 <Col md={12}>
                                     <div className="select-service">
-                                        <div>
+                                        <div>   
                                             <div className="title-caplock">TRONG NGÀY</div>
                                             <div className="description">Hiển thị bài đăng ở danh sách việc trong ngày trên trang chủ</div>
                                             <div className="bold-text description">Hiệu lực: 1 ngày</div>
                                             <div className="bold-text description">Số lượt: {listJobService.homeInDayQuantity}</div>
                                         </div>
-                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'TOP') ?
+                                        {!(active_home === 0 && eventJobDetail.priority.homePriority === 'IN_DAY') ?
                                             <Button
                                                 type={active_home === 0 ? "ghost" : "primary"}
                                                 style={{
@@ -1553,6 +1555,7 @@ class EventJobsList extends PureComponent<IEventJobsListProps, IEventJobsListSta
                                             >
                                                 {active_home === 0 ? "Đã kích hoạt" : null}
                                                 {active_home === 1 ? "Kích hoạt" : null}
+                                                
                                                 {active_home === 3 ? "Kích hoạt lại" : null}
                                             </Button> : null}
                                     </div>

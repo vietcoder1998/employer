@@ -35,9 +35,9 @@ function CandidateProfile(props: ICandidateProfileProps) {
     }
 
     if (data && data.coverUrl !== coverUrl) {
-        setcoverUrl(data.coverUrl);
+        setcoverUrl(data.coverUrl); 
     }
-
+    // console.log(data)
     return (
         <div className="candidate-profile test">
             <div className="candidate-profile-header">
@@ -70,7 +70,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                     {data ? data.lastName + " " + data.firstName : ""}
                                 </h4>
                                 <div>
-                                    <span className="unlock-state" style={{backgroundColor: data && data.unlocked ? 'rgb(22, 141, 205)' : '#ff5252'}}>{ data && data.unlocked ? 'Đã mở khoá' : 'Chưa mở khoá'}</span>
+                                    <span className="unlock-state" style={{ backgroundColor: data && data.unlocked ? 'rgb(22, 141, 205)' : '#ff5252' }}>{data && data.unlocked ? 'Đã mở khoá' : 'Chưa mở khoá'}</span>
                                 </div>
                             </div>
                             <div className="description">
@@ -157,28 +157,37 @@ function CandidateProfile(props: ICandidateProfileProps) {
                             <div style={{ paddingLeft: "25px" }}>
                                 <hr />
                             </div>
-                            <div>
-                                <TimeLineConfig
-                                    reserve={true}
-                                >
-                                    {data && data.educations && data.educations.length > 0 ?
-                                        data.educations.map((item: any, index: number) =>
-                                            <TimeLineConfigItem
-                                                color="#1890ff"
-                                                key={index}
-                                            >
-                                                <ul>
-                                                    <li><strong>Từ : {item.startedDate && item.startedDate !== -1 ? timeConverter(item.startedDate, 1000) : "Chưa có"}</strong></li>
-                                                    <li><strong>đến :  {item.finishedDate && item.finishedDate !== -1 ? timeConverter(item.finishedDate, 1000) : "Chưa có"}</strong></li>
-                                                    <li style={{ marginTop: "20px", textTransform: "capitalize" }}>{item.branchOfLearning ? item.branchOfLearning : "Chưa có"}</li>
-                                                    <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{item.school}</li>
-                                                    <li style={{ marginTop: "10px" }}>{item.description}</li>
-                                                </ul>
-                                            </TimeLineConfigItem>
-                                        )
+                            <div style={{ display: 'flex', flexDirection: 'row' }}>
+
+
+                                <div style={{ flex: 1 }}>
+                                    {data && data.school ?
+                                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <img src={data.school.logoUrl} style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
+
+                                            </img>
+                                            <ul style={{ marginLeft: 20 , marginTop: 10}}>
+
+                                                <li><strong>Từ : {data.schoolYearStart && data.schoolYearStart !== -1 ? data.schoolYearStart : "Chưa có"}</strong></li>
+                                                <li><strong>đến :  {data.schoolYearEnd && data.schoolYearEnd !== -1 ? data.schoolYearEnd : "Chưa có"}</strong></li>
+                                                {/* <li style={{ marginTop: "20px", textTransform: "capitalize" }}>{item.branchOfLearning ? item.branchOfLearning : "Chưa có"}</li> */}
+                                                <li style={{ marginTop: "10px", textTransform: "capitalize" }}>tại :{data.school.name}</li>
+
+                                            </ul>
+                                        </div>
                                         : <NotUpdate margin={true} />
                                     }
-                                </TimeLineConfig>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{display:'flex',flexDirection:'row'}}>
+                                        <img src={data.major.branch.imageUrl} style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
+                                        </img>
+                                        <ul style={{ marginLeft: 20 }}>
+                                            <li style={{ marginTop: "10px" }}><strong>Nghành nghề đào tạo</strong></li>
+                                            <li style={{ marginTop: "10px", textTransform: "capitalize" }}>{data.major.name}</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </Col>

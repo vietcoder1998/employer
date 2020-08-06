@@ -361,27 +361,28 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
         this.searchConnectSchools();
     };
 
-    // onSetDataSchool = async (id?: string) => {
-    //     let { listConnectSchools } = this.props;
-    //     console.log(listConnectSchools)
+    onSetDataSchool = async (id?: string) => {
+        let { listConnectSchools } = this.props;
+        // console.log(listConnectSchools)
 
-    //     let filter_arr = listConnectSchools.filter((item) => item.school.id === id);
-    //     let dataSchool = filter_arr[0];
+        let filter_arr = listConnectSchools.filter((item) => item.school.id === id);
+        // let filter_arr = listConnectSchools.filter((item: IConnectSchool) => item.id === id);
+        let dataSchool = filter_arr[0];
 
-    //     console.log(dataSchool)
+        console.log(dataSchool)
 
-    //     this.props.handleDrawer({ openDrawer: true });
-    //     await this.setState({ loading: true });
+        this.props.handleDrawer({ openDrawer: true });
+        await this.setState({ loading: true });
 
-    //     setTimeout(() => {
-    //         if (dataSchool.state) {
-    //             this.props.getConnectSchoolDetail(id);
-    //         } else {
-    //             this.props.setConnectSchoolDetail(dataSchool);
-    //         }
-    //     }, 500);
-    //     await this.setState({ loading: false });
-    // }
+        setTimeout(() => {
+            if (dataSchool.state) {
+                this.props.getConnectSchoolDetail(id);
+            } else {
+                this.props.setConnectSchoolDetail(dataSchool);
+            }
+        }, 500);
+        await this.setState({ loading: false });
+    }
 
     createRequest = async (type?: string) => {
         let { requestMessage, dataSchool } = this.state;
@@ -473,6 +474,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                     onClose={() => this.props.handleDrawer({ openDrawer: false })}
                     destroyOnClose={true}
                     visible={openDrawer}
+                    
+                    
                 >
                     {
                         dataSchool && !loading ? (
@@ -676,7 +679,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             lg={8}
                                             key={index}
                                         >
-                                            <CardSchool key={index} item={item.school}  />
+                                            <CardSchool key={index} item={item.school} openDrawer={this.onSetDataSchool} />
+                                            {/* <CardSchool key={index} item={item.school} /> */}
                                         </Col>
                                 )
                                 : <Empty description="Không có trường phù hợp" />) : <Loading />}

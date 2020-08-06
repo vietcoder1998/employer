@@ -21,6 +21,7 @@ export interface IConnectSchool {
     createdDate?: number,
     replyDate?: number,
     lastModified?: number
+    
 }
 
 export interface IConnectSchools {

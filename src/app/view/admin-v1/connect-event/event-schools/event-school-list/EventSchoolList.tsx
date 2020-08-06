@@ -391,7 +391,7 @@ class EventSchoolsList extends React.Component<IEventSchoolsListProps, IEventSch
                 </Modal>
                 <div className="common-content">
                     <h5 style={{ marginBottom: 10 }}>
-                        Sự kiện Ngày hội việc làm trực tuyến {`(${totalItems})`}
+                        Việc làm của nhà trường  {`(${totalItems})`}
                         {/* <Tooltip title="Lọc tìm kiếm" >
                             <Button
                                 onClick={() => this.searchEventSchool()}

@@ -9,14 +9,18 @@ import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../const/break-cumb';
+import { type } from 'os';
+import Item from 'antd/lib/list/Item';
 
 interface ICardSchoolProps {
     item?: IConnectSchool;
     openDrawer?: (id?: string) => any;
+    open?: any
 }
 
 export default function CardSchool(props?: ICardSchoolProps) {
     let color = "gray";
+    
     switch (props.item.state) {
         case TYPE.PENDING:
             color = "orange";
@@ -30,6 +34,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
 
         default:
             break;
+           
     }
 
     // // let color_me = "gray";
@@ -43,6 +48,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
     //     default:
     //         break;
     // }
+    
     return (
         <div
             className='card-school'
@@ -73,8 +79,9 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         props.item.coverUrl : backGround
                 }
                 alt="background"
-                onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
+                onClick={() =>  props.item.state === 'ACCEPTED' ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
             />
+            <div>{props.item.coverUrl}</div>
             <div
                 className="school-action"
                 style={{
@@ -86,7 +93,10 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         position: "relative",
                         padding: "0px 10px"
                     }}
-                    onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
+                    // onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
+                    // onClick={() => props.openDrawer(props.item.id)}
+                    onClick={() =>  props.item.schoolType.priority === 0 ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
+
                 >
                     <div className="school">
                         <Avatar

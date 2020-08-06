@@ -75,9 +75,38 @@ function SchoolInfo(props: ISchoolInfoProps) {
             </div>
             <Divider />
             <div className="school-info-body">
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="Giới thiệu" key="1">
-                        <Row>
+                <Tabs defaultActiveKey="2">
+                    <TabPane tab="Giới thiệu" key="2">
+                    <Row>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card title="Lịch sử phát triển" bordered={false}>
+                                    {data && data.historyDesc ? data.historyDesc : <NotUpdate />}
+                                </Card>
+                            </Col>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card title="Chiến lược phát triển" bordered={false}>
+                                    {data && data.devStrategyDesc ? data.devStrategyDesc : <NotUpdate />}
+                                </Card>
+                            </Col>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card title="Thành tích" bordered={false}>
+                                    {data && data.studyEnvDesc ? data.studyEnvDesc : <NotUpdate />}
+                                </Card>
+                            </Col>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card title="Đội ngũ giảng viên" bordered={false}>
+                                    {data && data.lecturersDesc ? data.lecturersDesc : <NotUpdate />}
+                                </Card>
+                            </Col>
+                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
+                                <Card title="Môi trường đào tạo" bordered={false}>
+                                    {data && data.achievementDesc ? data.achievementDesc : <NotUpdate />}
+                                </Card>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tab="Thông tin chung" key="1">
+                    <Row>
                             <Col sm={24} md={12} lg={12} xl={12} xxl={8}>
                                 <Card bordered={false}>
                                     <Meta
@@ -158,35 +187,6 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                             </>
                                         }
                                     />
-                                </Card>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tab="Thông tin chung" key="2">
-                        <Row>
-                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
-                                <Card title="Lịch sử phát triển" bordered={false}>
-                                    {data && data.historyDesc ? data.historyDesc : <NotUpdate />}
-                                </Card>
-                            </Col>
-                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
-                                <Card title="Chiến lược phát triển" bordered={false}>
-                                    {data && data.devStrategyDesc ? data.devStrategyDesc : <NotUpdate />}
-                                </Card>
-                            </Col>
-                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
-                                <Card title="Thành tích" bordered={false}>
-                                    {data && data.studyEnvDesc ? data.studyEnvDesc : <NotUpdate />}
-                                </Card>
-                            </Col>
-                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
-                                <Card title="Đội ngũ giảng viên" bordered={false}>
-                                    {data && data.lecturersDesc ? data.lecturersDesc : <NotUpdate />}
-                                </Card>
-                            </Col>
-                            <Col sm={24} md={24} lg={24} xl={24} xxl={24}>
-                                <Card title="Môi trường đào tạo" bordered={false}>
-                                    {data && data.achievementDesc ? data.achievementDesc : <NotUpdate />}
                                 </Card>
                             </Col>
                         </Row>
