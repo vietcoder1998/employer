@@ -679,7 +679,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             lg={8}
                                             key={index}
                                         >
-                                            <CardSchool key={index} item={item.school} openDrawer={this.onSetDataSchool} />
+                                            <CardSchool key={index} item={item.school} openDrawer={this.onSetDataSchool} state={item.state} />
                                             {/* <CardSchool key={index} item={item.school} /> */}
                                         </Col>
                                 )

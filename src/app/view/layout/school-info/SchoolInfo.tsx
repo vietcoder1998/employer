@@ -204,12 +204,13 @@ function SchoolInfo(props: ISchoolInfoProps) {
                                         title="Nhóm ngành đào tạo"
                                         description={
                                             <List
-                                                grid={{ gutter: 16, column: 8 }}
+                                                grid={{ gutter: 16, column: 4 }}
                                                 dataSource={schoolBranches}
+                                                
                                                 renderItem={item => (
                                                     <List.Item>
-                                                        <Card title={item.name} className="a_c">
-                                                            <Avatar src={item.imageUrl} icon="experiment" />
+                                                        <Card title={item.name} className="a_c" id="item">
+                                                            <Avatar src={item.imageUrl} icon="experiment" style={{borderRadius:0}}/>
                                                         </Card>
                                                     </List.Item>
                                                 )}

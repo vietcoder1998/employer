@@ -16,6 +16,7 @@ interface ICardSchoolProps {
     item?: IConnectSchool;
     openDrawer?: (id?: string) => any;
     open?: any
+    state?: any
 }
 
 export default function CardSchool(props?: ICardSchoolProps) {
@@ -79,7 +80,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                         props.item.coverUrl : backGround
                 }
                 alt="background"
-                onClick={() =>  props.item.state === 'ACCEPTED' ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
+                onClick={() =>  props.state  ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
             />
             <div>{props.item.coverUrl}</div>
             <div
@@ -95,7 +96,7 @@ export default function CardSchool(props?: ICardSchoolProps) {
                     }}
                     // onClick={() => window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`)}
                     // onClick={() => props.openDrawer(props.item.id)}
-                    onClick={() =>  props.item.schoolType.priority === 0 ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
+                    onClick={() =>  props.state ?  window.open(routeLink.CONNECT_SCHOOLS + `/school/${props.item.id}`) : props.openDrawer(props.item.id)}
 
                 >
                     <div className="school">

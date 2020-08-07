@@ -261,7 +261,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                     {list_ratings && list_ratings.length > 0 ? list_ratings.map((item?: IRating, index?: number) => <RatingItem key={index} item={item} />) : <NotUpdate msg={"Chưa có đánh giá"} />}
                 </DrawerConfig>
                 <div className='common-content'>
-                    <h5>
+                    <h4 style={{height:50,fontWeight:'bold'}}>
                         Hồ sơ nhà tuyển dụng
                         <Tooltip title="Xem đánh giá" >
                             <Button
@@ -293,7 +293,7 @@ class AdminAccount extends React.Component<IAdminAccountProps, IAdminAccountStat
                                 onClick={() => this.props.handleModal({ open_modal: true })}
                             />
                         </Tooltip>
-                    </h5>
+                    </h4>
                     <AdminProfile data={body} />
                 </div >
             </>
