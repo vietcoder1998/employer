@@ -54,6 +54,7 @@ interface IJobAnnouncementsApplyProps extends StateProps, DispatchProps {
     id?: string;
     searchEventJobs?: any;
     stateApply?: any;
+    getFindCandidateDetail?: any
 };
 
 
@@ -104,7 +105,8 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 
 
 
-        await this.props.getApplyJobs(id);
+        await this.props.getApplyJobs(id, this.onSuccessCallAPI);
+        // this.setState({loading: false})
 
     };
 
@@ -131,107 +133,128 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             }
         }
 
-        if (
-            props.listApplyJobs &&
-            props.listApplyJobs !== state.listApplyJobs
-        ) {
-            // console.log(props.listApplyJobs)
-            let listApplyJobs = props.listApplyJobs;
-            let listPending = [];
-            let listAccepted = [];
-            let listRejected = [];
-            let listShifts = [];
-            let defaultId = null;
-            let stateApply = null;
+        // if (
+        //     props.listApplyJobs &&
+        //     props.listApplyJobs !== state.listApplyJobs
+        // ) {
+        //     // console.log(props.listApplyJobs)
+        //     let listApplyJobs = props.listApplyJobs;
+        //     let listPending = [];
+        //     let listAccepted = [];
+        //     let listRejected = [];
+        //     let listShifts = [];
+        //     let defaultId = null;
+        //     let stateApply = null;
 
 
-            if (props.location && props.location.search) {
-                const param = new URLSearchParams(props.location.search);
-                stateApply = param.get('state');
-            }
-            if (!stateApply) {
-                stateApply = props.stateApply
-            }
+        //     if (props.location && props.location.search) {
+        //         const param = new URLSearchParams(props.location.search);
+        //         stateApply = param.get('state');
+        //     }
+        //     if (!stateApply) {
+        //         stateApply = props.stateApply
+        //     }
+            
+        //     if (listApplyJobs && listApplyJobs.length > 0) {
+        //         listApplyJobs.forEach((item: IApplyJob, index: number) => {
+        //             switch (item.state) {
+        //                 case TYPE.PENDING:
+        //                     listPending.push(item);
+        //                     break;
+        //                 case TYPE.REJECTED:
+        //                     listRejected.push(item);
+        //                     break;
+        //                 case TYPE.ACCEPTED:
+        //                     listAccepted.push(item);
+        //                     break;
 
-            if (listApplyJobs && listApplyJobs.length > 0) {
-                listApplyJobs.forEach((item: IApplyJob, index: number) => {
-                    switch (item.state) {
-                        case TYPE.PENDING:
-                            listPending.push(item);
-                            break;
-                        case TYPE.REJECTED:
-                            listRejected.push(item);
-                            break;
-                        case TYPE.ACCEPTED:
-                            listAccepted.push(item);
-                            break;
-
-                        default:
-                            break;
-                    }
-                })
-                if(!stateApply) {
-                    if(listPending && listPending.length > 0) {
-                        stateApply = "PENDING"
-                    } else if(listAccepted.length > 0) {
-                        stateApply = "ACCEPTED"
-                    }
-                }
-                if (listPending && listPending.length > 0 && stateApply === 'PENDING') {
-                    // if(stateApply === 'PENDING'){
-                    // searchShift(listApplyJobs[0].student.id, TYPE.PENDING, listApplyJobs[0].student.id)
+        //                 default:
+        //                     break;
+        //             }
+        //         })
+                
+        //         if (listPending && listPending.length > 0 && stateApply === 'PENDING') {
+        //             // if(stateApply === 'PENDING'){
+        //             // searchShift(listApplyJobs[0].student.id, TYPE.PENDING, listApplyJobs[0].student.id)
                     
-                    listShifts = listPending[0].appliedShifts
-                    defaultId = listPending[0].student.id
-                    // }
+        //             // listShifts = listPending[0].appliedShifts
+        //             defaultId = listPending[0].student.id
+        //             // }
 
-                    // if (stateApply === 'PENDING') {
-                    //     defaultId = listPending[0].student.id
-                    // }
+        //             // if (stateApply === 'PENDING') {
+        //             //     defaultId = listPending[0].student.id
+        //             // }
 
-                    // console.log(listPending[0].appliedShifts)
-                    // console.log(defaultId)
-                    // console.log(listPending[0].appliedShifts)
-                }
-                 else if (listAccepted.length > 0 && stateApply === 'ACCEPTED') {
-                    defaultId = listAccepted[0].student.id
-                }
-                else if(listRejected.length > 0 && stateApply === "REJECTED" ){
-                    defaultId = listRejected[0].student.id
-                }
-                // stateApply= TYPE.PENDING
-            }
-            return {
-                listApplyJobs,
-                listPending,
-                listRejected,
-                listAccepted,
-                listShifts,
-                defaultId,
-                loading: false,
-                stateApply
-            }
-        }
+        //             // console.log(listPending[0].appliedShifts)
+        //             // console.log(defaultId)
+        //             // console.log(listPending[0].appliedShifts)
+        //         }
+        //          else if (listAccepted.length > 0 && stateApply === 'ACCEPTED') {
+        //             defaultId = listAccepted[0].student.id
+        //         }
+        //         else if(listRejected.length > 0 && stateApply === "REJECTED" ){
+        //             defaultId = listRejected[0].student.id
+        //         }
+        //         // stateApply= TYPE.PENDING
+        //         if(!stateApply) {
+        //             if(listPending && listPending.length > 0) {
+        //                 stateApply = "PENDING"
+        //             } else if(listAccepted.length > 0) {
+        //                 stateApply = "ACCEPTED"
+        //             }
+        //             return {
+        //                 listApplyJobs,
+        //                 listPending,
+        //                 listRejected,
+        //                 listAccepted,
+        //                 listShifts,
+        //                 defaultId,
+        //                 loading: false,
+        //                 stateApply
+        //             }
+        //         }
+        //     }
+            
+        //     return {
+        //         listApplyJobs,
+        //         listPending,
+        //         listRejected,
+        //         listAccepted,
+        //         listShifts,
+        //         defaultId,
+        //         loading: false,
+        //         // stateApply
+        //     }
+        // }
 
         return null
     }
+    onSuccessCallAPI = () => {
+        console.log(this.state.stateApply)
+        this.setState({loading: false})
 
-    searchShift = (id?: string, type?: string, defaultId?: string) => {
-        // this.setState({ loading: true })
-        let { listApplyJobs } = this.state;
-        let listShifts = [];
-        setTimeout(() => {
-            if (id) {
-                listApplyJobs.forEach((item: IApplyJob) => {
-                    if (id === item.student.id) {
-                        listShifts = item.appliedShifts;
-                    }
-                });
-            }
+        // console.log(this.props.listAccepted)
+        if(this.state.stateApply === 'ACCEPTED' && this.props.listAccepted.length > 0) {
+            this.setState({defaultId: this.props.listAccepted[0].student.id})
+        }
+        if(this.state.stateApply === 'PENDING' && this.props.listPending.length > 0) {
+            this.setState({defaultId: this.props.listPending[0].student.id})
+        }
+        if(this.state.stateApply === 'REJECTED' && this.props.listRejected.length > 0) {
+            this.setState({defaultId: this.props.listRejected[0].student.id})
+        }
+        if(!this.state.stateApply) {
+            if(this.props.listAccepted && this.props.listAccepted.length > 0) {
+                this.setState({stateApply: 'ACCEPTED', defaultId: this.props.listAccepted[0].student.id})
+            } else if(this.props.listPending.length > 0){
+                this.setState({stateApply: 'PENDING', defaultId: this.props.listPending[0].student.id})
+            } else if(this.props.listRejected.length > 0){
+                this.setState({stateApply: 'REJECTED', defaultId: this.props.listRejected[0].student.id})
+            } 
+        }
 
-            this.setState({ listShifts, loading: false })
-        }, 250);
-
+    }
+    selectStudent = ( defaultId?: string) => {
         this.setState({ defaultId })
     }
 
@@ -250,14 +273,16 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
         ).then((res: any) => {
             if (res) {
                 message.success("Thành công", 3)
-                this.props.getApplyJobs(id);
+                this.props.getApplyJobs(id, this.onSuccessCallAPI);
+                if(state === 'ACCEPTED'){
+                    this.props.getFindCandidateDetail(cid)
+                }
             }
 
         })
         await this.setState({ lBtn: false })
         if (state === 'ACCEPTED') {
             this.setState({ stateApply: 'ACCEPTED', defaultId: cid })
-
         }
         if (
             this.props.searchEventJobs) {
@@ -266,35 +291,33 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
     }
     selectShift(type) {
         if (type === "ACCEPTED") {
-            if (this.state.listAccepted&&this.state.listAccepted.length > 0) {
-                this.setState({ listShifts: this.state.listAccepted[0].appliedShifts, defaultId: this.state.listAccepted[0].student.id })
-
+            if (this.props.listAccepted && this.props.listAccepted.length > 0) {
+                this.setState({  defaultId: this.props.listAccepted[0].student.id })
             }
 
         } else if (type === "PENDING") {
-            if (this.state.listPending&&this.state.listPending.length > 0) {
-                this.setState({ listShifts: this.state.listPending[0].appliedShifts, defaultId: this.state.listPending[0].student.id })
+            if (this.props.listPending&&this.props.listPending.length > 0) {
+                this.setState({ defaultId: this.props.listPending[0].student.id })
             }
         } else if (type === "REJECTED") {
-            if (this.state.listRejected.length > 0) {
-                this.setState({ listShifts: this.state.listRejected[0].appliedShifts, defaultId: this.state.listRejected[0].student.id })
+            if (this.props.listRejected.length > 0) {
+                this.setState({ defaultId: this.props.listRejected[0].student.id })
             }
         }
     }
     render() {
         let {
             stateApply,
-            listRejected,
-            listAccepted,
-            listPending,
+            // listRejected,
+            // listAccepted,
+            // listPending,
             listShifts,
             loading,
             defaultId,
             lBtn
         } = this.state;
-
         let {
-            totalItems
+            totalItems, listAccepted, listPending, listRejected
         } = this.props;
 
         return (
@@ -354,7 +377,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                                 defaultId={item.student.id === defaultId}
                                                                 onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                                 onClick={
-                                                                    (event: string) => this.searchShift(event, TYPE.PENDING, item.student.id)
+                                                                    (event: string) => this.selectStudent(item.student.id)
                                                                 }
 
                                                             />
@@ -379,7 +402,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                             defaultId={item.student.id === defaultId}
                                                             onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                             onClick={
-                                                                (event: string) => this.searchShift(event, TYPE.ACCEPTED, item.student.id)
+                                                                (event: string) => this.selectStudent(item.student.id)
                                                             }
                                                         />
                                                     ))
@@ -404,7 +427,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
                                                                 defaultId={item.student.id === defaultId}
                                                                 onChangeType={(id?: string, state?: 'PENDING' | 'REJECTED' | 'ACCEPTED') => this.createRequest(id, state)}
                                                                 onClick={
-                                                                    (event: string) => this.searchShift(event, TYPE.REJECTED, item.student.id)
+                                                                    (event: string) => this.selectStudent(item.student.id)
                                                                 }
                                                             />
                                                     )
@@ -439,8 +462,10 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
 };
 
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-    getApplyJobs: (id?: string, listApplyJobs?: string) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, listApplyJobs }),
+    getApplyJobs: (id?: string, onSuccessCallAPI?) => dispatch({ type: REDUX_SAGA.APPLY_JOB.GET_APPLY_JOB, id, onSuccessCallAPI }),
     getListEmBranches: () => dispatch({ type: REDUX_SAGA.EM_BRANCHES.GET_EM_BRANCHES }),
+    getFindCandidateDetail: (id?: string) =>
+        dispatch({ type: REDUX_SAGA.FIND_CANDIDATE_DETAIL.GET_FIND_CANDIDATE_DETAIL, id }),
 });
 
 const mapStateToProps = (state: IAppState, ownProps: any) => ({
@@ -448,6 +473,9 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     listSkills: state.Skills.items,
     listEmBranches: state.EmBranches.items,
     listApplyJobs: state.ApplyJobs.items,
+    listAccepted: state.ApplyJobs.listAccepted,
+    listPending: state.ApplyJobs.listPending,
+    listRejected: state.ApplyJobs.listRejected,
     totalItems: state.ApplyJobs.totalItems
 });
 

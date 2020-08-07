@@ -24,6 +24,7 @@ function* getListApplyJobsData(action: any) {
         type: REDUX.APPLY_JOB.GET_APPLY_JOB,
         data
     });
+    action.onSuccessCallAPI()
 }
 
 function callApplyJobs(action: any) {

@@ -264,6 +264,8 @@ class JobAnnouncementsCreate extends Component<IJobAnnouncementsCreateProps, IJo
     createRequest = async () => {
         let { body, typeCpn, id } = this.state;
         let newBody = await this.pretreatmentBody(body, typeCpn);
+        console.log(body)
+
         let matching = (typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY) ? `` : `/${id}`;
         let METHOD = typeCpn === TYPE.CREATE || typeCpn === TYPE.COPY ? POST : PUT;
         let API = typeCpn === TYPE.PENDING ? PENDING_JOBS : JOB_ANNOUNCEMENTS;

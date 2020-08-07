@@ -100,4 +100,8 @@ export interface IFindCandidateDetail {
         afternoon?: boolean;
         evening?: boolean
     }
+    school?: any;
+    schoolYearStart?: number;
+    schoolYearEnd?: number;
+    major?: any
 }

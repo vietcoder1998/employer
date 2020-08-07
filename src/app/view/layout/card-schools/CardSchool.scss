@@ -37,21 +37,10 @@
   .school {
     margin-bottom: 5px;
   }
-
   &:hover {
     cursor: pointer;
-    transform: scale(1.1);
-    z-index: 1;
-
-    .school-action {
-      bottom: -30px;
-      border: solid 1px;
-
-      .action-school {
-        height: 85px;
-      }
-    }
   }
+  
 
   .image-schools {
     height: 80%;
@@ -98,6 +87,23 @@
         &:hover {
           cursor: pointer;
         }
+      }
+    }
+  }
+}
+
+.card-school-animation {
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    z-index: 1;
+
+    .school-action {
+      bottom: -30px;
+      border: solid 1px;
+
+      .action-school {
+        height: 85px;
       }
     }
   }
