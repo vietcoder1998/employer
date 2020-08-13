@@ -9,7 +9,7 @@ import { _requestToServer } from '../../../../../../services/exec';
 import { POST } from '../../../../../../const/method';
 import { routeLink, routePath } from '../../../../../../const/break-cumb';
 import { DELETE } from '../../../../../../const/method';
-import { PENDING_JOBS, ADMIN_ACCOUNT } from '../../../../../../services/api/private.api';
+import { PENDING_JOBS } from '../../../../../../services/api/private.api';
 import { TYPE } from '../../../../../../const/type';
 // import { IptLetter } from '../../../../layout/common/Common';
 import { IPendingJob } from '../../../../../../models/pending-jobs';
@@ -18,9 +18,7 @@ import JobDetail from '../../../../layout/job-detail/JobDetail';
 import { IModalState } from '../../../../../../models/mutil-box';
 import { Link } from 'react-router-dom';
 import { NotUpdate } from '../../../../layout/common/Common';
-import { PendingJobDetail } from '../../../../../../redux/reducers/pending-job-detail';
 import { EMPLOYER_HOST } from '../../../../../../environment/dev';
-import { string } from 'prop-types';
 
 // let { Option } = Select;
 const Label = (props: any) => {
@@ -191,7 +189,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     };
 
     EditTool = (item?: IPendingJob) => {
-       
+
         return (
             <div>
                 <Tooltip title="Chỉnh sửa">
@@ -213,11 +211,11 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                         <Icon type="delete"
                             className={"f-ic delete"}
                             style={{ padding: "5px" }}
-                            onClick={ async ()  => 
+                            onClick={async () =>
                                 // this.props.handleModal({ msg: "Bạn chắc chắn muốn  xóa bài đăng này ?", typeModal: TYPE.DELETE })
                                 // this.deleteAnnoun()
-                                this.setState({modalDelete: true, id: item.id})
-                                
+                                this.setState({ modalDelete: true, id: item.id })
+
                             }
 
                         />
@@ -227,48 +225,47 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
     }
 
     deleteAnnoun = async () => {
-        
+
         // this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE });
-       
-      
-    //    this.state.selected == item.id ?  this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE }) : null
-       
+
+
+        //    this.state.selected == item.id ?  this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa chi nhánh này ?", typeModal: TYPE.DELETE }) : null
+
         this.props.handleModal({ msg: "Bạn chắc chắn muốn xóa bài viết này ?", typeModal: TYPE.DELETE })
-       
+
     };
 
 
     createRequest = async () => {
         let { id } = this.state;
-        
-        let { modalState } = this.props;
+        // let { modalState } = this.props;
         await this.setState({ loading: true });
-        
-                await _requestToServer(
-                    DELETE,
-                    PENDING_JOBS + `/${id}`,
-                    undefined,
-                    undefined,
-                    undefined,
-                    EMPLOYER_HOST,
-                    true,
-                    false
-                ).then((res) => {
-                    if (res) {
-                        // this.searchPendingJobs();
-                        // this.props.handleModal();
-                        this.setState({loadingTable: true})
-                        this.queryPendingJob();
-                    }
-                }).finally(
-                    () => this.setState({
-                        loading: false,
-                        modalDelete: false
-                    })
-                )
-           
-            
-        
+
+        await _requestToServer(
+            DELETE,
+            PENDING_JOBS + `/${id}`,
+            undefined,
+            undefined,
+            undefined,
+            EMPLOYER_HOST,
+            true,
+            false
+        ).then((res) => {
+            if (res) {
+                // this.searchPendingJobs();
+                // this.props.handleModal();
+                this.setState({ loadingTable: true })
+                this.queryPendingJob();
+            }
+        }).finally(
+            () => this.setState({
+                loading: false,
+                modalDelete: false
+            })
+        )
+
+
+
     }
 
 
@@ -409,8 +406,8 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
 
 
     render() {
-        let { dataTable, loading, loadingTable, state, jid ,modalDelete} = this.state;
-        let { totalItems, pendingJobDetail, open_modal, modalState } = this.props;
+        let { dataTable, loading, loadingTable, state, jid, modalDelete } = this.state;
+        let { totalItems, pendingJobDetail, open_modal } = this.props;
 
 
         return (
@@ -423,7 +420,7 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                     onCancel={() => {
                         this.setState({ message: null, loading: false });
                         // this.props.handleModal();
-                        this.setState({modalDelete: false})
+                        this.setState({ modalDelete: false })
                     }}
                     footer={[
                         <Button
@@ -437,12 +434,12 @@ class PendingJobsList extends PureComponent<IPendingJobListProps, IPendingJobLis
                                 });
 
                                 // this.props.handleModal()
-                                this.setState({modalDelete: false})
+                                this.setState({ modalDelete: false })
                             }}
                         />,
                         <Button
                             key="ok"
-                            type={ "danger"}
+                            type={"danger"}
                             icon={"delete"}
                             loading={loading}
                             children={"Xóa"}
@@ -561,7 +558,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
         type: REDUX_SAGA.PENDING_JOBS.GET_PENDING_JOBS,
         body
     }),
-    
+
     getPendingJobDetail: (id?: string) =>
         dispatch({
             type: REDUX_SAGA.PENDING_JOB_DETAIL.GET_PENDING_JOB_DETAIL,
@@ -581,7 +578,7 @@ const mapStateToProps = (state: IAppState, ownProps: any) => ({
     open_modal: state.MutilBox.modalState.open_modal,
     totalItems: state.PendingJobs.totalItems,
     listLanguages: state.Languages.items
-    
+
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

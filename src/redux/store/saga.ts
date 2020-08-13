@@ -33,7 +33,6 @@ import { EventJobssWatcher } from '../sagas/event-jobs';
 import { EventJobDetailWatcher } from '../sagas/event-job-detail';
 import { JobServiceEventWatcher } from '../sagas/job-service-event';
 import { SchoolBranchsWatcher } from '../sagas/school-branches';
-import { from } from 'core-js/fn/array';
 
 export default function* rootSaga() {
     const sagas = [

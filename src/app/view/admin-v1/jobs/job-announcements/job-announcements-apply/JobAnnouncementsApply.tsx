@@ -311,7 +311,7 @@ class JobAnnouncementsApply extends Component<IJobAnnouncementsApplyProps, IJobA
             // listRejected,
             // listAccepted,
             // listPending,
-            listShifts,
+            // listShifts,
             loading,
             defaultId,
             lBtn
