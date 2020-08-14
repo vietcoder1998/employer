@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Row, Col, Badge, Popover, Tooltip } from 'antd';
+import { Layout, Icon, Avatar, Row, Col, Badge, Popover, Tooltip, Button, Modal } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
@@ -48,7 +48,8 @@ interface IAdminState {
     pageIndex?: number,
     loadingNoti?: boolean;
     resInfoEvent?: any;
-    joinSucess?: boolean
+    joinSucess?: boolean;
+    visible?: boolean
 }
 
 interface IAdminProps extends StateProps, DispatchProps {
@@ -78,7 +79,8 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             pageIndex: 0,
             loadingNoti: false,
             resInfoEvent: null,
-            joinSucess: false
+            joinSucess: false,
+            visible: false
         };
     };
 
@@ -125,6 +127,25 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
             this.setState({ loading: false });
         }, 500);
     }
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
+    handleCancel = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
 
     render() {
         let { dataBreakcumb, loading, pageSize, pageIndex, resInfoEvent } = this.state;
@@ -345,30 +366,9 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                     <span style={{ color: '#fff' }}> Đăng Bài</span>
                                 </span>
                             </Tooltip>
-                            {/* <Tooltip title={"Tìm ứng viên"}>
-                                <div
-                                    className="noti-icon"
-                                    style={{ padding: 18 }}
-                                    onClick={
-                                        () => {
-                                            this.props.history.push(routeLink.FIND_CANDIDATES + routePath.LIST);
-                                            this.handleLoading()
-                                        }
-                                    }
-                                >
-                                    <Icon
-                                        type="search"
-                                        style={{
-                                            position: "absolute",
-                                            color: "white",
-                                            fontSize: 18,
-                                            left: 10,
-                                            top: 10
-                                        }}
-                                    />
-                                </div>
-                            </Tooltip>
-                             */}
+                            <Button type="primary" onClick={this.showModal}>
+                                Open Modal
+                            </Button>
                             <Popover
                                 overlayClassName="Notification"
                                 content={
@@ -469,30 +469,18 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             background: '#fff',
                         }}
                     >
-                        {/* <Breadcrumb >
-                            <Breadcrumb.Item >
-                                <a href='/v1/admin' >
-                                    <Icon type="home" />
-                                </a>
-                            </Breadcrumb.Item>
-                            {dataBreakcumb.map((item: any) => {
-                                let newBreakCump = null;
-                                breakCumb.forEach((item_brk: any, index: number) => {
-                                    if (item_brk.label === item) {
-                                        newBreakCump = (
-                                            <Breadcrumb.Item key={index}>
-                                                {!item_brk.disable ? <a href={item_brk.url} >{item_brk.name}</a> : <label>{item_brk.name}</label>}
-                                            </Breadcrumb.Item>
-                                        )
-                                    }
-                                })
-
-                                return newBreakCump
-                            })}
-                        </Breadcrumb> */}
+                        <Modal
+                            title="Basic Modal"
+                            visible={this.state.visible}
+                            onOk={this.handleOk}
+                            onCancel={this.handleCancel}
+                        >
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                            <p>Some contents...</p>
+                        </Modal>
                         {!loading ?
                             <Row>
-                                {/* <Col sm={1} md={1} lg={2}></Col> */}
                                 <Col sm={24} md={24} lg={24}>
                                     <Switch>
                                         <ErrorBoundaryRoute path={path + routePath.JOBS} component={Jobs} />
@@ -505,7 +493,6 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                                         <ErrorBoundaryRoute path={path + routePath.DASHBOARD} component={Dashboard} />
                                     </Switch>
                                 </Col>
-                                {/* <Col sm={1} md={1} lg={2}></Col> */}
                             </Row>
                             : <Loading />}
                     </Content>
