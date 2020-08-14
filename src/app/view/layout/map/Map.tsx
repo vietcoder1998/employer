@@ -8,7 +8,7 @@ import { IAppState } from '../../../../redux/store/reducer';
 import { IMapState } from '../../../../models/mutil-box';
 import Autocomplete from 'react-google-autocomplete';
 import IApiMap from '../../../../models/google-map-api';
-import { notification, Form } from 'antd';
+import { notification } from 'antd';
 
 GeoCode.setApiKey("AIzaSyDAC_NI2xITI6n6hky-5CAiemtWYCsrO28");
 
@@ -91,7 +91,7 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
         let { location } = mapState;
         return (
             <>
-           
+
                 <Autocomplete
                     style={{
                         width: '100%',
@@ -105,23 +105,23 @@ class MapContainer extends React.PureComponent<IMapContainerProps, IMapContainer
                     placeholder={'Nhập địa chỉ tìm kiếm'}
                     onPlaceSelected={(place?: IApiMap) => {
                         try {
-                           place.geometry ?
-                            this.props.setMapState({
-                                location: place.formatted_address,
-                                marker: {
-                                    lat: place.geometry.location.lat(),
-                                    lng: place.geometry.location.lng(),
-                                }
-                            }) : notification.warning({message: "Google Map thông báo", description: "We take your address"}); 
-                        } catch(err) {
+                            place.geometry ?
+                                this.props.setMapState({
+                                    location: place.formatted_address,
+                                    marker: {
+                                        lat: place.geometry.location.lat(),
+                                        lng: place.geometry.location.lng(),
+                                    }
+                                }) : notification.warning({ message: "Google Map thông báo", description: "We take your address" });
+                        } catch (err) {
                             throw err
                         }
-                        
+
                     }}
                     types={['geocode']}
                     componentRestrictions={{ country: "vn" }}
                 />
-               
+
                 <div className='map-wraper' style={style ? style : dfStyle} >
                     <Map
                         google={window["google"]}

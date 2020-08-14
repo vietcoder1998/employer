@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { } from 'react';
 import { InputTitle } from '../input-tittle/InputTitle';
 import { InputNumber, Switch, Select, Row, Col, Icon, Button, TimePicker, Radio, Input, Form } from 'antd';
 import { IptLetterP, Required } from '../common/Common';
@@ -153,7 +153,7 @@ export function ShiftContent(props: IShiftContent) {
                 {/* With Gender */}
                 <div style={{ display: typeGender ? 'flex' : 'none' }}>
                     <Form >
-                        <Form.Item validateStatus={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'error' : ''} help={valueGender[0].quantity == 0 && valueGender[1].quantity == 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
+                        <Form.Item validateStatus={valueGender[0].quantity === 0 && valueGender[1].quantity === 0 ? 'error' : ''} help={valueGender[0].quantity === 0 && valueGender[1].quantity === 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
                             <div style={{ marginTop: '-5px', display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 25 }}>
 
                                 <InputNumber
@@ -213,7 +213,7 @@ export function ShiftContent(props: IShiftContent) {
                 {/* <Col xs={12} sm={12} md={12} lg={10} xl={12}> */}
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Form>
-                        <Form.Item validateStatus={valueBoth[0].quantity == 0 ? 'error' : ''} help={valueBoth[0].quantity == 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
+                        <Form.Item validateStatus={valueBoth[0].quantity === 0 ? 'error' : ''} help={valueBoth[0].quantity === 0 ? 'Số lượng không được nhỏ hơn 1 !' : ''}>
                             <InputNumber
                                 min={0}
                                 max={10000}

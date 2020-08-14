@@ -35,7 +35,7 @@ import { ApplyJobs } from './../reducers/apply-job';
 import { combineReducers } from 'redux';
 import { JobSuitableCandidates } from './../reducers/job-suitable-candidate';
 import { SchoolBranches } from '../reducers/school-branches';
-import { from } from 'core-js/fn/array';
+
 
 const rootReducer = combineReducers({
     JobAnnouncements,

@@ -3,14 +3,12 @@ import './CardSchool.scss';
 // @ts-ignore
 import backGround from './../../../../assets/image/base-image.jpg';
 // @ts-ignore
-import { Avatar, Icon, Spin } from 'antd';
+import { Avatar, Icon } from 'antd';
 import { IConnectSchool } from '../../../../models/connect-schools';
 import { NotUpdate } from '../common/Common';
 import { TYPE } from '../../../../const/type';
-import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../const/break-cumb';
-import { type } from 'os';
-import Item from 'antd/lib/list/Item';
+
 
 interface ICardSchoolProps {
     item?: IConnectSchool;

@@ -9,7 +9,6 @@ import avatar_women from '../../../../assets/image/women-no-avatar.jpg';
 // import Loading from '../loading/Loading';
 import { IFindCandidateDetail } from '../../../../models/find-candidates-detail';
 // @ts-ignore
-import backGround from '../../../../assets/image/base-image.jpg';
 
 interface IProps {
     jobSuitableCandidates?: Array<IJobSuitableCandidate>,
@@ -27,12 +26,12 @@ interface IProps {
 
 export default function JobSuitableCandidate(props?: IProps) {
     let { jobSuitableCandidates, loading , profileType} = props;
-    let { data } = props;
-    let [avatarUrl, setAvatarUrl] = React.useState(avatar_men);
-    let [coverUrl, setcoverUrl] = React.useState(backGround);
+    // let { data } = props;
+    // let [avatarUrl, setAvatarUrl] = React.useState(avatar_men);
+    // let [coverUrl, setcoverUrl] = React.useState(backGround);
 
-    let [onErrAvatar, setErrAvatar] = React.useState(false);
-    let [onErrCover, setErrCover] = React.useState(false);
+    let [onErrAvatar] = React.useState(false);
+    // let [onErrCover, setErrCover] = React.useState(false);
 
     // if (data && data.avatarUrl !== avatarUrl) {
     //     setAvatarUrl(data.avatarUrl);

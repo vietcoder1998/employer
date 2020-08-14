@@ -35,6 +35,7 @@ export interface IEventJob {
     disable: boolean;
     hidden: boolean;
     enableNotification: boolean;
+    schoolEventID?: string
     priority?: {
         homePriority?: string;
         homeExpired?: boolean;
