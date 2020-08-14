@@ -163,7 +163,7 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 <div style={{ flex: 1 }}>
                                     {data && data.school ?
                                         <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                            <img src={data.school.logoUrl} style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
+                                            <img src={data.school.logoUrl} alt="img" style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
 
                                             </img>
                                             <ul style={{ marginLeft: 20 , marginTop: 10}}>
@@ -180,11 +180,11 @@ function CandidateProfile(props: ICandidateProfileProps) {
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <div style={{display:'flex',flexDirection:'row'}}>
-                                        <img src={data.major.branch.imageUrl} style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
+                                        <img src={data.major&& data.major.branch&&data.major.branch.imageUrl} alt='img' style={{ height: '20%', width: '20%    ', borderRadius: '50%' }}>
                                         </img>
                                         <ul style={{ marginLeft: 20 }}>
                                             <li style={{ marginTop: "10px" }}><strong>Nghành nghề đào tạo</strong></li>
-                                            <li style={{ marginTop: "10px", textTransform: "capitalize" }}>{data.major.name}</li>
+                                            <li style={{ marginTop: "10px", textTransform: "capitalize" }}>{data.major&&data.major.name}</li>
                                         </ul>
                                     </div>
                                 </div>

@@ -24,7 +24,7 @@ export default function EventDetail(props?: IEventDetail) {
             <div style={{marginTop: 10, fontWeight: 'bold'}}>Banner đã tải lên</div>
             <div>
                 <div style={{fontStyle: 'italic'}}>{!props.bannerUrlEmployer ? 'Chưa có banner tải lên' : null}</div>
-                <img src={props.bannerUrlEmployer} style={{width: '100%'}}/>
+                <img src={props.bannerUrlEmployer} style={{width: '100%'}}  />
             </div>
         </div>
     )

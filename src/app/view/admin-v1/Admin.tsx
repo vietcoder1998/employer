@@ -5,18 +5,15 @@ import './Admin.scss';
 import { connect } from 'react-redux';
 import clearStorage from '../../../services/clearStorage';
 import { routeLink, routePath } from '../../../const/break-cumb';
-
 import Jobs from './jobs/Jobs';
 import ConvernientService from './convernient-service/ConvernientService';
 import NotFoundAdmin from './not-found-admin/NotFoundAdmin';
 import Profile from './profile/Profile';
 import MoreInfo from './more-info/MoreInfo ';
 import Dashboard from './dashboard/index';
-
 import Loading from '../layout/loading/Loading';
 import ErrorBoundaryRoute from '../../../routes/ErrorBoundaryRoute';
 import NotiItem from '../layout/notification-item/NotiItem';
-
 import { IAppState } from '../../../redux/store/reducer';
 import { REDUX_SAGA } from '../../../const/actions';
 import { DropdownConfig, OptionConfig } from '../layout/config/DropdownConfig';
@@ -32,7 +29,7 @@ import { _requestToServer } from '../../../services/exec'
 import { GET, POST } from '../../../const/method';
 import { PUBLIC_HOST, EMPLOYER_HOST } from '../../../environment/dev';
 import { timeConverter } from '../../../utils/convertTime'
-import Item from 'antd/lib/list/Item';
+
 const Switch = require("react-router-dom").Switch;
 const { Content, Header } = Layout;
 
@@ -148,7 +145,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     };
 
     render() {
-        let { dataBreakcumb, loading, pageSize, pageIndex, resInfoEvent } = this.state;
+        let { loading, pageSize, pageIndex} = this.state;
         let { path } = this.props.match;
         let { listNoti, history } = this.props;
         let isNotRead = 0;

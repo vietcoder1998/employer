@@ -17,7 +17,7 @@ import { IConnectSchoolDetail } from '../../../../../models/connect-school-detai
 import TextArea from 'antd/lib/input/TextArea';
 import { timeConverter } from '../../../../../utils/convertTime';
 import { _requestToServer } from '../../../../../services/exec';
-import { POST, PUT } from '../../../../../const/method';
+import { POST } from '../../../../../const/method';
 import { CONNECT_SCHOOL } from '../../../../../services/api/private.api';
 import { Link } from 'react-router-dom';
 import { routeLink } from '../../../../../const/break-cumb';
@@ -474,8 +474,8 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                     onClose={() => this.props.handleDrawer({ openDrawer: false })}
                     destroyOnClose={true}
                     visible={openDrawer}
-                    
-                    
+
+
                 >
                     {
                         dataSchool && !loading ? (
@@ -679,7 +679,7 @@ class ConnectedSchoolsList extends React.Component<IConnectedSchoolsListProps, I
                                             lg={8}
                                             key={index}
                                         >
-                                            <CardSchool key={index} item={item.school} openDrawer={this.onSetDataSchool} state={item.state} createRequest={this.createRequest} loading={this.state.loading}/>
+                                            <CardSchool key={index} item={item.school} openDrawer={this.onSetDataSchool} state={item.state} createRequest={this.createRequest} loading={this.state.loading} />
                                             {/* <CardSchool key={index} item={item.school} /> */}
                                         </Col>
                                 )
