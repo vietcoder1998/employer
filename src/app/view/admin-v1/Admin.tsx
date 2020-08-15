@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Layout, Icon, Avatar, Row, Col, Badge, Popover, Tooltip, Button, Modal } from 'antd';
+import { Layout, Icon, Avatar, Row, Col, Badge, Popover, Tooltip, Button, Modal, Carousel } from 'antd';
 import MenuNavigation from './menu-navigation/MenuNavigation';
 import './Admin.scss';
 import { connect } from 'react-redux';
@@ -145,7 +145,7 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
     };
 
     render() {
-        let { loading, pageSize, pageIndex} = this.state;
+        let { loading, pageSize, pageIndex } = this.state;
         let { path } = this.props.match;
         let { listNoti, history } = this.props;
         let isNotRead = 0;
@@ -471,10 +471,38 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
                             visible={this.state.visible}
                             onOk={this.handleOk}
                             onCancel={this.handleCancel}
+                            width={'80vw'}
+                            bodyStyle={{ height: '70vh' }}
+                            footer={[
+                                <Button
+                                    key="cancel"
+                                    type="danger"
+                                    children="Trở lại"
+                                    onClick={() => {
+                                    }}
+                                />,
+                                <Button
+                                    key="ok"
+                                    type={"primary"}
+                                    children={"Tiếp theo"}
+                                    onClick={() => {}}
+                                />
+                            ]}
                         >
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
+                            <Carousel afterChange={(index) =>{console.log(index)}} >
+                                <div>
+                                    <h3 style={contentStyle}>1</h3>
+                                </div>
+                                <div>
+                                    <h3 style={contentStyle}>2</h3>
+                                </div>
+                                <div>
+                                    <h3 style={contentStyle}>3</h3>
+                                </div>
+                                <div>
+                                    <h3 style={contentStyle}>4</h3>
+                                </div>
+                            </Carousel>
                         </Modal>
                         {!loading ?
                             <Row>
@@ -501,7 +529,13 @@ class Admin extends PureComponent<IAdminProps, IAdminState> {
         )
     }
 }
-
+const contentStyle = {
+    height: 'calc(70vh - 25px)',
+    color: '#fff',
+    lineHeight: 'calc(70vh - 25px)',
+    textAlign: 'center',
+    background: '#364d79',
+  };
 const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
     getListRegions: () => dispatch({ type: REDUX_SAGA.REGIONS.GET_REGIONS }),
     getListJobNames: () => dispatch({ type: REDUX_SAGA.JOB_NAMES.GET_JOB_NAMES }),
